@@ -1,0 +1,9 @@
+#footer {
+	height: 50px;
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+	background: var(--BANNER_BACKGROUND_COLOR);
+	position: absolute;
+	overflow: hidden;
+}
