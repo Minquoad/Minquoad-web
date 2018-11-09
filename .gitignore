@@ -2,3 +2,6 @@
 /Storage/
 /src/utilities/ConfigurationImpl.java
 /WebContent/img/Community/
+/bin/
+/.classpath
+/.project
