@@ -10,7 +10,7 @@
 	<div id="mainContainer">
 		<div class="scrollableContainer">
 			<div class="padded">
-				<form method="post" action="test" accept-charset="UTF-8"
+				<form method="post" action="Test" accept-charset="UTF-8"
 					enctype="multipart/form-data">
 
 					<h2>Uploader un fichier :</h2>
@@ -24,7 +24,7 @@
 					</div>
 				</form>
 
-				<form method="post" action="test" accept-charset="UTF-8"
+				<form method="post" action="Test" accept-charset="UTF-8"
 					enctype="multipart/form-data">
 
 					<h2>Modifier la table :</h2>

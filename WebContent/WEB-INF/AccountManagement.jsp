@@ -25,7 +25,7 @@
 								</div>
 							</c:if>
 
-							<form method="post" action="accountManagement"
+							<form method="post" action="AccountManagement"
 								accept-charset="UTF-8" enctype="multipart/form-data">
 
 								<input type="hidden" name="formId" value="userPictureAlteration" />
@@ -47,7 +47,7 @@
 
 						<div class="tile">
 							<h2>Change password</h2>
-							<form method="post" action="accountManagement"
+							<form method="post" action="AccountManagement"
 								accept-charset="UTF-8">
 
 								<input type="hidden" name="formId"

@@ -11,7 +11,7 @@
 		<div class="scrollableContainer">
 			<div class="centererContainer">
 				<div class="totallyCenteredContainer">
-					<form method="post" action="logIn" accept-charset="UTF-8">
+					<form method="post" action="LogIn" accept-charset="UTF-8">
 						<p>
 							<label for="nickname">Nickname : </label>
 							<input type="text" name="nickname" id="nickname"
@@ -31,7 +31,7 @@
 						</div>
 					</form>
 					<p>
-						<a href="signUp">New user? Create an account.</a>
+						<a href="SignUp">New user? Create an account.</a>
 					</p>
 				</div>
 			</div>

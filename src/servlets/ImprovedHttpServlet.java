@@ -43,10 +43,10 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		} else {
 			if (this.servesOnlyLoggedUsers()) {
 				req.getSession().setAttribute(lastRefusedLoggedUserRequestUriKey, req.getRequestURI());
-				resp.sendRedirect(req.getContextPath() + "/logIn");
+				resp.sendRedirect(req.getContextPath() + "/LogIn");
 				return;
 			} else {
-				if (!req.getServletPath().equals("/logIn")) {
+				if (!req.getServletPath().equals("/LogIn")) {
 					req.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
 				}
 			}
