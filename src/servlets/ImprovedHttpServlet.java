@@ -30,10 +30,10 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		daoFactory = new DaoFactoryImpl();
+
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-
-		daoFactory = new DaoFactoryImpl();
 
 		User sessionUser = this.getSessionUser(req);
 		if (sessionUser != null) {
@@ -46,7 +46,9 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				resp.sendRedirect(req.getContextPath() + "/logIn");
 				return;
 			} else {
-				req.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
+				if (!req.getServletPath().equals("/logIn")) {
+					req.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
+				}
 			}
 		}
 

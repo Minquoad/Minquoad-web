@@ -11,10 +11,10 @@ public class LogOut extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getSession().removeAttribute(this.sessionUserIdKey);
+		request.getSession().removeAttribute(ImprovedHttpServlet.sessionUserIdKey);
 		request.removeAttribute("sessionUser");
 
-		response.sendRedirect(request.getContextPath() + "/logIn");
+		response.sendRedirect(request.getContextPath() + "/");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

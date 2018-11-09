@@ -43,6 +43,7 @@ public class LogIn extends ImprovedHttpServlet {
 				
 				String lastRefusedLoggedUserServletPath = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedLoggedUserRequestUriKey);
 				if (lastRefusedLoggedUserServletPath != null) {
+					request.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
 					response.sendRedirect(lastRefusedLoggedUserServletPath);
 				} else {
 					doGet(request, response);
