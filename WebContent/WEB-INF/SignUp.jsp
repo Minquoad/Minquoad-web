@@ -24,6 +24,10 @@
 							<label for="password">Password : </label> <input type="password"
 								name="password" id="password" />
 						</p>
+						<p>
+							<label for="passwordConfirmation">Password : </label> <input type="password"
+								name="passwordConfirmation" id="passwordConfirmation" />
+						</p>
 						<c:set var="currentFormProblems"
 							value="${ formProblems }" scope="request" />
 						<%@ include file="/WEB-INF/Form/FormProblems.jsp"%>

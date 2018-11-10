@@ -31,6 +31,7 @@ public class SignUp extends ImprovedHttpServlet {
 
 		String nickname = request.getParameter("nickname");
 		String password = request.getParameter("password");
+		String passwordConfirmation = request.getParameter("passwordConfirmation");
 
 		if (nickname != null && password != null) {
 			List<String> formProblems = new ArrayList<String>();
@@ -44,6 +45,10 @@ public class SignUp extends ImprovedHttpServlet {
 
 			List<String> nicknameProblems = User.getNicknameProblems(nickname);
 			List<String> passwordProblems = User.getPasswordProblems(password);
+
+			if (!password.equals(passwordConfirmation)) {
+				passwordProblems.add("The password confirmation is different to the password.");
+			}
 
 			List<User> users = getDaoFactory().getUserDao().getAllMatching(nickname, "nickname");
 			if (users.size() != 0) {

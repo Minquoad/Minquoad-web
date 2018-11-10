@@ -8,7 +8,7 @@
 		<ul class="formErrors">
 			<c:forEach items="${ currentFormProblems }" var="formProblem"
 				varStatus="status">
-				<li><c:out value="${ currentFormProblems }" /></li>
+				<li><c:out value="${ formProblem }" /></li>
 			</c:forEach>
 		</ul>
 	</c:if>
