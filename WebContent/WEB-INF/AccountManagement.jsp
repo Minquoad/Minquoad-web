@@ -71,7 +71,7 @@
 									value="${ userPasswordAlterationFormProblems }" scope="request" />
 								<%@ include file="/WEB-INF/Form/FormProblems.jsp"%>
 								<div>
-									<input type="submit" value="Log in" />
+									<input type="submit" value="Change" />
 								</div>
 							</form>
 						</div>

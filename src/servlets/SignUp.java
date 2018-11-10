@@ -43,19 +43,19 @@ public class SignUp extends ImprovedHttpServlet {
 
 			request.setAttribute("creatingAccount", true);
 
-			List<String> nicknameProblems = User.getNicknameProblems(nickname);
-			List<String> passwordProblems = User.getPasswordProblems(password);
-
+			formProblems.addAll(User.getNicknameProblems(nickname));
+			formProblems.addAll(User.getPasswordProblems(password));
+			
 			if (!password.equals(passwordConfirmation)) {
-				passwordProblems.add("The password confirmation is different to the password.");
+				formProblems.add("The password confirmation is different to the password.");
 			}
 
 			List<User> users = getDaoFactory().getUserDao().getAllMatching(nickname, "nickname");
 			if (users.size() != 0) {
-				nicknameProblems.add("The nickname \"" + nickname + "\" is alreadi taken.");
+				formProblems.add("The nickname \"" + nickname + "\" is alreadi taken.");
 			}
 
-			if (nicknameProblems.size() == 0 && passwordProblems.size() == 0) {
+			if (formProblems.size() == 0) {
 				User user = new User();
 				user.setNickname(nickname);
 				user.setRegistrationDate(new Date());
@@ -66,8 +66,6 @@ public class SignUp extends ImprovedHttpServlet {
 
 				this.setSessionUser(request, user);
 			} else {
-				formProblems.addAll(nicknameProblems);
-				formProblems.addAll(passwordProblems);
 				request.setAttribute("prefilledNickname", nickname);
 			}
 			doGet(request, response);

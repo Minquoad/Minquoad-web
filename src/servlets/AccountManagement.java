@@ -61,6 +61,39 @@ public class AccountManagement extends ImprovedHttpServlet {
 				getDaoFactory().getUserDao().update(user);
 
 			}
+
+			if (formId.equals("userPasswordAlteration")) {
+
+				String oldPassowrd = request.getParameter("oldPassowrd");
+				String newPassword = request.getParameter("newPassword");
+				String newPasswordConfirmation = request.getParameter("newPasswordConfirmation");
+
+				if (oldPassowrd != null && newPassword != null && newPasswordConfirmation != null) {
+
+					User user = getSessionUser(request);
+
+					List<String> formProblems = new ArrayList<String>();
+					request.setAttribute("userPasswordAlterationFormProblems", formProblems);
+
+					if (!user.isPassword(oldPassowrd)) {
+						formProblems.add("Old password not correct.");
+					}
+
+					if (!newPassword.equals(newPasswordConfirmation)) {
+						formProblems.add("The password confirmation is different to the password.");
+					} else {
+						formProblems.addAll(User.getPasswordProblems(newPassword));
+					}
+
+					if (formProblems.size() == 0) {
+						user.setPassword(newPassword);
+						getDaoFactory().getUserDao().update(user);
+					}
+
+					doGet(request, response);
+				}
+
+			}
 		}
 
 		doGet(request, response);
