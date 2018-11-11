@@ -4,8 +4,9 @@
 <%@ include file="/WEB-INF/MainHeadContent.jsp"%>
 </head>
 <body>
-	<c:set var="pageTitle" value="Account management" scope="request" />
-	<%@ include file="/WEB-INF/Header.jsp"%>
+	<jsp:include page="/WEB-INF/Header.jsp">
+		<jsp:param name="pageTitle" value="Account management" />
+	</jsp:include>
 
 	<div id="mainContainer">
 		<div class="scrollableContainer">
@@ -14,7 +15,7 @@
 					<div class="tileContainer">
 
 						<div class="tile">
-						
+
 							<h2>Sent a new profile picture</h2>
 
 							<c:if test="${not empty sessionUser.pictureName}">
@@ -33,12 +34,12 @@
 								<p>
 									<input type="file" name="userPicture" />
 								</p>
-								<p>
-									Submit without file to return back to the default picture.
-								</p>
-								<c:set var="currentFormProblems"
-									value="${ userPictureAlterationFormProblems }" scope="request" />
-								<%@ include file="/WEB-INF/Form/FormProblems.jsp"%>
+								<p>Submit without file to return back to the default
+									picture.</p>
+								<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+									<jsp:param name="formProblems"
+										value="userPictureAlterationFormProblems" />
+								</jsp:include>
 								<div>
 									<input type="submit" value="Submit" />
 								</div>
@@ -54,22 +55,22 @@
 									value="userPasswordAlteration" />
 
 								<p>
-									<label for="oldPassowrd">Old Password : </label>
-									<input type="password" name="oldPassowrd" id="oldPassowrd" />
+									<label for="oldPassowrd">Old Password : </label> <input
+										type="password" name="oldPassowrd" id="oldPassowrd" />
 								</p>
 								<p>
-									<label for="newPassword">New password : </label>
-									<input type="password" name="newPassword" id="newPassword" />
+									<label for="newPassword">New password : </label> <input
+										type="password" name="newPassword" id="newPassword" />
 								</p>
 								<p>
 									<label for="newPasswordConfirmation">Confirm new
-										password : </label>
-									<input type="password" name="newPasswordConfirmation"
-										id="newPasswordConfirmation" />
+										password : </label> <input type="password"
+										name="newPasswordConfirmation" id="newPasswordConfirmation" />
 								</p>
-								<c:set var="currentFormProblems"
-									value="${ userPasswordAlterationFormProblems }" scope="request" />
-								<%@ include file="/WEB-INF/Form/FormProblems.jsp"%>
+								<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+									<jsp:param name="formProblems"
+										value="userPasswordAlterationFormProblems" />
+								</jsp:include>
 								<div>
 									<input type="submit" value="Change" />
 								</div>

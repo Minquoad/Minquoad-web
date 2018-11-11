@@ -42,7 +42,7 @@ public class LogIn extends ImprovedHttpServlet {
 
 			if (users.size() == 1 && users.get(0).isPassword(password)) {
 				this.setSessionUser(request, users.get(0));
-				
+
 				String lastRefusedLoggedUserServletPath = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedLoggedUserRequestUriKey);
 				if (lastRefusedLoggedUserServletPath != null) {
 					request.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);

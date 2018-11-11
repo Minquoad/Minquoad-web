@@ -4,8 +4,9 @@
 <%@ include file="/WEB-INF/MainHeadContent.jsp"%>
 </head>
 <body>
-	<c:set var="pageTitle" value="Log In" scope="request" />
-	<%@ include file="/WEB-INF/Header.jsp"%>
+	<jsp:include page="/WEB-INF/Header.jsp">
+		<jsp:param name="pageTitle" value="Log In" />
+	</jsp:include>
 
 	<div id="mainContainer">
 		<div class="scrollableContainer">
@@ -13,19 +14,19 @@
 				<div class="totallyCenteredContainer">
 					<form method="post" action="LogIn" accept-charset="UTF-8">
 						<p>
-							<label for="nickname">Nickname : </label>
-							<input type="text" name="nickname" id="nickname"
+							<label for="nickname">Nickname : </label> <input type="text"
+								name="nickname" id="nickname"
 								<c:if test="${not empty prefilledNickname}">
 								value="<c:out value="${ prefilledNickname }" />"
 								</c:if> />
 						</p>
 						<p>
-							<label for="password">Password : </label>
-							<input type="password" name="password" id="password" />
+							<label for="password">Password : </label> <input type="password"
+								name="password" id="password" />
 						</p>
-						<c:set var="currentFormProblems"
-							value="${ formProblems }" scope="request" />
-						<%@ include file="/WEB-INF/Form/FormProblems.jsp"%>
+						<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+							<jsp:param name="formProblems" value="formProblems" />
+						</jsp:include>
 						<div>
 							<input type="submit" value="Log in" />
 						</div>

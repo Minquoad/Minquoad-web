@@ -60,6 +60,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 				getDaoFactory().getUserDao().update(user);
 
+				doGet(request, response);
 			}
 
 			if (formId.equals("userPasswordAlteration")) {
@@ -92,11 +93,8 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 					doGet(request, response);
 				}
-
 			}
 		}
-
-		doGet(request, response);
 	}
 
 }

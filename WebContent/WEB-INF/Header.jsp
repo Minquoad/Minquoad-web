@@ -12,7 +12,7 @@
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div id="pageTitle">
 					<a href="">
-						<c:out value="${ pageTitle }" />
+						<c:out value="${ param.pageTitle }" />
 					</a>
 				</div>
 			</div>

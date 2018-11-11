@@ -4,9 +4,10 @@
 <%@ include file="/WEB-INF/MainHeadContent.jsp"%>
 </head>
 <body>
-	<c:set var="pageTitle" value="Test" scope="request" />
-	<%@ include file="/WEB-INF/Header.jsp"%>
-	
+	<jsp:include page="/WEB-INF/Header.jsp">
+		<jsp:param name="pageTitle" value="Test" />
+	</jsp:include>
+
 	<div id="mainContainer">
 		<div class="scrollableContainer">
 			<div class="padded">
