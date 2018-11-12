@@ -22,7 +22,7 @@ public class SignUp extends ImprovedHttpServlet {
 			response.sendRedirect(request.getContextPath() + "/");
 		} else {
 			request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
-			this.getServletContext().getRequestDispatcher("/WEB-INF/SignUp.jsp").forward(request, response);
+			this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/SignUp.jsp").forward(request, response);
 		}
 	}
 

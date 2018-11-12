@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/MainHeadContent.jsp"%>
+<%@ include file="/WEB-INF/Includables/MainHeadContent.jsp"%>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/Header.jsp">
+	<jsp:include page="/WEB-INF/Includables/Header.jsp">
 		<jsp:param name="pageTitle" value="Account management" />
 	</jsp:include>
 
@@ -36,7 +36,7 @@
 								</p>
 								<p>Submit without file to return back to the default
 									picture.</p>
-								<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+								<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
 									<jsp:param name="formProblems"
 										value="userPictureAlterationFormProblems" />
 								</jsp:include>
@@ -67,7 +67,7 @@
 										password : </label> <input type="password"
 										name="newPasswordConfirmation" id="newPasswordConfirmation" />
 								</p>
-								<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+								<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
 									<jsp:param name="formProblems"
 										value="userPasswordAlterationFormProblems" />
 								</jsp:include>
@@ -83,5 +83,6 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/Footer.jsp"%>
+	<%@ include file="/WEB-INF/Includables/Footer.jsp"%>
 </body>
+</html>

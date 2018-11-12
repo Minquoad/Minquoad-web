@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/MainHeadContent.jsp"%>
+<%@ include file="/WEB-INF/Includables/MainHeadContent.jsp"%>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/Header.jsp">
+	<jsp:include page="/WEB-INF/Includables/Header.jsp">
 		<jsp:param name="pageTitle" value="Sign up" />
 	</jsp:include>
 
@@ -30,7 +30,7 @@
 								type="password" name="passwordConfirmation"
 								id="passwordConfirmation" />
 						</p>
-						<jsp:include page="/WEB-INF/Form/FormProblems.jsp">
+						<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
 							<jsp:param name="formProblems" value="formProblems" />
 						</jsp:include>
 						<div>
@@ -45,5 +45,6 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/Footer.jsp"%>
+	<%@ include file="/WEB-INF/Includables/Footer.jsp"%>
 </body>
+</html>

@@ -23,7 +23,7 @@
 		<jsp-property-group>
 			<url-pattern>*.jsp</url-pattern>
 			<page-encoding>UTF-8</page-encoding>
-			<include-prelude>/WEB-INF/Prelude.jsp</include-prelude>
+			<include-prelude>/WEB-INF/Includables/Prelude.jsp</include-prelude>
 		</jsp-property-group>
 	</jsp-config>
 </web-app>

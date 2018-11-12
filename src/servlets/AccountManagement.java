@@ -30,7 +30,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/AccountManagement.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/AccountManagement.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

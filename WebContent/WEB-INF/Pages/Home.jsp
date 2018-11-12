@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/MainHeadContent.jsp"%>
+<%@ include file="/WEB-INF/Includables/MainHeadContent.jsp"%>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/Header.jsp">
+	<jsp:include page="/WEB-INF/Includables/Header.jsp">
 		<jsp:param name="pageTitle" value="" />
 	</jsp:include>
 
@@ -44,5 +44,6 @@
 				varius purus. Curabitur eu amet.</div>
 		</div>
 	</div>
-	<%@ include file="/WEB-INF/Footer.jsp"%>
+	<%@ include file="/WEB-INF/Includables/Footer.jsp"%>
 </body>
+</html>

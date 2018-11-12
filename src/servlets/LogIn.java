@@ -20,7 +20,7 @@ public class LogIn extends ImprovedHttpServlet {
 		if (this.getSessionUser(request) != null) {
 			response.sendRedirect(request.getContextPath() + "/");
 		} else {
-			this.getServletContext().getRequestDispatcher("/WEB-INF/LogIn.jsp").forward(request, response);
+			this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/LogIn.jsp").forward(request, response);
 		}
 	}
 

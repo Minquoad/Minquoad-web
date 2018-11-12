@@ -24,26 +24,26 @@ public class Test extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		/*
 		System.out.println("requestURL = " + request.getRequestURL().toString());
 		System.out.println("requestURI = " + request.getRequestURI());
 		System.out.println("servletPath = " + request.getServletPath());
 		System.out.println("contextPath = " + request.getContextPath());
-		
+		*/
 		ThingDao thingDao = getDaoFactory().getThingDao();
 
 		String descriptionMemberName = "description";
 
 		List<Thing> things;
 
-		things = thingDao.getAllMatching("ttt", descriptionMemberName);
+		things = thingDao.getAllMatching("description \"\"", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setDescription("");
 			thingDao.update(thing);
 		}
 
-		things = thingDao.getAllMatching("null", descriptionMemberName);
+		things = thingDao.getAllMatching("description null", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setDescription(null);
@@ -53,26 +53,26 @@ public class Test extends ImprovedHttpServlet {
 		things = thingDao.getAllMatching("à admin", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory().getUserDao().getById(1));
+			thing.setOwner(getDaoFactory().getUserDao().getById(0));
 			thingDao.update(thing);
 		}
 
-		things = thingDao.getAllMatching("à persone", descriptionMemberName);
+		things = thingDao.getAllMatching("à null", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setOwner(null);
 			thingDao.update(thing);
 		}
 
-		things = thingDao.getAllMatching("à zero", descriptionMemberName);
+		things = thingDao.getAllMatching("à Dauchi", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory().getUserDao().getById(0));
+			thing.setOwner(getDaoFactory().getUserDao().getById(1));
 			thingDao.update(thing);
 		}
 
 		request.setAttribute("things", thingDao.getAll());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Test.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/Test.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
