@@ -33,7 +33,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		daoFactory = new DaoFactoryImpl();
 
 		req.setCharacterEncoding("UTF-8");
-		resp.setCharacterEncoding("UTF-8");
 
 		User sessionUser = this.getSessionUser(req);
 		if (sessionUser != null) {
