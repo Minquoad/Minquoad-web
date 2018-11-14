@@ -1,0 +1,68 @@
+.tileContainer {
+	font-size: 0;
+	text-align: center;
+}
+
+.tile {
+	vertical-align: top;
+	display: inline-block;
+	padding: 20px;
+	text-align: left;
+	font-size: var(--MAIN_FONT_SIZE);
+}
+
+.borderedTile {
+	vertical-align: top;
+	display: inline-block;
+	text-align: left;
+	font-size: var(--MAIN_FONT_SIZE);
+	background: var(--BACKGROUND_COLOR);
+}
+
+.topTileBorderAdder {
+	vertical-align: top;
+	display: inline-block;
+	padding: 2px 0 0 0;
+	background-image: linear-gradient(
+		to right,
+		var(--BORDER_COLOR),
+		var(--BACKGROUND_COLOR),
+		var(--BACKGROUND_COLOR)
+	);
+}
+
+.rightTileBorderAdder {
+	vertical-align: top;
+	display: inline-block;
+	padding: 0 2px 0 0;
+	background-image: linear-gradient(
+		to bottom,
+		var(--BACKGROUND_COLOR),
+		var(--BACKGROUND_COLOR),
+		var(--BORDER_COLOR)
+	);
+}
+
+.bottomTileBorderAdder {
+	vertical-align: top;
+	display: inline-block;
+	padding: 0 0 2px 0;
+	background-image: linear-gradient(
+		to right,
+		var(--BACKGROUND_COLOR),
+		var(--BACKGROUND_COLOR),
+		var(--BORDER_COLOR)
+	);
+}
+
+.leftTileBorderAdder {
+	vertical-align: top;
+	display: inline-block;
+	padding: 0 0 0 2px;
+	background-image: linear-gradient(
+		to bottom,
+		var(--BORDER_COLOR),
+		var(--BACKGROUND_COLOR),
+		var(--BACKGROUND_COLOR)
+	);
+}

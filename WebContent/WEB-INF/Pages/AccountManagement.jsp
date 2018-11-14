@@ -9,76 +9,70 @@
 	</jsp:include>
 
 	<div id="mainContainer">
-		<div class="scrollableContainer">
-			<div class="centererContainer">
-				<div class="totallyCenteredContainer">
-					<div class="tileContainer">
+		<div class="scrollableContainer centererContainer">
+			<div class="totallyCenteredContainer tileContainer">
 
-						<div class="tile">
+				<div class="borderedTile padded">
 
-							<h2>Sent a new profile picture</h2>
+					<h2>Sent a new profile picture</h2>
 
-							<c:if test="${not empty sessionUser.pictureName}">
+					<c:if test="${not empty sessionUser.pictureName}">
 
-								<p>Actual profile picture:</p>
-								<div class="croppedResizedPicture"
-									style="background-image: url('${pageContext.request.contextPath}/img/Community/${ sessionUser.pictureName}')">
-								</div>
-							</c:if>
-
-							<form method="post" action="AccountManagement"
-								accept-charset="UTF-8" enctype="multipart/form-data">
-
-								<input type="hidden" name="formId" value="userPictureAlteration" />
-
-								<p>
-									<input type="file" name="userPicture" />
-								</p>
-								<p>Submit without file to return back to the default
-									picture.</p>
-								<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
-									<jsp:param name="formProblems"
-										value="userPictureAlterationFormProblems" />
-								</jsp:include>
-								<div>
-									<input type="submit" value="Submit" />
-								</div>
-							</form>
+						<p>Actual profile picture:</p>
+						<div class="croppedResizedPicture"
+							style="background-image: url('${pageContext.request.contextPath}/img/Community/${ sessionUser.pictureName}')">
 						</div>
+					</c:if>
 
-						<div class="tile">
-							<h2>Change password</h2>
-							<form method="post" action="AccountManagement"
-								accept-charset="UTF-8">
+					<form method="post" action="AccountManagement"
+						accept-charset="UTF-8" enctype="multipart/form-data">
 
-								<input type="hidden" name="formId"
-									value="userPasswordAlteration" />
+						<input type="hidden" name="formId" value="userPictureAlteration" />
 
-								<p>
-									<label for="oldPassowrd">Old Password : </label> <input
-										type="password" name="oldPassowrd" id="oldPassowrd" />
-								</p>
-								<p>
-									<label for="newPassword">New password : </label> <input
-										type="password" name="newPassword" id="newPassword" />
-								</p>
-								<p>
-									<label for="newPasswordConfirmation">Confirm new
-										password : </label> <input type="password"
-										name="newPasswordConfirmation" id="newPasswordConfirmation" />
-								</p>
-								<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
-									<jsp:param name="formProblems"
-										value="userPasswordAlterationFormProblems" />
-								</jsp:include>
-								<div>
-									<input type="submit" value="Change" />
-								</div>
-							</form>
+						<p>
+							<input type="file" name="userPicture" />
+						</p>
+						<p>Submit without file to return back to the default picture.</p>
+						<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
+							<jsp:param name="formProblems"
+								value="userPictureAlterationFormProblems" />
+						</jsp:include>
+						<div>
+							<input type="submit" value="Submit" />
 						</div>
-
-					</div>
+					</form>
 				</div>
+
+				<div class="borderedTile padded">
+					<h2>Change password</h2>
+					<form method="post" action="AccountManagement"
+						accept-charset="UTF-8">
+
+						<input type="hidden" name="formId" value="userPasswordAlteration" />
+
+						<p>
+							<label for="oldPassowrd">Old Password : </label> <input
+								type="password" name="oldPassowrd" id="oldPassowrd" />
+						</p>
+						<p>
+							<label for="newPassword">New password : </label> <input
+								type="password" name="newPassword" id="newPassword" />
+						</p>
+						<p>
+							<label for="newPasswordConfirmation">Confirm new password
+								: </label> <input type="password" name="newPasswordConfirmation"
+								id="newPasswordConfirmation" />
+						</p>
+						<jsp:include page="/WEB-INF/Includables/Form/FormProblems.jsp">
+							<jsp:param name="formProblems"
+								value="userPasswordAlterationFormProblems" />
+						</jsp:include>
+						<div>
+							<input type="submit" value="Change" />
+						</div>
+					</form>
+				</div>
+
 			</div>
 		</div>
 	</div>

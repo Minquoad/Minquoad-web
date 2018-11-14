@@ -9,50 +9,62 @@
 	</jsp:include>
 
 	<div id="mainContainer">
-		<div class="scrollableContainer">
-			<div class="padded">
-				<form method="post" action="Test" accept-charset="UTF-8"
-					enctype="multipart/form-data">
+		<div class="scrollableContainer centererContainer">
+			<div class="totallyCenteredContainer tileContainer">
 
-					<h2>Uploader un fichier :</h2>
+				<div class="borderedTile padded">
 
-					<p>
-						<input type="file" name="file" id="file" />
-					</p>
+					<form method="post" action="Test" accept-charset="UTF-8"
+						enctype="multipart/form-data">
 
-					<div>
-						<input type="submit" value="Ajouter" />
-					</div>
-				</form>
+						<h2>Uploader un fichier :</h2>
 
-				<form method="post" action="Test" accept-charset="UTF-8"
-					enctype="multipart/form-data">
+						<p>
+							<input type="file" name="file" id="file" />
+						</p>
 
-					<h2>Modifier la table :</h2>
+						<div>
+							<input type="submit" value="Ajouter" />
+						</div>
+					</form>
 
-					<p>
-						<label for="description">Id (non-existing id for a new) :
-						</label> <input type="number" name="id" id="id" value="0" />
-					</p>
-					<p>
-						<label for="description">Description : </label> <input type="text"
-							name="description" id="description" />
-					</p>
-					<div>
-						<input type="submit" value="Ajouter" />
-					</div>
-				</form>
+				</div>
+				<div class="borderedTile padded">
 
-				<h1>Table :</h1>
-				<ul>
-					<c:forEach items="${ things }" var="thing" varStatus="status">
-						<li><c:out value="${ thing.id }" /> : <c:out
-								value="${ thing.description }" /> <c:if
-								test="${not empty thing.owner}"> (<c:out
-									value="${ thing.owner.nickname }" />)
+					<form method="post" action="Test" accept-charset="UTF-8"
+						enctype="multipart/form-data">
+
+						<h2>Modifier la table :</h2>
+
+						<p>
+							<label for="description">Id (non-existing id for a new) :
+							</label> <input type="number" name="id" id="id" value="0" />
+						</p>
+						<p>
+							<label for="description">Description : </label> <input
+								type="text" name="description" id="description" />
+						</p>
+						<div>
+							<input type="submit" value="Ajouter" />
+						</div>
+					</form>
+
+				</div>
+				<div class="borderedTile padded">
+
+					<h2>Table :</h2>
+					<ul>
+						<c:forEach items="${ things }" var="thing" varStatus="status">
+							<li><c:out value="${ thing.id }" /> : <c:out
+									value="${ thing.description }" /> <c:if
+									test="${not empty thing.owner}"> (<c:out
+										value="${ thing.owner.nickname }" />)
 								</c:if></li>
-					</c:forEach>
-				</ul>
+						</c:forEach>
+					</ul>
+
+				</div>
+
 			</div>
 		</div>
 	</div>
