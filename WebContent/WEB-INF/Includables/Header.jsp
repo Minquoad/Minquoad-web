@@ -24,7 +24,7 @@
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div class="horizontallyPadded">
 					<a href="Test" class="headerItem">Test</a>
-					<a href="Home" class="headerItem">👥 Community</a>
+					<a href="Community" class="headerItem">👥 Community</a>
 					<c:if test="${not empty sessionUser}">
 						<div class="headerItem dynamicMenuTrigger">
 							▼
