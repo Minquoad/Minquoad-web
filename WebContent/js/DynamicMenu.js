@@ -5,7 +5,7 @@ $(document).ready(function() {
 	$(document).click(function(event) {
 		
 		var clickedMenuTriggerIfExists = $(event.target).closest(".dynamicMenuTrigger");
-		
+
 		dynamicMenuTriggers.each(function() {
 			if ($(this).is(clickedMenuTriggerIfExists)) {
 

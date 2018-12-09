@@ -22,10 +22,10 @@
 .topTileBorderAdder {
 	vertical-align: top;
 	display: inline-block;
-	padding: 2px 0 0 0;
+	padding: 2px 0px 0px 0px;
 	background-image: linear-gradient(
 		to right,
-		var(--BORDER_COLOR),
+		rgb(37, 37, 37),
 		var(--BACKGROUND_COLOR),
 		var(--BACKGROUND_COLOR)
 	);
@@ -34,34 +34,34 @@
 .rightTileBorderAdder {
 	vertical-align: top;
 	display: inline-block;
-	padding: 0 2px 0 0;
+	padding: 0px 2px 0px 0px;
 	background-image: linear-gradient(
 		to bottom,
 		var(--BACKGROUND_COLOR),
 		var(--BACKGROUND_COLOR),
-		var(--BORDER_COLOR)
+		rgb(37, 37, 37)
 	);
 }
 
 .bottomTileBorderAdder {
 	vertical-align: top;
 	display: inline-block;
-	padding: 0 0 2px 0;
+	padding: 0px 0px 2px 0px;
 	background-image: linear-gradient(
 		to right,
 		var(--BACKGROUND_COLOR),
 		var(--BACKGROUND_COLOR),
-		var(--BORDER_COLOR)
+		rgb(37, 37, 37)
 	);
 }
 
 .leftTileBorderAdder {
 	vertical-align: top;
 	display: inline-block;
-	padding: 0 0 0 2px;
+	padding: 0px 0px 0px 2px;
 	background-image: linear-gradient(
 		to bottom,
-		var(--BORDER_COLOR),
+		rgb(37, 37, 37),
 		var(--BACKGROUND_COLOR),
 		var(--BACKGROUND_COLOR)
 	);
