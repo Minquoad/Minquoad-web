@@ -30,9 +30,9 @@
 							▼
 							<c:out value="${ sessionUser.nickname }" />
 							<div class="dynamicMenu">
-								<a class="dynamicMenuItem" href="AccountManagement"> 👤
+								<a class="dynamicMenuItem" href="AccountManagement">👤
 									Account management </a>
-								<a class="dynamicMenuItem" href="LogOut"> ✖ Log out </a>
+								<a class="dynamicMenuItem" href="LogOut">✖ Log out</a>
 							</div>
 						</div>
 					</c:if>
