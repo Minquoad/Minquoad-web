@@ -8,64 +8,110 @@ import java.sql.Types;
 import frameworks.daos.Entity;
 import frameworks.daos.EntityCriterion;
 import frameworks.daos.EntityModification;
+import frameworks.daos.PreparedStatementNonNullValueSetter;
+import frameworks.daos.ResultSetNonNullValueGetter;
 
-public abstract class EntityMember<EntitySubclass extends Entity, MemberType> {
+public class EntityMember<EntitySubclass extends Entity, MemberType> {
 
-	public abstract String getName();
+	private String name;
 
-	public void setValue(EntitySubclass entity, ResultSet resultSet) throws SQLException {
+	private EntityMemberGetter<EntitySubclass, MemberType> valueGetter;
+	private EntityMemberSetter<EntitySubclass, MemberType> valueSetter;
 
-		MemberType value = getNonNullValue(resultSet);
+	private ResultSetNonNullValueGetter<MemberType> resultSetNonNullValueGetter;
+	private PreparedStatementNonNullValueSetter<MemberType> preparedStatementNonNullValueSetter;
+
+	public EntityMember(String name,
+			EntityMemberGetter<EntitySubclass, MemberType> valueGetter,
+			EntityMemberSetter<EntitySubclass, MemberType> valueSetter,
+			ResultSetNonNullValueGetter<MemberType> resultSetNonNullValueGetter,
+			PreparedStatementNonNullValueSetter<MemberType> preparedStatementNonNullValueSetter) {
+		this.name = name;
+		this.valueGetter = valueGetter;
+		this.valueSetter = valueSetter;
+		this.resultSetNonNullValueGetter = resultSetNonNullValueGetter;
+		this.preparedStatementNonNullValueSetter = preparedStatementNonNullValueSetter;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setValueOfResultSetInEntity(EntitySubclass entity, ResultSet resultSet) throws SQLException {
+
+		MemberType value = this.getResultSetNonNullValueGetter().getNonNullValue(
+				resultSet,
+				this.getName());
 		if (resultSet.wasNull()) {
 			value = null;
 		}
 		this.setValue(entity, value);
 	}
 
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, EntitySubclass entity)
+	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntitySubclass entity)
 			throws SQLException {
 
-		setValue(preparedStatement, parameterIndex, getValue(entity));
+		setValueInPreparedStatement(preparedStatement, parameterIndex, getValue(entity));
 	}
 
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, MemberType value)
+	public void setValueInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, MemberType value)
 			throws SQLException {
 
 		if (value == null) {
 			preparedStatement.setNull(parameterIndex, Types.NULL);
 		} else {
-			setNonNullValue(preparedStatement, parameterIndex, value);
+			this.getPreparedStatementNonNullValueSetter().setNonNullValue(
+					preparedStatement,
+					parameterIndex,
+					value);
 		}
 	}
 
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion)
+	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion)
 			throws SQLException {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) criterion.getValue();
 
-		setValue(preparedStatement, parameterIndex, value);
+		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
 	}
 
-	public void setValue(PreparedStatement preparedStatement, int parameterIndex,
+	public MemberType getValue(EntitySubclass entity) {
+		return this.getValueGetter().getValue(entity);
+	}
+
+	public void setValue(EntitySubclass entity, MemberType value) {
+		this.getValueSetter().setValue(entity, value);
+	}
+
+	protected EntityMemberGetter<EntitySubclass, MemberType> getValueGetter() {
+		return this.valueGetter;
+	}
+
+	protected EntityMemberSetter<EntitySubclass, MemberType> getValueSetter() {
+		return this.valueSetter;
+	}
+
+	protected ResultSetNonNullValueGetter<MemberType> getResultSetNonNullValueGetter() {
+		return this.resultSetNonNullValueGetter;
+	}
+
+	protected PreparedStatementNonNullValueSetter<MemberType> getPreparedStatementNonNullValueSetter() {
+		return this.preparedStatementNonNullValueSetter;
+	}
+
+	// not used yet
+	
+	public void setValueOfModificationInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex,
 			EntityModification modification) throws SQLException {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) modification.getValue();
 
-		setValue(preparedStatement, parameterIndex, value);
+		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
 	}
 
-	public abstract void setNonNullValue(PreparedStatement preparedStatement, int parameterIndex, MemberType value)
-			throws SQLException;
-
-	public abstract MemberType getValue(EntitySubclass entity);
-
-	public abstract void setValue(EntitySubclass entity, MemberType value);
-
-	public abstract MemberType getNonNullValue(ResultSet resultSet) throws SQLException;
-
-	public void setValue(EntitySubclass entity, EntityModification modification) {
+	public void setValueOfModificationInEntity(EntitySubclass entity, EntityModification modification) {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) modification.getValue();

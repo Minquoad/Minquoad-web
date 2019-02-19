@@ -1,0 +1,38 @@
+html {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+
+	background: var(--BACKGROUND_COLOR);
+	color: var(--FOREGROUND_COLOR);
+
+	font-size: var(--MAIN_FONT_SIZE);
+	font-family: var(--MAIN_FONT_FAMILY);
+}
+
+#mainContainer {
+	height: calc(100% - 100px);
+}
+
+a {
+	color: inherit;
+}
+
+a[href="home"] {
+	text-decoration: inherit;
+}
+
+p:first-child {
+	margin-top: 0px;
+}
+
+h2:first-child {
+	margin-top: 0;
+}
+
+ul {
+	margin: 0;
+}

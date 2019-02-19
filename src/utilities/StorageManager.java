@@ -4,17 +4,21 @@ import java.io.File;
 
 public abstract class StorageManager {
 
-	public static final String tmpFilesPath = Deployment.privateStorage + "TmpFiles/";
-	public static final String logsPath = Deployment.privateStorage + "Logs/";
-	public static final String uploadedPath = tmpFilesPath + "Uploaded/";
+	public static final String internalPath = Deployment.storagePath + "internal/";
 
-	public static final String communityPublicImgPath = Deployment.publicStorage + "img/Community/";
+	public static final String tmpPath = internalPath + "tmp/";
+	public static final String logPath = internalPath + "log/";
+	public static final String uploadedPath = tmpPath + "uploaded/";
 
-	static {
-		initFolderIfNotExists(tmpFilesPath);
-		initFolderIfNotExists(logsPath);
+	public static final String communityPath = Deployment.storagePath + "community/";
+
+	public static void initTree() {
+		initFolderIfNotExists(Deployment.storagePath);
+		initFolderIfNotExists(internalPath);
+		initFolderIfNotExists(tmpPath);
+		initFolderIfNotExists(logPath);
 		initFolderIfNotExists(uploadedPath);
-		initFolderIfNotExists(communityPublicImgPath);
+		initFolderIfNotExists(communityPath);
 	}
 
 	public static boolean initFolderIfNotExists(String filePath) {

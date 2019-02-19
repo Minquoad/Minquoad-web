@@ -16,14 +16,15 @@ import daos.interfaces.UserDao;
 @WebServlet("/SignUp")
 public class SignUp extends ImprovedHttpServlet {
 
+	@Override
+	public boolean isAccessibleForUser(User user) {
+		return user == null;
+	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (this.getSessionUser(request) != null) {
-			response.sendRedirect(request.getContextPath() + "/");
-		} else {
-			request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
-			this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/SignUp.jsp").forward(request, response);
-		}
+		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/page/signUp.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -45,7 +46,7 @@ public class SignUp extends ImprovedHttpServlet {
 
 			formProblems.addAll(User.getNicknameProblems(nickname));
 			formProblems.addAll(User.getPasswordProblems(password));
-			
+
 			if (!password.equals(passwordConfirmation)) {
 				formProblems.add("The password confirmation is different to the password.");
 			}

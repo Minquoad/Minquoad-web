@@ -12,11 +12,7 @@ public class Community extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", this.getDaoFactory().getUserDao().getAll());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/Community.jsp").forward(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.doGet(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/page/community.jsp").forward(request, response);
 	}
 
 }

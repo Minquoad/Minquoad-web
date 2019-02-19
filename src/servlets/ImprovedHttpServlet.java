@@ -16,39 +16,67 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	protected final static String sessionUserIdKey = "sessionUserId";
 	public final static String lastRefusedLoggedUserRequestUriKey = "lastRefusedLoggedUserRequestUri";
-
-	private DaoFactory daoFactory;
+	public final static String sessionAdministerIdKey = "sessionAdministerId";
+	
+	private DaoFactory daoFactory = new DaoFactoryImpl();
 
 	public DaoFactory getDaoFactory() {
 		return daoFactory;
 	}
 
-	public boolean servesOnlyLoggedUsers() {
-		return false;
+	private void resetDaoFactory() {
+		daoFactory = new DaoFactoryImpl();
+	}
+
+	public boolean isAccessibleForUser(User user) {
+		return true;
 	}
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		daoFactory = new DaoFactoryImpl();
+		resetDaoFactory();
 
 		req.setCharacterEncoding("UTF-8");
 
 		User sessionUser = this.getSessionUser(req);
+		
 		if (sessionUser != null) {
-			sessionUser.setLastActivityDate(new Date());
-			getDaoFactory().getUserDao().update(sessionUser);
-			req.setAttribute("sessionUser", getSessionUser(req));
-		} else {
-			if (this.servesOnlyLoggedUsers()) {
+
+			req.setAttribute("sessionUser", sessionUser);
+
+			User sessionAdminister = this.getSessionAdminister(req);
+
+			if (sessionAdminister == null) {
+				sessionUser.setLastActivityDate(new Date());
+				getDaoFactory().getUserDao().update(sessionUser);
+				
+				if (sessionUser.isBlocked() && !req.getServletPath().equals("/AccountBlocked")) {
+					resp.sendRedirect(req.getContextPath() + "/AccountBlocked");
+					return;
+				}
+
+			} else {
+				sessionAdminister.setLastActivityDate(new Date());
+				getDaoFactory().getUserDao().update(sessionUser);
+
+				req.setAttribute("sessionAdminister", sessionAdminister);
+			}
+		}
+
+		if (!this.isAccessibleForUser(sessionUser)) {
+			if (sessionUser == null) {
 				req.getSession().setAttribute(lastRefusedLoggedUserRequestUriKey, req.getRequestURI());
 				resp.sendRedirect(req.getContextPath() + "/LogIn");
 				return;
 			} else {
-				if (!req.getServletPath().equals("/LogIn")) {
-					req.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
-				}
+				resp.sendRedirect(req.getContextPath() + "/");
+				return;
 			}
+		}
+
+		if (!req.getServletPath().equals("/LogIn") ) {
+			req.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
 		}
 
 		super.service(req, resp);
@@ -59,11 +87,19 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		if (sessionUserId == null) {
 			return null;
 		}
-		return getDaoFactory().getUserDao().getById((Integer) req.getSession().getAttribute(sessionUserIdKey));
+		return getDaoFactory().getUserDao().getById(sessionUserId);
 	}
 
 	public void setSessionUser(HttpServletRequest req, User user) {
 		req.getSession().setAttribute(sessionUserIdKey, user.getId());
+	}
+
+	public User getSessionAdminister(HttpServletRequest req) {
+		Integer sessionAdministerId = (Integer) req.getSession().getAttribute(sessionAdministerIdKey);
+		if (sessionAdministerId == null) {
+			return null;
+		}
+		return getDaoFactory().getUserDao().getById(sessionAdministerId);
 	}
 
 }

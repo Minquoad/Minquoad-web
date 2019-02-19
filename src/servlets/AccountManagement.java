@@ -20,17 +20,17 @@ import utilities.http.PartTool;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
 		maxFileSize = 1024 * 1024 * 10, // 10 MB
 		maxRequestSize = 1024 * 1024 * 15, // 15 MB
-		location = "C:/Users/Minquoad/Dev/Java/Projects/Repositories/GitHub/Minquoad-web/Storage/TmpFiles/Uploaded/")
+		location = "C:/minquoad-web-storage/internal/tmp/uploaded/")
 public class AccountManagement extends ImprovedHttpServlet {
 
 	@Override
-	public boolean servesOnlyLoggedUsers() {
-		return true;
+	public boolean isAccessibleForUser(User user) {
+		return user != null;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/AccountManagement.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/page/accountManagement.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,12 +48,12 @@ public class AccountManagement extends ImprovedHttpServlet {
 				User user = getSessionUser(request);
 
 				if (user.getPictureName() != null) {
-					new File(StorageManager.communityPublicImgPath + user.getPictureName()).delete();
+					new File(StorageManager.communityPath + user.getPictureName()).delete();
 				}
 
 				Part part = request.getPart("userPicture");
 				if (PartTool.hasFile(part)) {
-					String newFileName = PartTool.saveInNewFile(part, StorageManager.communityPublicImgPath);
+					String newFileName = PartTool.saveInNewFile(part, StorageManager.communityPath);
 					user.setPictureName(newFileName);
 				} else {
 					user.setPictureName(null);

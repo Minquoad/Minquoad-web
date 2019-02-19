@@ -8,10 +8,8 @@ import Entities.Thing;
 import Entities.User;
 import daos.Database;
 import daos.interfaces.ThingDao;
-import frameworks.daos.EntityDao;
 import frameworks.daos.EntityDaoImpl;
 import frameworks.daos.entityMembers.ForeingKeyEntityMember;
-import frameworks.daos.entityMembers.StringEntityMember;
 
 public class ThingDaoImpl extends EntityDaoImpl<Thing> implements ThingDao {
 
@@ -29,42 +27,20 @@ public class ThingDaoImpl extends EntityDaoImpl<Thing> implements ThingDao {
 		return "Thing";
 	}
 
-	public List<Thing> getUserThings(User user) {
-		return this.getAllMatching(user, "owner");
-	}
-
 	@Override
 	public void initEntityMembers() {
-		this.addEntityMember(new StringEntityMember<Thing>() {
-			public String getName() {
-				return "description";
-			}
 
-			public void setValue(Thing entity, String string) {
-				entity.setDescription(string);
-			}
+		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
 
-			public String getValue(Thing entity) {
-				return entity.getDescription();
-			}
-		});
-		this.addEntityMember(new ForeingKeyEntityMember<Thing, User>() {
-			public EntityDao<User> getReferencedEntityDao() {
-				return daoFactory.getUserDao();
-			}
+		this.addEntityMember(new ForeingKeyEntityMember<Thing, User>(
+				"owner",
+				Thing::getOwner,
+				Thing::setOwner,
+				daoFactory.getUserDao()));
+	}
 
-			public void setValue(Thing entity, User referencedEntity) {
-				entity.setOwner(referencedEntity);
-			}
-
-			public User getValue(Thing entity) {
-				return entity.getOwner();
-			}
-
-			public String getName() {
-				return "owner";
-			}
-		});
+	public List<Thing> getUserThings(User user) {
+		return this.getAllMatching(user, "owner");
 	}
 
 	@Override

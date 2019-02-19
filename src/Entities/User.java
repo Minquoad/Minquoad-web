@@ -16,6 +16,7 @@ public class User extends Entity {
 	private Date registrationDate;
 	private Date lastActivityDate;
 	private int adminLevel;
+	private Date unblockDate;
 
 	public static final int nicknameMaxlength = 25;
 
@@ -56,7 +57,23 @@ public class User extends Entity {
 	}
 
 	public void setAdminLevel(int adminLevel) {
-		this.adminLevel = adminLevel;
+		if (adminLevel < 0) {
+			new Exception("adminLevel must be >= 0").printStackTrace();
+		} else {
+			this.adminLevel = adminLevel;
+		}
+	}
+
+	public boolean isAdmin() {
+		return this.adminLevel != 0;
+	}
+
+	public boolean hasAdminLvl(int adminLevel) {
+		return this.adminLevel >= adminLevel;
+	}
+
+	public boolean canAdminister(User user) {
+		return hasAdminLvl(user.getAdminLevel() + 1);
 	}
 
 	public String getPictureName() {
@@ -198,6 +215,24 @@ public class User extends Entity {
 		}
 
 		return problems;
+	}
+
+	public Date getUnblockDate() {
+		return unblockDate;
+	}
+
+	public void setUnblockDate(Date unblockDate) {
+		this.unblockDate = unblockDate;
+	}
+
+	public boolean isBlocked() {
+		if (unblockDate == null) {
+			return false;
+		} else {
+			Date dayBeforeUnblockDate = new Date();
+			dayBeforeUnblockDate.setTime(unblockDate.getTime() - (1000l * 60l * 60l * 24l));
+			return new Date().after(dayBeforeUnblockDate);
+		}
 	}
 
 }

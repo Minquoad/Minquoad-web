@@ -4,6 +4,9 @@
   <session-config>
     <session-timeout>2880</session-timeout>
   </session-config>
+  <listener>
+    <listener-class>utilities.Deployment</listener-class>
+  </listener>
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>/css/*</url-pattern>
@@ -20,7 +23,7 @@
     <jsp-property-group>
       <url-pattern>*.jsp</url-pattern>
       <page-encoding>UTF-8</page-encoding>
-      <include-prelude>/WEB-INF/Includables/Prelude.jsp</include-prelude>
+      <include-prelude>/WEB-INF/includable/prelude.jsp</include-prelude>
     </jsp-property-group>
   </jsp-config>
 </web-app>

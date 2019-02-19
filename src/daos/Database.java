@@ -26,10 +26,10 @@ public abstract class Database {
 		try {
 			connections = new Connection[connectionsSize];
 			for (int i = 0; i < connections.length; i++) {
-				connections[i] = DriverManager.getConnection(Deployment.databaseUrl, Deployment.databaseUser,
+				connections[i] = DriverManager.getConnection(Deployment.databaseUrl + "/" + Deployment.databaseName, Deployment.databaseUser,
 						Deployment.databasePassword);
 			}
-			String message = connectionsSize + " connections to " + Deployment.databaseUrl + " has been created.";
+			String message = connectionsSize + " connections to " + Deployment.databaseUrl + "/" + Deployment.databaseName + " has been created.";
 			Logger.echoInfo(message);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -49,7 +49,7 @@ public abstract class Database {
 
 		} catch (SQLException e) {
 
-			connections[iterator] = DriverManager.getConnection(Deployment.databaseUrl, Deployment.databaseUser,
+			connections[iterator] = DriverManager.getConnection(Deployment.databaseUrl + "/" + Deployment.databaseName, Deployment.databaseUser,
 					Deployment.databasePassword);
 			String message = "A connection to " + Deployment.databaseUrl
 					+ " has been created to replace an invalid one.";

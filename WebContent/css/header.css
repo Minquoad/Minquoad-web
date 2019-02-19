@@ -1,0 +1,61 @@
+#header {
+	height: 50px;
+	background: var(--BANNER_BACKGROUND_COLOR);
+	overflow: visible;
+}
+
+#header {
+	font-size: 0;
+}
+
+#header>* {
+	font-size: var(--MAIN_FONT_SIZE);
+}
+
+#header a {
+	text-decoration: inherit;
+}
+
+#header>* {
+	display: inline-block;
+	height: 48px;
+	vertical-align: middle;
+}
+
+#pageTitleHeader {
+	text-align: left;
+	width: 313px;
+	font-size: 25px;
+}
+
+#pageTitle {
+	padding-left: 13px;
+	padding-right: 13px;
+}
+
+#siteNameHeader {
+	text-align: center;
+	color: var(--HIGHLIGHTING_COLOR);
+	font-weight: bold;
+	font-size: 25px;
+	width: 200px;
+}
+
+#rightHeader {
+	text-align: right;
+	width: calc(100% - 200px - 313px);
+}
+
+#header .headerItem {
+	padding: 10px;
+	display: inline-block;
+}
+
+#rightHeader .headerItem:not(:first-child) {
+	border-left: solid var(--BORDER_COLOR) 1px;
+}
+
+#rightHeader .dynamicMenu {
+	right: 0;
+	left: auto;
+}

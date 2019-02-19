@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding//WebContent/WEB-INF/Includables/Header.jsp=UTF-8
-encoding//WebContent/WEB-INF/Includables/MainHeadContent.jsp=UTF-8
-encoding//WebContent/WEB-INF/Pages/Home.jsp=UTF-8
-encoding//WebContent/WEB-INF/Pages/Test.jsp=UTF-8
+encoding//WebContent/WEB-INF/includable/header.jsp=UTF-8
+encoding//WebContent/WEB-INF/includable/mainHeadContent.jsp=UTF-8
+encoding//WebContent/WEB-INF/page/home.jsp=UTF-8
+encoding//WebContent/WEB-INF/page/test.jsp=UTF-8

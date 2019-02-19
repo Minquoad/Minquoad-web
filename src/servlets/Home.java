@@ -12,12 +12,7 @@ public class Home extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/Home.jsp").forward(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/page/home.jsp").forward(request, response);
 	}
 
 }

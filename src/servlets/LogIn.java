@@ -18,9 +18,15 @@ public class LogIn extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (this.getSessionUser(request) != null) {
-			response.sendRedirect(request.getContextPath() + "/");
+
+			String lastRefusedLoggedUserServletPath = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedLoggedUserRequestUriKey);
+			if (lastRefusedLoggedUserServletPath != null) {
+				response.sendRedirect(lastRefusedLoggedUserServletPath);
+			} else {
+				response.sendRedirect(request.getContextPath() + "/");
+			}
 		} else {
-			this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/LogIn.jsp").forward(request, response);
+			this.getServletContext().getRequestDispatcher("/WEB-INF/page/logIn.jsp").forward(request, response);
 		}
 	}
 
@@ -42,20 +48,11 @@ public class LogIn extends ImprovedHttpServlet {
 
 			if (users.size() == 1 && users.get(0).isPassword(password)) {
 				this.setSessionUser(request, users.get(0));
-
-				String lastRefusedLoggedUserServletPath = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedLoggedUserRequestUriKey);
-				if (lastRefusedLoggedUserServletPath != null) {
-					request.getSession().removeAttribute(lastRefusedLoggedUserRequestUriKey);
-					response.sendRedirect(lastRefusedLoggedUserServletPath);
-				} else {
-					doGet(request, response);
-				}
 			} else {
 				formProblems.add("Login or password is incorrect.");
 				request.setAttribute("prefilledNickname", nickname);
-				
-				doGet(request, response);
 			}
+			doGet(request, response);
 		}
 	}
 

@@ -13,15 +13,10 @@ public class LogOut extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.getSession().removeAttribute(ImprovedHttpServlet.sessionUserIdKey);
+		request.getSession().removeAttribute(sessionUserIdKey);
 		request.removeAttribute("sessionUser");
 
 		response.sendRedirect(request.getContextPath() + "/");
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 }

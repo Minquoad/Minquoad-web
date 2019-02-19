@@ -19,7 +19,7 @@ import utilities.http.PartTool;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
 		maxFileSize = 1024 * 1024 * 10, // 10 MB
 		maxRequestSize = 1024 * 1024 * 15, // 15 MB
-		location = "C:/Users/Minquoad/Dev/Java/Projects/Repositories/GitHub/Minquoad-web/Storage/TmpFiles/Uploaded/")
+		location = "C:/minquoad-web-storage/internal/tmp/uploaded/")
 public class Test extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -72,7 +72,7 @@ public class Test extends ImprovedHttpServlet {
 		}
 
 		request.setAttribute("things", thingDao.getAll());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Pages/Test.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -118,7 +118,7 @@ public class Test extends ImprovedHttpServlet {
 
 		Part part = request.getPart("file");
 		if (PartTool.hasFile(part)) {
-			PartTool.saveInNewFile(part, StorageManager.communityPublicImgPath);
+			PartTool.saveInNewFile(part, StorageManager.communityPath);
 		}
 
 		this.doGet(request, response);
