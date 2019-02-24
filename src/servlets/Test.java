@@ -53,7 +53,7 @@ public class Test extends ImprovedHttpServlet {
 		things = thingDao.getAllMatching("à admin", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory().getUserDao().getById(0));
+			thing.setOwner(getDaoFactory().getUserDao().getById(1));
 			thingDao.update(thing);
 		}
 
@@ -64,10 +64,10 @@ public class Test extends ImprovedHttpServlet {
 			thingDao.update(thing);
 		}
 
-		things = thingDao.getAllMatching("à Dauchi", descriptionMemberName);
+		things = thingDao.getAllMatching("à Test-zero", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory().getUserDao().getById(1));
+			thing.setOwner(getDaoFactory().getUserDao().getById(2));
 			thingDao.update(thing);
 		}
 

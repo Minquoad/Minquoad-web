@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.1
--- Dumped by pg_dump version 11.1
+-- Dumped from database version 10.7
+-- Dumped by pg_dump version 10.7
 
--- Started on 2019-02-20 21:14:06
+-- Started on 2019-02-21 00:48:46
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,12 +17,13 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+DROP DATABASE "Minquoad-DB";
 --
--- TOC entry 2180 (class 1262 OID 16384)
+-- TOC entry 2811 (class 1262 OID 16393)
 -- Name: Minquoad-DB; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE "Minquoad-DB" WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'English_United States.1252' LC_CTYPE = 'English_United States.1252';
+CREATE DATABASE "Minquoad-DB" WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'French_France.1252' LC_CTYPE = 'French_France.1252';
 
 
 ALTER DATABASE "Minquoad-DB" OWNER TO postgres;
@@ -39,12 +40,29 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- TOC entry 1 (class 3079 OID 12924)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2814 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- TOC entry 196 (class 1259 OID 16385)
+-- TOC entry 199 (class 1259 OID 16407)
 -- Name: Thing; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -58,7 +76,7 @@ CREATE TABLE public."Thing" (
 ALTER TABLE public."Thing" OWNER TO postgres;
 
 --
--- TOC entry 197 (class 1259 OID 16391)
+-- TOC entry 198 (class 1259 OID 16405)
 -- Name: Thing_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -74,8 +92,8 @@ CREATE SEQUENCE public."Thing_id_seq"
 ALTER TABLE public."Thing_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2181 (class 0 OID 0)
--- Dependencies: 197
+-- TOC entry 2815 (class 0 OID 0)
+-- Dependencies: 198
 -- Name: Thing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -83,26 +101,26 @@ ALTER SEQUENCE public."Thing_id_seq" OWNED BY public."Thing".id;
 
 
 --
--- TOC entry 198 (class 1259 OID 16393)
+-- TOC entry 197 (class 1259 OID 16396)
 -- Name: User; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public."User" (
     id integer NOT NULL,
-    nickname text NOT NULL,
     "hashedSaltedPassword" text,
-    "adminLevel" integer,
-    "lastActivityDate" timestamp with time zone,
-    "registrationDate" timestamp with time zone,
     "pictureName" text,
-    "unblockDate" time with time zone
+    "registrationDate" timestamp with time zone,
+    "lastActivityDate" timestamp with time zone,
+    "adminLevel" integer,
+    "unblockDate" timestamp with time zone,
+    nickname text
 );
 
 
 ALTER TABLE public."User" OWNER TO postgres;
 
 --
--- TOC entry 199 (class 1259 OID 16399)
+-- TOC entry 196 (class 1259 OID 16394)
 -- Name: User_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -118,8 +136,8 @@ CREATE SEQUENCE public."User_id_seq"
 ALTER TABLE public."User_id_seq" OWNER TO postgres;
 
 --
--- TOC entry 2182 (class 0 OID 0)
--- Dependencies: 199
+-- TOC entry 2816 (class 0 OID 0)
+-- Dependencies: 196
 -- Name: User_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -127,7 +145,7 @@ ALTER SEQUENCE public."User_id_seq" OWNED BY public."User".id;
 
 
 --
--- TOC entry 2047 (class 2604 OID 16401)
+-- TOC entry 2679 (class 2604 OID 16410)
 -- Name: Thing id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -135,7 +153,7 @@ ALTER TABLE ONLY public."Thing" ALTER COLUMN id SET DEFAULT nextval('public."Thi
 
 
 --
--- TOC entry 2048 (class 2604 OID 16402)
+-- TOC entry 2678 (class 2604 OID 16399)
 -- Name: User id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -143,7 +161,7 @@ ALTER TABLE ONLY public."User" ALTER COLUMN id SET DEFAULT nextval('public."User
 
 
 --
--- TOC entry 2050 (class 2606 OID 16404)
+-- TOC entry 2683 (class 2606 OID 16415)
 -- Name: Thing Thing_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -152,7 +170,7 @@ ALTER TABLE ONLY public."Thing"
 
 
 --
--- TOC entry 2052 (class 2606 OID 16406)
+-- TOC entry 2681 (class 2606 OID 16404)
 -- Name: User User_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -161,15 +179,24 @@ ALTER TABLE ONLY public."User"
 
 
 --
--- TOC entry 2053 (class 2606 OID 16407)
+-- TOC entry 2684 (class 2606 OID 16416)
 -- Name: Thing Thing_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public."Thing"
-    ADD CONSTRAINT "Thing_owner_fkey" FOREIGN KEY (owner) REFERENCES public."User"(id);
+    ADD CONSTRAINT "Thing_owner_fkey" FOREIGN KEY (owner) REFERENCES public."User"(id) ON DELETE CASCADE;
 
 
--- Completed on 2019-02-20 21:14:06
+--
+-- TOC entry 2813 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2019-02-21 00:48:46
 
 --
 -- PostgreSQL database dump complete

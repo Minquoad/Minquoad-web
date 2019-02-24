@@ -27,9 +27,11 @@ public class Possess extends ImprovedHttpServlet {
 			User user = this.getDaoFactory().getUserDao().getById(userId);
 
 			if (user != null && this.getSessionUser(request).canAdminister(user)) {
-				request.getSession().setAttribute(
-						sessionAdministerIdKey,
-						this.getSessionUser(request).getId());
+				if (this.getSessionAdminister(request) == null) {
+					request.getSession().setAttribute(
+							sessionAdministerIdKey,
+							this.getSessionUser(request).getId());
+				}
 				this.setSessionUser(request, user);
 			}
 

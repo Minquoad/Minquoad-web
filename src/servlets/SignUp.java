@@ -66,10 +66,11 @@ public class SignUp extends ImprovedHttpServlet {
 				userDao.update(user);
 
 				this.setSessionUser(request, user);
+				response.sendRedirect(request.getContextPath() + "/");
 			} else {
 				request.setAttribute("prefilledNickname", nickname);
+				doGet(request, response);
 			}
-			doGet(request, response);
 		}
 	}
 

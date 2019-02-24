@@ -122,67 +122,73 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 	}
 
 	public boolean insert(EntitySubclass entity) {
-		try {
-			String query = SqlQueryGenerator.generateInsertQuery(getTableName(), getColumnNames(false),
-					SqlQueryGenerator.all());
-			PreparedStatement preparedStatement = prepareStatement(query);
+		if (entity != null) {
+			try {
+				String query = SqlQueryGenerator.generateInsertQuery(getTableName(), getColumnNames(false),
+						SqlQueryGenerator.all());
+				PreparedStatement preparedStatement = prepareStatement(query);
 
-			int i = 1;
-			for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
-				if (entityMember.getName() != idKey) {
-					entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
-					i++;
+				int i = 1;
+				for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+					if (entityMember.getName() != idKey) {
+						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+						i++;
+					}
 				}
+
+				ResultSet resultSet = preparedStatement.executeQuery();
+				resultSet.next();
+				this.hydrate(entity, resultSet);
+
+				getInventory().put(entity);
+
+				return true;
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			this.hydrate(entity, resultSet);
-
-			getInventory().put(entity);
-
-			return true;
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
 
 	public boolean delete(EntitySubclass entity) {
-		getInventory().delete(entity);
-		try {
-			String query = SqlQueryGenerator.generateDeleteQuery(getTableName(), SqlQueryGenerator.toArray("id"));
-			PreparedStatement preparedStatement = prepareStatement(query);
-			preparedStatement.setInt(1, entity.getId());
+		if (entity != null) {
+			getInventory().delete(entity);
+			try {
+				String query = SqlQueryGenerator.generateDeleteQuery(getTableName(), SqlQueryGenerator.toArray("id"));
+				PreparedStatement preparedStatement = prepareStatement(query);
+				preparedStatement.setInt(1, entity.getId());
 
-			return 1 == preparedStatement.executeUpdate();
+				return 1 == preparedStatement.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 
 	public boolean update(EntitySubclass entity) {
-		try {
-			String query = SqlQueryGenerator.generateUpdateQuery(getTableName(), getColumnNames(false),
-					SqlQueryGenerator.toArray("id"));
-			PreparedStatement preparedStatement = prepareStatement(query);
+		if (entity != null) {
+			try {
+				String query = SqlQueryGenerator.generateUpdateQuery(getTableName(), getColumnNames(false),
+						SqlQueryGenerator.toArray("id"));
+				PreparedStatement preparedStatement = prepareStatement(query);
 
-			int i = 1;
-			for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
-				if (entityMember.getName() != idKey) {
-					entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
-					i++;
+				int i = 1;
+				for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+					if (entityMember.getName() != idKey) {
+						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+						i++;
+					}
 				}
+
+				preparedStatement.setInt(i, entity.getId());
+
+				return 1 == preparedStatement.executeUpdate();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-
-			preparedStatement.setInt(i, entity.getId());
-
-			return 1 == preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
