@@ -82,3 +82,7 @@
 .boldText {
 	font-weight: bold;
 }
+
+.undecorated {
+	text-decoration: unset;
+}

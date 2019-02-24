@@ -5,7 +5,7 @@
     <session-timeout>2880</session-timeout>
   </session-config>
   <listener>
-    <listener-class>utilities.Deployment</listener-class>
+    <listener-class>utility.Deployment</listener-class>
   </listener>
   <servlet-mapping>
     <servlet-name>default</servlet-name>

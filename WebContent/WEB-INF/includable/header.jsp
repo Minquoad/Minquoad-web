@@ -2,7 +2,7 @@
 	<div id="siteNameHeader">
 		<div class="centererContainer">
 			<div class="totallyCenteredContainer">
-				<a href="Home">Minquoad.com</a>
+				<a href="Home" class="undecorated">Minquoad.com</a>
 			</div>
 		</div>
 	</div>

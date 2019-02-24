@@ -18,7 +18,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	public final static String lastRefusedLoggedUserRequestUriKey = "lastRefusedLoggedUserRequestUri";
 	public final static String sessionAdministerIdKey = "sessionAdministerId";
 	
-	private DaoFactory daoFactory = new DaoFactoryImpl();
+	private DaoFactory daoFactory;
 
 	public DaoFactory getDaoFactory() {
 		return daoFactory;

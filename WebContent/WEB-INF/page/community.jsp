@@ -17,13 +17,20 @@
 				<c:forEach items="${ users }" var="user" varStatus="status">
 					<c:if test="${user != sessionUser}">
 
-						<c:url value="Profile" var="profileUrl">
-							<c:param name="userId" value="${user.id}" />
-						</c:url>
-						<a class="borderedTile padded"
-							href="<c:out value="${profileUrl}" />">
-							<span><c:out value="${ user.nickname }" /></span>
-						</a>
+						<div class="borderedTile">
+
+							<div class="dynamicMenuTrigger padded">
+								<c:out value="${ user.nickname }" />
+								<c:url value="Profile" var="profileUrl">
+									<c:param name="userId" value="${user.id}" />
+								</c:url>
+								<div class="dynamicMenu">
+									<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
+									<a class="dynamicMenuItem" href=""> Conversation </a>
+								</div>
+							</div>
+
+						</div>
 
 					</c:if>
 				</c:forEach>
