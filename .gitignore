@@ -1,6 +1,7 @@
 /build/
-/Storage/
-/src/utilities/ConfigurationImpl.java
-/bin/
 /Minquoad-web.war
+
+/installer/
+
 /DatabaseFilling.sql
+/src/utility/ConfigurationImpl.java
