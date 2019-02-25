@@ -14,7 +14,7 @@
 
 				<div class="borderedTile padded">
 
-					<form method="post" action="Test" accept-charset="UTF-8"
+					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8"
 						enctype="multipart/form-data">
 
 						<h2>Uploader un fichier :</h2>
@@ -31,7 +31,7 @@
 				</div>
 				<div class="borderedTile padded">
 
-					<form method="post" action="Test" accept-charset="UTF-8"
+					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8"
 						enctype="multipart/form-data">
 
 						<h2>Modifier la table :</h2>

@@ -2,21 +2,6 @@ let minMoveBeforTranslation = 2;
 
 let movableDivs;
 
-function detectMovableDivs() {
-	movableDivs = $(".movableDiv");
-}
-
-function deselctEverything() {
-	let sel = window.getSelection ? window.getSelection() : document.selection;
-	if (sel) {
-		if (sel.removeAllRanges) {
-			sel.removeAllRanges();
-		} else if (sel.empty) {
-			sel.empty();
-		}
-	}
-}
-
 function correctPositionIfNeeded(mousedownedMovableDiv) {
 
 	let overflowing;
@@ -43,6 +28,30 @@ function correctPositionIfNeeded(mousedownedMovableDiv) {
 
 }
 
+function correctAllPositionIfNeeded() {
+	if (movableDivs) {
+		movableDivs.each(function() {
+			correctPositionIfNeeded($(this));
+		});
+	}
+}
+
+function detectMovableDivs() {
+	movableDivs = $(".movableDiv");
+	correctAllPositionIfNeeded();
+}
+
+function deselctEverything() {
+	let sel = window.getSelection ? window.getSelection() : document.selection;
+	if (sel) {
+		if (sel.removeAllRanges) {
+			sel.removeAllRanges();
+		} else if (sel.empty) {
+			sel.empty();
+		}
+	}
+}
+
 $(document).mousedown(
 		function(e) {
 
@@ -56,7 +65,7 @@ $(document).mousedown(
 					y : e.pageY
 				};
 
-				mousedownedMovableDivIfExists.on("mousemove", function(e) {
+				$(window).on("mousemove", function(e) {
 
 					deselctEverything();
 
@@ -82,11 +91,7 @@ $(document).mousedown(
 					}
 				});
 
-				mousedownedMovableDivIfExists.mouseup(function() {
-					$(this).off("mousemove");
-				});
-
-				mousedownedMovableDivIfExists.mouseout(function() {
+				$(window).mouseup(function() {
 					$(this).off("mousemove");
 				});
 
@@ -95,9 +100,5 @@ $(document).mousedown(
 		});
 
 $(window).resize(function() {
-	if (movableDivs) {
-		movableDivs.each(function() {
-			correctPositionIfNeeded($(this));
-		});
-	}
+	correctAllPositionIfNeeded();
 });

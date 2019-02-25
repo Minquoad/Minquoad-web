@@ -27,8 +27,7 @@
 						 -->
 					</c:if>
 
-					<form method="post" action="AccountManagement"
-						accept-charset="UTF-8" enctype="multipart/form-data">
+					<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8" enctype="multipart/form-data">
 
 						<input type="hidden" name="formId" value="userPictureAlteration" />
 
@@ -37,8 +36,7 @@
 						</p>
 						<p>Submit without file to return back to the default picture.</p>
 						<jsp:include page="/WEB-INF/includable/form/formProblems.jsp">
-							<jsp:param name="formProblems"
-								value="userPictureAlterationFormProblems" />
+							<jsp:param name="formProblems" value="userPictureAlterationFormProblems" />
 						</jsp:include>
 						<div>
 							<input type="submit" value="Submit" />
@@ -48,27 +46,21 @@
 
 				<div class="borderedTile padded">
 					<h2>Change password</h2>
-					<form method="post" action="AccountManagement"
-						accept-charset="UTF-8">
+					<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
 
 						<input type="hidden" name="formId" value="userPasswordAlteration" />
 
 						<p>
-							<label for="oldPassowrd">Old Password : </label> <input
-								type="password" name="oldPassowrd" id="oldPassowrd" />
+							<label for="oldPassowrd">Old Password : </label> <input type="password" name="oldPassowrd" id="oldPassowrd" />
 						</p>
 						<p>
-							<label for="newPassword">New password : </label> <input
-								type="password" name="newPassword" id="newPassword" />
+							<label for="newPassword">New password : </label> <input type="password" name="newPassword" id="newPassword" />
 						</p>
 						<p>
-							<label for="newPasswordConfirmation">Confirm new password
-								: </label> <input type="password" name="newPasswordConfirmation"
-								id="newPasswordConfirmation" />
+							<label for="newPasswordConfirmation">Confirm new password : </label> <input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" />
 						</p>
 						<jsp:include page="/WEB-INF/includable/form/formProblems.jsp">
-							<jsp:param name="formProblems"
-								value="userPasswordAlterationFormProblems" />
+							<jsp:param name="formProblems" value="userPasswordAlterationFormProblems" />
 						</jsp:include>
 						<div>
 							<input type="submit" value="Change" />

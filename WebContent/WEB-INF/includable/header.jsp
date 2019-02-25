@@ -2,7 +2,7 @@
 	<div id="siteNameHeader">
 		<div class="centererContainer">
 			<div class="totallyCenteredContainer">
-				<a href="Home" class="undecorated">Minquoad.com</a>
+				<a href="<c:url value="/Home" />" class="undecorated">Minquoad.com</a>
 			</div>
 		</div>
 	</div>
@@ -23,24 +23,23 @@
 		<div class="centererContainer">
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div class="horizontallyPadded">
-					<a href="Test" class="headerItem">Test</a>
-					<a href="Community" class="headerItem">👥 Community</a>
+					<a href="<c:url value="/Test" />" class="headerItem">Test</a>
+					<a href="<c:url value="/Community" />" class="headerItem">👥 Community</a>
 					<c:if test="${not empty sessionUser}">
 						<c:if test="${sessionUser.admin}">
-							<a href="Administration" class="headerItem">Administration</a>
+							<a href="<c:url value="/Administration" />" class="headerItem">Administration</a>
 						</c:if>
 						<div class="headerItem dynamicMenuTrigger">
 							▼
 							<c:out value="${ sessionUser.nickname }" />
 							<div class="dynamicMenu">
-								<a class="dynamicMenuItem" href="AccountManagement">👤
-									Account management </a>
-								<a class="dynamicMenuItem" href="LogOut">✖ Log out</a>
+								<a class="dynamicMenuItem" href="<c:url value="/AccountManagement" />">👤 Account management </a>
+								<a class="dynamicMenuItem" href="<c:url value="/LogOut" />">✖ Log out</a>
 							</div>
 						</div>
 					</c:if>
 					<c:if test="${empty sessionUser}">
-						<a href="LogIn" class="headerItem">👤 Log in</a>
+						<a href="<c:url value="/LogIn" />" class="headerItem">👤 Log in</a>
 					</c:if>
 				</div>
 			</div>

@@ -21,12 +21,12 @@
 
 							<div class="dynamicMenuTrigger padded">
 								<c:out value="${ user.nickname }" />
-								<c:url value="Profile" var="profileUrl">
+								<c:url value="/Profile" var="profileUrl">
 									<c:param name="userId" value="${user.id}" />
 								</c:url>
 								<div class="dynamicMenu">
 									<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
-									<a class="dynamicMenuItem" href=""> Conversation </a>
+									<span class="dynamicMenuItem"> Conversation </span>
 								</div>
 							</div>
 
@@ -40,6 +40,10 @@
 	</div>
 
 	<%@ include file="/WEB-INF/includable/footer.jsp"%>
+
+	<div class="movableDiv"></div>
+
+	<div class="movableDiv"></div>
 
 </body>
 </html>

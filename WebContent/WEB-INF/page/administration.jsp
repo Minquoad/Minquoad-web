@@ -45,7 +45,7 @@
 										</td>
 										<td>
 											<c:if test="${user.canAdminister(sessionUser)}">
-												<c:url value="Possess" var="possessUrl">
+												<c:url value="/Possess" var="possessUrl">
 													<c:param name="userId" value="${user.id}" />
 												</c:url>
 												<a href="<c:out value="${possessUrl}" />"> 🕹️ </a>

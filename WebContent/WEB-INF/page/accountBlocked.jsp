@@ -10,9 +10,7 @@
 
 	<div id="mainContainer">
 		<div class="scrollableContainer centererContainer">
-			<div class="totallyCenteredContainer padded centeredText redText">
-				Account blocked
-			</div>
+			<div class="totallyCenteredContainer padded centeredText redText">Account blocked</div>
 		</div>
 	</div>
 
