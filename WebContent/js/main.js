@@ -4,6 +4,8 @@ $(document).ready(function() {
 
 	detectDynamicMenuTriggers();
 
+	detectMovableDivs();
+	
 	$('.table').dynatable({
 		features : {
 			pushState : false

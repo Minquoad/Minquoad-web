@@ -11,6 +11,7 @@
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/footer.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dynamicMenu.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/form.css" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/movableDiv.css" />
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
@@ -18,5 +19,6 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/dynamicMenu.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/tile.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/movableDiv.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/main.js"></script>

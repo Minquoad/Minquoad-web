@@ -1,0 +1,8 @@
+.movableDiv {
+	height: 200px;
+	width: 200px;
+	top: 500px;
+	left: 500px;
+	position: absolute;
+	background: var(--MOVABLE_BACKGROUND_COLOR);
+}

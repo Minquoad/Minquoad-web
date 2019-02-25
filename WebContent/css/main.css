@@ -11,6 +11,8 @@ body {
 
 	font-size: var(--MAIN_FONT_SIZE);
 	font-family: var(--MAIN_FONT_FAMILY);
+	
+	overflow: hidden;
 }
 
 #mainContainer {
