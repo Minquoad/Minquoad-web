@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,16 +18,24 @@
 
 						<div class="borderedTile">
 
-							<div class="dynamicMenuTrigger padded">
-								<c:out value="${ user.nickname }" />
-								<c:url value="/Profile" var="profileUrl">
-									<c:param name="userId" value="${user.id}" />
-								</c:url>
-								<div class="dynamicMenu">
-									<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
-									<span class="dynamicMenuItem"> Conversation </span>
+							<c:if test="${empty sessionUser}">
+								<div class="padded">
+									<c:out value="${ user.nickname }" />
 								</div>
-							</div>
+							</c:if>
+							<c:if test="${not empty sessionUser}">
+
+								<div class="dynamicMenuTrigger padded">
+									<c:out value="${ user.nickname }" />
+									<c:url value="/Profile" var="profileUrl">
+										<c:param name="userId" value="${user.id}" />
+									</c:url>
+									<div class="dynamicMenu">
+										<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
+										<span class="dynamicMenuItem conversationTrigger" data-userId="<c:out value="${user.id}" />"> Conversation </span>
+									</div>
+								</div>
+							</c:if>
 
 						</div>
 
@@ -40,10 +47,6 @@
 	</div>
 
 	<%@ include file="/WEB-INF/includable/footer.jsp"%>
-
-	<div class="movableDiv"></div>
-
-	<div class="movableDiv"></div>
 
 </body>
 </html>

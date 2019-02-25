@@ -92,7 +92,7 @@ $(document).mousedown(
 				});
 
 				$(window).mouseup(function() {
-					$(this).off("mousemove");
+					$(window).off("mousemove");
 				});
 
 			}

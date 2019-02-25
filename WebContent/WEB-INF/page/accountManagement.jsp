@@ -22,7 +22,7 @@
 						WIP
 						<!--
 						<div class="croppedResizedPicture"
-							style="background-image: url('${pageContext.request.contextPath}/img/Community/${ sessionUser.pictureName}')">
+							style="background-image: url('<c:url value="/img/Community/${ sessionUser.pictureName}" />')">
 						</div>
 						 -->
 					</c:if>

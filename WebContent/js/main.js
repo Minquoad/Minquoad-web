@@ -4,8 +4,12 @@ $(document).ready(function() {
 
 	detectDynamicMenuTriggers();
 
+	detectConversationTriggers();
+
+	detectConversationTriggers();
+
 	detectMovableDivs();
-	
+
 	$('.table').dynatable({
 		features : {
 			pushState : false
