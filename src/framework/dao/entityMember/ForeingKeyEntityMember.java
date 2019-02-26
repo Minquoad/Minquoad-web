@@ -9,12 +9,12 @@ public class ForeingKeyEntityMember<EntitySubclass extends Entity, ReferencedEnt
 	public ForeingKeyEntityMember(String name,
 			EntityMemberGetter<EntitySubclass, ReferencedEntitySubclass> valueGetter,
 			EntityMemberSetter<EntitySubclass, ReferencedEntitySubclass> valueSetter,
-			EntityDaoImpl<ReferencedEntitySubclass> referencedEntityDao) {
+			EntityDaoImpl<ReferencedEntitySubclass> referencedEntityDaoImpl) {
 		super(
 				name,
 				valueGetter,
 				valueSetter,
-				(resultSet, thisName) -> referencedEntityDao.getById(resultSet.getInt(thisName)),
+				(resultSet, thisName) -> referencedEntityDaoImpl.getById(resultSet.getInt(thisName)),
 				(preparedStatement, parameterIndex, value) -> preparedStatement.setInt(parameterIndex, value.getId()));
 	}
 

@@ -4,20 +4,51 @@ import dao.interfaces.DaoFactory;
 
 public class DaoFactoryImpl implements DaoFactory {
 
-	private ThingDaoImpl thingDao;
+	private ThingDaoImpl thingDaoImpl;
+	private UserDaoImpl userDaoImpl;
+	private MessageDaoImpl messageDaoImpl;
+	private ConversationAccessDaoImpl conversationAccessDaoImpl;
+	private ConversationDaoImpl conversationDaoImpl;
+
+	@Override
 	public ThingDaoImpl getThingDao() {
-		if (thingDao == null) {
-			thingDao = new ThingDaoImpl(this);
+		if (thingDaoImpl == null) {
+			thingDaoImpl = new ThingDaoImpl(this);
 		}
-		return thingDao;
+		return thingDaoImpl;
 	}
 
-	private UserDaoImpl userDao;
+
+	@Override
 	public UserDaoImpl getUserDao() {
-		if (userDao == null) {
-			userDao = new UserDaoImpl();
+		if (userDaoImpl == null) {
+			userDaoImpl = new UserDaoImpl(this);
 		}
-		return userDao;
+		return userDaoImpl;
+	}
+
+	@Override
+	public MessageDaoImpl getMessageDao() {
+		if (messageDaoImpl == null) {
+			messageDaoImpl = new MessageDaoImpl(this);
+		}
+		return messageDaoImpl;
+	}
+
+	@Override
+	public ConversationAccessDaoImpl getConversationAccessDao() {
+		if (conversationAccessDaoImpl == null) {
+			conversationAccessDaoImpl = new ConversationAccessDaoImpl(this);
+		}
+		return conversationAccessDaoImpl;
+	}
+
+	@Override
+	public ConversationDaoImpl getConversationDao() {
+		if (conversationDaoImpl == null) {
+			conversationDaoImpl = new ConversationDaoImpl(this);
+		}
+		return conversationDaoImpl;
 	}
 
 }

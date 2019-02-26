@@ -19,10 +19,12 @@ public class ThingDaoImpl extends EntityDaoImpl<Thing> implements ThingDao {
 		this.daoFactory = daoFactory;
 	}
 
+	@Override
 	public Thing instantiateBlank() {
 		return new Thing();
 	}
 
+	@Override
 	public String getTableName() {
 		return "Thing";
 	}
@@ -39,13 +41,13 @@ public class ThingDaoImpl extends EntityDaoImpl<Thing> implements ThingDao {
 				daoFactory.getUserDao()));
 	}
 
-	public List<Thing> getUserThings(User user) {
-		return this.getAllMatching(user, "owner");
-	}
-
 	@Override
 	public PreparedStatement prepareStatement(String statement) throws SQLException {
 		return Database.prepareStatement(statement);
+	}
+
+	public List<Thing> getUserThings(User user) {
+		return this.getAllMatching(user, "owner");
 	}
 
 }

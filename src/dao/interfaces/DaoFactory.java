@@ -6,4 +6,10 @@ public interface DaoFactory {
 
 	public UserDao getUserDao();
 
+	public MessageDao getMessageDao();
+
+	public ConversationAccessDao getConversationAccessDao();
+
+	public ConversationDao getConversationDao();
+
 }
