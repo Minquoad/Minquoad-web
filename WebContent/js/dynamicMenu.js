@@ -13,15 +13,15 @@ $(document).click(function(event) {
 
 			if ($(this).find(".dynamicMenu").css("display") == "none") {
 				$(this).find(".dynamicMenu").css("display", "block");
-				$(this).css("background", "var(--MENU_BACKGROUND_COLOR)");
+				$(this).css("background-color", "var(--MENU_BACKGROUND_COLOR)");
 			} else {
 				$(this).find(".dynamicMenu").css("display", "none");
-				$(this).css("background", "inherit");
+				$(this).css("background-color", "inherit");
 			}
 
 		} else {
 			$(this).find(".dynamicMenu").css("display", "none");
-			$(this).css("background", "inherit");
+			$(this).css("background-color", "inherit");
 		}
 	});
 

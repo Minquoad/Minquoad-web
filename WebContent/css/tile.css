@@ -15,12 +15,11 @@
 	display: inline-block;
 	text-align: left;
 	font-size: var(--MAIN_FONT_SIZE);
-	background: var(--BACKGROUND_COLOR);
 }
 
 .topTileBorderAdder {
-	vertical-align: top;
-	display: inline-block;
+	width: 100%;
+	height: calc(100% - 2px);
 	padding: 2px 0px 0px 0px;
 	background-image: linear-gradient(
 		to right,
@@ -31,8 +30,8 @@
 }
 
 .rightTileBorderAdder {
-	vertical-align: top;
-	display: inline-block;
+	width: calc(100% - 2px);
+	height: 100%;
 	padding: 0px 2px 0px 0px;
 	background-image: linear-gradient(
 		to bottom,
@@ -43,8 +42,8 @@
 }
 
 .bottomTileBorderAdder {
-	vertical-align: top;
-	display: inline-block;
+	width: 100%;
+	height: calc(100% - 2px);
 	padding: 0px 0px 2px 0px;
 	background-image: linear-gradient(
 		to right,
@@ -55,8 +54,8 @@
 }
 
 .leftTileBorderAdder {
-	vertical-align: top;
-	display: inline-block;
+	width: calc(100% - 2px);
+	height: 100%;
 	padding: 0px 0px 0px 2px;
 	background-image: linear-gradient(
 		to bottom,
@@ -64,4 +63,10 @@
 		var(--BACKGROUND_COLOR),
 		var(--BACKGROUND_COLOR)
 	);
+}
+
+.borderedTilebackgroundCorrector {
+	width: 100%;
+	height: 100%;
+	background: var(--BACKGROUND_COLOR);
 }

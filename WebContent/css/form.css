@@ -2,12 +2,12 @@
 	color: red;
 }
 
-form input[type="text"]  {
-	background: var(--BACKGROUND_COLOR);
+form input, form textarea {
+	background-color: var(--BACKGROUND_COLOR);
 	color: var(--FOREGROUND_COLOR);
+	border: solid 1px var(--BORDER_COLOR);
 }
 
-form input[type="password"]  {
-	background: var(--BACKGROUND_COLOR);
-	color: var(--FOREGROUND_COLOR);
+form input[type="button"], form input[type="submit"] {
+	border: solid 2px var(--HIGHLIGHTING_COLOR);
 }

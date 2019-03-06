@@ -86,3 +86,12 @@
 .undecorated {
 	text-decoration: unset;
 }
+
+.inlineBlockContainer {
+	font-size: 0;
+}
+
+.inlineBlockContainer>* {
+	font-size: var(--MAIN_FONT_SIZE);
+	vertical-align: top;
+}

@@ -4,9 +4,7 @@ $(document).ready(function() {
 
 	detectDynamicMenuTriggers();
 
-	detectConversationTriggers();
-
-	detectConversationTriggers();
+	// detectConversationTriggers();
 
 	detectMovableDivs();
 

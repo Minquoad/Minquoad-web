@@ -1,6 +1,6 @@
 .movableDiv {
-	height: 200px;
-	width: 200px;
+	height: 320px;
+	width: 240px;
 	top: calc(50% - 100px);
 	left: calc(50% - 100px);
 	position: absolute;

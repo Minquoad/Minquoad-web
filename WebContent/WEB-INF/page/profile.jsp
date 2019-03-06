@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/includable/mainHeadContent.jsp"%>
+<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -14,13 +14,13 @@
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer">
 
-				<c:out value="${ user.nickname }" />
+				<c:out value="${ requestScope.showedUser.nickname }" />
 
 			</div>
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/includable/footer.jsp"%>
+	<jsp:include page="/WEB-INF/includable/footer.jsp" />
 
 </body>
 </html>

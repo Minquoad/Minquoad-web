@@ -1,12 +1,17 @@
 function borderTiles() {
 
-	$('.bottomTileBorderAdder>.borderedTile').unwrap();
-	$('.rightTileBorderAdder>.borderedTile').unwrap();
-	$('.topTileBorderAdder>.borderedTile').unwrap();
-	$('.leftTileBorderAdder>.borderedTile').unwrap();
+	let borderedTiles = $(".borderedTile");
 
-	$(".borderedTile").wrap("<div class='leftTileBorderAdder'></div>");
-	$(".borderedTile").wrap("<div class='topTileBorderAdder'></div>");
-	$(".borderedTile").wrap("<div class='rightTileBorderAdder'></div>");
-	$(".borderedTile").wrap("<div class='bottomTileBorderAdder'></div>");
+	borderedTiles.each(function() {
+		borderedTile = $(this);
+
+		if (!borderedTile.children().first().hasClass("topTileBorderAdder")) {
+			borderedTile.wrapInner("<div class='borderedTilebackgroundCorrector'></div>");
+			borderedTile.wrapInner("<div class='leftTileBorderAdder'></div>");
+			borderedTile.wrapInner("<div class='bottomTileBorderAdder'></div>");
+			borderedTile.wrapInner("<div class='rightTileBorderAdder'></div>");
+			borderedTile.wrapInner("<div class='topTileBorderAdder'></div>");
+		}
+	});
+
 }

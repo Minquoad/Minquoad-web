@@ -4,4 +4,4 @@
 /installer/
 
 /DatabaseFilling.sql
-/src/utility/ConfigurationImpl.java
+/src/com/minquoad/service/ConfigurationImpl.java

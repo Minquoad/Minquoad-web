@@ -15,10 +15,6 @@ body {
 	overflow: hidden;
 }
 
-#mainContainer {
-	height: calc(100% - 100px);
-}
-
 a {
 	color: inherit;
 }

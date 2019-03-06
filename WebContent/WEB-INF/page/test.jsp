@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/includable/mainHeadContent.jsp"%>
+<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -12,10 +12,9 @@
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer tileContainer">
 
-				<div class="borderedTile padded">
+				<div class="borderedTile">
 
-					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8"
-						enctype="multipart/form-data">
+					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8" enctype="multipart/form-data" class="padded">
 
 						<h2>Uploader un fichier :</h2>
 
@@ -29,20 +28,17 @@
 					</form>
 
 				</div>
-				<div class="borderedTile padded">
+				<div class="borderedTile">
 
-					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8"
-						enctype="multipart/form-data">
+					<form method="post" action="<c:url value="/Test" />" accept-charset="UTF-8" enctype="multipart/form-data" class="padded">
 
 						<h2>Modifier la table :</h2>
 
 						<p>
-							<label for="description">Id (non-existing id for a new) :
-							</label> <input type="number" name="id" id="id" value="0" />
+							<label for="description">Id (non-existing id for a new) : </label> <input type="number" name="id" id="id" value="0" />
 						</p>
 						<p>
-							<label for="description">Description : </label> <input
-								type="text" name="description" id="description" />
+							<label for="description">Description : </label> <input type="text" name="description" id="description" />
 						</p>
 						<div>
 							<input type="submit" value="Ajouter" />
@@ -50,18 +46,17 @@
 					</form>
 
 				</div>
-				<div class="borderedTile padded">
+				<div class="borderedTile">
 
-					<h2>Table :</h2>
-					<ul>
-						<c:forEach items="${ things }" var="thing" varStatus="status">
-							<li><c:out value="${ thing.id }" /> : <c:out
-									value="${ thing.description }" /> <c:if
-									test="${not empty thing.owner}"> (<c:out
-										value="${ thing.owner.nickname }" />)
+					<div class="padded">
+						<h2>Table :</h2>
+						<ul>
+							<c:forEach items="${ requestScope.things }" var="thing" varStatus="status">
+								<li><c:out value="${ thing.id }" /> : <c:out value="${ thing.description }" /> <c:if test="${not empty thing.owner}"> (<c:out value="${ thing.owner.nickname }" />)
 								</c:if></li>
-						</c:forEach>
-					</ul>
+							</c:forEach>
+						</ul>
+					</div>
 
 				</div>
 
@@ -69,7 +64,7 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/includable/footer.jsp"%>
+	<jsp:include page="/WEB-INF/includable/footer.jsp" />
 
 </body>
 </html>

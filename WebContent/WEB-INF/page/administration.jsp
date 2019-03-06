@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/includable/mainHeadContent.jsp"%>
+<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -28,8 +28,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach items="${ users }" var="user" varStatus="status">
-								<c:if test="${user != sessionUser}">
+							<c:forEach items="${ requestScope.users }" var="user" varStatus="status">
+								<c:if test="${user != requestScope.user}">
 									<tr>
 										<td>
 											<c:out value="${ user.id }" />
@@ -44,11 +44,11 @@
 											<c:out value="${ user.registrationDate }" />
 										</td>
 										<td>
-											<c:if test="${user.canAdminister(sessionUser)}">
-												<c:url value="/Possess" var="possessUrl">
+											<c:if test="${user.canAdminister(requestScope.user)}">
+												<c:url value="/Possession" var="possessUrl">
 													<c:param name="userId" value="${user.id}" />
 												</c:url>
-												<a href="<c:out value="${possessUrl}" />"> 🕹️ </a>
+												<a href="${possessUrl}"> 🕹️ </a>
 											</c:if>
 										</td>
 										<td>
@@ -68,6 +68,7 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/includable/footer.jsp"%>
+	<jsp:include page="/WEB-INF/includable/footer.jsp" />
+
 </body>
 </html>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@ include file="/WEB-INF/includable/mainHeadContent.jsp"%>
+<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -13,26 +13,32 @@
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer tileContainer">
 
-				<c:forEach items="${ users }" var="user" varStatus="status">
-					<c:if test="${user != sessionUser}">
+				<c:forEach items="${ requestScope.users }" var="showedUser">
+					<c:if test="${showedUser != requestScope.user}">
 
 						<div class="borderedTile">
 
-							<c:if test="${empty sessionUser}">
+							<c:if test="${empty requestScope.user}">
 								<div class="padded">
-									<c:out value="${ user.nickname }" />
+									<c:out value="${ showedUser.nickname }" />
 								</div>
 							</c:if>
-							<c:if test="${not empty sessionUser}">
+							<c:if test="${not empty requestScope.user}">
 
 								<div class="dynamicMenuTrigger padded">
-									<c:out value="${ user.nickname }" />
-									<c:url value="/Profile" var="profileUrl">
-										<c:param name="userId" value="${user.id}" />
-									</c:url>
+									<c:out value="${ showedUser.nickname }" />
 									<div class="dynamicMenu">
+										<c:url value="/Profile" var="profileUrl">
+											<c:param name="userId" value="${showedUser.id}" />
+										</c:url>
 										<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
-										<span class="dynamicMenuItem conversationTrigger" data-userId="<c:out value="${user.id}" />"> Conversation </span>
+										<c:url value="/Conversations" var="conversationsUrl">
+											<c:param name="userId" value="${showedUser.id}" />
+										</c:url>
+										<a class="dynamicMenuItem" href="${conversationsUrl}"> Conversation </a>
+										<%--
+										<span class="dynamicMenuItem conversationTrigger" data-userId="${user.id}"> Conversation </span>
+										--%>
 									</div>
 								</div>
 							</c:if>
@@ -46,7 +52,7 @@
 		</div>
 	</div>
 
-	<%@ include file="/WEB-INF/includable/footer.jsp"%>
+	<jsp:include page="/WEB-INF/includable/footer.jsp" />
 
 </body>
 </html>

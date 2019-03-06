@@ -1,0 +1,100 @@
+#conversations #list {
+	display: inline-block;
+	height: 100%;
+	width: 220px;
+	border-right: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	font-size: var(--MAIN_FONT_SIZE);
+}
+
+#conversations #list .tileContainer {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#conversations #list .borderedTile {
+	text-align: center;
+	height: 45px;
+	width: 100%;
+	cursor: pointer;
+}
+
+#conversations #list .selectedConversation {
+	background-color: var(--MENU_BACKGROUND_COLOR);
+}
+
+#conversations #list .conversationTitle {
+	height: 18px;
+}
+
+#conversations #list .participants {
+	color: grey;
+	font-size: 12px;
+}
+
+#conversations #current {
+	display: inline-block;
+	height: 100%;
+	width: calc(100% - 220px - 1px);
+	font-size: var(--MAIN_FONT_SIZE);
+}
+
+#conversations #current #title {
+	height: 45px;
+	font-size: 16px;
+	background-color: var(--MENU_BACKGROUND_COLOR);
+	border-bottom: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+}
+
+#conversations #current #messages {
+	height: calc(100% - 90px - 2px);
+	border-bottom: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	word-break: break-word;
+}
+
+#conversations #current #messages .messageMetaData {
+	font-size: 0;
+}
+
+#conversations #current #messages .messageMetaData div {
+	display: inline-block;
+	width: 50%;
+	color: grey;
+	font-size: 12px;
+}
+
+#conversations #current #messages .messageMetaData div:not(:first-child) {
+	text-align: right;
+}
+
+#conversations #current #messageEditor {
+	height: 45px;
+}
+
+#conversations #current #messageEditor #messageEditorForm {
+	font-size: 0;
+}
+
+#conversations #current #messageEditor #messageEditorForm>* {
+	font-size: var(--MAIN_FONT_SIZE);
+}
+
+#conversations #current #messageEditor textarea {
+	height: 45px;
+	width: 90%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	resize: none;
+	vertical-align: top;
+}
+
+#conversations #current #messageEditor [type="button"] {
+	vertical-align: top;
+	height: calc(45px);/* why not - 4px for the borders ? */
+	width: calc(10%);/* why not - 4px for the borders ? */
+	padding: 0;
+	margin: 0;
+	border: solid 2px var(--HIGHLIGHTING_COLOR);
+}
