@@ -22,4 +22,8 @@ public class UnitFactory {
 		return new ConversationUnit(getDaoFactory());
 	}
 	
+	public FailedInLoginigAttemptUnit getFailedInLoginigAttemptUnit() {
+		return new FailedInLoginigAttemptUnit(getDaoFactory());
+	}
+	
 }

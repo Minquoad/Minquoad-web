@@ -21,6 +21,7 @@ public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao 
 
 	@Override
 	public void initEntityMembers() {
+		this.addStringEntityMember("mailAddress", User::getMailAddress, User::setMailAddress);
 		this.addStringEntityMember("nickname", User::getNickname, User::setNickname);
 		this.addStringEntityMember("hashedSaltedPassword", User::getHashedSaltedPassword, User::setHashedSaltedPassword);
 		this.addStringEntityMember("pictureName", User::getPictureName, User::setPictureName);
@@ -30,6 +31,7 @@ public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao 
 		this.addDateEntityMember("unblockDate", User::getUnblockDate, User::setUnblockDate);
 	}
 
+	@Override
 	public List<User> getConversationUsers(Conversation conversation) {
 		List<User> users = new ArrayList<User>();
 		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching(conversation, "conversation");

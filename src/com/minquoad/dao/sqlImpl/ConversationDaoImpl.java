@@ -25,6 +25,7 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 		return new Conversation();
 	}
 
+	@Override
 	public List<Conversation> getUserConversations(User user) {
 		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching(user, "user");
 		List<Conversation> conversations = new ArrayList<Conversation>();

@@ -13,10 +13,10 @@
 			<div class="totallyCenteredContainer">
 				<form method="post" action="<c:url value="/InLoging" />" accept-charset="UTF-8">
 					<p>
-						<label for="nickname">Nickname : </label> <input type="text"
-							name="nickname" id="nickname"
-							<c:if test="${not empty requestScope.prefilledNickname}">
-								value="<c:out value="${ requestScope.prefilledNickname }" />"
+						<label for="mailAddress">Mail address : </label> <input type="text"
+							name="mailAddress" id="nickname"
+							<c:if test="${not empty requestScope.prefilledMailAddress}">
+								value="<c:out value="${ requestScope.prefilledMailAddress }" />"
 								</c:if> />
 					</p>
 					<p>

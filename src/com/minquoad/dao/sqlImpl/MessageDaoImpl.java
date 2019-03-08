@@ -26,6 +26,7 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 		return new Message();
 	}
 
+	@Override
 	public List<Message> getConversationMessages(Conversation conversation) {
 		return this.getAllMatching(conversation, "conversation");
 	}

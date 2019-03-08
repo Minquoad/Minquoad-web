@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.dao.interfaces.UserDao;
+import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
@@ -39,27 +41,38 @@ public class InLoging extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String nickname = request.getParameter("nickname");
+		String mailAddress = request.getParameter("mailAddress");
 		String password = request.getParameter("password");
 
-		if (nickname != null && password != null) {
+		if (mailAddress != null && password != null) {
 			List<String> formProblems = new ArrayList<String>();
 			request.setAttribute("formProblems", formProblems);
 
-			nickname = User.formatNickanameCase(nickname);
+			mailAddress = User.formatMailAddressCase(mailAddress);
 
 			UserDao userDao = getDaoFactory(request).getUserDao();
 
-			List<User> users = userDao.getAllMatching(nickname, "nickname");
+			List<User> users = userDao.getAllMatching(mailAddress, "mailAddress");
 
-			if (users.size() == 1 && users.get(0).isPassword(password)) {
+			if (users.size() != 0 && users.get(0).isPassword(password)) {
 				setSessionUser(request, users.get(0));
+				
+				FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
+				FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getFailedInLoginigAttemptByMailAddress(mailAddress);
+				failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+
 			} else {
-				formProblems.add("Login or password is incorrect.");
-				request.setAttribute("prefilledNickname", nickname);
+				formProblems.add("Mail address or password is incorrect.");
+				request.setAttribute("prefilledMailAddress", mailAddress);
+
+				getUnitFactory(request).getFailedInLoginigAttemptUnit().registerFailedInLoginigAttempt(mailAddress);
 			}
+			
 			doGet(request, response);
+			return;
 		}
+
+		response.setStatus(422);
 	}
 
 }

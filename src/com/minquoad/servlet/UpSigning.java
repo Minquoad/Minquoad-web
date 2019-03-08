@@ -23,24 +23,25 @@ public class UpSigning extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
+		request.setAttribute("mailAddressMaxlength", User.mailAddressMaxlength);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/upSigning.jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		String mailAddress = request.getParameter("mailAddress");
 		String nickname = request.getParameter("nickname");
 		String password = request.getParameter("password");
 		String passwordConfirmation = request.getParameter("passwordConfirmation");
 
-		if (nickname != null && password != null) {
+		if (mailAddress != null && nickname != null && password != null) {
 			List<String> formProblems = new ArrayList<String>();
 			request.setAttribute("formProblems", formProblems);
 
 			nickname = User.formatNickanameCase(nickname);
 
-			request.setAttribute("creatingAccount", true);
-
+			formProblems.addAll(User.getMailAddressProblems(mailAddress));
 			formProblems.addAll(User.getNicknameProblems(nickname));
 			formProblems.addAll(User.getPasswordProblems(password));
 
@@ -53,17 +54,27 @@ public class UpSigning extends ImprovedHttpServlet {
 				formProblems.add("The nickname \"" + nickname + "\" is alreadi taken.");
 			}
 
+			users = getDaoFactory(request).getUserDao().getAllMatching(mailAddress, "mailAddress");
+			if (users.size() != 0) {
+				formProblems.add("The mail address \"" + mailAddress + "\" is alreadi taken.");
+			}
+
 			if (formProblems.size() == 0) {
 
-				User user = getUnitFactory(request).getUserUnit().createNewUser(nickname, password);
+				User user = getUnitFactory(request).getUserUnit().createNewUser(mailAddress, nickname, password);
 
 				setSessionUser(request, user);
 				response.sendRedirect(request.getContextPath() + "/");
+
 			} else {
 				request.setAttribute("prefilledNickname", nickname);
+				request.setAttribute("prefilledMailAddress", mailAddress);
 				doGet(request, response);
 			}
+			return;
 		}
+
+		response.setStatus(422);
 	}
 
 }

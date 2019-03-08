@@ -12,11 +12,12 @@ public class UserUnit extends Unit {
 		super(daoFactory);
 	}
 
-	public User createNewUser(String nickname, String password) {
+	public User createNewUser(String mailAddress, String nickname, String password) {
 
 		UserDao userDao = getDaoFactory().getUserDao();
 
 		User user = new User();
+		user.setMailAddress(mailAddress);
 		user.setNickname(nickname);
 		user.setRegistrationDate(new Date());
 		user.setLastActivityDate(new Date());

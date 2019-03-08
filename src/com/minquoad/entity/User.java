@@ -10,6 +10,7 @@ import com.minquoad.tool.SecurityTool;
 
 public class User extends Entity {
 
+	private String mailAddress;
 	private String nickname;
 	private String hashedSaltedPassword;
 	private String pictureName;
@@ -19,6 +20,7 @@ public class User extends Entity {
 	private Date unblockDate;
 
 	public static final int nicknameMaxlength = 25;
+	public static final int mailAddressMaxlength = 50;
 
 	public String getNickname() {
 		return nickname;
@@ -97,7 +99,7 @@ public class User extends Entity {
 
 			String saltedString = Deployment.getDynamicSalt(this) + Deployment.passwordSalt + string;
 			return SecurityTool.toSha512(saltedString);
-			
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -105,6 +107,10 @@ public class User extends Entity {
 
 	public static String formatNickanameCase(String nickname) {
 		return nickname.substring(0, 1).toUpperCase() + nickname.substring(1).toLowerCase();
+	}
+
+	public static String formatMailAddressCase(String mailAddress) {
+		return mailAddress.toLowerCase();
 	}
 
 	public static List<String> getNicknameProblems(String nickname) {
@@ -205,6 +211,14 @@ public class User extends Entity {
 		return problems;
 	}
 
+	public static List<String> getMailAddressProblems(String mailAddress) {
+		List<String> problems = new ArrayList<String>();
+
+		// TODO
+
+		return problems;
+	}
+
 	public Date getUnblockDate() {
 		return unblockDate;
 	}
@@ -221,6 +235,14 @@ public class User extends Entity {
 			dayBeforeUnblockDate.setTime(unblockDate.getTime() - (1000l * 60l * 60l * 24l));
 			return new Date().after(dayBeforeUnblockDate);
 		}
+	}
+
+	public String getMailAddress() {
+		return mailAddress;
+	}
+
+	public void setMailAddress(String mailAddress) {
+		this.mailAddress = mailAddress;
 	}
 
 }

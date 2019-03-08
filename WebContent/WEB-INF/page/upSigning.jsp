@@ -13,6 +13,12 @@
 			<div class="totallyCenteredContainer">
 				<form method="post" action="<c:url value="/UpSigning" />" accept-charset="UTF-8">
 					<p>
+						<label for="mailAddress">Mail address : </label> <input type="text" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
+							<c:if test="${not empty requestScope.prefilledMailAddress}">
+								value="<c:out value="${ requestScope.prefilledMailAddress }" />"
+								</c:if> />
+					</p>
+					<p>
 						<label for="nickname">Nickname : </label> <input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
 							<c:if test="${not empty requestScope.prefilledNickname}">
 								value="<c:out value="${ requestScope.prefilledNickname }" />"

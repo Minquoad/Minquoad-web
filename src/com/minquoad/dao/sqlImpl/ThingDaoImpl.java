@@ -23,6 +23,7 @@ public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingD
 		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());
 	}
 
+	@Override
 	public List<Thing> getUserThings(User user) {
 		return this.getAllMatching(user, "owner");
 	}

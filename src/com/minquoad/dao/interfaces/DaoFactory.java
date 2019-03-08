@@ -12,4 +12,6 @@ public interface DaoFactory {
 
 	public ConversationDao getConversationDao();
 
+	public FailedInLoginigAttemptDao getFailedInLoginigAttemptDao();
+
 }

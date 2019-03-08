@@ -28,6 +28,7 @@ public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<Conversatio
 		return new ConversationAccess();
 	}
 
+	@Override
 	public ConversationAccess getConversationAccess(User user, Conversation conversation) {
 
 		Collection<ConversationAccess> conversationAccessesInInventory = this.getInstantiatedEntyties();
