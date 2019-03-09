@@ -6,7 +6,12 @@ public abstract class SqlQueryGenerator {
 		return toArray("*");
 	}
 
+
 	public static String generateSelectQuery(String table, String[] returningColumn, String[] whereColumns) {
+		return generateSelectQuery(table, returningColumn, whereColumns, false);
+	}
+
+	public static String generateSelectQuery(String table, String[] returningColumn, String[] whereColumns, boolean stopAtFirstMatch) {
 		String query = "SELECT ";
 		if (isAll(returningColumn)) {
 			query += "*";
@@ -17,6 +22,9 @@ public abstract class SqlQueryGenerator {
 		}
 		query += " FROM \"" + table + "\"";
 		query = addConditions(query, whereColumns);
+		if (stopAtFirstMatch) {
+			query += " LIMIT 1";
+		}
 		return query + ";";
 	}
 

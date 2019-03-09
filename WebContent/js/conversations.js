@@ -64,7 +64,7 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
-	/*setInterval(function() {
+	setInterval(function() {
 		let messages = $("#messages");
 		if (messages) {
 			$.ajax({
@@ -86,5 +86,5 @@ $(document).ready(function() {
 				}
 			});
 		}
-	}, 3500);*/
+	}, 3500);
 });

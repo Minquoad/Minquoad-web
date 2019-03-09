@@ -1,5 +1,6 @@
 package com.minquoad.entity.unit;
 
+import java.time.Period;
 import java.util.Date;
 
 import com.minquoad.dao.interfaces.DaoFactory;
@@ -13,11 +14,11 @@ public class FailedInLoginigAttemptUnit extends Unit {
 	}
 
 	public void registerFailedInLoginigAttempt(String mailAddress) {
-		
+
 		FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory().getFailedInLoginigAttemptDao();
 
-		FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getFailedInLoginigAttemptByMailAddress(mailAddress);
-		
+		FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+
 		if (failedInLoginigAttempt != null) {
 			failedInLoginigAttempt.incrementAttemptsCount();
 			failedInLoginigAttempt.setLastArremptDate(new Date());
@@ -29,6 +30,20 @@ public class FailedInLoginigAttemptUnit extends Unit {
 			failedInLoginigAttempt.incrementAttemptsCount();
 			failedInLoginigAttempt.setLastArremptDate(new Date());
 			failedInLoginigAttemptDao.insert(failedInLoginigAttempt);
+		}
+	}
+
+	public Period getCoolDown(String mailAddress) {
+		FailedInLoginigAttempt failedInLoginigAttempt = getDaoFactory().getFailedInLoginigAttemptDao().getOneMatching(mailAddress, "mailAddress");
+		if (failedInLoginigAttempt == null) {
+			return null;
+		} else {
+			Date lastAttemptDate = failedInLoginigAttempt.getLastArremptDate();
+			int attemptsCount = failedInLoginigAttempt.getAttemptsCount();
+			Period period = null;
+			if (attemptsCount > 4) {
+			}
+			return period;
 		}
 	}
 

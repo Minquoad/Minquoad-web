@@ -1,7 +1,5 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.util.List;
-
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 
@@ -23,14 +21,4 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedI
 		return new FailedInLoginigAttempt();
 	}
 
-	@Override
-	public FailedInLoginigAttempt getFailedInLoginigAttemptByMailAddress(String mailAddress) {
-		List<FailedInLoginigAttempt> failedInLoginigAttempts = this.getAllMatching(mailAddress, "mailAddress");
-		if (failedInLoginigAttempts.isEmpty()) {
-			return null;
-		} else {
-			return failedInLoginigAttempts.get(0);
-		}
-	}
-	
 }

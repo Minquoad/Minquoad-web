@@ -29,6 +29,8 @@ public class UnseenMessages extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
+		getDaoFactory(request).getConversationAccessDao().getAll();
+		
 		return getUser(request) != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
@@ -64,7 +66,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 			if (unseenMessages.size() != 0) {
 				conversationAccess.setLastSeenMessage(unseenMessages.get(unseenMessages.size() - 1));
-				getDaoFactory(request).getConversationAccessDao().update(conversationAccess);
+				getDaoFactory(request).getConversationAccessDao().persist(conversationAccess);
 			}
 
 			request.setAttribute("messages", unseenMessages);

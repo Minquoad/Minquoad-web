@@ -8,6 +8,8 @@ public interface Dao<EntitySubclass> {
 
 	public EntitySubclass getById(Integer id);
 
+	public boolean persist(EntitySubclass entity);
+
 	public boolean insert(EntitySubclass entity);
 
 	public boolean update(EntitySubclass entity);
@@ -21,5 +23,11 @@ public interface Dao<EntitySubclass> {
 	public List<EntitySubclass> getAllMatching(EntityCriterion criterion);
 
 	public List<EntitySubclass> getAllMatching(EntityCriterion[] criteria);
+
+	public EntitySubclass getOneMatching(Object value, String memberName);
+
+	public EntitySubclass getOneMatching(EntityCriterion criterion);
+
+	public EntitySubclass getOneMatching(EntityCriterion[] criteria);
 
 }

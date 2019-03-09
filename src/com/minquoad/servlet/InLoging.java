@@ -13,6 +13,7 @@ import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
+import com.minquoad.entity.unit.FailedInLoginigAttemptUnit;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/InLoging")
@@ -45,29 +46,42 @@ public class InLoging extends ImprovedHttpServlet {
 		String password = request.getParameter("password");
 
 		if (mailAddress != null && password != null) {
+
+			FailedInLoginigAttemptUnit failedInLoginigAttemptUnit = getUnitFactory(request).getFailedInLoginigAttemptUnit();
+
 			List<String> formProblems = new ArrayList<String>();
 			request.setAttribute("formProblems", formProblems);
 
 			mailAddress = User.formatMailAddressCase(mailAddress);
 
-			UserDao userDao = getDaoFactory(request).getUserDao();
+			Object coolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
 
-			List<User> users = userDao.getAllMatching(mailAddress, "mailAddress");
+			if (coolDown == null) {
 
-			if (users.size() != 0 && users.get(0).isPassword(password)) {
-				setSessionUser(request, users.get(0));
-				
-				FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
-				FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getFailedInLoginigAttemptByMailAddress(mailAddress);
-				failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+				UserDao userDao = getDaoFactory(request).getUserDao();
+
+				List<User> users = userDao.getAllMatching(mailAddress, "mailAddress");
+
+				if (users.size() != 0 && users.get(0).isPassword(password)) {
+					setSessionUser(request, users.get(0));
+
+					FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
+					FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+					failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+
+				} else {
+					formProblems.add("Mail address or password is incorrect.");
+					request.setAttribute("prefilledMailAddress", mailAddress);
+
+					failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
+				}
 
 			} else {
-				formProblems.add("Mail address or password is incorrect.");
-				request.setAttribute("prefilledMailAddress", mailAddress);
 
-				getUnitFactory(request).getFailedInLoginigAttemptUnit().registerFailedInLoginigAttempt(mailAddress);
+				formProblems.add("Too manny failed connection trials have been done with the mail address " + mailAddress + ". This mail address will not be usable for " + coolDown);
+
 			}
-			
+
 			doGet(request, response);
 			return;
 		}
