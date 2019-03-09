@@ -1,7 +1,7 @@
 package com.minquoad.tool.http;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,8 +43,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			User controllingAdmin = getDaoFactory(request).getUserDao().getById((Integer) request.getSession().getAttribute(controllingAdminIdKey));
 
 			if (controllingAdmin == null) {
-				user.setLastActivityDate(new Date());
-				getDaoFactory(request).getUserDao().update(user);
+				user.setLastActivityInstant(Instant.now());
+				getDaoFactory(request).getUserDao().persist(user);
 
 				if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount")) {
 					response.sendRedirect(request.getContextPath() + "/BlockedAccount");
@@ -54,8 +54,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			} else {
 				setControllingAdmin(request, controllingAdmin);
 
-				controllingAdmin.setLastActivityDate(new Date());
-				getDaoFactory(request).getUserDao().update(user);
+				controllingAdmin.setLastActivityInstant(Instant.now());
+				getDaoFactory(request).getUserDao().persist(user);
 
 			}
 		}

@@ -1,6 +1,7 @@
 package com.minquoad.servlet;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,16 +55,16 @@ public class InLoging extends ImprovedHttpServlet {
 
 			mailAddress = User.formatMailAddressCase(mailAddress);
 
-			Object coolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
+			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
 
 			if (coolDown == null) {
 
 				UserDao userDao = getDaoFactory(request).getUserDao();
 
-				List<User> users = userDao.getAllMatching(mailAddress, "mailAddress");
+				User user = userDao.getOneMatching(mailAddress, "mailAddress");
 
-				if (users.size() != 0 && users.get(0).isPassword(password)) {
-					setSessionUser(request, users.get(0));
+				if (user != null && user.isPassword(password)) {
+					setSessionUser(request, user);
 
 					FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
 					FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
@@ -71,15 +72,20 @@ public class InLoging extends ImprovedHttpServlet {
 
 				} else {
 					formProblems.add("Mail address or password is incorrect.");
-					request.setAttribute("prefilledMailAddress", mailAddress);
-
 					failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
 				}
 
-			} else {
+			}
 
-				formProblems.add("Too manny failed connection trials have been done with the mail address " + mailAddress + ". This mail address will not be usable for " + coolDown);
+			Duration newCoolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
 
+			if (newCoolDown != null) {
+				formProblems.add("Too manny failed connection trials have been done with the mail address " + mailAddress
+						+ ". This mail address will not be usable for " + newCoolDown.getSeconds()/60 + " minutes and " + newCoolDown.getSeconds()%60 + " seconds.");
+			}
+
+			if (formProblems.size() != 0) {
+				request.setAttribute("prefilledMailAddress", mailAddress);
 			}
 
 			doGet(request, response);

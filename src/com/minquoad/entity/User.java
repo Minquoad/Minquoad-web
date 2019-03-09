@@ -1,7 +1,7 @@
 package com.minquoad.entity;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.minquoad.framework.dao.Entity;
@@ -14,10 +14,10 @@ public class User extends Entity {
 	private String nickname;
 	private String hashedSaltedPassword;
 	private String pictureName;
-	private Date registrationDate;
-	private Date lastActivityDate;
+	private Instant registrationInstant;
+	private Instant lastActivityInstant;
 	private int adminLevel;
-	private Date unblockDate;
+	private Instant unblockInstant;
 
 	public static final int nicknameMaxlength = 25;
 	public static final int mailAddressMaxlength = 50;
@@ -38,20 +38,20 @@ public class User extends Entity {
 		this.hashedSaltedPassword = hashedSaltedPassword;
 	}
 
-	public Date getRegistrationDate() {
-		return registrationDate;
+	public Instant getRegistrationInstant() {
+		return registrationInstant;
 	}
 
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setRegistrationInstant(Instant registrationInstant) {
+		this.registrationInstant = registrationInstant;
 	}
 
-	public Date getLastActivityDate() {
-		return lastActivityDate;
+	public Instant getLastActivityInstant() {
+		return lastActivityInstant;
 	}
 
-	public void setLastActivityDate(Date lastLogInDate) {
-		this.lastActivityDate = lastLogInDate;
+	public void setLastActivityInstant(Instant lastLogInInstant) {
+		this.lastActivityInstant = lastLogInInstant;
 	}
 
 	public int getAdminLevel() {
@@ -219,21 +219,20 @@ public class User extends Entity {
 		return problems;
 	}
 
-	public Date getUnblockDate() {
-		return unblockDate;
+	public Instant getUnblockInstant() {
+		return unblockInstant;
 	}
 
-	public void setUnblockDate(Date unblockDate) {
-		this.unblockDate = unblockDate;
+	public void setUnblockInstant(Instant unblockInstant) {
+		this.unblockInstant = unblockInstant;
 	}
 
 	public boolean isBlocked() {
-		if (unblockDate == null) {
+		if (unblockInstant == null) {
 			return false;
 		} else {
-			Date dayBeforeUnblockDate = new Date();
-			dayBeforeUnblockDate.setTime(unblockDate.getTime() - (1000l * 60l * 60l * 24l));
-			return new Date().after(dayBeforeUnblockDate);
+			Instant dayBeforeUnblockInstant = Instant.ofEpochMilli(unblockInstant.toEpochMilli() - (1000l * 60l * 60l * 24l));
+			return Instant.now().isAfter(dayBeforeUnblockInstant);
 		}
 	}
 

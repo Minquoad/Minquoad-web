@@ -13,7 +13,7 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedI
 	public void initEntityMembers() {
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
 		this.addIntegerEntityMember("attemptsCount", FailedInLoginigAttempt::getAttemptsCount, FailedInLoginigAttempt::setAttemptsCount);
-		this.addDateEntityMember("lastArremptDate", FailedInLoginigAttempt::getLastArremptDate, FailedInLoginigAttempt::setLastArremptDate);
+		this.addInstantEntityMember("lastArremptInstant", FailedInLoginigAttempt::getLastArremptInstant, FailedInLoginigAttempt::setLastArremptInstant);
 	}
 
 	@Override

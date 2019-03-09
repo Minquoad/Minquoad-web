@@ -48,7 +48,7 @@ public class ConversationUnit extends Unit {
 
 		int i = 0;
 		while (i + 1 < messages.size()) {
-			if (messages.get(i).getDate().after(messages.get(i + 1).getDate())) {
+			if (messages.get(i).getInstant().isAfter(messages.get(i + 1).getInstant())) {
 				Message latest = messages.get(i);
 				Message earlyest = messages.get(i + 1);
 				messages.set(i + 1, latest);

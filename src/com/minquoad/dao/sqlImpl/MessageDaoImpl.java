@@ -16,7 +16,7 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 	public void initEntityMembers() {
 		this.addStringEntityMember("text", Message::getText, Message::setText);
 		this.addStringEntityMember("editedText", Message::getEditedText, Message::setEditedText);
-		this.addDateEntityMember("date", Message::getDate, Message::setDate);
+		this.addInstantEntityMember("instant", Message::getInstant, Message::setInstant);
 		this.addForeingKeyEntityMember("user", Message::getUser, Message::setUser, getDaoFactory().getUserDao());
 		this.addForeingKeyEntityMember("conversation", Message::getConversation, Message::setConversation, getDaoFactory().getConversationDao());
 	}

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -89,7 +90,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 		if (entity != null) {
 			try {
 				boolean idNull = entity.getId() == null;
-				
+
 				String query = SqlQueryGenerator.generateInsertQuery(getTableName(), getColumnNames(!idNull),
 						SqlQueryGenerator.all());
 				PreparedStatement preparedStatement = prepareStatement(query);
@@ -222,8 +223,14 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 				for (EntityCriterion criterion : criteria) {
 					for (EntityMember<EntitySubclass, ?> member : getEntityMembers()) {
 						if (criterion.getName().equals(member.getName())) {
-							if (!criterion.getValue().equals(member.getValue(instantiatedEntity))) {
-								isMatching = false;
+							if (criterion.getValue() == null) {
+								if (member.getValue(instantiatedEntity) != null) {
+									isMatching = false;
+								}
+							} else {
+								if (!criterion.getValue().equals(member.getValue(instantiatedEntity))) {
+									isMatching = false;
+								}
 							}
 						}
 					}
@@ -232,7 +239,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 					return instantiatedEntity;
 				}
 			}
-			
+
 			String[] whereColumns = new String[criteria.length];
 			for (int i = 0; i < whereColumns.length; i++) {
 				whereColumns[i] = criteria[i].getName();
@@ -319,7 +326,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 		}
 		return idEntityMember;
 	}
-	
+
 	// EntityMember adders
 
 	public void addEntityMember(EntityMember<EntitySubclass, ?> entityMember) {
@@ -521,6 +528,33 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 				ResultSet::getTimestamp,
 				(preparedStatement, parameterIndex, value) -> preparedStatement.setTimestamp(parameterIndex,
 						new Timestamp(value.getTime()))));
+	}
+
+	/**
+	 * postgreSQL equivalent type : timestamp with time zone
+	 * 
+	 * @param name
+	 * @param valueGetter
+	 * @param valueSetter
+	 */
+	public void addInstantEntityMember(String name,
+			EntityMemberGetter<EntitySubclass, Instant> valueGetter,
+			EntityMemberSetter<EntitySubclass, Instant> valueSetter) {
+
+		this.addEntityMember(new EntityMember<EntitySubclass, Instant>(
+				name,
+				valueGetter,
+				valueSetter,
+				(resultSet, thisName) -> {
+					Timestamp timestamp = resultSet.getTimestamp(thisName);
+					if (timestamp == null) {
+						return null;
+					} else {
+						return timestamp.toInstant();
+					}
+				},
+				(preparedStatement, parameterIndex, value) -> preparedStatement.setTimestamp(parameterIndex,
+						new Timestamp(value.toEpochMilli()))));
 	}
 
 	/**

@@ -25,10 +25,10 @@ public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao 
 		this.addStringEntityMember("nickname", User::getNickname, User::setNickname);
 		this.addStringEntityMember("hashedSaltedPassword", User::getHashedSaltedPassword, User::setHashedSaltedPassword);
 		this.addStringEntityMember("pictureName", User::getPictureName, User::setPictureName);
-		this.addDateEntityMember("registrationDate", User::getRegistrationDate, User::setRegistrationDate);
-		this.addDateEntityMember("lastActivityDate", User::getLastActivityDate, User::setLastActivityDate);
+		this.addInstantEntityMember("registrationInstant", User::getRegistrationInstant, User::setRegistrationInstant);
+		this.addInstantEntityMember("lastActivityInstant", User::getLastActivityInstant, User::setLastActivityInstant);
 		this.addIntegerEntityMember("adminLevel", User::getAdminLevel, User::setAdminLevel);
-		this.addDateEntityMember("unblockDate", User::getUnblockDate, User::setUnblockDate);
+		this.addInstantEntityMember("unblockInstant", User::getUnblockInstant, User::setUnblockInstant);
 	}
 
 	@Override

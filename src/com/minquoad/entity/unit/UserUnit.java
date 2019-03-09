@@ -1,6 +1,6 @@
 package com.minquoad.entity.unit;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.UserDao;
@@ -19,11 +19,11 @@ public class UserUnit extends Unit {
 		User user = new User();
 		user.setMailAddress(mailAddress);
 		user.setNickname(nickname);
-		user.setRegistrationDate(new Date());
-		user.setLastActivityDate(new Date());
+		user.setRegistrationInstant(Instant.now());
+		user.setLastActivityInstant(Instant.now());
 		userDao.insert(user);
 		user.setPassword(password);
-		userDao.update(user);
+		userDao.persist(user);
 
 		new ConversationUnit(getDaoFactory()).initUserConversations(user);
 

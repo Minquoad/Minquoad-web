@@ -1,6 +1,6 @@
 package com.minquoad.entity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.minquoad.framework.dao.Entity;
 
@@ -8,7 +8,7 @@ public class FailedInLoginigAttempt extends Entity {
 
 	private String mailAddress;
 	private int attemptsCount;
-	private Date lastArremptDate;
+	private Instant lastArremptInstant;
 
 	public String getMailAddress() {
 		return mailAddress;
@@ -32,12 +32,12 @@ public class FailedInLoginigAttempt extends Entity {
 		this.attemptsCount = attemptsCount;
 	}
 
-	public Date getLastArremptDate() {
-		return lastArremptDate;
+	public Instant getLastArremptInstant() {
+		return lastArremptInstant;
 	}
 
-	public void setLastArremptDate(Date lastArremptDate) {
-		this.lastArremptDate = lastArremptDate;
+	public void setLastArremptInstant(Instant lastArremptInstant) {
+		this.lastArremptInstant = lastArremptInstant;
 	}
 
 }

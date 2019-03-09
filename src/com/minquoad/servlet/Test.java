@@ -47,35 +47,35 @@ public class Test extends ImprovedHttpServlet {
 
 		for (Thing thing : things) {
 			thing.setDescription("");
-			thingDao.update(thing);
+			thingDao.persist(thing);
 		}
 
 		things = thingDao.getAllMatching("description null", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setDescription(null);
-			thingDao.update(thing);
+			thingDao.persist(thing);
 		}
 
 		things = thingDao.getAllMatching("à admin", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setOwner(getDaoFactory(request).getUserDao().getById(1));
-			thingDao.update(thing);
+			thingDao.persist(thing);
 		}
 
 		things = thingDao.getAllMatching("à null", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setOwner(null);
-			thingDao.update(thing);
+			thingDao.persist(thing);
 		}
 
 		things = thingDao.getAllMatching("à Test-zero", descriptionMemberName);
 
 		for (Thing thing : things) {
 			thing.setOwner(getDaoFactory(request).getUserDao().getById(2));
-			thingDao.update(thing);
+			thingDao.persist(thing);
 		}
 
 		request.setAttribute("things", thingDao.getAll());
@@ -113,11 +113,11 @@ public class Test extends ImprovedHttpServlet {
 						thing = new Thing();
 						thing.setId(id);
 						thing.setDescription(description);
-						getDaoFactory(request).getThingDao().insert(thing);
+						getDaoFactory(request).getThingDao().persist(thing);
 					} else {
 
 						thing.setDescription(description);
-						getDaoFactory(request).getThingDao().update(thing);
+						getDaoFactory(request).getThingDao().persist(thing);
 					}
 				}
 			}

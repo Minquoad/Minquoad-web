@@ -46,7 +46,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 				ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
 				ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
 				conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
-				conversationAccessDao.update(conversationAccess);
+				conversationAccessDao.persist(conversationAccess);
 			}
 
 			request.setAttribute("messages", messages);

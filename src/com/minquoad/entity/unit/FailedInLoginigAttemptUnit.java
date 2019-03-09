@@ -1,7 +1,7 @@
 package com.minquoad.entity.unit;
 
-import java.time.Period;
-import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
@@ -21,29 +21,46 @@ public class FailedInLoginigAttemptUnit extends Unit {
 
 		if (failedInLoginigAttempt != null) {
 			failedInLoginigAttempt.incrementAttemptsCount();
-			failedInLoginigAttempt.setLastArremptDate(new Date());
-			failedInLoginigAttemptDao.update(failedInLoginigAttempt);
+			failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+			failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 
 		} else {
 			failedInLoginigAttempt = new FailedInLoginigAttempt();
 			failedInLoginigAttempt.setMailAddress(mailAddress);
 			failedInLoginigAttempt.incrementAttemptsCount();
-			failedInLoginigAttempt.setLastArremptDate(new Date());
-			failedInLoginigAttemptDao.insert(failedInLoginigAttempt);
+			failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+			failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 		}
 	}
 
-	public Period getCoolDown(String mailAddress) {
+	public Duration getCoolDown(String mailAddress) {
 		FailedInLoginigAttempt failedInLoginigAttempt = getDaoFactory().getFailedInLoginigAttemptDao().getOneMatching(mailAddress, "mailAddress");
 		if (failedInLoginigAttempt == null) {
 			return null;
 		} else {
-			Date lastAttemptDate = failedInLoginigAttempt.getLastArremptDate();
+			Instant lastAttemptInstant = failedInLoginigAttempt.getLastArremptInstant();
 			int attemptsCount = failedInLoginigAttempt.getAttemptsCount();
-			Period period = null;
-			if (attemptsCount > 4) {
+			Duration duration = null;
+			if (attemptsCount >= 5) {
+				if (attemptsCount < 8) {
+					Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60);
+					duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
+				} else {
+					if (attemptsCount < 10) {
+						Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60 * 10);
+						duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
+					} else {
+						Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60 * 20);
+						duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
+					}
+				}
 			}
-			return period;
+			
+			if (duration.isNegative()) {
+				duration = null;
+			}
+			
+			return duration;
 		}
 	}
 

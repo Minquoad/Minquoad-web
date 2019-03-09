@@ -1,6 +1,6 @@
 package com.minquoad.entity;
 
-import java.util.Date;
+import java.time.Instant;
 
 import com.minquoad.framework.dao.Entity;
 
@@ -10,7 +10,7 @@ public class Message extends Entity {
 
 	private String editedText;
 
-	private Date date;
+	private Instant instant;
 
 	private User user;
 
@@ -48,12 +48,12 @@ public class Message extends Entity {
 		this.conversation = conversation;
 	}
 
-	public Date getDate() {
-		return date;
+	public Instant getInstant() {
+		return instant;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setInstant(Instant instant) {
+		this.instant = instant;
 	}
 	
 }

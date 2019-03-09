@@ -1,7 +1,7 @@
 package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,7 +43,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 				message.setText(text);
 				message.setUser(getUser(request));
 				message.setConversation(conversation);
-				message.setDate(new Date());
+				message.setInstant(Instant.now());
 				getDaoFactory(request).getMessageDao().insert(message);
 			}
 		}

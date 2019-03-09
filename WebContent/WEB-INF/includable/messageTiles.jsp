@@ -11,7 +11,7 @@
 				:
 			</div>
 			<div>
-				<c:out value="${ message.date }" />
+				<c:out value="${ message.instant }" />
 			</div>
 		</div>
 		<div class="messageText">

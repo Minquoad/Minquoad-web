@@ -38,10 +38,10 @@
 											<c:out value="${ user.nickname }" />
 										</td>
 										<td>
-											<c:out value="${ user.registrationDate }" />
+											<c:out value="${ user.registrationInstant }" />
 										</td>
 										<td>
-											<c:out value="${ user.registrationDate }" />
+											<c:out value="${ user.registrationInstant }" />
 										</td>
 										<td>
 											<c:if test="${user.canAdminister(requestScope.user)}">
@@ -55,7 +55,7 @@
 											<c:out value="${ user.adminLevel }" />
 										</td>
 										<td>
-											<c:out value="${ user.unblockDate }" />
+											<c:out value="${ user.unblockInstant }" />
 										</td>
 									</tr>
 								</c:if>

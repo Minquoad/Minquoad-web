@@ -59,7 +59,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				} else {
 					user.setPictureName(null);
 				}
-				getDaoFactory(request).getUserDao().update(user);
+				getDaoFactory(request).getUserDao().persist(user);
 
 				doGet(request, response);
 			}
@@ -89,7 +89,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 					if (formProblems.size() == 0) {
 						user.setPassword(newPassword);
-						getDaoFactory(request).getUserDao().update(user);
+						getDaoFactory(request).getUserDao().persist(user);
 					}
 
 					doGet(request, response);
