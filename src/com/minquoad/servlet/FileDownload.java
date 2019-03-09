@@ -30,7 +30,7 @@ public class FileDownload extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
 
-		File file = new File(Deployment.storagePath + protectedFile.getStoragePath());
+		File file = new File(Deployment.storagePath + protectedFile.getRelativePath());
 
 		String type = getServletContext().getMimeType(file.getName());
 
@@ -42,7 +42,7 @@ public class FileDownload extends ImprovedHttpServlet {
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(type);
 		response.setHeader("Content-Length", String.valueOf(file.length()));
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + protectedFile.getId() + "\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + protectedFile.getApparentName() + "\"");
 
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;

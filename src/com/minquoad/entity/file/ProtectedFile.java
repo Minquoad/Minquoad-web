@@ -5,18 +5,22 @@ import com.minquoad.framework.dao.Entity;
 
 public class ProtectedFile extends Entity {
 
-	private String storagePath;
+	private String relativePath;
 
 	public boolean isDownloadableForUser(User user) {
 		return true;
 	}
 
-	public String getStoragePath() {
-		return storagePath;
+	public String getApparentName() {
+		return Integer.toString(getId());
+	}
+	
+	public String getRelativePath() {
+		return relativePath;
 	}
 
-	public void setStoragePath(String storagePath) {
-		this.storagePath = storagePath;
+	public void setRelativePath(String relativePath) {
+		this.relativePath = relativePath;
 	}
 	
 }

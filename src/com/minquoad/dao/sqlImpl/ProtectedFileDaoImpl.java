@@ -11,7 +11,7 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 
 	@Override
 	public void initEntityMembers() {
-		this.addStringEntityMember("storagePath", ProtectedFile::getStoragePath, ProtectedFile::setStoragePath);
+		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
 	}
 
 	@Override
