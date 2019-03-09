@@ -14,4 +14,6 @@ public interface DaoFactory {
 
 	public FailedInLoginigAttemptDao getFailedInLoginigAttemptDao();
 
+	public ProtectedFileDao getProtectedFileDao();
+
 }

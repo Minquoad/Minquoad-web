@@ -74,7 +74,6 @@ public class InLoging extends ImprovedHttpServlet {
 					formProblems.add("Mail address or password is incorrect.");
 					failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
 				}
-
 			}
 
 			Duration newCoolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);

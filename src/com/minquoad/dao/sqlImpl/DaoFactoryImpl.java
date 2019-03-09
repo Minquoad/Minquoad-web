@@ -10,7 +10,8 @@ public class DaoFactoryImpl implements DaoFactory {
 	private ConversationAccessDaoImpl conversationAccessDaoImpl;
 	private ConversationDaoImpl conversationDaoImpl;
 	private FailedInLoginigAttemptDaoImpl failedInLoginigAttemptDaoImpl;
-	
+	private ProtectedFileDaoImpl protectedFileDaoImpl;
+
 	@Override
 	public ThingDaoImpl getThingDao() {
 		if (thingDaoImpl == null) {
@@ -57,6 +58,14 @@ public class DaoFactoryImpl implements DaoFactory {
 			failedInLoginigAttemptDaoImpl = new FailedInLoginigAttemptDaoImpl(this);
 		}
 		return failedInLoginigAttemptDaoImpl;
+	}
+
+	@Override
+	public ProtectedFileDaoImpl getProtectedFileDao() {
+		if (protectedFileDaoImpl == null) {
+			protectedFileDaoImpl = new ProtectedFileDaoImpl(this);
+		}
+		return protectedFileDaoImpl;
 	}
 
 }
