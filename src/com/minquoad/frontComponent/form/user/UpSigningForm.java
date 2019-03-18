@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.FormField;
+import com.minquoad.frontComponent.form.NonNullValueChecker;
 
 public class UpSigningForm extends Form {
 
@@ -18,7 +19,7 @@ public class UpSigningForm extends Form {
 	public UpSigningForm(HttpServletRequest request) {
 		super(request);
 	}
-	
+
 	@Override
 	public void build() {
 
@@ -27,10 +28,13 @@ public class UpSigningForm extends Form {
 		field = new FormField(mailAddressKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
-				problemes.addAll(User.getMailAddressProblems(getValue()));
+				if (getValue() != null) {
+					problemes.addAll(User.getMailAddressProblems(getValue()));
+				}
 				return problemes;
 			}
 		};
+		field.addValueChecker(new NonNullValueChecker());
 		field.addValueChecker((value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "mailAddress");
 			if (existingUser == null) {
@@ -44,10 +48,13 @@ public class UpSigningForm extends Form {
 		field = new FormField(nicknameKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
-				problemes.addAll(User.getNicknameProblems(getValue()));
+				if (getValue() != null) {
+					problemes.addAll(User.getNicknameProblems(getValue()));
+				}
 				return problemes;
 			}
 		};
+		field.addValueChecker(new NonNullValueChecker());
 		field.addValueChecker((value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "nickname");
 			if (existingUser == null) {
@@ -61,13 +68,17 @@ public class UpSigningForm extends Form {
 		field = new FormField(passwordKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
-				problemes.addAll(User.getPasswordProblems(getValue()));
+				if (getValue() != null) {
+					problemes.addAll(User.getPasswordProblems(getValue()));
+				}
 				return problemes;
 			}
 		};
+		field.addValueChecker(new NonNullValueChecker());
 		this.addField(field);
 
 		field = new FormField(passwordConfirmationKey);
+		field.addValueChecker(new NonNullValueChecker());
 		field.addValueChecker((value) -> {
 			String password = this.getFieldValue(passwordKey);
 			if (password != null && !password.equals(value)) {
@@ -78,5 +89,5 @@ public class UpSigningForm extends Form {
 		this.addField(field);
 
 	}
-	
+
 }

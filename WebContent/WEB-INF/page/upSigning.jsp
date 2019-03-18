@@ -59,7 +59,7 @@
 					</div>
 				</form>
 				<p>
-					<a href="LogIn">Already registered? Log in.</a>
+					<a href="<c:url value="/InLoging" />">Already registered? Log in.</a>
 				</p>
 			</div>
 		</div>
