@@ -32,15 +32,9 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		File file = new File(Deployment.storagePath + protectedFile.getRelativePath());
 
-		String type = getServletContext().getMimeType(file.getName());
-
-		if (type == null) {
-			type = "application/octet-stream";
-		}
-
 		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
-		response.setContentType(type);
+		response.setContentType(this.getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(file.length()));
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + protectedFile.getApparentName() + "\"");
 
@@ -66,5 +60,18 @@ public class FileDownload extends ImprovedHttpServlet {
 			} catch (IOException ignore) {
 			}
 		}
+	}
+
+	protected String getMimeType(ProtectedFile protectedFile) {
+
+		File file = new File(Deployment.storagePath + protectedFile.getRelativePath());
+
+		String mimeType = getServletContext().getMimeType(file.getName());
+
+		if (mimeType == null) {
+			mimeType = "application/octet-stream";
+		}
+
+		return mimeType;
 	}
 }

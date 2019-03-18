@@ -55,7 +55,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 			} else {
 				try {
 					String query = SqlQueryGenerator.generateSelectQuery(getTableName(), SqlQueryGenerator.all(),
-							SqlQueryGenerator.toArray("id"));
+							SqlQueryGenerator.toArray("id"), true);
 					PreparedStatement preparedStatement = prepareStatement(query);
 					preparedStatement.setInt(1, id);
 					ResultSet resultSet = preparedStatement.executeQuery();
@@ -218,7 +218,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 
 	public EntitySubclass getOneMatching(EntityCriterion[] criteria) {
 		try {
-			for (EntitySubclass instantiatedEntity : getInventory().values()) {
+			for (EntitySubclass instantiatedEntity : getInstantiatedEntyties()) {
 				boolean isMatching = true;
 				for (EntityCriterion criterion : criteria) {
 					for (EntityMember<EntitySubclass, ?> member : getEntityMembers()) {

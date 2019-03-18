@@ -29,9 +29,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
-		getDaoFactory(request).getConversationAccessDao().getAll();
-		
-		return getUser(request) != null
+		return user != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
 

@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.dao.Database;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
-import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
 import com.minquoad.entity.User;
 import com.minquoad.entity.unit.UnitFactory;
 import com.minquoad.framework.dao.Entity;
@@ -88,6 +88,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		}
 
 		super.service(request, response);
+
 	}
 
 	public boolean isFullPage() {
@@ -96,7 +97,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
 		if (request.getAttribute(daoFactoryKey) == null) {
-			request.setAttribute(daoFactoryKey, ImprovedHttpServlet.instantiateDaoFactory());
+			request.setAttribute(daoFactoryKey, Database.instantiateDaoFactory());
 		}
 		return (DaoFactory) request.getAttribute(daoFactoryKey);
 	}
@@ -151,10 +152,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			}
 		}
 		return null;
-	}
-
-	public static DaoFactory instantiateDaoFactory() {
-		return new DaoFactoryImpl();
 	}
 
 	protected interface DaoGetter<EntitySubclass extends Entity> {

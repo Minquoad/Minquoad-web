@@ -30,13 +30,13 @@ public class Test extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		/*
+
 		System.out.println("requestURL = " + request.getRequestURL().toString());
 		System.out.println("queryString = " + request.getQueryString());
 		System.out.println("requestURI = " + request.getRequestURI());
 		System.out.println("servletPath = " + request.getServletPath());
 		System.out.println("contextPath = " + request.getContextPath());
-		*/
+
 		ThingDao thingDao = getDaoFactory(request).getThingDao();
 
 		String descriptionMemberName = "description";

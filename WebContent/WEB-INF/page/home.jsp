@@ -24,7 +24,7 @@
 			<img>
 			<div class="tileContainer">
 				<div class="borderedTile">
-					<img class="padded" src="<c:url value="/img/test.png" />" />
+					<img class="padded" src="<c:url value="/img/staticTest.png" />" />
 				</div>
 				<div class="borderedTile">
 					<c:url value="/FileDownload" var="fileDownloadUrl">

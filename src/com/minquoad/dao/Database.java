@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
 
@@ -57,6 +59,10 @@ public abstract class Database {
 			Logger.logInfo(message);
 			return connections[iterator].prepareStatement(statement);
 		}
+	}
+
+	public static DaoFactory instantiateDaoFactory() {
+		return new DaoFactoryImpl();
 	}
 
 }
