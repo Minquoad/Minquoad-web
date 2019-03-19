@@ -8,10 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
+import com.minquoad.frontComponent.form.conversation.MessageAdditionForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/MessageAddition")
@@ -24,8 +24,10 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
+		MessageAdditionForm form = new MessageAdditionForm(request);
+
 		User user = getUser(request);
-		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		Conversation conversation = form.getConversation();
 
 		return user != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
@@ -33,19 +35,18 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String text = request.getParameter("text");
-		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		MessageAdditionForm form = new MessageAdditionForm(request);
 
-		if (conversation != null && text != null) {
-			text = text.trim();
-			if (!text.equals("")) {
-				Message message = new Message();
-				message.setText(text);
-				message.setUser(getUser(request));
-				message.setConversation(conversation);
-				message.setInstant(Instant.now());
-				getDaoFactory(request).getMessageDao().insert(message);
-			}
+		if (form.isValide()) {
+			String text = form.getFieldValueAsString(MessageAdditionForm.textKey);
+			Conversation conversation = form.getConversation();
+
+			Message message = new Message();
+			message.setText(text);
+			message.setUser(getUser(request));
+			message.setConversation(conversation);
+			message.setInstant(Instant.now());
+			getDaoFactory(request).getMessageDao().persist(message);
 		}
 	}
 

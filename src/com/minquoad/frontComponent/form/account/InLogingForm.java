@@ -30,7 +30,9 @@ public class InLogingForm extends Form {
 		field = new FormStringField(mailAddressKey) {
 			@Override
 			public void setValue(String value) {
-				super.setValue(User.formatMailAddressCase(value));
+				if (value != null) {
+					super.setValue(User.formatMailAddressCase(value));
+				}
 			}
 		};
 		field.addValueChecker(new NonNullValueChecker());

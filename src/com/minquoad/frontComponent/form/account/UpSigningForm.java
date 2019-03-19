@@ -28,7 +28,9 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(mailAddressKey) {
 			@Override
 			public void setValue(String value) {
-				super.setValue(User.formatMailAddressCase(value));
+				if (value != null) {
+					super.setValue(User.formatMailAddressCase(value));
+				}
 			}
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
@@ -52,7 +54,9 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(nicknameKey) {
 			@Override
 			public void setValue(String value) {
-				super.setValue(User.formatNickanameCase(value));
+				if (value != null) {
+					super.setValue(User.formatNickanameCase(value));
+				}
 			}
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();

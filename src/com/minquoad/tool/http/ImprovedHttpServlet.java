@@ -153,10 +153,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	protected interface DaoGetter<EntitySubclass extends Entity> {
-		public Dao<EntitySubclass> getDao(DaoFactory daoFactory);
-	}
-
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
 		this.getServletContext().getRequestDispatcher(viewPath).forward(request, response);
 	}

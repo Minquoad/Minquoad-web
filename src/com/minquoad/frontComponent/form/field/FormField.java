@@ -9,6 +9,7 @@ import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.unit.UnitFactory;
 import com.minquoad.framework.dao.Entity;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.tool.http.DaoGetter;
 
 public abstract class FormField {
 
@@ -85,6 +86,10 @@ public abstract class FormField {
 				return null;
 			}
 		}
+	}
+
+	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(DaoGetter<EntitySubclass> daoGetter) {
+		return getValueAsEntity(daoGetter.getDao(getDaoFactory()));
 	}
 
 	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
