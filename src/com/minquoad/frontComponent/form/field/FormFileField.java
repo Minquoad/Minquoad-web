@@ -17,6 +17,7 @@ public class FormFileField extends FormField {
 
 	public FormFileField(String name) {
 		super(name);
+		required = false;
 	}
 
 	@Override

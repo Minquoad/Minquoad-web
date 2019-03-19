@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.user.UpSigningForm;
+import com.minquoad.frontComponent.form.account.UpSigningForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/UpSigning")

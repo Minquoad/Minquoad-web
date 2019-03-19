@@ -33,11 +33,14 @@
 
 							<p>
 								<input type="file" name="userPicture" />
+								<c:if test="${ not empty requestScope.userPictureAlterationForm }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userPictureAlterationForm" />
+										<jsp:param name="fieldName" value="userPicture" />
+									</jsp:include>
+								</c:if>
 							</p>
 							<p>Submit without file to return back to the default picture.</p>
-							<jsp:include page="/WEB-INF/includable/form/formProblems.jsp">
-								<jsp:param name="formProblems" value="userPictureAlterationFormProblems" />
-							</jsp:include>
 							<div>
 								<input type="submit" value="Submit" />
 							</div>
@@ -54,16 +57,31 @@
 
 							<p>
 								<label for="oldPassowrd">Old Password : </label> <input type="password" name="oldPassowrd" id="oldPassowrd" />
+								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userPasswordAlterationForm" />
+										<jsp:param name="fieldName" value="oldPassowrd" />
+									</jsp:include>
+								</c:if>
 							</p>
 							<p>
 								<label for="newPassword">New password : </label> <input type="password" name="newPassword" id="newPassword" />
+								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userPasswordAlterationForm" />
+										<jsp:param name="fieldName" value="newPassword" />
+									</jsp:include>
+								</c:if>
 							</p>
 							<p>
 								<label for="newPasswordConfirmation">Confirm new password : </label> <input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" />
+								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userPasswordAlterationForm" />
+										<jsp:param name="fieldName" value="newPasswordConfirmation" />
+									</jsp:include>
+								</c:if>
 							</p>
-							<jsp:include page="/WEB-INF/includable/form/formProblems.jsp">
-								<jsp:param name="formProblems" value="userPasswordAlterationFormProblems" />
-							</jsp:include>
 							<div>
 								<input type="submit" value="Change" />
 							</div>

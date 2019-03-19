@@ -1,9 +1,6 @@
 package com.minquoad.servlet.account;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +12,7 @@ import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
 import com.minquoad.entity.unit.FailedInLoginigAttemptUnit;
+import com.minquoad.frontComponent.form.account.InLogingForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/InLoging")
@@ -36,55 +34,31 @@ public class InLoging extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		String mailAddress = request.getParameter("mailAddress");
-		String password = request.getParameter("password");
+		InLogingForm form = new InLogingForm(request);
 
-		if (mailAddress != null && password != null) {
+		String mailAddress = form.getFieldValueAsString(InLogingForm.mailAddressKey);
 
+		if (form.isValide()) {
+
+			UserDao userDao = getDaoFactory(request).getUserDao();
+
+			User user = userDao.getOneMatching(mailAddress, "mailAddress");
+
+			setSessionUser(request, user);
+
+			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
+			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+			failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+
+		} else {
 			FailedInLoginigAttemptUnit failedInLoginigAttemptUnit = getUnitFactory(request).getFailedInLoginigAttemptUnit();
 
-			List<String> formProblems = new ArrayList<String>();
-			request.setAttribute("formProblems", formProblems);
+			failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
 
-			mailAddress = User.formatMailAddressCase(mailAddress);
-
-			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
-
-			if (coolDown == null) {
-
-				UserDao userDao = getDaoFactory(request).getUserDao();
-
-				User user = userDao.getOneMatching(mailAddress, "mailAddress");
-
-				if (user != null && user.isPassword(password)) {
-					setSessionUser(request, user);
-
-					FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
-					FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
-					failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
-
-				} else {
-					formProblems.add("Mail address or password is incorrect.");
-					failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
-				}
-			}
-
-			Duration newCoolDown = failedInLoginigAttemptUnit.getCoolDown(mailAddress);
-
-			if (newCoolDown != null) {
-				formProblems.add("Too manny failed connection trials have been done with the mail address " + mailAddress
-						+ ". This mail address will not be usable for " + newCoolDown.getSeconds()/60 + " minutes and " + newCoolDown.getSeconds()%60 + " seconds.");
-			}
-
-			if (formProblems.size() != 0) {
-				request.setAttribute("prefilledMailAddress", mailAddress);
-			}
-
-			forwardToView(request, response, viewPath);
-			return;
+			request.setAttribute("form", form);
 		}
 
-		response.setStatus(422);
+		forwardToView(request, response, viewPath);
 	}
 
 	@Override

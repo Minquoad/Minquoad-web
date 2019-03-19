@@ -4,7 +4,7 @@
 		fieldName : the name of the field in the form
  --%>
 <c:set var="form" value="${ requestScope[param.formKey] }" scope="page" />
-<c:set var="fieldValueProblems" value="${ form.getFieldValueProblems(param.fieldName) }" scope="page" />
+<c:set var="fieldValueProblems" value="${ pageScope.form.getFieldValueProblems(param.fieldName) }" scope="page" />
 
 <c:if test="${ not empty pageScope.fieldValueProblems }">
 	<c:if test="${ fn:length(pageScope.fieldValueProblems) ne 0}">

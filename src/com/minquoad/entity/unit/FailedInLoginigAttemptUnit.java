@@ -15,21 +15,24 @@ public class FailedInLoginigAttemptUnit extends Unit {
 
 	public void registerFailedInLoginigAttempt(String mailAddress) {
 
-		FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory().getFailedInLoginigAttemptDao();
+		if (getCoolDown(mailAddress) == null) {
 
-		FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory().getFailedInLoginigAttemptDao();
 
-		if (failedInLoginigAttempt != null) {
-			failedInLoginigAttempt.incrementAttemptsCount();
-			failedInLoginigAttempt.setLastArremptInstant(Instant.now());
-			failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
+			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
 
-		} else {
-			failedInLoginigAttempt = new FailedInLoginigAttempt();
-			failedInLoginigAttempt.setMailAddress(mailAddress);
-			failedInLoginigAttempt.incrementAttemptsCount();
-			failedInLoginigAttempt.setLastArremptInstant(Instant.now());
-			failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
+			if (failedInLoginigAttempt != null) {
+				failedInLoginigAttempt.incrementAttemptsCount();
+				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
+
+			} else {
+				failedInLoginigAttempt = new FailedInLoginigAttempt();
+				failedInLoginigAttempt.setMailAddress(mailAddress);
+				failedInLoginigAttempt.incrementAttemptsCount();
+				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
+			}
 		}
 	}
 
@@ -40,7 +43,9 @@ public class FailedInLoginigAttemptUnit extends Unit {
 		} else {
 			Instant lastAttemptInstant = failedInLoginigAttempt.getLastArremptInstant();
 			int attemptsCount = failedInLoginigAttempt.getAttemptsCount();
+			
 			Duration duration = null;
+			
 			if (attemptsCount >= 5) {
 				if (attemptsCount < 8) {
 					Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60);
@@ -56,11 +61,11 @@ public class FailedInLoginigAttemptUnit extends Unit {
 				}
 			}
 			
-			if (duration.isNegative()) {
-				duration = null;
+			if (duration == null || duration.isNegative()) {
+				return null;
+			} else {
+				return duration;
 			}
-			
-			return duration;
 		}
 	}
 

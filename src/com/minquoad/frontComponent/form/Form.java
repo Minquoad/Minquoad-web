@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.entity.User;
+import com.minquoad.entity.unit.UnitFactory;
 import com.minquoad.frontComponent.form.field.FormField;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
@@ -64,6 +66,14 @@ public class Form {
 
 	public DaoFactory getDaoFactory() {
 		return ImprovedHttpServlet.getDaoFactory(getRequest());
+	}
+
+	public UnitFactory getUnitFactory() {
+		return ImprovedHttpServlet.getUnitFactory(getRequest());
+	}
+
+	public User getUser() {
+		return ImprovedHttpServlet.getUser(getRequest());
 	}
 
 	public HttpServletRequest getRequest() {

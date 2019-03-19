@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.entity.unit.UnitFactory;
 import com.minquoad.framework.dao.Entity;
 import com.minquoad.frontComponent.form.Form;
 
@@ -53,6 +54,10 @@ public abstract class FormField {
 
 	protected DaoFactory getDaoFactory() {
 		return getForm().getDaoFactory();
+	}
+
+	protected UnitFactory getUnitFactory() {
+		return getForm().getUnitFactory();
 	}
 
 	public abstract String getValueAsString();

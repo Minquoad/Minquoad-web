@@ -29,7 +29,7 @@ public class FormStringField extends FormField {
 	}
 
 	public void collectValue(HttpServletRequest request) {
-		this.value = request.getParameter(getName());
+		this.setValue(request.getParameter(getName()));
 	}
 
 	public void addValueChecker(ValueChecker valueChecker) {

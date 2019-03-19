@@ -88,7 +88,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		}
 
 		super.service(request, response);
-
 	}
 
 	public boolean isFullPage() {

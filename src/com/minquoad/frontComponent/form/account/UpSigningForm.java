@@ -1,4 +1,4 @@
-package com.minquoad.frontComponent.form.user;
+package com.minquoad.frontComponent.form.account;
 
 import java.util.List;
 
@@ -26,6 +26,10 @@ public class UpSigningForm extends Form {
 		FormStringField field = null;
 
 		field = new FormStringField(mailAddressKey) {
+			@Override
+			public void setValue(String value) {
+				super.setValue(User.formatMailAddressCase(value));
+			}
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
 				if (getValue() != null) {
@@ -46,6 +50,10 @@ public class UpSigningForm extends Form {
 		this.addField(field);
 
 		field = new FormStringField(nicknameKey) {
+			@Override
+			public void setValue(String value) {
+				super.setValue(User.formatNickanameCase(value));
+			}
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
 				if (getValue() != null) {

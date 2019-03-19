@@ -13,19 +13,24 @@
 			<div class="totallyCenteredContainer">
 				<form method="post" action="<c:url value="/InLoging" />" accept-charset="UTF-8">
 					<p>
-						<label for="mailAddress">Mail address : </label> <input type="text"
-							name="mailAddress" id="nickname"
-							<c:if test="${not empty requestScope.prefilledMailAddress}">
-								value="<c:out value="${ requestScope.prefilledMailAddress }" />"
+						<label for="mailAddress">Mail address : </label> <input type="text" name="mailAddress" id="nickname"
+							<c:if test="${not empty requestScope.form}">
+								value="<c:out value="${ requestScope.form.getFieldValueAsString('mailAddress') }" />"
 								</c:if> />
+						<c:if test="${ not empty requestScope.form }">
+							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+								<jsp:param name="formKey" value="form" />
+								<jsp:param name="fieldName" value="mailAddress" />
+							</jsp:include>
+						</c:if>
 					</p>
 					<p>
-						<label for="password">Password : </label> <input type="password"
-							name="password" id="password" />
+						<label for="password">Password : </label> <input type="password" name="password" id="password" />
+							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+								<jsp:param name="formKey" value="form" />
+								<jsp:param name="fieldName" value="password" />
+							</jsp:include>
 					</p>
-					<jsp:include page="/WEB-INF/includable/form/formProblems.jsp">
-						<jsp:param name="formProblems" value="formProblems" />
-					</jsp:include>
 					<div>
 						<input type="submit" value="Log in" />
 					</div>
