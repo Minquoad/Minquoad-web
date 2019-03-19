@@ -3,11 +3,12 @@ package com.minquoad.frontComponent.form;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
-import com.minquoad.dao.interfaces.Dao;
+import javax.servlet.http.HttpServletRequest;
+
 import com.minquoad.dao.interfaces.DaoFactory;
-import com.minquoad.framework.dao.Entity;
+import com.minquoad.frontComponent.form.field.FormField;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 public class Form {
@@ -17,15 +18,12 @@ public class Form {
 	private HttpServletRequest request;
 
 	public Form(HttpServletRequest request) {
-		
+
 		fileds = new HashMap<String, FormField>();
-		
+
 		setRequest(request);
-		
+
 		this.build();
-		for (FormField field : getFileds()) {
-			field.collectValue(request);
-		}
 	}
 
 	protected void build() {
@@ -44,38 +42,27 @@ public class Form {
 		return fileds.values();
 	}
 
-	public String getFieldValue(String name) {
-		FormField field = fileds.get(name);
-		if (field == null) {
-			return null;
-		} else {
-			return field.getValue();
-		}
-	}
-
 	public List<String> getFieldValueProblems(String name) {
 		FormField field = fileds.get(name);
 		if (field == null) {
+			new Exception("Field with name  " + name + " not existing in the form.").printStackTrace();
 			return null;
 		} else {
 			return field.getValueProblems();
 		}
 	}
 
-	public void addField(String name) {
-		addField(new FormField(name));
-	}
-
-	public void addField(FormField formField) {
-		formField.setForm(this);
-		fileds.put(formField.getName(), formField);
+	public void addField(FormField field) {
+		field.setForm(this);
+		fileds.put(field.getName(), field);
+		field.collectValue(request);
 	}
 
 	public FormField getField(String name) {
 		return fileds.get(name);
 	}
 
-	protected DaoFactory getDaoFactory() {
+	public DaoFactory getDaoFactory() {
 		return ImprovedHttpServlet.getDaoFactory(getRequest());
 	}
 
@@ -87,33 +74,8 @@ public class Form {
 		this.request = request;
 	}
 
-	// custom value getters
-
-	public Integer getFieldValueAsInteger(String name) {
-		FormField field = fileds.get(name);
-		if (field == null) {
-			return null;
-		} else {
-			return field.getValueAsInteger();
-		}
-	}
-
-	public Float getFieldValueAsFloat(String name) {
-		FormField field = fileds.get(name);
-		if (field == null) {
-			return null;
-		} else {
-			return field.getValueAsFloat();
-		}
-	}
-
-	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(String name, Dao<EntitySubclass> dao) {
-		FormField field = fileds.get(name);
-		if (field == null) {
-			return null;
-		} else {
-			return field.getValueAsEntity(dao);
-		}
+	public String getFieldValueAsString(String name) {
+		return this.getField(name).getValueAsString();
 	}
 
 }

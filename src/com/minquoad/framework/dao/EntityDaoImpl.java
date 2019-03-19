@@ -332,7 +332,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 	public void addEntityMember(EntityMember<EntitySubclass, ?> entityMember) {
 		for (EntityMember<EntitySubclass, ?> entityMemberInList : getEntityMembers()) {
 			if (entityMemberInList.getName().equals(entityMember.getName())) {
-				new Exception("Dao implementation of class " + this.getClass() + "has duplicated EntityMember name.")
+				new Exception("Dao implementation of class " + this.getClass() + " has duplicated EntityMember name.")
 						.printStackTrace();
 			}
 		}

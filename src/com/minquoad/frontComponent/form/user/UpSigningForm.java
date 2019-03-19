@@ -6,8 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
-import com.minquoad.frontComponent.form.FormField;
-import com.minquoad.frontComponent.form.NonNullValueChecker;
+import com.minquoad.frontComponent.form.field.FormStringField;
+import com.minquoad.frontComponent.form.field.valueChecker.NonNullValueChecker;
 
 public class UpSigningForm extends Form {
 
@@ -23,9 +23,9 @@ public class UpSigningForm extends Form {
 	@Override
 	public void build() {
 
-		FormField field = null;
+		FormStringField field = null;
 
-		field = new FormField(mailAddressKey) {
+		field = new FormStringField(mailAddressKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
 				if (getValue() != null) {
@@ -45,7 +45,7 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormField(nicknameKey) {
+		field = new FormStringField(nicknameKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
 				if (getValue() != null) {
@@ -65,7 +65,7 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormField(passwordKey) {
+		field = new FormStringField(passwordKey) {
 			public List<String> getValueProblems() {
 				List<String> problemes = super.getValueProblems();
 				if (getValue() != null) {
@@ -77,10 +77,10 @@ public class UpSigningForm extends Form {
 		field.addValueChecker(new NonNullValueChecker());
 		this.addField(field);
 
-		field = new FormField(passwordConfirmationKey);
+		field = new FormStringField(passwordConfirmationKey);
 		field.addValueChecker(new NonNullValueChecker());
 		field.addValueChecker((value) -> {
-			String password = this.getFieldValue(passwordKey);
+			String password = this.getFieldValueAsString(passwordKey);
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";
 			} else

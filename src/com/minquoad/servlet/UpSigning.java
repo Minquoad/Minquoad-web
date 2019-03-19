@@ -34,9 +34,9 @@ public class UpSigning extends ImprovedHttpServlet {
 
 		if (form.isValide()) {
 			User user = getUnitFactory(request).getUserUnit().createNewUser(
-					form.getFieldValue(UpSigningForm.mailAddressKey),
-					form.getFieldValue(UpSigningForm.nicknameKey),
-					form.getFieldValue(UpSigningForm.passwordKey));
+					form.getFieldValueAsString(UpSigningForm.mailAddressKey),
+					form.getFieldValueAsString(UpSigningForm.nicknameKey),
+					form.getFieldValueAsString(UpSigningForm.passwordKey));
 
 			setSessionUser(request, user);
 			response.sendRedirect(request.getContextPath() + "/");

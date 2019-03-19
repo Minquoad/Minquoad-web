@@ -15,11 +15,11 @@
 					<p>
 						<label for="mailAddress">Mail address : </label> <input type="text" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
 							<c:if test="${ not empty requestScope.form }">
-								value="<c:out value="${ requestScope.form.getFieldValue('mailAddress') }" />"
+								value="<c:out value="${ requestScope.form.getFieldValueAsString('mailAddress') }" />"
 								</c:if> />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="form" value="form" />
+								<jsp:param name="formKey" value="form" />
 								<jsp:param name="fieldName" value="mailAddress" />
 							</jsp:include>
 						</c:if>
@@ -27,11 +27,11 @@
 					<p>
 						<label for="nickname">Nickname : </label> <input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
 							<c:if test="${ not empty requestScope.form }">
-								value="<c:out value="${ requestScope.form.getFieldValue('nickname') }" />"
+								value="<c:out value="${ requestScope.form.getFieldValueAsString('nickname') }" />"
 								</c:if> />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="form" value="form" />
+								<jsp:param name="formKey" value="form" />
 								<jsp:param name="fieldName" value="nickname" />
 							</jsp:include>
 						</c:if>
@@ -40,7 +40,7 @@
 						<label for="password">Password : </label> <input type="password" name="password" id="password" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="form" value="form" />
+								<jsp:param name="formKey" value="form" />
 								<jsp:param name="fieldName" value="password" />
 							</jsp:include>
 						</c:if>
@@ -49,7 +49,7 @@
 						<label for="passwordConfirmation">Password : </label> <input type="password" name="passwordConfirmation" id="passwordConfirmation" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="form" value="form" />
+								<jsp:param name="formKey" value="form" />
 								<jsp:param name="fieldName" value="passwordConfirmation" />
 							</jsp:include>
 						</c:if>

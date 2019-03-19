@@ -1,9 +1,9 @@
 <%-- 
-2 params :
-form : the key to get the form in the requestScope
-fieldName : the key to get the field in the form
+	params
+		formKey : the key to get the form in the requestScope
+		fieldName : the name of the field in the form
  --%>
-<c:set var="form" value="${ requestScope[param.form] }" scope="page" />
+<c:set var="form" value="${ requestScope[param.formKey] }" scope="page" />
 <c:set var="fieldValueProblems" value="${ form.getFieldValueProblems(param.fieldName) }" scope="page" />
 
 <c:if test="${ not empty pageScope.fieldValueProblems }">
