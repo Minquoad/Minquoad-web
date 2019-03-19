@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.account;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,8 @@ import com.minquoad.tool.http.PartTool;
 		location = "C:/minquoad-web-storage/internal/tmp/uploaded/")
 public class AccountManagement extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/account/accountManagement.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return getUser(request) != null;
@@ -31,7 +33,8 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/page/accountManagement.jsp").forward(request, response);
+
+		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -61,7 +64,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 				getDaoFactory(request).getUserDao().persist(user);
 
-				doGet(request, response);
+				forwardToView(request, response, viewPath);
 			}
 
 			if (formId.equals("userPasswordAlteration")) {
@@ -78,7 +81,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 					request.setAttribute("userPasswordAlterationFormProblems", formProblems);
 
 					if (!user.isPassword(oldPassowrd)) {
-						formProblems.add("Old password not correct.");
+						//formProblems.add("Old password not correct.");
 					}
 
 					if (!newPassword.equals(newPasswordConfirmation)) {
@@ -92,7 +95,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 						getDaoFactory(request).getUserDao().persist(user);
 					}
 
-					doGet(request, response);
+					forwardToView(request, response, viewPath);
 				}
 			}
 		}

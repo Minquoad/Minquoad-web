@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.account;
 
 import java.io.IOException;
 
@@ -14,8 +14,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/UpSigning")
 public class UpSigning extends ImprovedHttpServlet {
 
-	public static final String vue = "/WEB-INF/page/upSigning.jsp";
-	
+	public static final String viewPath = "/WEB-INF/page/account/upSigning.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return getUser(request) == null;
@@ -24,7 +24,7 @@ public class UpSigning extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		forwardToView(request, response);
+		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -43,14 +43,15 @@ public class UpSigning extends ImprovedHttpServlet {
 
 		} else {
 			request.setAttribute("form", form);
-			forwardToView(request, response);
+			forwardToView(request, response, viewPath);
 		}
 	}
 
-	public void forwardToView(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
 		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
 		request.setAttribute("mailAddressMaxlength", User.mailAddressMaxlength);
-		this.getServletContext().getRequestDispatcher(vue).forward(request, response);
+		super.forwardToView(request, response, viewPath);
 	}
-	
+
 }

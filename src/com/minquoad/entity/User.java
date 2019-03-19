@@ -232,7 +232,7 @@ public class User extends Entity {
 			return false;
 		} else {
 			Instant dayBeforeUnblockInstant = Instant.ofEpochMilli(unblockInstant.toEpochMilli() - (1000l * 60l * 60l * 24l));
-			return Instant.now().isAfter(dayBeforeUnblockInstant);
+			return Instant.now().isBefore(dayBeforeUnblockInstant);
 		}
 	}
 

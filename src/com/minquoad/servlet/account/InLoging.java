@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.account;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -20,6 +20,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/InLoging")
 public class InLoging extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/account/inLoging.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return true;
@@ -27,17 +29,8 @@ public class InLoging extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		if (getUser(request) != null) {
 
-			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedUrlKey);
-			if (lastRefusedUrl != null) {
-				response.sendRedirect(lastRefusedUrl);
-			} else {
-				response.sendRedirect(request.getContextPath() + "/");
-			}
-		} else {
-			this.getServletContext().getRequestDispatcher("/WEB-INF/page/inLoging.jsp").forward(request, response);
-		}
+		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -87,11 +80,25 @@ public class InLoging extends ImprovedHttpServlet {
 				request.setAttribute("prefilledMailAddress", mailAddress);
 			}
 
-			doGet(request, response);
+			forwardToView(request, response, viewPath);
 			return;
 		}
 
 		response.setStatus(422);
 	}
 
+	@Override
+	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		if (getUser(request) != null) {
+
+			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedUrlKey);
+			if (lastRefusedUrl != null) {
+				response.sendRedirect(lastRefusedUrl);
+			} else {
+				response.sendRedirect(request.getContextPath() + "/");
+			}
+		} else {
+			super.forwardToView(request, response, viewPath);
+		}
+	}
 }

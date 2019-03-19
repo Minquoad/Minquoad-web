@@ -12,6 +12,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Community")
 public class Community extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/community.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return true;
@@ -19,7 +21,8 @@ public class Community extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/page/community.jsp").forward(request, response);
+		
+		forwardToView(request, response, viewPath);
 	}
 
 }

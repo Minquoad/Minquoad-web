@@ -19,6 +19,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/UnseenMessages")
 public class UnseenMessages extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/conversation/unseenMessages.jsp";
+
 	@Override
 	public boolean isFullPage() {
 		return false;
@@ -69,8 +71,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 			request.setAttribute("messages", unseenMessages);
 
-			this.getServletContext().getRequestDispatcher("/WEB-INF/subPage/unseenMessages.jsp")
-					.forward(request, response);
+			forwardToView(request, response, viewPath);
 
 		} catch (Exception e) {
 		}

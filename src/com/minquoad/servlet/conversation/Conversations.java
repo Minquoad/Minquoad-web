@@ -20,6 +20,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Conversations")
 public class Conversations extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/conversation/conversations.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return getUser(request) != null;
@@ -99,6 +101,6 @@ public class Conversations extends ImprovedHttpServlet {
 		request.setAttribute("conversationResumes", conversationResumes);
 		request.setAttribute("selectedConversation", selectedConversation);
 
-		this.getServletContext().getRequestDispatcher("/WEB-INF/page/conversations.jsp").forward(request, response);
+		forwardToView(request, response, viewPath);
 	}
 }

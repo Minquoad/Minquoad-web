@@ -46,7 +46,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				user.setLastActivityInstant(Instant.now());
 				getDaoFactory(request).getUserDao().persist(user);
 
-				if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount")) {
+				if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount") && !request.getServletPath().equals("/OutLoging")) {
 					response.sendRedirect(request.getContextPath() + "/BlockedAccount");
 					return;
 				}
@@ -156,6 +156,14 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	protected interface DaoGetter<EntitySubclass extends Entity> {
 		public Dao<EntitySubclass> getDao(DaoFactory daoFactory);
+	}
+
+	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		this.getServletContext().getRequestDispatcher(viewPath).forward(request, response);
+	}
+
+	public void includeView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		this.getServletContext().getRequestDispatcher(viewPath).include(request, response);
 	}
 
 }

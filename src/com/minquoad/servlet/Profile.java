@@ -14,6 +14,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Profile")
 public class Profile extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/profile.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return getUser(request) != null;
@@ -24,11 +26,10 @@ public class Profile extends ImprovedHttpServlet {
 
 		User user = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
 
-		request.setAttribute("showedUser", user);
-
 		if (user != null) {
-			this.getServletContext().getRequestDispatcher("/WEB-INF/page/profile.jsp").forward(request,
-					response);
+
+			request.setAttribute("showedUser", user);
+			forwardToView(request, response, viewPath);
 		} else {
 			response.sendRedirect(request.getContextPath() + "/");
 		}

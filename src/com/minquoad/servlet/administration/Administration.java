@@ -1,6 +1,7 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.administration;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Administration")
 public class Administration extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/administration/administration.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
@@ -20,8 +23,8 @@ public class Administration extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/page/administration.jsp").forward(request,
-				response);
+
+		forwardToView(request, response, viewPath);
 	}
 
 }

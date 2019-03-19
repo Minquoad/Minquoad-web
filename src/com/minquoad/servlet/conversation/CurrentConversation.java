@@ -19,6 +19,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/CurrentConversation")
 public class CurrentConversation extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/conversation/currentConversation.jsp";
+
 	@Override
 	public boolean isFullPage() {
 		return false;
@@ -51,8 +53,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 
 			request.setAttribute("messages", messages);
 
-			this.getServletContext().getRequestDispatcher("/WEB-INF/subPage/currentConversation.jsp")
-					.include(request, response);
+			includeView(request, response, viewPath);
 
 		} catch (Exception e) {
 		}

@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.account;
 
 import java.io.IOException;
 
@@ -13,6 +13,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/BlockedAccount")
 public class BlockedAccount extends ImprovedHttpServlet {
 
+	public static final String viewPath = "/WEB-INF/page/account/blockedAccount.jsp";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
@@ -20,7 +22,7 @@ public class BlockedAccount extends ImprovedHttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/page/blockedAccount.jsp").forward(request, response);
+		forwardToView(request, response, viewPath);
 	}
 
 }

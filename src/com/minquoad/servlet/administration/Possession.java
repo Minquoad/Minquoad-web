@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.administration;
 
 import java.io.IOException;
 
