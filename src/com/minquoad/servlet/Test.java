@@ -71,13 +71,14 @@ public class Test extends ImprovedHttpServlet {
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("à Test-zero", descriptionMemberName);
+		things = thingDao.getAllMatching("à User-one", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory(request).getUserDao().getById(2));
+			thing.setOwner(getDaoFactory(request).getUserDao().getById(4));
 			thingDao.persist(thing);
 		}
 
+		request.setAttribute("things", thingDao.getAllMatching(null, "owner"));
 		request.setAttribute("things", thingDao.getAll());
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
