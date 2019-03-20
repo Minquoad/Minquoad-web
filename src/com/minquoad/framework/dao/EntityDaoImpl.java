@@ -16,7 +16,7 @@ import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 
 public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 
-	public static final String idKey = "id";
+	public static final String idName = "id";
 
 	private List<EntityMember<EntitySubclass, ?>> entityMembers;
 	private EntityMember<EntitySubclass, Integer> idEntityMember;
@@ -52,7 +52,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 				return entity;
 			} else {
 				try {
-					String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + idKey + "\"=? LIMIT 1;";
+					String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + getIdEntityMember().getName() + "\"=? LIMIT 1;";
 					PreparedStatement preparedStatement = prepareStatement(query);
 					getIdEntityMember().setValueInPreparedStatement(preparedStatement, 1, id);
 					ResultSet resultSet = preparedStatement.executeQuery();
@@ -135,7 +135,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 		if (entity != null) {
 			getInventory().delete(entity);
 			try {
-				String query = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + idKey + "\"=?;";
+				String query = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getIdEntityMember().getName() + "\"=?;";
 				PreparedStatement preparedStatement = prepareStatement(query);
 				getIdEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
 
@@ -156,7 +156,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 						+ "\" SET \""
 						+ getColumnNamesInSingleString("\"=?, \"", false)
 						+ "\"=? WHERE \""
-						+ idKey
+						+ getIdEntityMember().getName()
 						+ "\"=?;";
 
 				PreparedStatement preparedStatement = prepareStatement(query);
@@ -281,7 +281,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 					}
 				}
 			}
-			query += ";";
+			query += " LIMIT 1;";
 
 			
 			PreparedStatement preparedStatement = prepareStatement(query);
@@ -349,7 +349,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 	private void initAllEntityMembers() {
 		entityMembers = new ArrayList<EntityMember<EntitySubclass, ?>>();
 
-		this.addIntegerEntityMember(idKey, Entity::getId, Entity::setId);
+		this.addIntegerEntityMember(idName, Entity::getId, Entity::setId);
 
 		this.initEntityMembers();
 	}
@@ -405,7 +405,7 @@ public abstract class EntityDaoImpl<EntitySubclass extends Entity> {
 
 		this.addEntityMember(entityMember);
 
-		if (name.equals(idKey)) {
+		if (name.equals(idName)) {
 			idEntityMember = entityMember;
 		}
 	}
