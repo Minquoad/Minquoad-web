@@ -16,4 +16,6 @@ public interface DaoFactory {
 
 	public ProtectedFileDao getProtectedFileDao();
 
+	public UserPictureDao getUserPictureDao();
+
 }

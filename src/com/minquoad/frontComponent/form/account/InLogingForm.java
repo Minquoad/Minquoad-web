@@ -6,10 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
-import com.minquoad.entity.unit.FailedInLoginigAttemptUnit;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
 import com.minquoad.frontComponent.form.field.valueChecker.NonNullValueChecker;
+import com.minquoad.unit.FailedInLoginigAttemptUnit;
 
 public class InLogingForm extends Form {
 

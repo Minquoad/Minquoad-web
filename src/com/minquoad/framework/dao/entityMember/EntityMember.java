@@ -33,13 +33,18 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 
 	public void setValueOfResultSetInEntity(EntitySubclass entity, ResultSet resultSet) throws SQLException {
 
+		MemberType value = getValueOfResultSet(resultSet);
+		this.setValue(entity, value);
+	}
+
+	public MemberType getValueOfResultSet(ResultSet resultSet) throws SQLException {
 		MemberType value = this.getResultSetNonNullValueGetter().getNonNullValue(
 				resultSet,
 				this.getName());
 		if (resultSet.wasNull()) {
 			value = null;
 		}
-		this.setValue(entity, value);
+		return value;
 	}
 
 	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntitySubclass entity)
@@ -90,11 +95,11 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		return this.valueSetter;
 	}
 
-	protected ResultSetNonNullValueGetter<MemberType> getResultSetNonNullValueGetter() {
+	public ResultSetNonNullValueGetter<MemberType> getResultSetNonNullValueGetter() {
 		return this.resultSetNonNullValueGetter;
 	}
 
-	protected PreparedStatementNonNullValueSetter<MemberType> getPreparedStatementNonNullValueSetter() {
+	public PreparedStatementNonNullValueSetter<MemberType> getPreparedStatementNonNullValueSetter() {
 		return this.preparedStatementNonNullValueSetter;
 	}
 

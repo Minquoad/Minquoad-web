@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
-import com.minquoad.entity.unit.UnitFactory;
 import com.minquoad.frontComponent.form.field.FormField;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.unit.UnitFactory;
 
 public class Form {
 

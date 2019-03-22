@@ -11,9 +11,9 @@ import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
-import com.minquoad.entity.unit.FailedInLoginigAttemptUnit;
 import com.minquoad.frontComponent.form.account.InLogingForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.unit.FailedInLoginigAttemptUnit;
 
 @WebServlet("/InLoging")
 public class InLoging extends ImprovedHttpServlet {

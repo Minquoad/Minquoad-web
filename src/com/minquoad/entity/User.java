@@ -13,7 +13,6 @@ public class User extends Entity {
 	private String mailAddress;
 	private String nickname;
 	private String hashedSaltedPassword;
-	private String pictureName;
 	private Instant registrationInstant;
 	private Instant lastActivityInstant;
 	private int adminLevel;
@@ -76,14 +75,6 @@ public class User extends Entity {
 
 	public boolean canAdminister(User user) {
 		return hasAdminLvl(user.getAdminLevel() + 1);
-	}
-
-	public String getPictureName() {
-		return pictureName;
-	}
-
-	public void setPictureName(String picture) {
-		this.pictureName = picture;
 	}
 
 	public void setPassword(String password) {

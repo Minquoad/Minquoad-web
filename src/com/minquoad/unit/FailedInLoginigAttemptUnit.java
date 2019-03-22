@@ -1,4 +1,4 @@
-package com.minquoad.entity.unit;
+package com.minquoad.unit;
 
 import java.time.Duration;
 import java.time.Instant;

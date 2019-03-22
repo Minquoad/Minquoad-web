@@ -5,9 +5,9 @@ import java.sql.SQLException;
 
 import com.minquoad.dao.Database;
 import com.minquoad.framework.dao.Entity;
-import com.minquoad.framework.dao.EntityDaoImpl;
+import com.minquoad.framework.dao.EntityDao;
 
-public abstract class ImprovedEntityDaoImpl<EntitySubclass extends Entity> extends EntityDaoImpl<EntitySubclass> {
+public abstract class ImprovedEntityDaoImpl<EntitySubclass extends Entity> extends EntityDao<EntitySubclass> {
 
 	private String tableName;
 

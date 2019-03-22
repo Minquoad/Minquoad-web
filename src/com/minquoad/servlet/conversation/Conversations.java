@@ -13,9 +13,9 @@ import com.minquoad.dao.interfaces.ConversationDao;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.User;
-import com.minquoad.entity.unit.ConversationUnit;
 import com.minquoad.frontComponent.ConversationResume;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.unit.ConversationUnit;
 
 @WebServlet("/Conversations")
 public class Conversations extends ImprovedHttpServlet {

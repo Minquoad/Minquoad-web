@@ -78,7 +78,6 @@ public class Test extends ImprovedHttpServlet {
 			thingDao.persist(thing);
 		}
 
-		request.setAttribute("things", thingDao.getAllMatching(null, "owner"));
 		request.setAttribute("things", thingDao.getAll());
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
