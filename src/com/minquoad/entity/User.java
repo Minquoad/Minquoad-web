@@ -10,6 +10,7 @@ import com.minquoad.tool.SecurityTool;
 
 public class User extends Entity {
 
+	private Integer id;
 	private String mailAddress;
 	private String nickname;
 	private String hashedSaltedPassword;
@@ -233,6 +234,14 @@ public class User extends Entity {
 
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

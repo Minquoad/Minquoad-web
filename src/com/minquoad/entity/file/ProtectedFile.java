@@ -5,6 +5,7 @@ import com.minquoad.framework.dao.Entity;
 
 public class ProtectedFile extends Entity {
 
+	private Integer id;
 	private String relativePath;
 
 	public boolean isDownloadableForUser(User user) {
@@ -21,6 +22,14 @@ public class ProtectedFile extends Entity {
 
 	public void setRelativePath(String relativePath) {
 		this.relativePath = relativePath;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 }

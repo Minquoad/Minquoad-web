@@ -15,6 +15,7 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addLongEntityMember("id", Message::getId, Message::setId, true);
 		this.addStringEntityMember("text", Message::getText, Message::setText);
 		this.addStringEntityMember("editedText", Message::getEditedText, Message::setEditedText);
 		this.addInstantEntityMember("instant", Message::getInstant, Message::setInstant);

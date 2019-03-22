@@ -17,6 +17,7 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", Conversation::getId, Conversation::setId, true);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
 	}

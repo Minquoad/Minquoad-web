@@ -144,8 +144,22 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		String idString = request.getParameter(idRequestParameterName);
 		if (idString != null) {
 			try {
-				int id = Integer.parseInt(idString);
-				return dao.getByPk(id);
+				EntitySubclass entity;
+				int idInteger = Integer.parseInt(idString);
+				entity = dao.getByPk(idInteger);
+				if (entity != null) {
+					return entity;
+				}
+				long idLong = Long.parseLong(idString);
+				entity = dao.getByPk(idLong);
+				if (entity != null) {
+					return entity;
+				}
+				entity = dao.getByPk(idString);
+				if (entity != null) {
+					return entity;
+				}
+				return null;
 
 			} catch (NumberFormatException e) {
 			}

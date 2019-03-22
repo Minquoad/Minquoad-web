@@ -14,6 +14,7 @@ public class UserPictureDaoImpl extends ImprovedEntityDaoImpl<UserPicture> imple
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", UserPicture::getId, UserPicture::setId, true);
 		this.addForeingKeyEntityMember("user", UserPicture::getUser, UserPicture::setUser, getDaoFactory().getUserDao());
 	}
 

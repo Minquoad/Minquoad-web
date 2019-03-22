@@ -13,6 +13,7 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
 		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
 	}
 

@@ -4,12 +4,10 @@ import com.minquoad.framework.dao.Entity;
 
 public class ConversationAccess extends Entity {
 
+	private Integer id;
 	private User user;
-
 	private Conversation conversation;
-
 	private boolean administrator;
-	
 	private Message lastSeenMessage;
 
 	public User getUser() {
@@ -42,6 +40,14 @@ public class ConversationAccess extends Entity {
 
 	public void setLastSeenMessage(Message lastSeenMessage) {
 		this.lastSeenMessage = lastSeenMessage;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

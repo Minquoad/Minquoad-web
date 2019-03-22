@@ -432,8 +432,6 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		if (entityMembers == null) {
 			entityMembers = new ArrayList<EntityMember<EntitySubclass, ?>>();
 
-			this.addIntegerEntityMember("id", Entity::getId, Entity::setId, true);
-
 			this.initEntityMembers();
 
 			if (!hasPrimaryKey()) {

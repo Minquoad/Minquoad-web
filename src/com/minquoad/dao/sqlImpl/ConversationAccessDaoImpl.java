@@ -16,6 +16,7 @@ public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<Conversatio
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", ConversationAccess::getId, ConversationAccess::setId, true);
 		this.addBooleanEntityMember("administrator", ConversationAccess::isAdministrator, ConversationAccess::setAdministrator);
 		this.addForeingKeyEntityMember("user", ConversationAccess::getUser, ConversationAccess::setUser, getDaoFactory().getUserDao());
 		this.addForeingKeyEntityMember("conversation", ConversationAccess::getConversation, ConversationAccess::setConversation, getDaoFactory().getConversationDao());

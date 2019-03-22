@@ -6,6 +6,7 @@ import com.minquoad.framework.dao.Entity;
 
 public class FailedInLoginigAttempt extends Entity {
 
+	private Integer id;
 	private String mailAddress;
 	private int attemptsCount;
 	private Instant lastArremptInstant;
@@ -38,6 +39,14 @@ public class FailedInLoginigAttempt extends Entity {
 
 	public void setLastArremptInstant(Instant lastArremptInstant) {
 		this.lastArremptInstant = lastArremptInstant;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

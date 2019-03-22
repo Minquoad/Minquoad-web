@@ -6,14 +6,11 @@ import com.minquoad.framework.dao.Entity;
 
 public class Message extends Entity {
 
+	private Long id;
 	private String text;
-
 	private String editedText;
-
 	private Instant instant;
-
 	private User user;
-
 	private Conversation conversation;
 
 	public String getText() {
@@ -54,6 +51,14 @@ public class Message extends Entity {
 
 	public void setInstant(Instant instant) {
 		this.instant = instant;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 }

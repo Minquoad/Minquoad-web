@@ -13,6 +13,7 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedI
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", FailedInLoginigAttempt::getId, FailedInLoginigAttempt::setId, true);
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
 		this.addIntegerEntityMember("attemptsCount", FailedInLoginigAttempt::getAttemptsCount, FailedInLoginigAttempt::setAttemptsCount);
 		this.addInstantEntityMember("lastArremptInstant", FailedInLoginigAttempt::getLastArremptInstant, FailedInLoginigAttempt::setLastArremptInstant);

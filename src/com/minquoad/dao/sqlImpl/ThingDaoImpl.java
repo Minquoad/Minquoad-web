@@ -20,6 +20,7 @@ public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingD
 
 	@Override
 	public void initEntityMembers() throws SQLException {
+		this.addIntegerEntityMember("id", Thing::getId, Thing::setId, true);
 		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
 		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());
 	}

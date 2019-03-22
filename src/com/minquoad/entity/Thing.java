@@ -4,8 +4,8 @@ import com.minquoad.framework.dao.Entity;
 
 public class Thing extends Entity {
 
+	private Integer id;
 	private User owner;
-	
 	private String description;
 
 	public User getOwner() {
@@ -22,6 +22,14 @@ public class Thing extends Entity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

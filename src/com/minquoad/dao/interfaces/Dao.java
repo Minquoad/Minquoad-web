@@ -8,6 +8,10 @@ public interface Dao<EntitySubclass> {
 
 	public EntitySubclass getByPk(Integer id);
 
+	public EntitySubclass getByPk(Long id);
+
+	public EntitySubclass getByPk(String id);
+
 	public boolean persist(EntitySubclass entity);
 
 	public boolean insert(EntitySubclass entity);
