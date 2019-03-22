@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
-import com.minquoad.framework.dao.Entity;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.tool.http.DaoGetter;
 import com.minquoad.unit.UnitFactory;
@@ -88,11 +87,11 @@ public abstract class FormField {
 		}
 	}
 
-	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(DaoGetter<EntitySubclass> daoGetter) {
+	public <EntitySubclass> EntitySubclass getValueAsEntity(DaoGetter<EntitySubclass> daoGetter) {
 		return getValueAsEntity(daoGetter.getDao(getDaoFactory()));
 	}
 
-	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
+	public <EntitySubclass> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
 		return dao.getByPk(getValueAsInteger());
 	}
 

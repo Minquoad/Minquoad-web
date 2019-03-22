@@ -1,8 +1,6 @@
 package com.minquoad.entity;
 
-import com.minquoad.framework.dao.Entity;
-
-public class Thing extends Entity {
+public class Thing {
 
 	private Integer id;
 	private User owner;

@@ -1,8 +1,6 @@
 package com.minquoad.entity;
 
-import com.minquoad.framework.dao.Entity;
-
-public class ConversationAccess extends Entity {
+public class ConversationAccess {
 
 	private Integer id;
 	private User user;

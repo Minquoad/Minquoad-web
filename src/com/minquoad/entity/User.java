@@ -4,11 +4,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.minquoad.framework.dao.Entity;
 import com.minquoad.service.Deployment;
 import com.minquoad.tool.SecurityTool;
 
-public class User extends Entity {
+public class User {
 
 	private Integer id;
 	private String mailAddress;

@@ -15,24 +15,24 @@ import com.minquoad.framework.dao.entityMember.EntityMember;
 import com.minquoad.framework.dao.entityMember.EntityMemberGetter;
 import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 
-public abstract class DaoImpl<EntitySubclass extends Entity> {
+public abstract class DaoImpl<Entity> {
 
-	private List<EntityMember<EntitySubclass, ?>> entityMembers;
+	private List<EntityMember<Entity, ?>> entityMembers;
 
-	private List<DaoImpl<? extends EntitySubclass>> subClassDaos;
+	private List<DaoImpl<? extends Entity>> subClassDaos;
 
 	private boolean primaryKeyInteger;
 	private boolean primaryKeyLong;
 	private boolean primaryKeyString;
 
 	// a primary-key must be an Integer, a Long or a String;
-	private EntityMember<EntitySubclass, Integer> integerPrimaryKeyEntityMember;
-	private EntityMember<EntitySubclass, Long> longPrimaryKeyEntityMember;
-	private EntityMember<EntitySubclass, String> stringPrimaryKeyEntityMember;
+	private EntityMember<Entity, Integer> integerPrimaryKeyEntityMember;
+	private EntityMember<Entity, Long> longPrimaryKeyEntityMember;
+	private EntityMember<Entity, String> stringPrimaryKeyEntityMember;
 
-	private EntityDaoInventory<Integer, EntitySubclass> integerInventory;
-	private EntityDaoInventory<Long, EntitySubclass> longInventory;
-	private EntityDaoInventory<String, EntitySubclass> stringInventory;
+	private DaoInventory<Integer, Entity> integerInventory;
+	private DaoInventory<Long, Entity> longInventory;
+	private DaoInventory<String, Entity> stringInventory;
 
 	public DaoImpl() {
 		primaryKeyInteger = false;
@@ -44,14 +44,14 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 
 	public abstract PreparedStatement prepareStatement(String statement) throws SQLException;
 
-	public abstract EntitySubclass instantiateBlank();
+	public abstract Entity instantiateBlank();
 
 	public abstract String getTableName();
 
 	protected void initSubClassDaos() {
 	};
 
-	public DaoImpl<? super EntitySubclass> getSuperClassDao() {
+	public DaoImpl<? super Entity> getSuperClassDao() {
 		return null;
 	}
 
@@ -69,10 +69,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * (superClassDao != null) { superClassDao.hydrateSubClassEntity(entity); } }
 	 */
 
-	public EntitySubclass getByPk(Integer id) {
+	public Entity getByPk(Integer id) {
 		try {
 			if (isPrimaryKeyInteger() && id != null) {
-				EntitySubclass entity = getIntegerInventory().getByPrimaryKey(id);
+				Entity entity = getIntegerInventory().getByPrimaryKey(id);
 				if (entity != null) {
 					return entity;
 				} else {
@@ -96,10 +96,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return null;
 	}
 
-	public EntitySubclass getByPk(Long id) {
+	public Entity getByPk(Long id) {
 		try {
 			if (isPrimaryKeyLong() && id != null) {
-				EntitySubclass entity = getLongInventory().getByPrimaryKey(id);
+				Entity entity = getLongInventory().getByPrimaryKey(id);
 				if (entity != null) {
 					return entity;
 				} else {
@@ -123,10 +123,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return null;
 	}
 
-	public EntitySubclass getByPk(String id) {
+	public Entity getByPk(String id) {
 		try {
 			if (isPrimaryKeyString() && id != null) {
-				EntitySubclass entity = getStringInventory().getByPrimaryKey(id);
+				Entity entity = getStringInventory().getByPrimaryKey(id);
 				if (entity != null) {
 					return entity;
 				} else {
@@ -150,7 +150,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return null;
 	}
 
-	public boolean persist(EntitySubclass entity) {
+	public boolean persist(Entity entity) {
 		if (entity != null) {
 			try {
 
@@ -167,7 +167,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return false;
 	}
 
-	public boolean insert(EntitySubclass entity) {
+	public boolean insert(Entity entity) {
 		if (entity != null) {
 			try {
 				boolean primaryKeyNull = getPrimaryKeyEntityMember().getValue(entity) == null;
@@ -194,7 +194,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 				PreparedStatement preparedStatement = prepareStatement(query);
 
 				int i = 1;
-				for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+				for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 					if (!primaryKeyNull || entityMember != getPrimaryKeyEntityMember()) {
 						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 						i++;
@@ -215,7 +215,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return false;
 	}
 
-	public boolean delete(EntitySubclass entity) {
+	public boolean delete(Entity entity) {
 		if (entity != null) {
 			try {
 				getInventory().delete(entity);
@@ -233,7 +233,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return false;
 	}
 
-	public boolean update(EntitySubclass entity) {
+	public boolean update(Entity entity) {
 		if (entity != null) {
 			try {
 				getInventory().checkPrimaryKeyUnchanged(entity);
@@ -249,7 +249,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 				PreparedStatement preparedStatement = prepareStatement(query);
 
 				int i = 1;
-				for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+				for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 					if (entityMember != getPrimaryKeyEntityMember()) {
 						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 						i++;
@@ -267,19 +267,19 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return false;
 	}
 
-	public List<EntitySubclass> getAll() {
+	public List<Entity> getAll() {
 		return this.getAllMatching(new EntityCriterion[0]);
 	}
 
-	public List<EntitySubclass> getAllMatching(Object value, String memberName) {
+	public List<Entity> getAllMatching(Object value, String memberName) {
 		return getAllMatching(new EntityCriterion(value, memberName));
 	}
 
-	public List<EntitySubclass> getAllMatching(EntityCriterion criterion) {
+	public List<Entity> getAllMatching(EntityCriterion criterion) {
 		return getAllMatching(criterion.toArray());
 	}
 
-	public List<EntitySubclass> getAllMatching(EntityCriterion[] criteria) {
+	public List<Entity> getAllMatching(EntityCriterion[] criteria) {
 		try {
 			String query = "SELECT * FROM \"" + getTableName() + "\"";
 			if (criteria.length != 0) {
@@ -303,7 +303,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
 				if (criterion.getValue() != null) {
-					EntityMember<EntitySubclass, ?> entityMember = getEntityMember(criterion.getName());
+					EntityMember<Entity, ?> entityMember = getEntityMember(criterion.getName());
 					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
 					i++;
 				}
@@ -315,8 +315,8 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 				toUnifiedInstance(resultSet);
 			}
 
-			List<EntitySubclass> entities = new LinkedList<EntitySubclass>();
-			for (EntitySubclass instantiatedEntity : getInstantiatedEntyties()) {
+			List<Entity> entities = new LinkedList<Entity>();
+			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
 				if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
 					entities.add(instantiatedEntity);
 				}
@@ -330,17 +330,17 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return null;
 	}
 
-	public EntitySubclass getOneMatching(Object value, String memberName) {
+	public Entity getOneMatching(Object value, String memberName) {
 		return getOneMatching(new EntityCriterion(value, memberName));
 	}
 
-	public EntitySubclass getOneMatching(EntityCriterion criterion) {
+	public Entity getOneMatching(EntityCriterion criterion) {
 		return getOneMatching(criterion.toArray());
 	}
 
-	public EntitySubclass getOneMatching(EntityCriterion[] criteria) {
+	public Entity getOneMatching(EntityCriterion[] criteria) {
 		try {
-			for (EntitySubclass instantiatedEntity : getInstantiatedEntyties()) {
+			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
 				if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
 					return instantiatedEntity;
 				}
@@ -368,7 +368,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
 				if (criterion.getValue() != null) {
-					EntityMember<EntitySubclass, ?> entityMember = getEntityMember(criterion.getName());
+					EntityMember<Entity, ?> entityMember = getEntityMember(criterion.getName());
 					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
 					i++;
 				}
@@ -377,7 +377,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				EntitySubclass entity = toUnifiedInstance(resultSet);
+				Entity entity = toUnifiedInstance(resultSet);
 				if (isEntityMachingCriteria(entity, criteria)) {
 					return entity;
 				} else {
@@ -394,10 +394,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return null;
 	}
 
-	public boolean isEntityMachingCriteria(EntitySubclass entity, EntityCriterion[] criteria) throws SQLException {
+	public boolean isEntityMachingCriteria(Entity entity, EntityCriterion[] criteria) throws SQLException {
 		if (criteria != null) {
 			for (EntityCriterion criterion : criteria) {
-				EntityMember<EntitySubclass, ?> member = getEntityMember(criterion.getName());
+				EntityMember<Entity, ?> member = getEntityMember(criterion.getName());
 				if (criterion.getValue() == null) {
 					if (member.getValue(entity) != null) {
 						return false;
@@ -412,14 +412,14 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return true;
 	}
 
-	private void hydrate(EntitySubclass entity, ResultSet resultSet) throws SQLException {
-		for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+	private void hydrate(Entity entity, ResultSet resultSet) throws SQLException {
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 			entityMember.setValueOfResultSetInEntity(entity, resultSet);
 		}
 	}
 
-	private EntitySubclass toUnifiedInstance(ResultSet resultSet) throws SQLException {
-		EntitySubclass entity = getInventory().getByPrimaryKey(resultSet);
+	private Entity toUnifiedInstance(ResultSet resultSet) throws SQLException {
+		Entity entity = getInventory().getByPrimaryKey(resultSet);
 		if (entity == null) {
 			entity = instantiateBlank();
 			this.hydrate(entity, resultSet);
@@ -430,7 +430,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 
 	private void initIfneeded() throws SQLException {
 		if (entityMembers == null) {
-			entityMembers = new ArrayList<EntityMember<EntitySubclass, ?>>();
+			entityMembers = new ArrayList<EntityMember<Entity, ?>>();
 
 			this.initEntityMembers();
 
@@ -439,13 +439,13 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 			}
 
 			if (isPrimaryKeyInteger()) {
-				integerInventory = new EntityDaoInventory<Integer, EntitySubclass>(integerPrimaryKeyEntityMember);
+				integerInventory = new DaoInventory<Integer, Entity>(integerPrimaryKeyEntityMember);
 			}
 			if (isPrimaryKeyLong()) {
-				longInventory = new EntityDaoInventory<Long, EntitySubclass>(longPrimaryKeyEntityMember);
+				longInventory = new DaoInventory<Long, Entity>(longPrimaryKeyEntityMember);
 			}
 			if (isPrimaryKeyString()) {
-				stringInventory = new EntityDaoInventory<String, EntitySubclass>(stringPrimaryKeyEntityMember);
+				stringInventory = new DaoInventory<String, Entity>(stringPrimaryKeyEntityMember);
 			}
 		}
 	}
@@ -481,22 +481,22 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		this.primaryKeyString = primaryKeyString;
 	}
 
-	private EntityDaoInventory<Integer, EntitySubclass> getIntegerInventory() throws SQLException {
+	private DaoInventory<Integer, Entity> getIntegerInventory() throws SQLException {
 		initIfneeded();
 		return integerInventory;
 	}
 
-	private EntityDaoInventory<Long, EntitySubclass> getLongInventory() throws SQLException {
+	private DaoInventory<Long, Entity> getLongInventory() throws SQLException {
 		initIfneeded();
 		return longInventory;
 	}
 
-	private EntityDaoInventory<String, EntitySubclass> getStringInventory() throws SQLException {
+	private DaoInventory<String, Entity> getStringInventory() throws SQLException {
 		initIfneeded();
 		return stringInventory;
 	}
 
-	private EntityDaoInventory<?, EntitySubclass> getInventory() throws SQLException {
+	private DaoInventory<?, Entity> getInventory() throws SQLException {
 		initIfneeded();
 		if (isPrimaryKeyInteger()) {
 			return getIntegerInventory();
@@ -510,13 +510,13 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
 	}
 
-	private List<EntityMember<EntitySubclass, ?>> getEntityMembers() throws SQLException {
+	private List<EntityMember<Entity, ?>> getEntityMembers() throws SQLException {
 		initIfneeded();
 		return entityMembers;
 	}
 
-	private EntityMember<EntitySubclass, ?> getEntityMember(String name) throws SQLException {
-		for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+	private EntityMember<Entity, ?> getEntityMember(String name) throws SQLException {
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 			if (entityMember.getName().equals(name)) {
 				return entityMember;
 			}
@@ -524,7 +524,7 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		throw new SQLException("EntityMember with name " + name + " do not exist in " + this.getClass().getSimpleName());
 	}
 
-	private EntityMember<EntitySubclass, ?> getPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<Entity, ?> getPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		if (isPrimaryKeyInteger()) {
 			return getIntegerPrimaryKeyEntityMember();
@@ -538,36 +538,36 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
 	}
 
-	private EntityMember<EntitySubclass, Integer> getIntegerPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<Entity, Integer> getIntegerPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return integerPrimaryKeyEntityMember;
 	}
 
-	private EntityMember<EntitySubclass, Long> getLongPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<Entity, Long> getLongPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return longPrimaryKeyEntityMember;
 	}
 
-	private EntityMember<EntitySubclass, String> getStringPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<Entity, String> getStringPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return stringPrimaryKeyEntityMember;
 	}
 
-	protected List<DaoImpl<? extends EntitySubclass>> getSubClassDaos() {
+	protected List<DaoImpl<? extends Entity>> getSubClassDaos() {
 		if (subClassDaos == null) {
-			subClassDaos = new ArrayList<DaoImpl<? extends EntitySubclass>>();
+			subClassDaos = new ArrayList<DaoImpl<? extends Entity>>();
 			this.initSubClassDaos();
 		}
 		return subClassDaos;
 	}
 
-	public void addSubClassDao(DaoImpl<? extends EntitySubclass> dao) {
+	public void addSubClassDao(DaoImpl<? extends Entity> dao) {
 		getSubClassDaos().add(dao);
 	}
 
 	private String getColumnNamesInSingleString(String separator, boolean withPrimaryKey) throws SQLException {
 		String string = null;
-		for (EntityMember<EntitySubclass, ?> entityMember : getEntityMembers()) {
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 			if (withPrimaryKey || entityMember != getPrimaryKeyEntityMember()) {
 				if (string == null) {
 					string = entityMember.getName();
@@ -579,14 +579,14 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 		return string;
 	}
 
-	protected Collection<EntitySubclass> getInstantiatedEntyties() throws SQLException {
+	protected Collection<Entity> getInstantiatedEntyties() throws SQLException {
 		return this.getInventory().values();
 	}
 
 	// EntityMember adders
 
-	public void addEntityMember(EntityMember<EntitySubclass, ?> entityMember) throws SQLException {
-		for (EntityMember<EntitySubclass, ?> entityMemberInList : getEntityMembers()) {
+	public void addEntityMember(EntityMember<Entity, ?> entityMember) throws SQLException {
+		for (EntityMember<Entity, ?> entityMemberInList : getEntityMembers()) {
 			if (entityMemberInList.getName().equals(entityMember.getName())) {
 				new Exception("Dao implementation of class " + this.getClass() + " has duplicated EntityMember name.")
 						.printStackTrace();
@@ -605,11 +605,11 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addIntegerEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Integer> valueGetter,
-			EntityMemberSetter<EntitySubclass, Integer> valueSetter,
+			EntityMemberGetter<Entity, Integer> valueGetter,
+			EntityMemberSetter<Entity, Integer> valueSetter,
 			boolean isPrimaryKey) throws SQLException {
 
-		EntityMember<EntitySubclass, Integer> entityMember = new EntityMember<EntitySubclass, Integer>(
+		EntityMember<Entity, Integer> entityMember = new EntityMember<Entity, Integer>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -628,8 +628,8 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	}
 
 	public void addIntegerEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Integer> valueGetter,
-			EntityMemberSetter<EntitySubclass, Integer> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Integer> valueGetter,
+			EntityMemberSetter<Entity, Integer> valueSetter) throws SQLException {
 		addIntegerEntityMember(name, valueGetter, valueSetter, false);
 	}
 
@@ -642,10 +642,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addBooleanEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Boolean> valueGetter,
-			EntityMemberSetter<EntitySubclass, Boolean> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Boolean> valueGetter,
+			EntityMemberSetter<Entity, Boolean> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Boolean>(
+		this.addEntityMember(new EntityMember<Entity, Boolean>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -662,10 +662,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addByteaEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, byte[]> valueGetter,
-			EntityMemberSetter<EntitySubclass, byte[]> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, byte[]> valueGetter,
+			EntityMemberSetter<Entity, byte[]> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, byte[]>(
+		this.addEntityMember(new EntityMember<Entity, byte[]>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -682,10 +682,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addByteEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Byte> valueGetter,
-			EntityMemberSetter<EntitySubclass, Byte> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Byte> valueGetter,
+			EntityMemberSetter<Entity, Byte> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Byte>(
+		this.addEntityMember(new EntityMember<Entity, Byte>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -702,10 +702,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addDoubleEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Double> valueGetter,
-			EntityMemberSetter<EntitySubclass, Double> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Double> valueGetter,
+			EntityMemberSetter<Entity, Double> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Double>(
+		this.addEntityMember(new EntityMember<Entity, Double>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -722,10 +722,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addFloatEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Float> valueGetter,
-			EntityMemberSetter<EntitySubclass, Float> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Float> valueGetter,
+			EntityMemberSetter<Entity, Float> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Float>(
+		this.addEntityMember(new EntityMember<Entity, Float>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -742,11 +742,11 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addLongEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Long> valueGetter,
-			EntityMemberSetter<EntitySubclass, Long> valueSetter,
+			EntityMemberGetter<Entity, Long> valueGetter,
+			EntityMemberSetter<Entity, Long> valueSetter,
 			boolean isPrimaryKey) throws SQLException {
 
-		EntityMember<EntitySubclass, Long> entityMember = new EntityMember<EntitySubclass, Long>(
+		EntityMember<Entity, Long> entityMember = new EntityMember<Entity, Long>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -765,8 +765,8 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	}
 
 	public void addLongEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Long> valueGetter,
-			EntityMemberSetter<EntitySubclass, Long> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Long> valueGetter,
+			EntityMemberSetter<Entity, Long> valueSetter) throws SQLException {
 
 		addLongEntityMember(name, valueGetter, valueSetter, false);
 	}
@@ -780,10 +780,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addShortEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Short> valueGetter,
-			EntityMemberSetter<EntitySubclass, Short> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Short> valueGetter,
+			EntityMemberSetter<Entity, Short> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Short>(
+		this.addEntityMember(new EntityMember<Entity, Short>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -800,11 +800,11 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addStringEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, String> valueGetter,
-			EntityMemberSetter<EntitySubclass, String> valueSetter,
+			EntityMemberGetter<Entity, String> valueGetter,
+			EntityMemberSetter<Entity, String> valueSetter,
 			boolean isPrimaryKey) throws SQLException {
 
-		EntityMember<EntitySubclass, String> entityMember = new EntityMember<EntitySubclass, String>(
+		EntityMember<Entity, String> entityMember = new EntityMember<Entity, String>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -823,8 +823,8 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	}
 
 	public void addStringEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, String> valueGetter,
-			EntityMemberSetter<EntitySubclass, String> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, String> valueGetter,
+			EntityMemberSetter<Entity, String> valueSetter) throws SQLException {
 
 		addStringEntityMember(name, valueGetter, valueSetter, false);
 	}
@@ -838,10 +838,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addDateEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Date> valueGetter,
-			EntityMemberSetter<EntitySubclass, Date> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Date> valueGetter,
+			EntityMemberSetter<Entity, Date> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Date>(
+		this.addEntityMember(new EntityMember<Entity, Date>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -859,10 +859,10 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @throws SQLException
 	 */
 	public void addInstantEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, Instant> valueGetter,
-			EntityMemberSetter<EntitySubclass, Instant> valueSetter) throws SQLException {
+			EntityMemberGetter<Entity, Instant> valueGetter,
+			EntityMemberSetter<Entity, Instant> valueSetter) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, Instant>(
+		this.addEntityMember(new EntityMember<Entity, Instant>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -887,12 +887,12 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 	 * @param referencedEntityDaoImpl
 	 * @throws SQLException
 	 */
-	public <ReferencedEntitySubclass extends Entity> void addForeingKeyEntityMember(String name,
-			EntityMemberGetter<EntitySubclass, ReferencedEntitySubclass> valueGetter,
-			EntityMemberSetter<EntitySubclass, ReferencedEntitySubclass> valueSetter,
+	public <ReferencedEntitySubclass> void addForeingKeyEntityMember(String name,
+			EntityMemberGetter<Entity, ReferencedEntitySubclass> valueGetter,
+			EntityMemberSetter<Entity, ReferencedEntitySubclass> valueSetter,
 			DaoImpl<ReferencedEntitySubclass> referencedEntityDaoImpl) throws SQLException {
 
-		this.addEntityMember(new EntityMember<EntitySubclass, ReferencedEntitySubclass>(
+		this.addEntityMember(new EntityMember<Entity, ReferencedEntitySubclass>(
 				name,
 				valueGetter,
 				valueSetter,
@@ -917,18 +917,13 @@ public abstract class DaoImpl<EntitySubclass extends Entity> {
 					}
 					if (referencedEntityDaoImpl.isPrimaryKeyString()) {
 						String nonNullPrimaryKey = referencedEntityDaoImpl.getStringPrimaryKeyEntityMember().getResultSetNonNullValueGetter().getNonNullValue(resultSet, thisName);
-						// the wasNull() check is done here to avoid and unnecessary getById(0) call
-						if (resultSet.wasNull()) {
-							return null;
-						} else {
-							return referencedEntityDaoImpl.getByPk(nonNullPrimaryKey);
-						}
+						return referencedEntityDaoImpl.getByPk(nonNullPrimaryKey);
 					}
 					throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
 				},
 				(preparedStatement, parameterIndex, value) -> referencedEntityDaoImpl.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, parameterIndex, value)) {
 
-			public void setValueOfResultSetInEntity(EntitySubclass entity, ResultSet resultSet) throws SQLException {
+			public void setValueOfResultSetInEntity(Entity entity, ResultSet resultSet) throws SQLException {
 
 				ReferencedEntitySubclass value = this.getResultSetNonNullValueGetter().getNonNullValue(
 						resultSet,

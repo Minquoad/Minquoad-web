@@ -2,9 +2,7 @@ package com.minquoad.entity;
 
 import java.time.Instant;
 
-import com.minquoad.framework.dao.Entity;
-
-public class Message extends Entity {
+public class Message {
 
 	private Long id;
 	private String text;

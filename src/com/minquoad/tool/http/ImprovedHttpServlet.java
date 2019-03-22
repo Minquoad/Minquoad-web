@@ -12,7 +12,6 @@ import com.minquoad.dao.Database;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
-import com.minquoad.framework.dao.Entity;
 import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
@@ -136,11 +135,11 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		setControllingAdmin(request, user);
 	}
 
-	public static <EntitySubclass extends Entity> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {
+	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {
 		return getEntityFromIdParameter(request, idRequestParameterName, daoGetter.getDao(getDaoFactory(request)));
 	}
 
-	public static <EntitySubclass extends Entity> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
+	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
 		String idString = request.getParameter(idRequestParameterName);
 		if (idString != null) {
 			try {

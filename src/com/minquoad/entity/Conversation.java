@@ -1,8 +1,6 @@
 package com.minquoad.entity;
 
-import com.minquoad.framework.dao.Entity;
-
-public class Conversation extends Entity {
+public class Conversation {
 
 	public static final int TYPE_MONOLOGUE = 0;
 	public static final int TYPE_MAIN_BETWEEN_TWO_USERS = 1;

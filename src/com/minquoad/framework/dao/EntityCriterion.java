@@ -9,7 +9,7 @@ public class EntityCriterion {
 		this.value = value;
 		this.memberName = memberName;
 	}
-	
+
 	public Object getValue() {
 		return value;
 	}

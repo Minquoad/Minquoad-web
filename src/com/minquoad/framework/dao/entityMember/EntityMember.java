@@ -5,23 +5,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import com.minquoad.framework.dao.Entity;
 import com.minquoad.framework.dao.EntityCriterion;
 import com.minquoad.framework.dao.EntityModification;
 
-public class EntityMember<EntitySubclass extends Entity, MemberType> {
+public class EntityMember<Entity, MemberType> {
 
 	private String name;
 
-	private EntityMemberGetter<EntitySubclass, MemberType> valueGetter;
-	private EntityMemberSetter<EntitySubclass, MemberType> valueSetter;
+	private EntityMemberGetter<Entity, MemberType> valueGetter;
+	private EntityMemberSetter<Entity, MemberType> valueSetter;
 
 	private ResultSetNonNullValueGetter<MemberType> resultSetNonNullValueGetter;
 	private PreparedStatementNonNullValueSetter<MemberType> preparedStatementNonNullValueSetter;
 
 	public EntityMember(String name,
-			EntityMemberGetter<EntitySubclass, MemberType> valueGetter,
-			EntityMemberSetter<EntitySubclass, MemberType> valueSetter,
+			EntityMemberGetter<Entity, MemberType> valueGetter,
+			EntityMemberSetter<Entity, MemberType> valueSetter,
 			ResultSetNonNullValueGetter<MemberType> resultSetNonNullValueGetter,
 			PreparedStatementNonNullValueSetter<MemberType> preparedStatementNonNullValueSetter) {
 		this.name = name;
@@ -31,7 +30,7 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		this.preparedStatementNonNullValueSetter = preparedStatementNonNullValueSetter;
 	}
 
-	public void setValueOfResultSetInEntity(EntitySubclass entity, ResultSet resultSet) throws SQLException {
+	public void setValueOfResultSetInEntity(Entity entity, ResultSet resultSet) throws SQLException {
 
 		MemberType value = getValueOfResultSet(resultSet);
 		this.setValue(entity, value);
@@ -47,7 +46,7 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		return value;
 	}
 
-	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntitySubclass entity)
+	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, Entity entity)
 			throws SQLException {
 
 		setValueInPreparedStatement(preparedStatement, parameterIndex, getValue(entity));
@@ -75,11 +74,11 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
 	}
 
-	public MemberType getValue(EntitySubclass entity) {
+	public MemberType getValue(Entity entity) {
 		return this.getValueGetter().getValue(entity);
 	}
 
-	public void setValue(EntitySubclass entity, MemberType value) {
+	public void setValue(Entity entity, MemberType value) {
 		this.getValueSetter().setValue(entity, value);
 	}
 
@@ -87,11 +86,11 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		return name;
 	}
 
-	protected EntityMemberGetter<EntitySubclass, MemberType> getValueGetter() {
+	protected EntityMemberGetter<Entity, MemberType> getValueGetter() {
 		return this.valueGetter;
 	}
 
-	protected EntityMemberSetter<EntitySubclass, MemberType> getValueSetter() {
+	protected EntityMemberSetter<Entity, MemberType> getValueSetter() {
 		return this.valueSetter;
 	}
 
@@ -114,7 +113,7 @@ public class EntityMember<EntitySubclass extends Entity, MemberType> {
 		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
 	}
 
-	public void setValueOfModificationInEntity(EntitySubclass entity, EntityModification modification) {
+	public void setValueOfModificationInEntity(Entity entity, EntityModification modification) {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) modification.getValue();

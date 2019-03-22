@@ -4,10 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import com.minquoad.dao.Database;
-import com.minquoad.framework.dao.Entity;
 import com.minquoad.framework.dao.DaoImpl;
 
-public abstract class ImprovedEntityDaoImpl<EntitySubclass extends Entity> extends DaoImpl<EntitySubclass> {
+public abstract class ImprovedEntityDaoImpl<EntitySubclass> extends DaoImpl<EntitySubclass> {
 
 	private String tableName;
 

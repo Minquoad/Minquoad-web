@@ -2,9 +2,7 @@ package com.minquoad.entity;
 
 import java.time.Instant;
 
-import com.minquoad.framework.dao.Entity;
-
-public class FailedInLoginigAttempt extends Entity {
+public class FailedInLoginigAttempt {
 
 	private Integer id;
 	private String mailAddress;

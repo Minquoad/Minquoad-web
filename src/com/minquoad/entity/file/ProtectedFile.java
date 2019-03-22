@@ -1,9 +1,8 @@
 package com.minquoad.entity.file;
 
 import com.minquoad.entity.User;
-import com.minquoad.framework.dao.Entity;
 
-public class ProtectedFile extends Entity {
+public class ProtectedFile {
 
 	private Integer id;
 	private String relativePath;
