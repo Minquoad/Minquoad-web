@@ -15,11 +15,11 @@ import com.minquoad.framework.dao.entityMember.EntityMember;
 import com.minquoad.framework.dao.entityMember.EntityMemberGetter;
 import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 
-public abstract class EntityDao<EntitySubclass extends Entity> {
+public abstract class DaoImpl<EntitySubclass extends Entity> {
 
 	private List<EntityMember<EntitySubclass, ?>> entityMembers;
 
-	private List<EntityDao<? extends EntitySubclass>> subClassDaos;
+	private List<DaoImpl<? extends EntitySubclass>> subClassDaos;
 
 	private boolean primaryKeyInteger;
 	private boolean primaryKeyLong;
@@ -34,7 +34,7 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 	private EntityDaoInventory<Long, EntitySubclass> longInventory;
 	private EntityDaoInventory<String, EntitySubclass> stringInventory;
 
-	public EntityDao() {
+	public DaoImpl() {
 		primaryKeyInteger = false;
 		primaryKeyLong = false;
 		primaryKeyString = false;
@@ -51,7 +51,7 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 	protected void initSubClassDaos() {
 	};
 
-	public EntityDao<? super EntitySubclass> getSuperClassDao() {
+	public DaoImpl<? super EntitySubclass> getSuperClassDao() {
 		return null;
 	}
 
@@ -68,6 +68,7 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 	 * EntityDao<? super EntitySubclass> superClassDao = this.getSuperClassDao(); if
 	 * (superClassDao != null) { superClassDao.hydrateSubClassEntity(entity); } }
 	 */
+
 	public EntitySubclass getByPk(Integer id) {
 		try {
 			if (isPrimaryKeyInteger() && id != null) {
@@ -235,6 +236,8 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 	public boolean update(EntitySubclass entity) {
 		if (entity != null) {
 			try {
+				getInventory().checkPrimaryKeyUnchanged(entity);
+
 				String query = "UPDATE \""
 						+ getTableName()
 						+ "\" SET \""
@@ -552,15 +555,15 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 		return stringPrimaryKeyEntityMember;
 	}
 
-	protected List<EntityDao<? extends EntitySubclass>> getSubClassDaos() {
+	protected List<DaoImpl<? extends EntitySubclass>> getSubClassDaos() {
 		if (subClassDaos == null) {
-			subClassDaos = new ArrayList<EntityDao<? extends EntitySubclass>>();
+			subClassDaos = new ArrayList<DaoImpl<? extends EntitySubclass>>();
 			this.initSubClassDaos();
 		}
 		return subClassDaos;
 	}
 
-	public void addSubClassDao(EntityDao<? extends EntitySubclass> dao) {
+	public void addSubClassDao(DaoImpl<? extends EntitySubclass> dao) {
 		getSubClassDaos().add(dao);
 	}
 
@@ -889,7 +892,7 @@ public abstract class EntityDao<EntitySubclass extends Entity> {
 	public <ReferencedEntitySubclass extends Entity> void addForeingKeyEntityMember(String name,
 			EntityMemberGetter<EntitySubclass, ReferencedEntitySubclass> valueGetter,
 			EntityMemberSetter<EntitySubclass, ReferencedEntitySubclass> valueSetter,
-			EntityDao<ReferencedEntitySubclass> referencedEntityDaoImpl) throws SQLException {
+			DaoImpl<ReferencedEntitySubclass> referencedEntityDaoImpl) throws SQLException {
 
 		this.addEntityMember(new EntityMember<EntitySubclass, ReferencedEntitySubclass>(
 				name,

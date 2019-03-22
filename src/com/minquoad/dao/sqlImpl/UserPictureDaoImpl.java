@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import com.minquoad.dao.interfaces.UserPictureDao;
 import com.minquoad.entity.file.UserPicture;
-import com.minquoad.framework.dao.EntityDao;
+import com.minquoad.framework.dao.DaoImpl;
 
 public class UserPictureDaoImpl extends ImprovedEntityDaoImpl<UserPicture> implements UserPictureDao {
 
@@ -23,7 +23,7 @@ public class UserPictureDaoImpl extends ImprovedEntityDaoImpl<UserPicture> imple
 	}
 
 	@Override
-	public EntityDao<? super UserPicture> getSuperClassDao() {
+	public DaoImpl<? super UserPicture> getSuperClassDao() {
 		return getDaoFactory().getUserPictureDao();
 	}
 	

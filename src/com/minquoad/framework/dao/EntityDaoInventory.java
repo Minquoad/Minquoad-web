@@ -11,35 +11,42 @@ public class EntityDaoInventory<PrimaryKeyType, EntitySubclass extends Entity> {
 
 	HashMap<PrimaryKeyType, EntitySubclass> map;
 	
-	private EntityMember<EntitySubclass, PrimaryKeyType> idEntityMember;
+	private EntityMember<EntitySubclass, PrimaryKeyType> pkEntityMember;
 	
-	public EntityDaoInventory(EntityMember<EntitySubclass, PrimaryKeyType> idEntityMember) {
+	public EntityDaoInventory(EntityMember<EntitySubclass, PrimaryKeyType> pkEntityMember) {
 		map = new HashMap<PrimaryKeyType, EntitySubclass>();
-		this.idEntityMember = idEntityMember;
+		this.pkEntityMember = pkEntityMember;
 	}
 
 	public void delete(EntitySubclass entity) {
-		map.remove(idEntityMember.getValue(entity));
+		map.remove(pkEntityMember.getValue(entity));
 	}
 
 	public EntitySubclass put(EntitySubclass entity) throws SQLException {
-		PrimaryKeyType primaryKey = idEntityMember.getValue(entity);
+		PrimaryKeyType primaryKey = pkEntityMember.getValue(entity);
 		if (primaryKey == null) {
 			throw new SQLException("Entity without initialised primary key cannot be put in a dao inventory.");
 		}
 		return map.put(primaryKey, entity);
 	}
 
+	public void checkPrimaryKeyUnchanged(EntitySubclass entity) throws SQLException {
+		EntitySubclass expectedEntity = this.getByPrimaryKey(pkEntityMember.getValue(entity));
+		if (!entity.equals(expectedEntity)) {
+			throw new SQLException("Entity primary key value changes are not allowed.");
+		}
+	}
+	
 	public EntitySubclass getByPrimaryKey(PrimaryKeyType primaryKey) {
 		return map.get(primaryKey);
 	}
 
 	public boolean isInside(EntitySubclass entity) {
-		return map.get(idEntityMember.getValue(entity)) == null;
+		return map.get(pkEntityMember.getValue(entity)) == null;
 	}
-	
+
 	public EntitySubclass getByPrimaryKey(ResultSet resultSet) throws SQLException {
-		return map.get(idEntityMember.getValueOfResultSet(resultSet));
+		return map.get(pkEntityMember.getValueOfResultSet(resultSet));
 	}
 
 	public Collection<EntitySubclass> values() {
