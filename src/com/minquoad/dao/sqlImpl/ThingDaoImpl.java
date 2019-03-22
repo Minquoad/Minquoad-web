@@ -1,5 +1,6 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.minquoad.dao.interfaces.ThingDao;
@@ -18,7 +19,7 @@ public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingD
 	}
 
 	@Override
-	public void initEntityMembers() {
+	public void initEntityMembers() throws SQLException {
 		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
 		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());
 	}

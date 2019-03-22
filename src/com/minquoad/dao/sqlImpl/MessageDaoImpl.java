@@ -1,5 +1,6 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.minquoad.dao.interfaces.MessageDao;
@@ -13,7 +14,7 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 	}
 
 	@Override
-	public void initEntityMembers() {
+	public void initEntityMembers() throws SQLException {
 		this.addStringEntityMember("text", Message::getText, Message::setText);
 		this.addStringEntityMember("editedText", Message::getEditedText, Message::setEditedText);
 		this.addInstantEntityMember("instant", Message::getInstant, Message::setInstant);

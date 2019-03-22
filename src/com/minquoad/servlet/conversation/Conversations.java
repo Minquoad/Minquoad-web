@@ -56,7 +56,7 @@ public class Conversations extends ImprovedHttpServlet {
 		if (selectedConversation == null && userIdString != null) {
 			try {
 				int userId = Integer.parseInt(userIdString);
-				User user = userDao.getById(userId);
+				User user = userDao.getByPk(userId);
 				if (user != null && user != getUser(request)) {
 					for (Conversation conversation : conversations) {
 						if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {

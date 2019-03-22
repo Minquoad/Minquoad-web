@@ -6,7 +6,7 @@ import com.minquoad.framework.dao.EntityCriterion;
 
 public interface Dao<EntitySubclass> {
 
-	public EntitySubclass getById(Integer id);
+	public EntitySubclass getByPk(Integer id);
 
 	public boolean persist(EntitySubclass entity);
 

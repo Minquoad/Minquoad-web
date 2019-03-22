@@ -60,7 +60,7 @@ public class Test extends ImprovedHttpServlet {
 		things = thingDao.getAllMatching("à admin", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory(request).getUserDao().getById(1));
+			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(1));
 			thingDao.persist(thing);
 		}
 
@@ -74,7 +74,7 @@ public class Test extends ImprovedHttpServlet {
 		things = thingDao.getAllMatching("à User-one", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory(request).getUserDao().getById(4));
+			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(4));
 			thingDao.persist(thing);
 		}
 
@@ -97,7 +97,7 @@ public class Test extends ImprovedHttpServlet {
 
 			if (id < 0) {
 
-				Thing thing = getDaoFactory(request).getThingDao().getById(-id);
+				Thing thing = getDaoFactory(request).getThingDao().getByPk(-id);
 				if (thing != null) {
 					getDaoFactory(request).getThingDao().delete(thing);
 				}
@@ -106,7 +106,7 @@ public class Test extends ImprovedHttpServlet {
 
 				if (!description.isEmpty()) {
 
-					Thing thing = getDaoFactory(request).getThingDao().getById(id);
+					Thing thing = getDaoFactory(request).getThingDao().getByPk(id);
 
 					if (thing == null) {
 

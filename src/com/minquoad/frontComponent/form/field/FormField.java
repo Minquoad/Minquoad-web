@@ -93,7 +93,7 @@ public abstract class FormField {
 	}
 
 	public <EntitySubclass extends Entity> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
-		return dao.getById(getValueAsInteger());
+		return dao.getByPk(getValueAsInteger());
 	}
 
 }

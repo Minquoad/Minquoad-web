@@ -34,13 +34,13 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		User user = getDaoFactory(request).getUserDao().getById((Integer) request.getSession().getAttribute(userIdKey));
+		User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
 
 		if (user != null) {
 
 			setUser(request, user);
 
-			User controllingAdmin = getDaoFactory(request).getUserDao().getById((Integer) request.getSession().getAttribute(controllingAdminIdKey));
+			User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(controllingAdminIdKey));
 
 			if (controllingAdmin == null) {
 				user.setLastActivityInstant(Instant.now());
@@ -145,7 +145,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		if (idString != null) {
 			try {
 				int id = Integer.parseInt(idString);
-				return dao.getById(id);
+				return dao.getByPk(id);
 
 			} catch (NumberFormatException e) {
 			}

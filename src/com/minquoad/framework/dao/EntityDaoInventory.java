@@ -1,5 +1,6 @@
 package com.minquoad.framework.dao;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,6 +32,14 @@ public class EntityDaoInventory<PrimaryKeyType, EntitySubclass extends Entity> {
 
 	public EntitySubclass getByPrimaryKey(PrimaryKeyType primaryKey) {
 		return map.get(primaryKey);
+	}
+
+	public boolean isInside(EntitySubclass entity) {
+		return map.get(idEntityMember.getValue(entity)) == null;
+	}
+	
+	public EntitySubclass getByPrimaryKey(ResultSet resultSet) throws SQLException {
+		return map.get(idEntityMember.getValueOfResultSet(resultSet));
 	}
 
 	public Collection<EntitySubclass> values() {

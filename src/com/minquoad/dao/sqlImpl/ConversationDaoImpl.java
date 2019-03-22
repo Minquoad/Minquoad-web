@@ -1,5 +1,6 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 	}
 
 	@Override
-	public void initEntityMembers() {
+	public void initEntityMembers() throws SQLException {
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
 	}
