@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.file.ProtectedFile;
-import com.minquoad.service.Deployment;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/FileDownload")
@@ -24,19 +23,43 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
-		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
+		return protectedFile != null && protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
 
-		File file = new File(Deployment.storagePath + protectedFile.getRelativePath());
+		File file = protectedFile.getFile();
 
-		response.reset();
+		String mimeType = protectedFile.getMimeType();
+		if (mimeType == null) {
+			mimeType = getMimeType(file);
+		}
+
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
-		response.setContentType(this.getMimeType(protectedFile));
+		response.setContentType(mimeType);
 		response.setHeader("Content-Length", String.valueOf(file.length()));
-		response.setHeader("Content-Disposition", "attachment; filename=\"" + protectedFile.getApparentName() + "\"");
+		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
+	}
+
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
+
+		File file = protectedFile.getFile();
+
+		String mimeType = protectedFile.getMimeType();
+		if (mimeType == null) {
+			mimeType = getMimeType(file);
+		}
+
+		response.setBufferSize(DEFAULT_BUFFER_SIZE);
+		response.setContentType(mimeType);
+		response.setHeader("Content-Length", String.valueOf(file.length()));
+		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
 
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
@@ -62,9 +85,12 @@ public class FileDownload extends ImprovedHttpServlet {
 		}
 	}
 
-	protected String getMimeType(ProtectedFile protectedFile) {
+	public String getContentDisposition(ProtectedFile protectedFile) {
+		return "inline";
+		// return "attachment; filename=\"" + protectedFile.getApparentName() + "\"";
+	}
 
-		File file = new File(Deployment.storagePath + protectedFile.getRelativePath());
+	protected String getMimeType(File file) {
 
 		String mimeType = getServletContext().getMimeType(file.getName());
 
@@ -72,6 +98,13 @@ public class FileDownload extends ImprovedHttpServlet {
 			mimeType = "application/octet-stream";
 		}
 
-		return mimeType;
+		return "image/png";
 	}
+
+	@Override
+	protected long getLastModified(HttpServletRequest request) {
+		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
+		return protectedFile.getLastModificationDate().toEpochMilli() / 1000l * 1000 + 1l;
+	}
+
 }

@@ -21,6 +21,14 @@ public class User {
 	public static final int nicknameMaxlength = 25;
 	public static final int mailAddressMaxlength = 50;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getNickname() {
 		return nickname;
 	}
@@ -233,14 +241,6 @@ public class User {
 
 	public void setMailAddress(String mailAddress) {
 		this.mailAddress = mailAddress;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 }

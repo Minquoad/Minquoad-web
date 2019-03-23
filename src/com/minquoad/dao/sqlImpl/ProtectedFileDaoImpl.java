@@ -15,6 +15,9 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 	public void initEntityMembers() throws SQLException {
 		this.addIntegerEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
 		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
+		this.addStringEntityMember("originalName", ProtectedFile::getOriginalName, ProtectedFile::setOriginalName);
+		this.addStringEntityMember("originalExtention", ProtectedFile::getOriginalExtention, ProtectedFile::setOriginalExtention);
+		this.addInstantEntityMember("lastModificationDate", ProtectedFile::getLastModificationDate, ProtectedFile::setLastModificationDate);
 	}
 
 	@Override

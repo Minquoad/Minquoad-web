@@ -21,7 +21,7 @@ public class Home extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		forwardToView(request, response, viewPath);
 	}
 

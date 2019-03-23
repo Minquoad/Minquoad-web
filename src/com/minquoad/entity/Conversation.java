@@ -7,8 +7,15 @@ public class Conversation {
 
 	private Integer id;
 	private String title;
-
 	private int type;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;
@@ -24,14 +31,6 @@ public class Conversation {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 }

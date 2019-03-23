@@ -8,6 +8,14 @@ public class ConversationAccess {
 	private boolean administrator;
 	private Message lastSeenMessage;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -38,14 +46,6 @@ public class ConversationAccess {
 
 	public void setLastSeenMessage(Message lastSeenMessage) {
 		this.lastSeenMessage = lastSeenMessage;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 }

@@ -9,6 +9,14 @@ public class FailedInLoginigAttempt {
 	private int attemptsCount;
 	private Instant lastArremptInstant;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getMailAddress() {
 		return mailAddress;
 	}
@@ -37,14 +45,6 @@ public class FailedInLoginigAttempt {
 
 	public void setLastArremptInstant(Instant lastArremptInstant) {
 		this.lastArremptInstant = lastArremptInstant;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 }

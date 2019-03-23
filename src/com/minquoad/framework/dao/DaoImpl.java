@@ -55,20 +55,6 @@ public abstract class DaoImpl<Entity> {
 		return null;
 	}
 
-	/*
-	 * private <SubClass extends EntitySubclass> void hydrateSubClassEntity(SubClass
-	 * entity) throws SQLException { String query = "SELECT * FROM \"" +
-	 * getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() +
-	 * "\"=? LIMIT 1;"; PreparedStatement preparedStatement =
-	 * prepareStatement(query);
-	 * getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(
-	 * preparedStatement, 1, entity); ResultSet resultSet =
-	 * preparedStatement.executeQuery(); this.hydrate(entity, resultSet);
-	 * 
-	 * EntityDao<? super EntitySubclass> superClassDao = this.getSuperClassDao(); if
-	 * (superClassDao != null) { superClassDao.hydrateSubClassEntity(entity); } }
-	 */
-
 	public Entity getByPk(Integer id) {
 		try {
 			if (isPrimaryKeyInteger() && id != null) {
@@ -415,6 +401,9 @@ public abstract class DaoImpl<Entity> {
 	private void hydrate(Entity entity, ResultSet resultSet) throws SQLException {
 		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 			entityMember.setValueOfResultSetInEntity(entity, resultSet);
+		}
+		if (getSuperClassDao() != null) {
+			getSuperClassDao().hydrate(entity, resultSet);
 		}
 	}
 

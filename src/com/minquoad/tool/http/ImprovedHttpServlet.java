@@ -16,6 +16,9 @@ import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
+	public static final String METHOD_GET = "GET";
+	public static final String HEADER_IFMODSINCE = "If-Modified-Since";
+
 	// request keys
 	private final static String daoFactoryKey = "daoFactory";
 	private final static String unitFactoryKey = "unitFactory";

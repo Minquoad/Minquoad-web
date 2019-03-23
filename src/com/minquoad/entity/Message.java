@@ -11,6 +11,14 @@ public class Message {
 	private User user;
 	private Conversation conversation;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public String getText() {
 		return text;
 	}
@@ -51,12 +59,4 @@ public class Message {
 		this.instant = instant;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
 }

@@ -36,7 +36,7 @@ public class DaoInventory<PrimaryKey, Entity> {
 			throw new SQLException("Entity primary key value changes are not allowed.");
 		}
 	}
-	
+
 	public Entity getByPrimaryKey(PrimaryKey primaryKey) {
 		return map.get(primaryKey);
 	}
