@@ -21,6 +21,11 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 	}
 
 	@Override
+	protected void initSubClassDaos() {
+		this.addSubClassDao(getDaoFactory().getUserProfileImageDao());
+	}
+
+	@Override
 	public ProtectedFile instantiateBlank() {
 		return new ProtectedFile();
 	}

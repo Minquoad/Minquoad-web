@@ -66,11 +66,11 @@ public class FileDownload extends ImprovedHttpServlet {
 		} finally {
 			try {
 				input.close();
-			} catch (IOException ignore) {
+			} catch (IOException e) {
 			}
 			try {
 				output.close();
-			} catch (IOException ignore) {
+			} catch (IOException e) {
 			}
 		}
 	}
@@ -93,7 +93,7 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	protected long getLastModified(HttpServletRequest request) {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
-		return protectedFile.getLastModificationDate().toEpochMilli() / 1000l * 1000 + 1l;
+		return protectedFile.getLastModificationDate().toEpochMilli() / 1000l * 1000 + 1000l;
 	}
 
 }

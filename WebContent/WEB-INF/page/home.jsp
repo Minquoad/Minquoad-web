@@ -24,11 +24,17 @@
 			<img>
 			<div class="tileContainer">
 				<div class="borderedTile">
-					<img class="padded" src="<c:url value="/img/staticTest.png" />" />
+					<img class="padded" src="<c:url value="/img/haha.png" />" />
 				</div>
 				<div class="borderedTile">
 					<c:url value="/ImageDownload" var="imageDownloadUrl">
 						<c:param name="protectedFileId" value="1" />
+					</c:url>
+					<img class="padded" src="${imageDownloadUrl}" />
+				</div>
+				<div class="borderedTile">
+					<c:url value="/ImageDownload" var="imageDownloadUrl">
+						<c:param name="protectedFileId" value="2" />
 					</c:url>
 					<img class="padded" src="${imageDownloadUrl}" />
 				</div>

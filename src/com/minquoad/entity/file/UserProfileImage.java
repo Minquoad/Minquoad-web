@@ -2,7 +2,7 @@ package com.minquoad.entity.file;
 
 import com.minquoad.entity.User;
 
-public class UserPicture extends ProtectedFile {
+public class UserProfileImage extends ProtectedFile {
 
 	private User user;
 	
