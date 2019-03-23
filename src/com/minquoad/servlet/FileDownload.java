@@ -31,16 +31,9 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
 
-		File file = protectedFile.getFile();
-
-		String mimeType = protectedFile.getMimeType();
-		if (mimeType == null) {
-			mimeType = getMimeType(file);
-		}
-
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
-		response.setContentType(mimeType);
-		response.setHeader("Content-Length", String.valueOf(file.length()));
+		response.setContentType(getMimeType(protectedFile));
+		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile().length()));
 		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
 	}
 
@@ -51,15 +44,12 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		File file = protectedFile.getFile();
 
-		String mimeType = protectedFile.getMimeType();
-		if (mimeType == null) {
-			mimeType = getMimeType(file);
-		}
-
+		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
-		response.setContentType(mimeType);
+		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(file.length()));
 		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
+		response.setDateHeader("Last-Modified", getLastModified(request));
 
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
@@ -86,19 +76,18 @@ public class FileDownload extends ImprovedHttpServlet {
 	}
 
 	public String getContentDisposition(ProtectedFile protectedFile) {
-		return "inline";
-		// return "attachment; filename=\"" + protectedFile.getApparentName() + "\"";
+		return "attachment; filename=\"" + protectedFile.getApparentName() + "\"";
 	}
 
-	protected String getMimeType(File file) {
+	protected String getMimeType(ProtectedFile protectedFile) {
 
-		String mimeType = getServletContext().getMimeType(file.getName());
+		String mimeType = getServletContext().getMimeType(protectedFile.getFile().getName());
 
 		if (mimeType == null) {
 			mimeType = "application/octet-stream";
 		}
 
-		return "image/png";
+		return mimeType;
 	}
 
 	@Override

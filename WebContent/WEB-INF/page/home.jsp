@@ -27,10 +27,10 @@
 					<img class="padded" src="<c:url value="/img/staticTest.png" />" />
 				</div>
 				<div class="borderedTile">
-					<c:url value="/FileDownload" var="fileDownloadUrl">
+					<c:url value="/ImageDownload" var="imageDownloadUrl">
 						<c:param name="protectedFileId" value="1" />
 					</c:url>
-					<img class="padded" src="${fileDownloadUrl}" />
+					<img class="padded" src="${imageDownloadUrl}" />
 				</div>
 			</div>
 		</div>

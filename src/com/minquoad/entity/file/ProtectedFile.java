@@ -61,7 +61,7 @@ public class ProtectedFile {
 	}
 
 	public String getApparentName() {
-		return Integer.toString(getId()) + '.' + getOriginalExtention();
+		return getOriginalName() + '.' + getOriginalExtention();
 	}
 
 	public File getFile() {
@@ -69,10 +69,6 @@ public class ProtectedFile {
 			file = new File(Deployment.storagePath + getRelativePath());
 		}
 		return file;
-	}
-
-	public String getMimeType() {
-		return null;
 	}
 
 }
