@@ -8,7 +8,7 @@ public class UserProfileImage extends ProtectedFile {
 	
 	@Override
 	public boolean isDownloadableForUser(User user) {
-		System.out.println("I have been checked");
+		System.out.println("I have been checked, user owner is " + this.getUser().getNickname());
 		return true;
 	}
 

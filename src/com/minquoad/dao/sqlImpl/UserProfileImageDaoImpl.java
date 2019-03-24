@@ -24,7 +24,7 @@ public class UserProfileImageDaoImpl extends ImprovedEntityDaoImpl<UserProfileIm
 
 	@Override
 	public DaoImpl<? super UserProfileImage> getSuperClassDao() {
-		return getDaoFactory().getUserProfileImageDao();
+		return getDaoFactory().getProtectedFileDao();
 	}
-	
+
 }
