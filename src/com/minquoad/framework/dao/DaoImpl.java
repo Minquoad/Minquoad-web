@@ -17,28 +17,19 @@ import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 
 public abstract class DaoImpl<Entity> {
 
-	private List<EntityMember<Entity, ?>> entityMembers;
+	private List<EntityMember<? super Entity, ?>> entityMembers;
 
 	private List<DaoImpl<? extends Entity>> subClassDaos;
 
-	private boolean primaryKeyInteger;
-	private boolean primaryKeyLong;
-	private boolean primaryKeyString;
+	// a primary-key must be an Integer, a Long or a String
 
-	// a primary-key must be an Integer, a Long or a String;
-	private EntityMember<Entity, Integer> integerPrimaryKeyEntityMember;
-	private EntityMember<Entity, Long> longPrimaryKeyEntityMember;
-	private EntityMember<Entity, String> stringPrimaryKeyEntityMember;
+	private EntityMember<? super Entity, Integer> integerPrimaryKeyEntityMember;
+	private EntityMember<? super Entity, Long> longPrimaryKeyEntityMember;
+	private EntityMember<? super Entity, String> stringPrimaryKeyEntityMember;
 
 	private DaoInventory<Integer, Entity> integerInventory;
 	private DaoInventory<Long, Entity> longInventory;
 	private DaoInventory<String, Entity> stringInventory;
-
-	public DaoImpl() {
-		primaryKeyInteger = false;
-		primaryKeyLong = false;
-		primaryKeyString = false;
-	}
 
 	protected abstract void initEntityMembers() throws SQLException;
 
@@ -55,83 +46,52 @@ public abstract class DaoImpl<Entity> {
 		return null;
 	}
 
-	public Entity getByPk(Integer id) {
+	public Entity getByPk(Integer pk) {
 		try {
-			if (isPrimaryKeyInteger() && id != null) {
-				Entity entity = getIntegerInventory().getByPrimaryKey(id);
-				if (entity != null) {
-					return entity;
-				} else {
-					String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? LIMIT 1;";
-					PreparedStatement preparedStatement = prepareStatement(query);
-					getIntegerPrimaryKeyEntityMember().setValueInPreparedStatement(preparedStatement, 1, id);
-					ResultSet resultSet = preparedStatement.executeQuery();
-
-					if (resultSet.next()) {
-						entity = instantiateBlank();
-						this.hydrate(entity, resultSet);
-						getInventory().put(entity);
-						return entity;
-					}
-
-				}
-			}
+			return getByPk(pk, getIntegerPrimaryKeyEntityMember(), getIntegerInventory());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public Entity getByPk(Long id) {
+	public Entity getByPk(Long pk) {
 		try {
-			if (isPrimaryKeyLong() && id != null) {
-				Entity entity = getLongInventory().getByPrimaryKey(id);
-				if (entity != null) {
-					return entity;
-				} else {
-					String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? LIMIT 1;";
-					PreparedStatement preparedStatement = prepareStatement(query);
-					getLongPrimaryKeyEntityMember().setValueInPreparedStatement(preparedStatement, 1, id);
-					ResultSet resultSet = preparedStatement.executeQuery();
-
-					if (resultSet.next()) {
-						entity = instantiateBlank();
-						this.hydrate(entity, resultSet);
-						getInventory().put(entity);
-						return entity;
-					}
-
-				}
-			}
+			return getByPk(pk, getLongPrimaryKeyEntityMember(), getLongInventory());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public Entity getByPk(String id) {
+	public Entity getByPk(String pk) {
 		try {
-			if (isPrimaryKeyString() && id != null) {
-				Entity entity = getStringInventory().getByPrimaryKey(id);
-				if (entity != null) {
-					return entity;
-				} else {
-					String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? LIMIT 1;";
-					PreparedStatement preparedStatement = prepareStatement(query);
-					getStringPrimaryKeyEntityMember().setValueInPreparedStatement(preparedStatement, 1, id);
-					ResultSet resultSet = preparedStatement.executeQuery();
-
-					if (resultSet.next()) {
-						entity = instantiateBlank();
-						this.hydrate(entity, resultSet);
-						getInventory().put(entity);
-						return entity;
-					}
-
-				}
-			}
+			return getByPk(pk, getStringPrimaryKeyEntityMember(), getStringInventory());
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public <PrimaryKey> Entity getByPk(PrimaryKey pk, EntityMember<? super Entity, PrimaryKey> primaryKeyEntityMember, DaoInventory<PrimaryKey, Entity> inventory) throws SQLException {
+		if (primaryKeyEntityMember != null && pk != null) {
+			Entity entity = inventory.getByPrimaryKey(pk);
+			if (entity != null) {
+				return entity;
+			} else {
+				String query = "SELECT * FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? LIMIT 1;";
+				PreparedStatement preparedStatement = prepareStatement(query);
+				primaryKeyEntityMember.setValueInPreparedStatement(preparedStatement, 1, pk);
+				ResultSet resultSet = preparedStatement.executeQuery();
+
+				if (resultSet.next()) {
+					entity = instantiateBlank();
+					this.hydrate(entity, resultSet);
+					getInventory().put(entity);
+					return entity;
+				}
+
+			}
 		}
 		return null;
 	}
@@ -140,7 +100,7 @@ public abstract class DaoImpl<Entity> {
 		if (entity != null) {
 			try {
 
-				if (getPrimaryKeyEntityMember().getValue(entity) == null || getInventory().isInside(entity)) {
+				if (getPrimaryKeyEntityMember().getValue(entity) == null || !getInventory().isInside(entity)) {
 					return this.insert(entity);
 				} else {
 					return this.update(entity);
@@ -180,7 +140,7 @@ public abstract class DaoImpl<Entity> {
 				PreparedStatement preparedStatement = prepareStatement(query);
 
 				int i = 1;
-				for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+				for (EntityMember<? super Entity, ?> entityMember : getEntityMembers()) {
 					if (!primaryKeyNull || entityMember != getPrimaryKeyEntityMember()) {
 						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 						i++;
@@ -235,7 +195,7 @@ public abstract class DaoImpl<Entity> {
 				PreparedStatement preparedStatement = prepareStatement(query);
 
 				int i = 1;
-				for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+				for (EntityMember<? super Entity, ?> entityMember : getEntityMembers()) {
 					if (entityMember != getPrimaryKeyEntityMember()) {
 						entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 						i++;
@@ -289,7 +249,7 @@ public abstract class DaoImpl<Entity> {
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
 				if (criterion.getValue() != null) {
-					EntityMember<Entity, ?> entityMember = getEntityMember(criterion.getName());
+					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getName());
 					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
 					i++;
 				}
@@ -354,7 +314,7 @@ public abstract class DaoImpl<Entity> {
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
 				if (criterion.getValue() != null) {
-					EntityMember<Entity, ?> entityMember = getEntityMember(criterion.getName());
+					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getName());
 					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
 					i++;
 				}
@@ -383,7 +343,7 @@ public abstract class DaoImpl<Entity> {
 	public boolean isEntityMachingCriteria(Entity entity, EntityCriterion[] criteria) throws SQLException {
 		if (criteria != null) {
 			for (EntityCriterion criterion : criteria) {
-				EntityMember<Entity, ?> member = getEntityMember(criterion.getName());
+				EntityMember<? super Entity, ?> member = getEntityMember(criterion.getName());
 				if (criterion.getValue() == null) {
 					if (member.getValue(entity) != null) {
 						return false;
@@ -399,11 +359,8 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	private void hydrate(Entity entity, ResultSet resultSet) throws SQLException {
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+		for (EntityMember<? super Entity, ?> entityMember : getEntityMembers()) {
 			entityMember.setValueOfResultSetInEntity(entity, resultSet);
-		}
-		if (getSuperClassDao() != null) {
-			getSuperClassDao().hydrate(entity, resultSet);
 		}
 	}
 
@@ -419,55 +376,63 @@ public abstract class DaoImpl<Entity> {
 
 	private void initIfneeded() throws SQLException {
 		if (entityMembers == null) {
-			entityMembers = new ArrayList<EntityMember<Entity, ?>>();
+			entityMembers = new ArrayList<EntityMember<? super Entity, ?>>();
+
+			DaoImpl<? super Entity> superClassDao = getSuperClassDao();
+
+			if (superClassDao != null) {
+				entityMembers.addAll(superClassDao.getEntityMembers());
+			}
+
+			if (superClassDao != null) {
+				setIntegerPrimaryKeyEntityMember(superClassDao.getIntegerPrimaryKeyEntityMember());
+				setLongPrimaryKeyEntityMember(superClassDao.getLongPrimaryKeyEntityMember());
+				setStringPrimaryKeyEntityMember(superClassDao.getStringPrimaryKeyEntityMember());
+			}
 
 			this.initEntityMembers();
 
-			if (!hasPrimaryKey()) {
-				throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
+			if (isPrimaryKeyInteger()) {
+				this.setIntegerInventory(new DaoInventory<Integer, Entity>(
+						getIntegerPrimaryKeyEntityMember(),
+						getSuperClassDao() == null ? null : getSuperClassDao().getIntegerInventory()));
+			} else if (isPrimaryKeyLong()) {
+				setLongInventory(new DaoInventory<Long, Entity>(
+						getLongPrimaryKeyEntityMember(),
+						getSuperClassDao() == null ? null : getSuperClassDao().getLongInventory()));
+			} else if (isPrimaryKeyString()) {
+				setStringInventory(new DaoInventory<String, Entity>(
+						getStringPrimaryKeyEntityMember(),
+						getSuperClassDao() == null ? null : getSuperClassDao().getStringInventory()));
+			} else {
+				throw new SQLException("Not all primary key types are handeled in initIfneeded()");
 			}
 
-			if (isPrimaryKeyInteger()) {
-				integerInventory = new DaoInventory<Integer, Entity>(integerPrimaryKeyEntityMember);
-			}
-			if (isPrimaryKeyLong()) {
-				longInventory = new DaoInventory<Long, Entity>(longPrimaryKeyEntityMember);
-			}
-			if (isPrimaryKeyString()) {
-				stringInventory = new DaoInventory<String, Entity>(stringPrimaryKeyEntityMember);
+			if (!hasPrimaryKey()) {
+				throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
 			}
 		}
 	}
 
 	private boolean hasPrimaryKey() throws SQLException {
-		return isPrimaryKeyInteger() || isPrimaryKeyLong() || isPrimaryKeyString();
+		try {
+			getPrimaryKeyEntityMember();
+			return true;
+		} catch (SQLException e) {
+		}
+		return false;
 	}
 
 	public boolean isPrimaryKeyInteger() throws SQLException {
-		initIfneeded();
-		return primaryKeyInteger;
-	}
-
-	private void setPrimaryKeyInteger(boolean primaryKeyInteger) {
-		this.primaryKeyInteger = primaryKeyInteger;
+		return getIntegerPrimaryKeyEntityMember() != null;
 	}
 
 	public boolean isPrimaryKeyLong() throws SQLException {
-		initIfneeded();
-		return primaryKeyLong;
-	}
-
-	private void setPrimaryKeyLong(boolean primaryKeyLong) {
-		this.primaryKeyLong = primaryKeyLong;
+		return getLongPrimaryKeyEntityMember() != null;
 	}
 
 	public boolean isPrimaryKeyString() throws SQLException {
-		initIfneeded();
-		return primaryKeyString;
-	}
-
-	private void setPrimaryKeyString(boolean primaryKeyString) {
-		this.primaryKeyString = primaryKeyString;
+		return getStringPrimaryKeyEntityMember() != null;
 	}
 
 	private DaoInventory<Integer, Entity> getIntegerInventory() throws SQLException {
@@ -485,8 +450,19 @@ public abstract class DaoImpl<Entity> {
 		return stringInventory;
 	}
 
+	public void setIntegerInventory(DaoInventory<Integer, Entity> integerInventory) {
+		this.integerInventory = integerInventory;
+	}
+
+	public void setLongInventory(DaoInventory<Long, Entity> longInventory) {
+		this.longInventory = longInventory;
+	}
+
+	public void setStringInventory(DaoInventory<String, Entity> stringInventory) {
+		this.stringInventory = stringInventory;
+	}
+
 	private DaoInventory<?, Entity> getInventory() throws SQLException {
-		initIfneeded();
 		if (isPrimaryKeyInteger()) {
 			return getIntegerInventory();
 		}
@@ -496,16 +472,16 @@ public abstract class DaoImpl<Entity> {
 		if (isPrimaryKeyString()) {
 			return getStringInventory();
 		}
-		throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
+		throw new SQLException("Not all primary key types are handeled in getInventory()");
 	}
 
-	private List<EntityMember<Entity, ?>> getEntityMembers() throws SQLException {
+	private List<EntityMember<? super Entity, ?>> getEntityMembers() throws SQLException {
 		initIfneeded();
 		return entityMembers;
 	}
 
-	private EntityMember<Entity, ?> getEntityMember(String name) throws SQLException {
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+	private EntityMember<? super Entity, ?> getEntityMember(String name) throws SQLException {
+		for (EntityMember<? super Entity, ?> entityMember : getEntityMembers()) {
 			if (entityMember.getName().equals(name)) {
 				return entityMember;
 			}
@@ -513,8 +489,7 @@ public abstract class DaoImpl<Entity> {
 		throw new SQLException("EntityMember with name " + name + " do not exist in " + this.getClass().getSimpleName());
 	}
 
-	private EntityMember<Entity, ?> getPrimaryKeyEntityMember() throws SQLException {
-		initIfneeded();
+	private EntityMember<? super Entity, ?> getPrimaryKeyEntityMember() throws SQLException {
 		if (isPrimaryKeyInteger()) {
 			return getIntegerPrimaryKeyEntityMember();
 		}
@@ -524,22 +499,34 @@ public abstract class DaoImpl<Entity> {
 		if (isPrimaryKeyString()) {
 			return getStringPrimaryKeyEntityMember();
 		}
-		throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
+		throw new SQLException("Not all primary key types are handeled in getPrimaryKeyEntityMember()");
 	}
 
-	private EntityMember<Entity, Integer> getIntegerPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<? super Entity, Integer> getIntegerPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return integerPrimaryKeyEntityMember;
 	}
 
-	private EntityMember<Entity, Long> getLongPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<? super Entity, Long> getLongPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return longPrimaryKeyEntityMember;
 	}
 
-	private EntityMember<Entity, String> getStringPrimaryKeyEntityMember() throws SQLException {
+	private EntityMember<? super Entity, String> getStringPrimaryKeyEntityMember() throws SQLException {
 		initIfneeded();
 		return stringPrimaryKeyEntityMember;
+	}
+
+	public void setIntegerPrimaryKeyEntityMember(EntityMember<? super Entity, Integer> integerPrimaryKeyEntityMember) throws SQLException {
+		this.integerPrimaryKeyEntityMember = integerPrimaryKeyEntityMember;
+	}
+
+	public void setLongPrimaryKeyEntityMember(EntityMember<? super Entity, Long> longPrimaryKeyEntityMember) throws SQLException {
+		this.longPrimaryKeyEntityMember = longPrimaryKeyEntityMember;
+	}
+
+	public void setStringPrimaryKeyEntityMember(EntityMember<? super Entity, String> stringPrimaryKeyEntityMember) throws SQLException {
+		this.stringPrimaryKeyEntityMember = stringPrimaryKeyEntityMember;
 	}
 
 	protected List<DaoImpl<? extends Entity>> getSubClassDaos() {
@@ -556,7 +543,7 @@ public abstract class DaoImpl<Entity> {
 
 	private String getColumnNamesInSingleString(String separator, boolean withPrimaryKey) throws SQLException {
 		String string = null;
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+		for (EntityMember<? super Entity, ?> entityMember : getEntityMembers()) {
 			if (withPrimaryKey || entityMember != getPrimaryKeyEntityMember()) {
 				if (string == null) {
 					string = entityMember.getName();
@@ -575,7 +562,7 @@ public abstract class DaoImpl<Entity> {
 	// EntityMember adders
 
 	public void addEntityMember(EntityMember<Entity, ?> entityMember) throws SQLException {
-		for (EntityMember<Entity, ?> entityMemberInList : getEntityMembers()) {
+		for (EntityMember<? super Entity, ?> entityMemberInList : getEntityMembers()) {
 			if (entityMemberInList.getName().equals(entityMember.getName())) {
 				new Exception("Dao implementation of class " + this.getClass() + " has duplicated EntityMember name.")
 						.printStackTrace();
@@ -611,8 +598,7 @@ public abstract class DaoImpl<Entity> {
 			if (hasPrimaryKey()) {
 				throw new SQLException("A primary key called " + name + " can not be added because a other called " + getPrimaryKeyEntityMember().getName() + " is already defined.");
 			}
-			setPrimaryKeyInteger(true);
-			integerPrimaryKeyEntityMember = entityMember;
+			setIntegerPrimaryKeyEntityMember(entityMember);
 		}
 	}
 
@@ -748,8 +734,7 @@ public abstract class DaoImpl<Entity> {
 			if (hasPrimaryKey()) {
 				throw new SQLException("A primary key called " + name + " can not be added because a other called " + getPrimaryKeyEntityMember().getName() + " is already defined.");
 			}
-			setPrimaryKeyLong(true);
-			longPrimaryKeyEntityMember = entityMember;
+			setLongPrimaryKeyEntityMember(entityMember);
 		}
 	}
 
@@ -806,8 +791,7 @@ public abstract class DaoImpl<Entity> {
 			if (hasPrimaryKey()) {
 				throw new SQLException("A primary key called " + name + " can not be added because a other called " + getPrimaryKeyEntityMember().getName() + " is already defined.");
 			}
-			setPrimaryKeyString(true);
-			stringPrimaryKeyEntityMember = entityMember;
+			setStringPrimaryKeyEntityMember(entityMember);
 		}
 	}
 
@@ -888,7 +872,7 @@ public abstract class DaoImpl<Entity> {
 				(resultSet, thisName) -> {
 					if (referencedEntityDaoImpl.isPrimaryKeyInteger()) {
 						Integer nonNullPrimaryKey = referencedEntityDaoImpl.getIntegerPrimaryKeyEntityMember().getResultSetNonNullValueGetter().getNonNullValue(resultSet, thisName);
-						// the wasNull() check is done here to avoid and unnecessary getById(0) call
+						// the wasNull() check is done here to avoid and unnecessary getByPk(0) call
 						if (resultSet.wasNull()) {
 							return null;
 						} else {
@@ -897,7 +881,7 @@ public abstract class DaoImpl<Entity> {
 					}
 					if (referencedEntityDaoImpl.isPrimaryKeyLong()) {
 						Long nonNullPrimaryKey = referencedEntityDaoImpl.getLongPrimaryKeyEntityMember().getResultSetNonNullValueGetter().getNonNullValue(resultSet, thisName);
-						// the wasNull() check is done here to avoid and unnecessary getById(0) call
+						// the wasNull() check is done here to avoid and unnecessary getByPk(0) call
 						if (resultSet.wasNull()) {
 							return null;
 						} else {
