@@ -5,10 +5,9 @@ import com.minquoad.entity.User;
 public class UserProfileImage extends ProtectedFile {
 
 	private User user;
-	
+
 	@Override
 	public boolean isDownloadableForUser(User user) {
-		System.out.println("I have been checked, user owner is " + this.getUser().getNickname());
 		return true;
 	}
 
