@@ -19,7 +19,6 @@ public abstract class ImprovedEntityDaoImpl<EntitySubclass> extends DaoImpl<Enti
 
 	@Override
 	public PreparedStatement prepareStatement(String statement) throws SQLException {
-		System.out.println(statement);
 		return Database.prepareStatement(statement);
 	}
 
