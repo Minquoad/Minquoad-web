@@ -14,6 +14,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/dynamicMenu.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/form.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/movableDiv.css" />" />
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/account.css" />" />
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 

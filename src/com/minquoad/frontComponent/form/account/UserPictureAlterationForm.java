@@ -15,8 +15,7 @@ public class UserPictureAlterationForm extends Form {
 
 	@Override
 	protected void build() {
-		FormFileField field = new FormFileField(userPictureKey);
-		this.addField(field);
+		this.addField(new FormFileField(userPictureKey));
 	}
 
 }

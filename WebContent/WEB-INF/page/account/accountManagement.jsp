@@ -16,15 +16,17 @@
 					<div class="padded">
 						<h2>Sent a new profile picture</h2>
 
-						<c:if test="${not empty sessionUser.pictureName}">
+						<c:if test="${not empty userProfileImage}">
 
 							<p>Actual profile picture:</p>
-						WIP
-						<!--
-						<div class="croppedResizedPicture"
-							style="background-image: url('<c:url value="/img/Community/${ sessionUser.pictureName}" />')">
-						</div>
-						 -->
+
+							<c:url value="/ImageDownload" var="imageDownloadUrl">
+								<c:param name="protectedFileId" value="${userProfileImage.id}" />
+							</c:url>
+							<div class="userProfileImageContainer">
+								<img src="${imageDownloadUrl}" class="userProfileImage">
+							</div>
+
 						</c:if>
 
 						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8" enctype="multipart/form-data">

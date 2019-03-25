@@ -35,11 +35,37 @@ public class FormFileField extends FormField {
 		this.setValueProblems(problems);
 	}
 
-	public String getOriginalFileName() {
+	public String getOriginalFileName(boolean withExtention) {
 		if (getValue() == null || !PartTool.hasFile(getValue())) {
 			return null;
 		} else {
-			return PartTool.getFileName(getValue());
+			String fileName = PartTool.getFileName(getValue());
+
+			if (withExtention) {
+				return fileName;
+			}
+
+			int lastIndexOf = fileName.lastIndexOf('.');
+			if (lastIndexOf == -1) {
+				return fileName;
+			} else {
+				return fileName.substring(0, lastIndexOf);
+			}
+
+		}
+	}
+
+	public String getOriginalFileExtention() {
+		if (getValue() == null || !PartTool.hasFile(getValue())) {
+			return null;
+		}
+		String fileName = PartTool.getFileName(getValue());
+
+		int lastIndexOf = fileName.lastIndexOf('.');
+		if (lastIndexOf == -1) {
+			return "";
+		} else {
+			return fileName.substring(lastIndexOf + 1);
 		}
 	}
 
@@ -70,7 +96,7 @@ public class FormFileField extends FormField {
 
 	@Override
 	public String getValueAsString() {
-		return this.getOriginalFileName();
+		return this.getOriginalFileName(true);
 	}
 
 	public boolean hasFile() {

@@ -186,23 +186,39 @@ public abstract class DaoImpl<Entity> {
 			getSuperClassDao().insertRecursivelyFromSuper(entity);
 		}
 
-		boolean primaryKeyNull = getPrimaryKeyEntityMember().getValue(entity) == null;
-
-		int valuesCount = getEntityMembers().size();
-		if (primaryKeyNull) {
-			valuesCount--;
-		}
+		EntityMember<? super Entity, ?> primaryKeyEntityMember = getPrimaryKeyEntityMember();
+		boolean primaryKeyNull = primaryKeyEntityMember.getValue(entity) == null;
 
 		String query = "INSERT INTO \""
 				+ getTableName()
-				+ "\" (\""
-				+ getColumnNamesInSingleString("\", \"", !primaryKeyNull)
-				+ "\") VALUES (";
-		for (int i = 0; i < valuesCount; i++) {
-			if (i == 0) {
+				+ "\" (";
+		boolean first = true;
+		if (!primaryKeyNull) {
+			query += "\"" + primaryKeyEntityMember.getName() + "\" ";
+			first = false;
+		}
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+			if (entityMember != primaryKeyEntityMember) {
+				if (!first) {
+					query += ", ";
+				}
+				query += "\"" + entityMember.getName() + "\"";
+				first = false;
+			}
+		}
+		query += ") VALUES (";
+		first = true;
+		if (!primaryKeyNull) {
+			query += "?";
+			first = false;
+		}
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+			if (entityMember != primaryKeyEntityMember) {
+				if (!first) {
+					query += ", ";
+				}
 				query += "?";
-			} else {
-				query += ", ?";
+				first = false;
 			}
 		}
 		query += ") RETURNING * ;";
@@ -210,8 +226,12 @@ public abstract class DaoImpl<Entity> {
 		PreparedStatement preparedStatement = prepareStatement(query);
 
 		int i = 1;
+		if (!primaryKeyNull) {
+			primaryKeyEntityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+			i++;
+		}
 		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (!primaryKeyNull || entityMember != getPrimaryKeyEntityMember()) {
+			if (entityMember != primaryKeyEntityMember) {
 				entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 				i++;
 			}

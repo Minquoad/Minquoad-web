@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.servlet.http.Part;
 
+import com.minquoad.service.Deployment;
+
 public abstract class PartTool {
 
 	public static boolean hasFile(Part part) {
@@ -36,7 +38,7 @@ public abstract class PartTool {
 			File newFile = null;
 			while (newFile == null || newFile.exists()) {
 				randomName = Long.toString(Math.abs(new Random().nextLong()));
-				newFile = new File(directoryPath + randomName);
+				newFile = new File(Deployment.storagePath + directoryPath + randomName);
 			}
 
 			int bufferSize = 102400;

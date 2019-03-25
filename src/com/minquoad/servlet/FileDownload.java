@@ -63,14 +63,16 @@ public class FileDownload extends ImprovedHttpServlet {
 				output.write(buffer, 0, longueur);
 			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				input.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 			try {
 				output.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 			}
 		}
 	}

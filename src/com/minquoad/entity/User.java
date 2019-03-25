@@ -15,7 +15,7 @@ public class User {
 	private String hashedSaltedPassword;
 	private Instant registrationInstant;
 	private Instant lastActivityInstant;
-	private int adminLevel;
+	private int adminLevel = 0;
 	private Instant unblockInstant;
 
 	public static final int nicknameMaxlength = 25;
@@ -74,11 +74,11 @@ public class User {
 	}
 
 	public boolean isAdmin() {
-		return this.adminLevel != 0;
+		return getAdminLevel() != 0;
 	}
 
 	public boolean hasAdminLvl(int adminLevel) {
-		return this.adminLevel >= adminLevel;
+		return getAdminLevel() >= adminLevel;
 	}
 
 	public boolean canAdminister(User user) {

@@ -1,6 +1,7 @@
 package com.minquoad.servlet.account;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -8,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
+import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.frontComponent.form.account.UserPasswordAlterationForm;
 import com.minquoad.frontComponent.form.account.UserPictureAlterationForm;
 import com.minquoad.frontComponent.form.field.FormFileField;
@@ -48,9 +51,27 @@ public class AccountManagement extends ImprovedHttpServlet {
 				UserPictureAlterationForm form = new UserPictureAlterationForm(request);
 				
 				if (form.isValide()) {
+
+					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
+					
+					UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
+					if (image != null) {
+						image.getFile().delete();
+						userProfileImageDao.delete(image);
+					}
+
 					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.userPictureKey);
 					if (field.hasFile()) {
-						PartTool.saveInNewFile(field.getValue(), StorageManager.communityPath);
+						String fileName = PartTool.saveInNewFile(field.getValue(), StorageManager.communityPath);
+
+						image = new UserProfileImage();
+						image.setRelativePath(StorageManager.communityPath + fileName);
+						image.setOriginalName(field.getOriginalFileName(false));
+						image.setOriginalExtention(field.getOriginalFileExtention());
+						image.setLastModificationDate(Instant.now());
+						image.setUser(getUser(request));
+
+						userProfileImageDao.persist(image);
 					}
 				} else {
 					request.setAttribute("userPictureAlterationForm", form);
@@ -74,4 +95,14 @@ public class AccountManagement extends ImprovedHttpServlet {
 		}
 	}
 
+	@Override
+	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+
+		UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
+		UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
+		request.setAttribute("userProfileImage", image);
+
+		super.forwardToView(request, response, viewPath);
+	}
+	
 }

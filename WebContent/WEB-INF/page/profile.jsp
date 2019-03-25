@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +13,20 @@
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer">
 
-				<c:out value="${ requestScope.showedUser.nickname }" />
+				<p>
+					<c:out value="${ requestScope.showedUser.nickname }" />
+				</p>
+
+				<c:if test="${not empty userProfileImage}">
+
+					<c:url value="/ImageDownload" var="imageDownloadUrl">
+						<c:param name="protectedFileId" value="${userProfileImage.id}" />
+					</c:url>
+					<div class="userProfileImageContainer">
+						<img src="${imageDownloadUrl}" class="userProfileImage">
+					</div>
+
+				</c:if>
 
 			</div>
 		</div>
