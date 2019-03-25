@@ -59,4 +59,8 @@ public class Message {
 		this.instant = instant;
 	}
 
+	public boolean isEdited() {
+		return getEditedText() != null;
+	}
+	
 }

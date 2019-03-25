@@ -18,4 +18,6 @@ public interface DaoFactory {
 
 	public UserProfileImageDao getUserProfileImageDao();
 
+	public RequestLogDao getRequestLogDao();
+
 }

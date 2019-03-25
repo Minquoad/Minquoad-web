@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
-@WebServlet({"/Home", "/"})
+@WebServlet({ "/Home", "/" })
 public class Home extends ImprovedHttpServlet {
 
 	public static final String viewPath = "/WEB-INF/page/home.jsp";

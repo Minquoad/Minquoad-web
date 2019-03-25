@@ -41,7 +41,7 @@
 											<c:out value="${ user.registrationInstant }" />
 										</td>
 										<td>
-											<c:out value="${ user.registrationInstant }" />
+											<c:out value="${ user.lastActivityInstant }" />
 										</td>
 										<td>
 											<c:if test="${user.canAdminister(requestScope.user)}">

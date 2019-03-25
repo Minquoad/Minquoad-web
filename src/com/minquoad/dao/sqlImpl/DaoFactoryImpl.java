@@ -12,6 +12,7 @@ public class DaoFactoryImpl implements DaoFactory {
 	private FailedInLoginigAttemptDaoImpl failedInLoginigAttemptDaoImpl;
 	private ProtectedFileDaoImpl protectedFileDaoImpl;
 	private UserProfileImageDaoImpl userProfileImageDaoImpl;
+	private RequestLogDaoImpl requestLogDaoImpl;
 
 	@Override
 	public ThingDaoImpl getThingDao() {
@@ -75,6 +76,14 @@ public class DaoFactoryImpl implements DaoFactory {
 			userProfileImageDaoImpl = new UserProfileImageDaoImpl(this);
 		}
 		return userProfileImageDaoImpl;
+	}
+
+	@Override
+	public RequestLogDaoImpl getRequestLogDao() {
+		if (requestLogDaoImpl == null) {
+			requestLogDaoImpl = new RequestLogDaoImpl(this);
+		}
+		return requestLogDaoImpl;
 	}
 
 }

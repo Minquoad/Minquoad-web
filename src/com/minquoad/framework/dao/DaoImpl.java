@@ -624,6 +624,10 @@ public abstract class DaoImpl<Entity> {
 
 			this.initEntityMembers();
 
+			if (!hasPrimaryKey()) {
+				throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
+			}
+
 			if (isPrimaryKeyInteger()) {
 				this.setIntegerInventory(new DaoInventory<Integer, Entity>(
 						getIntegerPrimaryKeyEntityMember(),
@@ -640,9 +644,6 @@ public abstract class DaoImpl<Entity> {
 				throw new SQLException("Not all primary key types are handeled in initIfneeded()");
 			}
 
-			if (!hasPrimaryKey()) {
-				throw new SQLException("No primary key defined in " + this.getClass().getSimpleName());
-			}
 		}
 	}
 

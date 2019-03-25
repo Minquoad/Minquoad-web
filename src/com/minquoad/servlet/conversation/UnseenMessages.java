@@ -37,44 +37,45 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		try {
-			Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
-			List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
+		List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
 
-			List<Message> unseenMessages = null;
+		List<Message> unseenMessages = null;
 
-			ConversationAccess conversationAccess = getDaoFactory(request).getConversationAccessDao()
-					.getConversationAccess(getUser(request), conversation);
+		ConversationAccess conversationAccess = getDaoFactory(request).getConversationAccessDao()
+				.getConversationAccess(getUser(request), conversation);
 
-			Message lastSeenMessage = conversationAccess.getLastSeenMessage();
-			
-			if (lastSeenMessage == null) {
-				unseenMessages = messages;
+		Message lastSeenMessage = conversationAccess.getLastSeenMessage();
 
-			} else {
-				unseenMessages = new LinkedList<Message>();
-				boolean lastSeenMessageFonded = false;
-				for (Message message : messages) {
-					if (lastSeenMessageFonded) {
-						unseenMessages.add(message);
-					} else {
-						lastSeenMessageFonded = message == lastSeenMessage;
-					}
+		if (lastSeenMessage == null) {
+			unseenMessages = messages;
+
+		} else {
+			unseenMessages = new LinkedList<Message>();
+			boolean lastSeenMessageFonded = false;
+			for (Message message : messages) {
+				if (lastSeenMessageFonded) {
+					unseenMessages.add(message);
+				} else {
+					lastSeenMessageFonded = message == lastSeenMessage;
 				}
 			}
-
-			if (unseenMessages.size() != 0) {
-				conversationAccess.setLastSeenMessage(unseenMessages.get(unseenMessages.size() - 1));
-				getDaoFactory(request).getConversationAccessDao().persist(conversationAccess);
-			}
-
-			request.setAttribute("messages", unseenMessages);
-
-			forwardToView(request, response, viewPath);
-
-		} catch (Exception e) {
 		}
+
+		if (unseenMessages.size() != 0) {
+			conversationAccess.setLastSeenMessage(unseenMessages.get(unseenMessages.size() - 1));
+			getDaoFactory(request).getConversationAccessDao().persist(conversationAccess);
+		}
+
+		request.setAttribute("messages", unseenMessages);
+
+		forwardToView(request, response, viewPath);
+
+	}
+
+	public boolean isLoggingAllResuqests() {
+		return false;
 	}
 
 }

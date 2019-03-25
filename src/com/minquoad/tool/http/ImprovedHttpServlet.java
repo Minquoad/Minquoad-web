@@ -1,6 +1,8 @@
 package com.minquoad.tool.http;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Instant;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.Database;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
 import com.minquoad.unit.UnitFactory;
 
@@ -36,60 +39,94 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
-		User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
-
-		if (user != null) {
-
-			setUser(request, user);
-
-			User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(controllingAdminIdKey));
-
-			if (controllingAdmin == null) {
-				user.setLastActivityInstant(Instant.now());
-				getDaoFactory(request).getUserDao().persist(user);
-
-				if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount") && !request.getServletPath().equals("/OutLoging")) {
-					response.sendRedirect(request.getContextPath() + "/BlockedAccount");
-					return;
-				}
-
-			} else {
-				setControllingAdmin(request, controllingAdmin);
-
-				controllingAdmin.setLastActivityInstant(Instant.now());
-				getDaoFactory(request).getUserDao().persist(user);
-
-			}
+		String currentUrlWithArguments = request.getRequestURI();
+		String queryString = request.getQueryString();
+		if (queryString != null) {
+			currentUrlWithArguments += "?" + queryString;
 		}
 
-		if (!this.isAccessible(request)) {
+		RequestLog requestLog = new RequestLog();
+		requestLog.setInstant(Instant.now());
+		requestLog.setUrl(currentUrlWithArguments);
 
-			if (user == null) {
-				if (isFullPage()) {
-					String lastRefusedUrl = request.getRequestURI();
-					String queryString = request.getQueryString();
-					if (queryString != null) {
-						lastRefusedUrl += "?" + queryString;
+		try {
+
+			User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
+
+			if (user != null) {
+
+				requestLog.setUser(user);
+
+				setUser(request, user);
+
+				User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(controllingAdminIdKey));
+
+				if (controllingAdmin == null) {
+					user.setLastActivityInstant(Instant.now());
+					getDaoFactory(request).getUserDao().persist(user);
+
+					if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount") && !request.getServletPath().equals("/OutLoging")) {
+						response.sendRedirect(request.getContextPath() + "/BlockedAccount");
+						return;
 					}
-					request.getSession().setAttribute(lastRefusedUrlKey, lastRefusedUrl);
-					response.sendRedirect(request.getContextPath() + "/InLoging");
-					return;
+
 				} else {
-					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-					return;
+					setControllingAdmin(request, controllingAdmin);
+
+					controllingAdmin.setLastActivityInstant(Instant.now());
+					getDaoFactory(request).getUserDao().persist(user);
+
 				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				return;
 			}
 
-		}
+			if (!this.isAccessible(request)) {
 
-		if (!request.getServletPath().equals("/InLoging")) {
-			request.getSession().removeAttribute(lastRefusedUrlKey);
-		}
+				if (user == null) {
+					if (isFullPage()) {
+						request.getSession().setAttribute(lastRefusedUrlKey, currentUrlWithArguments);
+						response.sendRedirect(request.getContextPath() + "/InLoging");
+						return;
+					} else {
+						response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+						return;
+					}
+				} else {
+					if (isFullPage()) {
+						response.sendRedirect(request.getContextPath() + "/");
+					} else {
+						response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					}
+					return;
+				}
 
-		super.service(request, response);
+			}
+
+			if (!request.getServletPath().equals("/InLoging")) {
+				request.getSession().removeAttribute(lastRefusedUrlKey);
+			}
+
+			super.service(request, response);
+
+			if (isLoggingAllResuqests()) {
+				getDaoFactory(request).getRequestLogDao().persist(requestLog);
+			}
+
+		} catch (Exception e) {
+
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String stackTrace = sw.toString();
+
+			requestLog.setError(stackTrace);
+			getDaoFactory(request).getRequestLogDao().persist(requestLog);
+
+			throw e;
+		}
+	}
+
+	public boolean isLoggingAllResuqests() {
+		return true;
 	}
 
 	public boolean isFullPage() {
