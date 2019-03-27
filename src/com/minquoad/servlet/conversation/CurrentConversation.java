@@ -31,32 +31,34 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
-		return getUser(request) != null
+		return getUser(request) != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		try {
-			Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
-			request.setAttribute("conversation", conversation);
+		request.setAttribute("conversation", conversation);
 
-			List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
+		List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
 
-			if (messages.size() != 0) {
-				ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
-				ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
-				conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
-				conversationAccessDao.persist(conversationAccess);
-			}
-
-			request.setAttribute("messages", messages);
-
-			includeView(request, response, viewPath);
-
-		} catch (Exception e) {
+		if (messages.size() != 0) {
+			ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
+			ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
+			conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
+			conversationAccessDao.persist(conversationAccess);
 		}
+
+		request.setAttribute("messages", messages);
+
+		if (conversation.isMainBetweenTwoUsers()) {
+			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
+			request.setAttribute("participants", conversationUsers);
+		}
+		
+		includeView(request, response, viewPath);
+
 	}
 
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.UserProfileImage;
+import com.minquoad.frontComponent.form.account.UserParametersAlterationForm;
 import com.minquoad.frontComponent.form.account.UserPasswordAlterationForm;
 import com.minquoad.frontComponent.form.account.UserPictureAlterationForm;
 import com.minquoad.frontComponent.form.field.FormFileField;
@@ -53,7 +54,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				if (form.isValide()) {
 
 					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
-					
+
 					UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
 					if (image != null) {
 						image.getFile().delete();
@@ -88,6 +89,29 @@ public class AccountManagement extends ImprovedHttpServlet {
 					getDaoFactory(request).getUserDao().persist(user);
 				} else {
 					request.setAttribute("userPasswordAlterationForm", form);
+				}
+			}
+			
+			if (formId.equals("userParametersAlteration")) {
+
+				UserParametersAlterationForm form = new UserParametersAlterationForm(request);
+				
+				if (form.isValide()) {
+					User user = getUser(request);
+
+					String colorString = form.getFieldValueAsString(UserParametersAlterationForm.defaultColorKey);
+					if (colorString != null) {
+						try {
+							String substring = colorString.substring(1);
+							int parseInt = Integer.parseInt(substring, 16);
+							user.setDefaultColor(parseInt);
+						} catch (Exception e) {
+						}
+					}
+
+					getDaoFactory(request).getUserDao().persist(user);
+				} else {
+					request.setAttribute("userParametersAlteration", form);
 				}
 			}
 

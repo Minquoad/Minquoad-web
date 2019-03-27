@@ -21,6 +21,7 @@ public class UserUnit extends Unit {
 		user.setNickname(nickname);
 		user.setRegistrationInstant(Instant.now());
 		user.setLastActivityInstant(Instant.now());
+		user.setDefaultColor(User.defaultDefaultColor);
 		userDao.insert(user);
 		user.setPassword(password);
 		userDao.persist(user);

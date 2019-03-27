@@ -9,6 +9,8 @@ import com.minquoad.tool.SecurityTool;
 
 public class User {
 
+	public static final int defaultDefaultColor = 3384294;
+
 	private Integer id;
 	private String mailAddress;
 	private String nickname;
@@ -17,6 +19,7 @@ public class User {
 	private Instant lastActivityInstant;
 	private int adminLevel = 0;
 	private Instant unblockInstant;
+	private Integer defaultColor;
 
 	public static final int nicknameMaxlength = 25;
 	public static final int mailAddressMaxlength = 50;
@@ -243,4 +246,20 @@ public class User {
 		this.mailAddress = mailAddress;
 	}
 
+	public String getDefaultColorAsHexString() {
+		if (getDefaultColor() == null) {
+			return null;
+		} else {
+			return Integer.toHexString(getDefaultColor());
+		}
+	}
+
+	public Integer getDefaultColor() {
+		return defaultColor;
+	}
+
+	public void setDefaultColor(Integer defaultColor) {
+		this.defaultColor = defaultColor;
+	}
+	
 }

@@ -27,15 +27,27 @@
 							${ conversationResume.conversation eq requestScope.selectedConversation ? 'selectedConversation' : '' }
 							">
 								<div class="conversationTitle">
-									<c:out value="${ conversationResume.conversation.title }" />
+
+									<c:if test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
+										<c:out value="${ conversationResume.conversation.title }" />
+									</c:if>
+									<c:if test="${ conversationResume.conversation.isMainBetweenTwoUsers() }">
+										<c:forEach items="${ conversationResume.participants }" var="participant">
+											<c:if test="${participant ne requestScope.user}">
+												<c:out value="${ participant.nickname }" />
+											</c:if>
+										</c:forEach>
+									</c:if>
 								</div>
 
 								<div class="participants">
-									<c:forEach items="${ conversationResume.participants }" var="participant">
-										<c:if test="${participant ne requestScope.user}">
-											<c:out value="${ participant.nickname }" />
-										</c:if>
-									</c:forEach>
+									<c:if test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
+										<c:forEach items="${ conversationResume.participants }" var="participant">
+											<c:if test="${participant ne requestScope.user}">
+												<c:out value="${ participant.nickname }" />
+											</c:if>
+										</c:forEach>
+									</c:if>
 								</div>
 							</div>
 						</div>

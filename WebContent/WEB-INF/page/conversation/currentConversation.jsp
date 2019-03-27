@@ -1,6 +1,15 @@
 <div id="title" class="centererContainer">
 	<div class="totallyCenteredContainer">
-		<c:out value="${ requestScope.conversation.title }" />
+		<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
+			<c:forEach items="${ requestScope.participants }" var="loopUser">
+				<c:if test="${ loopUser ne requestScope.user }">
+					Main conversation with <c:out value="${ loopUser.nickname }" />
+				</c:if>
+			</c:forEach>
+		</c:if>
+		<c:if test="${ not requestScope.conversation.isMainBetweenTwoUsers() }">
+			<c:out value="${ requestScope.conversation.title }" />
+		</c:if>
 	</div>
 </div>
 

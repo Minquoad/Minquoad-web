@@ -58,7 +58,8 @@
 							<input type="hidden" name="formId" value="userPasswordAlteration" />
 
 							<p>
-								<label for="oldPassowrd">Old Password : </label> <input type="password" name="oldPassowrd" id="oldPassowrd" />
+								<label for="oldPassowrd">Old Password : </label>
+								<input type="password" name="oldPassowrd" id="oldPassowrd" />
 								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
 									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 										<jsp:param name="formKey" value="userPasswordAlterationForm" />
@@ -67,7 +68,8 @@
 								</c:if>
 							</p>
 							<p>
-								<label for="newPassword">New password : </label> <input type="password" name="newPassword" id="newPassword" />
+								<label for="newPassword">New password : </label>
+								<input type="password" name="newPassword" id="newPassword" />
 								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
 									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 										<jsp:param name="formKey" value="userPasswordAlterationForm" />
@@ -76,7 +78,8 @@
 								</c:if>
 							</p>
 							<p>
-								<label for="newPasswordConfirmation">Confirm new password : </label> <input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" />
+								<label for="newPasswordConfirmation">Confirm new password : </label>
+								<input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" />
 								<c:if test="${ not empty requestScope.userPasswordAlterationForm }">
 									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 										<jsp:param name="formKey" value="userPasswordAlterationForm" />
@@ -90,6 +93,30 @@
 						</form>
 					</div>
 				</div>
+
+				<div class="borderedTile">
+					<div class="padded">
+						<h2>Default account color</h2>
+						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
+
+							<input type="hidden" name="formId" value="userParametersAlteration" />
+
+							<p>
+								<input type="color" name="defaultColor" id="defaultColor"  value="#${ requestScope.user.getDefaultColorAsHexString() }"/>
+								<c:if test="${ not empty requestScope.userParametersAlteration }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userParametersAlteration" />
+										<jsp:param name="fieldName" value="defaultColor" />
+									</jsp:include>
+								</c:if>
+							</p>
+							<div>
+								<input type="submit" value="Change" />
+							</div>
+						</form>
+					</div>
+				</div>
+
 
 			</div>
 		</div>

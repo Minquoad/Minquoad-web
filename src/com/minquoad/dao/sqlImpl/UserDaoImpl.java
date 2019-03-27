@@ -30,6 +30,7 @@ public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao 
 		this.addInstantEntityMember("lastActivityInstant", User::getLastActivityInstant, User::setLastActivityInstant);
 		this.addIntegerEntityMember("adminLevel", User::getAdminLevel, User::setAdminLevel);
 		this.addInstantEntityMember("unblockInstant", User::getUnblockInstant, User::setUnblockInstant);
+		this.addIntegerEntityMember("defaultColor", User::getDefaultColor, User::setDefaultColor);
 	}
 
 	@Override

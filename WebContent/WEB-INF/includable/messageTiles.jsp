@@ -9,7 +9,7 @@
 	</c:if>>
 		<div class="messageMetaData">
 			<div>
-				<c:out value="${ message.user.nickname }" />
+				<span style="color: #${ message.user.getDefaultColorAsHexString() };"><c:out value="${ message.user.nickname }" /></span>
 				:
 			</div>
 			<div>

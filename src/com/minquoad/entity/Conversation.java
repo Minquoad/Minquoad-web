@@ -33,4 +33,12 @@ public class Conversation {
 		this.type = type;
 	}
 
+	public boolean isMainBetweenTwoUsers() {
+		return getType() == TYPE_MAIN_BETWEEN_TWO_USERS;
+	}
+
+	public boolean isMonologue() {
+		return getType() == TYPE_MONOLOGUE;
+	}
+	
 }
