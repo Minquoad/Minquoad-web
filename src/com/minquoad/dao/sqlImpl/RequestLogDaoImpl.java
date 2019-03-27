@@ -18,6 +18,8 @@ public class RequestLogDaoImpl extends ImprovedEntityDaoImpl<RequestLog> impleme
 		this.addStringEntityMember("url", RequestLog::getUrl, RequestLog::setUrl);
 		this.addForeingKeyEntityMember("user", RequestLog::getUser, RequestLog::setUser, getDaoFactory().getUserDao());
 		this.addStringEntityMember("error", RequestLog::getError, RequestLog::setError);
+		this.addIntegerEntityMember("serviceDuration", RequestLog::getServiceDuration, RequestLog::setServiceDuration);
+		this.addStringEntityMember("servletName", RequestLog::getServletName, RequestLog::setServletName);
 	}
 
 	@Override

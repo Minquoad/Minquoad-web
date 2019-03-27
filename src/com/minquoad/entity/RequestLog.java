@@ -9,6 +9,8 @@ public class RequestLog {
 	private String url;
 	private User user;
 	private String error;
+	private Integer serviceDuration;
+	private String servletName;
 
 	public Long getId() {
 		return id;
@@ -39,6 +41,18 @@ public class RequestLog {
 	}
 	public void setError(String error) {
 		this.error = error;
+	}
+	public Integer getServiceDuration() {
+		return serviceDuration;
+	}
+	public void setServiceDuration(Integer serviceDuration) {
+		this.serviceDuration = serviceDuration;
+	}
+	public String getServletName() {
+		return servletName;
+	}
+	public void setServletName(String servletName) {
+		this.servletName = servletName;
 	}
 
 }

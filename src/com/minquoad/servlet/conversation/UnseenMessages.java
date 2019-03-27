@@ -74,7 +74,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 	}
 
-	public boolean isLoggingAllResuqests() {
+	public boolean isLoggingAllRequests() {
 		return false;
 	}
 

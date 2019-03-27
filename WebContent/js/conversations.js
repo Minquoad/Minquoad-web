@@ -62,7 +62,7 @@ $(document).ready(function() {
 	detectCurrentConversation();
 	detectConversationResumes();
 });
-
+/*
 $(document).ready(function() {
 	setInterval(function() {
 		let messages = $("#messages");
@@ -88,3 +88,4 @@ $(document).ready(function() {
 		}
 	}, 3500);
 });
+*/

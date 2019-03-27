@@ -23,6 +23,8 @@ public class Deployment implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
 		StorageManager.initTree();
+		
+		
 	}
 
 	@Override

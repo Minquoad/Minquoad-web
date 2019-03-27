@@ -36,20 +36,18 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-
-		String currentUrlWithArguments = request.getRequestURI();
-		String queryString = request.getQueryString();
-		if (queryString != null) {
-			currentUrlWithArguments += "?" + queryString;
-		}
+		Instant serviceStartingInstant = Instant.now();
 
 		RequestLog requestLog = new RequestLog();
-		requestLog.setInstant(Instant.now());
-		requestLog.setUrl(currentUrlWithArguments);
 
 		try {
+			requestLog.setInstant(serviceStartingInstant);
+			requestLog.setServletName(this.getServletName());
+
+			request.setCharacterEncoding("UTF-8");
+			response.setCharacterEncoding("UTF-8");
+
+			requestLog.setUrl(getCurrentUrlWithArguments(request));
 
 			User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
 
@@ -83,7 +81,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 				if (user == null) {
 					if (isFullPage()) {
-						request.getSession().setAttribute(lastRefusedUrlKey, currentUrlWithArguments);
+						request.getSession().setAttribute(lastRefusedUrlKey, getCurrentUrlWithArguments(request));
 						response.sendRedirect(request.getContextPath() + "/InLoging");
 						return;
 					} else {
@@ -107,7 +105,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			super.service(request, response);
 
-			if (isLoggingAllResuqests()) {
+			if (isLoggingAllRequests()) {
+				requestLog.setServiceDuration((int)(Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 				getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			}
 
@@ -119,13 +118,23 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			String stackTrace = sw.toString();
 
 			requestLog.setError(stackTrace);
+			requestLog.setServiceDuration((int)(Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 			getDaoFactory(request).getRequestLogDao().persist(requestLog);
 
 			throw e;
 		}
 	}
 
-	public boolean isLoggingAllResuqests() {
+	public String getCurrentUrlWithArguments(HttpServletRequest request) {
+		String currentUrlWithArguments = request.getRequestURI();
+		String queryString = request.getQueryString();
+		if (queryString != null) {
+			currentUrlWithArguments += "?" + queryString;
+		}
+		return currentUrlWithArguments;
+	}
+
+	public boolean isLoggingAllRequests() {
 		return true;
 	}
 
