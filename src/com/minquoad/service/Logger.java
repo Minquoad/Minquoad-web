@@ -36,7 +36,7 @@ public abstract class Logger {
 
 	public static void logInFile(String string, String filePath) {
 		try {
-			File file = new File(Deployment.storagePath + filePath);
+			File file = new File(Deployment.getStoragePath() + filePath);
 			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 				file.createNewFile();

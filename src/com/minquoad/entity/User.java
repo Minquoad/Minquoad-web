@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.minquoad.service.Deployment;
-import com.minquoad.tool.SecurityTool;
+import com.minquoad.tool.security.SecurityTool;
 
 public class User {
 
@@ -99,7 +99,7 @@ public class User {
 	public String toHashedSaltedPassword(String string) {
 		try {
 
-			String saltedString = Deployment.getDynamicSalt(this) + Deployment.passwordSalt + string;
+			String saltedString = SecurityTool.getDynamicSalt(this) + Deployment.getUserPasswordSalt() + string;
 			return SecurityTool.toSha512(saltedString);
 
 		} catch (Exception ex) {

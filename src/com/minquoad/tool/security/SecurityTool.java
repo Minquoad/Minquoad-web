@@ -1,10 +1,14 @@
-package com.minquoad.tool;
+package com.minquoad.tool.security;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.minquoad.entity.User;
+
 public abstract class SecurityTool {
+
+	private static SecretTool secretTool = new SecretToolImpl();
 
 	public static String toSha512(String stringHash) {
 		String generatedPassword = null;
@@ -20,6 +24,10 @@ public abstract class SecurityTool {
 			e.printStackTrace();
 		}
 		return generatedPassword;
+	}
+
+	public static String getDynamicSalt(User user) {
+		return secretTool.getDynamicSalt(user);
 	}
 
 }

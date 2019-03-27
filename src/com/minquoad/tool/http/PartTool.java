@@ -38,7 +38,7 @@ public abstract class PartTool {
 			File newFile = null;
 			while (newFile == null || newFile.exists()) {
 				randomName = Long.toString(Math.abs(new Random().nextLong()));
-				newFile = new File(Deployment.storagePath + directoryPath + randomName);
+				newFile = new File(Deployment.getStoragePath() + directoryPath + randomName);
 			}
 
 			int bufferSize = 102400;

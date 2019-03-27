@@ -66,7 +66,7 @@ public class ProtectedFile {
 
 	public File getFile() {
 		if (file == null) {
-			file = new File(Deployment.storagePath + getRelativePath());
+			file = new File(Deployment.getStoragePath() + getRelativePath());
 		}
 		return file;
 	}

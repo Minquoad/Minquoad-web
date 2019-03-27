@@ -1,34 +1,85 @@
 package com.minquoad.service;
 
+import java.io.File;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.minquoad.entity.User;
+import org.json.JSONObject;
+
+import com.minquoad.dao.Database;
 
 public class Deployment implements ServletContextListener {
 
-	private static final Configuration configuration = new ConfigurationImpl();
+	public static final String configurationJsonPath = "/minquoad-web-configuration.json";
 
-	public static final String databaseUrl = configuration.getDatabaseUrl();
-	public static final String databaseName = configuration.getDatabaseName();
-	public static final String databaseUser = configuration.getDatabaseUser();
-	public static final String databasePassword = configuration.getDatabasePassword();
-	public static final String passwordSalt = configuration.getPasswordSalt();
-	public static final String storagePath = configuration.getStoragePath();
-
-	public static String getDynamicSalt(User user) {
-		return configuration.getDynamicSalt(user);
-	}
+	private static String storagePath;
+	private static String databaseHost;
+	private static String databasePort;
+	private static String databaseName;
+	private static String databaseUser;
+	private static String databasePassword;
+	private static String userPasswordSalt;
 
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
+		initConfiguration();
 		StorageManager.initTree();
-		
-		
+		Database.init();
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent) {
+	}
+
+	public static void initConfiguration() {
+
+		File file = new File(configurationJsonPath);
+		if (!file.exists()) {
+			new Exception("Configuration json not found at \"" + configurationJsonPath + "\".").printStackTrace();
+		} else {
+			JSONObject configurationJson = StorageManager.fileToJsonObject(configurationJsonPath);
+
+			storagePath = configurationJson.getString("storagePath");
+
+			JSONObject databaseJson = configurationJson.getJSONObject("database");
+
+			databaseHost = databaseJson.getString("host");
+			databasePort = databaseJson.getString("port");
+			databaseName = databaseJson.getString("name");
+			databaseUser = databaseJson.getString("user");
+			databasePassword = databaseJson.getString("password");
+			userPasswordSalt = databaseJson.getString("userPasswordSalt");
+
+		}
+	}
+	
+	public static String getStoragePath() {
+		return storagePath;
+	}
+
+	public static String getDatabaseHost() {
+		return databaseHost;
+	}
+
+	public static String getDatabasePort() {
+		return databasePort;
+	}
+
+	public static String getDatabaseName() {
+		return databaseName;
+	}
+
+	public static String getDatabaseUser() {
+		return databaseUser;
+	}
+
+	public static String getDatabasePassword() {
+		return databasePassword;
+	}
+
+	public static String getUserPasswordSalt() {
+		return userPasswordSalt;
 	}
 
 }

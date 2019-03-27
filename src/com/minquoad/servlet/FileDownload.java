@@ -51,27 +51,27 @@ public class FileDownload extends ImprovedHttpServlet {
 		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
 		response.setDateHeader("Last-Modified", getLastModified(request));
 
-		BufferedInputStream input = null;
-		BufferedOutputStream output = null;
+		BufferedInputStream inputStream = null;
+		BufferedOutputStream outputStream = null;
 		try {
-			input = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
-			output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
+			inputStream = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
+			outputStream = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
 
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-			int longueur;
-			while ((longueur = input.read(buffer)) > 0) {
-				output.write(buffer, 0, longueur);
+			int length;
+			while ((length = inputStream.read(buffer)) > 0) {
+				outputStream.write(buffer, 0, length);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				input.close();
+				inputStream.close();
 			} catch (Exception e) {
 			}
 			try {
-				output.close();
+				outputStream.close();
 			} catch (Exception e) {
 			}
 		}
