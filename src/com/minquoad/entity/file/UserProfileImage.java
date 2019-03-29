@@ -8,7 +8,7 @@ public class UserProfileImage extends ProtectedFile {
 
 	@Override
 	public boolean isDownloadableForUser(User user) {
-		return true;
+		return user != null;
 	}
 
 	public User getUser() {

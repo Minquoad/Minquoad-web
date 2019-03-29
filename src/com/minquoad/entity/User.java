@@ -9,7 +9,7 @@ import com.minquoad.tool.security.SecurityTool;
 
 public class User {
 
-	public static final int defaultDefaultColor = 3384294;
+	public static final int defaultDefaultColor = 8421504;
 
 	private Integer id;
 	private String mailAddress;

@@ -8,6 +8,7 @@ import javax.servlet.ServletContextListener;
 import org.json.JSONObject;
 
 import com.minquoad.dao.Database;
+import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
@@ -26,6 +27,7 @@ public class Deployment implements ServletContextListener {
 		initConfiguration();
 		StorageManager.initTree();
 		Database.init();
+		CronManager.start();
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class Deployment implements ServletContextListener {
 
 		}
 	}
-	
+
 	public static String getStoragePath() {
 		return storagePath;
 	}

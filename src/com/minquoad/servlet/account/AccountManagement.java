@@ -50,7 +50,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 			if (formId.equals("userPictureAlteration")) {
 
 				UserPictureAlterationForm form = new UserPictureAlterationForm(request);
-				
+
 				if (form.isValide()) {
 
 					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
@@ -91,11 +91,11 @@ public class AccountManagement extends ImprovedHttpServlet {
 					request.setAttribute("userPasswordAlterationForm", form);
 				}
 			}
-			
+
 			if (formId.equals("userParametersAlteration")) {
 
 				UserParametersAlterationForm form = new UserParametersAlterationForm(request);
-				
+
 				if (form.isValide()) {
 					User user = getUser(request);
 
@@ -128,5 +128,5 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 		super.forwardToView(request, response, viewPath);
 	}
-	
+
 }

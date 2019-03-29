@@ -30,6 +30,7 @@ function detectConversationResumes() {
 }
 
 function detectCurrentConversation() {
+	detectDynamicMenuTriggers();
 
 	let messagesDiv = document.getElementById("messages");
 	messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -37,11 +38,10 @@ function detectCurrentConversation() {
 	let form = $('#messageEditorForm');
 
 	let textarea = $('#conversations #current #messageEditor textarea');
+	let emojis = $('#conversations #current #messageEditor #sepcialChars span');
 	let button = $('#conversations #current #messageEditor [type="button"]');
 
-	button.on('click', function(e) {
-		e.preventDefault();
-
+	let postMessage = function() {
 		$.ajax({
 			url : form.attr('action'),
 			type : "POST",
@@ -54,16 +54,31 @@ function detectCurrentConversation() {
 				window.location.replace("");
 			}
 		});
+	};
+
+	button.on('click', function(e) {
+		e.preventDefault();
+		postMessage();
 	});
 
+	textarea.keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13' && !event.shiftKey) {
+			event.preventDefault();
+			postMessage();
+		}
+	});
+
+	emojis.on('click', function(e) {
+		textarea.val(textarea.val()+$(this).text());
+		textarea.focus();
+	});
 }
 
 $(document).ready(function() {
-	detectCurrentConversation();
 	detectConversationResumes();
-});
-/*
-$(document).ready(function() {
+	detectCurrentConversation();
+
 	setInterval(function() {
 		let messages = $("#messages");
 		if (messages) {
@@ -87,5 +102,5 @@ $(document).ready(function() {
 			});
 		}
 	}, 3500);
+
 });
-*/

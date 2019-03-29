@@ -90,10 +90,31 @@
 	vertical-align: top;
 }
 
+#conversations #current #messageEditor #sepcialChars {
+	display: inline-block;
+	height: 45px;
+	width: 5%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+#conversations #current #messageEditor #sepcialChars .dynamicMenu {
+	right: 0;
+	left: auto;
+	bottom: 100%;
+	top: auto;
+}
+
+#conversations #current #messageEditor #sepcialChars .dynamicMenuItem {
+	border-bottom: solid var(--BORDER_COLOR) 1px;
+	border-top: 0;
+}
+
 #conversations #current #messageEditor [type="button"] {
 	vertical-align: top;
 	height: calc(45px);/* why not - 4px for the borders ? */
-	width: calc(10%);/* why not - 4px for the borders ? */
+	width: calc(5%);/* why not - 4px for the borders ? */
 	padding: 0;
 	margin: 0;
 	border: solid 2px var(--HIGHLIGHTING_COLOR);

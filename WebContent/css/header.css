@@ -2,24 +2,18 @@
 	height: 50px;
 	background: var(--BANNER_BACKGROUND_COLOR);
 	overflow: visible;
-}
-
-#header {
 	font-size: 0;
 }
 
 #header>* {
 	font-size: var(--MAIN_FONT_SIZE);
+	display: inline-block;
+	height: 50px;
+	vertical-align: middle;
 }
 
 #header a {
 	text-decoration: inherit;
-}
-
-#header>* {
-	display: inline-block;
-	height: 48px;
-	vertical-align: middle;
 }
 
 #pageTitleHeader {

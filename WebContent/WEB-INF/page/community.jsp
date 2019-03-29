@@ -18,30 +18,19 @@
 
 						<div class="borderedTile">
 
-							<c:if test="${empty requestScope.user}">
-								<div class="padded">
-									<c:out value="${ showedUser.nickname }" />
+							<div class="dynamicMenuTrigger padded">
+								<c:out value="${ showedUser.nickname }" />
+								<div class="dynamicMenu">
+									<c:url value="/Profile" var="profileUrl">
+										<c:param name="userId" value="${showedUser.id}" />
+									</c:url>
+									<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
+									<c:url value="/Conversations" var="conversationsUrl">
+										<c:param name="userId" value="${showedUser.id}" />
+									</c:url>
+									<a class="dynamicMenuItem" href="${conversationsUrl}"> Conversation </a>
 								</div>
-							</c:if>
-							<c:if test="${not empty requestScope.user}">
-
-								<div class="dynamicMenuTrigger padded">
-									<c:out value="${ showedUser.nickname }" />
-									<div class="dynamicMenu">
-										<c:url value="/Profile" var="profileUrl">
-											<c:param name="userId" value="${showedUser.id}" />
-										</c:url>
-										<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
-										<c:url value="/Conversations" var="conversationsUrl">
-											<c:param name="userId" value="${showedUser.id}" />
-										</c:url>
-										<a class="dynamicMenuItem" href="${conversationsUrl}"> Conversation </a>
-										<%--
-										<span class="dynamicMenuItem conversationTrigger" data-userId="${user.id}"> Conversation </span>
-										--%>
-									</div>
-								</div>
-							</c:if>
+							</div>
 
 						</div>
 

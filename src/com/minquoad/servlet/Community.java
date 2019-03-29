@@ -16,7 +16,7 @@ public class Community extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		return true;
+		return getUser(request) != null;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
