@@ -69,9 +69,7 @@ public class User {
 	}
 
 	public void setAdminLevel(int adminLevel) {
-		if (adminLevel < 0) {
-			new Exception("adminLevel must be >= 0").printStackTrace();
-		} else {
+		if (adminLevel >= 0) {
 			this.adminLevel = adminLevel;
 		}
 	}

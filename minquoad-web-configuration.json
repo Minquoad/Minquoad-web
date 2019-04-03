@@ -1,10 +1,10 @@
 {
   "database": {
-    "host": "localhost",
+    "host": "127.0.0.1",
     "port": "5432",
     "name": "Minquoad-DB",
     "user": "postgres",
-    "password": "postgres",
+    "password": "password",
     "userPasswordSalt": "userPasswordSalt"
   },
   "storagePath" : "/minquoad-web-storage/"

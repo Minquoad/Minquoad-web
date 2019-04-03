@@ -19,8 +19,8 @@ import com.minquoad.tool.http.PartTool;
 @WebServlet("/Test")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
 		maxFileSize = 1024 * 1024 * 10, // 10 MB
-		maxRequestSize = 1024 * 1024 * 15, // 15 MB
-		location = "C:/minquoad-web-storage/internal/tmp/uploaded/")
+		maxRequestSize = 1024 * 1024 * 15 // 15 MB
+)
 public class Test extends ImprovedHttpServlet {
 
 	@Override

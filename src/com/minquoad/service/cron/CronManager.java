@@ -1,14 +1,29 @@
 package com.minquoad.service.cron;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.minquoad.service.Logger;
+import com.minquoad.service.StorageManager;
 
 public class CronManager {
 
+	static boolean stopRequested;
+	
 	static long lastMinuteStart;
 	static long lastHoureStart;
 	static long lastDayStart;
 
+	static List<Runnable> minutelyCrons = new ArrayList<Runnable>();
+	
+	static {
+		
+	}
+	
 	public static void start() {
+		
+		stopRequested = false;
 		
 		new Thread(new Runnable() {
 			public void run() {
@@ -17,14 +32,18 @@ public class CronManager {
 				lastHoureStart = startTime;
 				lastDayStart = startTime;
 
-				loop();
+				CronManager.loop();
 			}
 		}).start();
 		
 	}
 
+	public static void stop() {
+		stopRequested = true;
+	}
+
 	public static void loop() {
-		while (true) {
+		while (!stopRequested) {
 
 			long timeToWait = 1000 * 60 + lastMinuteStart - Instant.now().toEpochMilli();
 			if (timeToWait > 0) {
@@ -38,26 +57,22 @@ public class CronManager {
 			lastMinuteStart += 1000 * 60;
 
 			runMinutlyCrons();
-
-			if (Instant.now().toEpochMilli() >= lastHoureStart + 1000 * 60 * 60) {
-				lastHoureStart += 1000 * 60 * 60;
-				runHourlyCrons();
-			}
-
-			if (Instant.now().toEpochMilli() >= lastDayStart + 1000 * 60 * 60 * 24) {
-				lastDayStart += 1000 * 60 * 60 * 24;
-				runDaylyCrons();
-			}
 		}
 	}
 
 	private static void runMinutlyCrons() {
-	}
+		
+		Logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.logPath + "cron.log");
+		
+		for (Runnable minutelyCron : minutelyCrons) {
+			try {
+				minutelyCron.run();
 
-	private static void runHourlyCrons() {
-	}
-
-	private static void runDaylyCrons() {
+			} catch (Exception e) {
+				e.printStackTrace();
+				Logger.logError(e);
+			}
+		}
 	}
 
 }

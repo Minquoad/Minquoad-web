@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.ConversationDao;
+import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.User;
@@ -34,54 +35,32 @@ public class Conversations extends ImprovedHttpServlet {
 
 		List<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
 
-		Conversation selectedConversation = null;
+		Conversation selectedConversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
 
-		String conversationIdString = request.getParameter("conversationId");
-
-		if (selectedConversation == null && conversationIdString != null) {
-			try {
-				int conversationId = Integer.parseInt(conversationIdString);
-
+		if (selectedConversation == null) {
+			User user = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
+			if (user != null && user != getUser(request)) {
 				for (Conversation conversation : conversations) {
-					if (conversation.getId() == conversationId) {
-						selectedConversation = conversation;
-					}
-				}
-			} catch (Exception e) {
-			}
-		}
+					if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
 
-		String userIdString = request.getParameter("userId");
-
-		if (selectedConversation == null && userIdString != null) {
-			try {
-				int userId = Integer.parseInt(userIdString);
-				User user = userDao.getByPk(userId);
-				if (user != null && user != getUser(request)) {
-					for (Conversation conversation : conversations) {
-						if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
-
-							List<User> conversationUsers = userDao.getConversationUsers(conversation);
-							for (User conversationUser : conversationUsers) {
-								if (conversationUser == user) {
-									selectedConversation = conversation;
-								}
+						List<User> conversationUsers = userDao.getConversationUsers(conversation);
+						for (User conversationUser : conversationUsers) {
+							if (conversationUser == user) {
+								selectedConversation = conversation;
 							}
 						}
 					}
-					if (selectedConversation == null) {
-						Conversation newConversation = new Conversation();
-						newConversation.setTitle("");
-						newConversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
-						conversationDao.insert(newConversation);
-						new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(user, newConversation);
-						new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(getUser(request), newConversation);
-						selectedConversation = newConversation;
-						conversations.add(newConversation);
-					}
 				}
-				
-			} catch (Exception e) {
+				if (selectedConversation == null) {
+					Conversation newConversation = new Conversation();
+					newConversation.setTitle("");
+					newConversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
+					conversationDao.insert(newConversation);
+					new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(user, newConversation);
+					new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(getUser(request), newConversation);
+					selectedConversation = newConversation;
+					conversations.add(newConversation);
+				}
 			}
 		}
 

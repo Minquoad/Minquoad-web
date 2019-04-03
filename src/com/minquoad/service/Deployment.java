@@ -12,7 +12,7 @@ import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
-	public static final String configurationJsonPath = "/minquoad-web-configuration.json";
+	public static final String configurationJsonPath = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
 	private static String storagePath;
 	private static String databaseHost;
@@ -32,6 +32,7 @@ public class Deployment implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent) {
+		CronManager.stop();
 	}
 
 	public static void initConfiguration() {

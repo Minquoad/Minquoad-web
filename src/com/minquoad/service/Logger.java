@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,8 +15,12 @@ public abstract class Logger {
 		System.out.println("ERROR : " + string);
 	}
 
+	public static void logError(Exception e) {
+		logError(getStackTraceAsString(e));
+	}
+
 	public static void logError(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "eroor.log");
+		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "error.log");
 	}
 
 	public static void echoWarning(String string) {
@@ -58,4 +63,14 @@ public abstract class Logger {
 		return formatter.format(new Date());
 	}
 
+	public static String getStackTraceAsString(Exception e) {
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String stackTrace = sw.toString();
+
+		return stackTrace;
+	}
+	
 }

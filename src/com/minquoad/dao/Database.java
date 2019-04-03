@@ -14,7 +14,7 @@ public abstract class Database {
 
 	public static final String dataBaseProtocol = "jdbc";
 	public static final String dataBaseSubprotocol = "postgresql";
-	public static final int connectionsSize = 1;
+	public static final int connectionsSize = 10;
 
 	private static Connection[] connections;
 	private static int iterator = 0;
@@ -22,22 +22,19 @@ public abstract class Database {
 	public static void init() {
 		try {
 			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		try {
+			
 			connections = new Connection[connectionsSize];
 			for (int i = 0; i < connections.length; i++) {
 				connections[i] = getConnection();
 			}
-			String message = connectionsSize + " connections to " + getDatabaseUrl() + " has been created.";
-			Logger.echoInfo(message);
-		} catch (SQLException e) {
+			Logger.echoInfo(connectionsSize + " connections to " + getDatabaseUrl() + " has been created.");
+
+		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.logError(e);
 		}
 	}
-	
+
 	private static void incrementConnectionIterator() {
 		iterator = (iterator + 1) % connectionsSize;
 	}

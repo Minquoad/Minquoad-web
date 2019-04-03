@@ -1,8 +1,6 @@
 package com.minquoad.tool.http;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.Instant;
 
 import javax.servlet.ServletException;
@@ -15,6 +13,7 @@ import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
+import com.minquoad.service.Logger;
 import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
@@ -111,16 +110,9 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			}
 
 		} catch (Exception e) {
-
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			String stackTrace = sw.toString();
-
-			requestLog.setError(stackTrace);
+			requestLog.setError(Logger.getStackTraceAsString(e));
 			requestLog.setServiceDuration((int)(Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 			getDaoFactory(request).getRequestLogDao().persist(requestLog);
-
 			throw e;
 		}
 	}
