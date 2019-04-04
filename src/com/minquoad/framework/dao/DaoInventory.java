@@ -30,10 +30,10 @@ public class DaoInventory<PrimaryKey, Entity> {
 		}
 	}
 
-	public void put(Entity entity) throws SQLException {
+	public void put(Entity entity) throws DaoException {
 		PrimaryKey primaryKey = getPkEntityMember().getValue(entity);
 		if (primaryKey == null) {
-			throw new SQLException("Entity without initialised primary key cannot be put in a dao inventory.");
+			throw new DaoException("Entity without initialised primary key cannot be put in a dao inventory.");
 		}
 		getMap().put(primaryKey, entity);
 		if (getSuperEntityDaoInventory() != null) {
@@ -41,10 +41,10 @@ public class DaoInventory<PrimaryKey, Entity> {
 		}
 	}
 
-	public void checkPrimaryKeyUnchanged(Entity entity) throws SQLException {
+	public void checkPrimaryKeyUnchanged(Entity entity) throws DaoException {
 		Entity expectedEntity = this.getByPrimaryKey(pkEntityMember.getValue(entity));
 		if (!entity.equals(expectedEntity)) {
-			throw new SQLException("Entity primary key value changes are not allowed.");
+			throw new DaoException("Entity primary key value changes are not allowed.");
 		}
 	}
 
@@ -56,7 +56,7 @@ public class DaoInventory<PrimaryKey, Entity> {
 		return getMap().get(pkEntityMember.getValue(entity)) != null;
 	}
 
-	public Entity getByPrimaryKey(ResultSet resultSet) throws SQLException {
+	public Entity getByPrimaryKey(ResultSet resultSet) throws SQLException, DaoException {
 		return getMap().get(pkEntityMember.getValueOfResultSet(resultSet));
 	}
 

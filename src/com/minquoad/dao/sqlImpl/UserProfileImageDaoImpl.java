@@ -1,10 +1,9 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
-
 import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.UserProfileImage;
+import com.minquoad.framework.dao.DaoException;
 import com.minquoad.framework.dao.DaoImpl;
 
 public class UserProfileImageDaoImpl extends ImprovedEntityDaoImpl<UserProfileImage> implements UserProfileImageDao {
@@ -14,7 +13,7 @@ public class UserProfileImageDaoImpl extends ImprovedEntityDaoImpl<UserProfileIm
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addForeingKeyEntityMember("user", UserProfileImage::getUser, UserProfileImage::setUser, getDaoFactory().getUserDao());
 	}
 

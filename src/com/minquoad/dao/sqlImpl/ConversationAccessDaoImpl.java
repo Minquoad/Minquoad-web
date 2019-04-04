@@ -1,11 +1,10 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
-
 import com.minquoad.dao.interfaces.ConversationAccessDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.User;
+import com.minquoad.framework.dao.DaoException;
 import com.minquoad.framework.dao.EntityCriterion;
 
 public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<ConversationAccess> implements ConversationAccessDao {
@@ -15,7 +14,7 @@ public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<Conversatio
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", ConversationAccess::getId, ConversationAccess::setId, true);
 		this.addBooleanEntityMember("administrator", ConversationAccess::isAdministrator, ConversationAccess::setAdministrator);
 		this.addForeingKeyEntityMember("user", ConversationAccess::getUser, ConversationAccess::setUser, getDaoFactory().getUserDao());

@@ -1,11 +1,11 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
 import com.minquoad.entity.User;
+import com.minquoad.framework.dao.DaoException;
 
 public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingDao {
 
@@ -19,7 +19,7 @@ public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingD
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", Thing::getId, Thing::setId, true);
 		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
 		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());

@@ -1,11 +1,11 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.minquoad.dao.interfaces.MessageDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
+import com.minquoad.framework.dao.DaoException;
 
 public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements MessageDao {
 
@@ -14,7 +14,7 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", Message::getId, Message::setId, true);
 		this.addStringEntityMember("text", Message::getText, Message::setText);
 		this.addStringEntityMember("editedText", Message::getEditedText, Message::setEditedText);

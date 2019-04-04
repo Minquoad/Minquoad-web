@@ -1,6 +1,5 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +7,7 @@ import com.minquoad.dao.interfaces.ConversationDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.User;
+import com.minquoad.framework.dao.DaoException;
 
 public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> implements ConversationDao {
 
@@ -16,7 +16,7 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", Conversation::getId, Conversation::setId, true);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);

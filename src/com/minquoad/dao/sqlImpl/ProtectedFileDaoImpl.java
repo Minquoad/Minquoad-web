@@ -1,9 +1,8 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
-
 import com.minquoad.dao.interfaces.ProtectedFileDao;
 import com.minquoad.entity.file.ProtectedFile;
+import com.minquoad.framework.dao.DaoException;
 
 public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> implements ProtectedFileDao {
 
@@ -12,7 +11,7 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
 		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
 		this.addStringEntityMember("originalName", ProtectedFile::getOriginalName, ProtectedFile::setOriginalName);

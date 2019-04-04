@@ -1,9 +1,8 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.SQLException;
-
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
+import com.minquoad.framework.dao.DaoException;
 
 public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedInLoginigAttempt> implements FailedInLoginigAttemptDao {
 
@@ -12,7 +11,7 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedI
 	}
 
 	@Override
-	public void initEntityMembers() throws SQLException {
+	public void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", FailedInLoginigAttempt::getId, FailedInLoginigAttempt::setId, true);
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
 		this.addIntegerEntityMember("attemptsCount", FailedInLoginigAttempt::getAttemptsCount, FailedInLoginigAttempt::setAttemptsCount);

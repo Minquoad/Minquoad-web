@@ -40,14 +40,14 @@ public class Test extends ImprovedHttpServlet {
 		// System.out.println("contextPath = " + request.getContextPath());
 
 		ThingDao thingDao = getDaoFactory(request).getThingDao();
-
+/*
 		Thing thing2 = new Thing();
 		thing2.setId(15);
 		User owner = new User();
 		//owner.setId(5555);
 		//thing2.setOwner(owner);
 		thingDao.persist(thing2);
-
+*/
 		String descriptionMemberName = "description";
 
 		List<Thing> things;
