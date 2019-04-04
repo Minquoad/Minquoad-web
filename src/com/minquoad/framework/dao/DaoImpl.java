@@ -186,52 +186,60 @@ public abstract class DaoImpl<Entity> {
 			getSuperClassDao().insertRecursivelyFromSuper(entity);
 		}
 
-		EntityMember<? super Entity, ?> primaryKeyEntityMember = getPrimaryKeyEntityMember();
-		boolean primaryKeyNull = primaryKeyEntityMember.getValue(entity) == null;
-
 		String query = "INSERT INTO \""
 				+ getTableName()
-				+ "\" (";
+				+ "\" ";
 		boolean first = true;
-		if (!primaryKeyNull) {
-			query += "\"" + primaryKeyEntityMember.getName() + "\" ";
+		// if the Entity has a superclass entity then the primary key member is not in the list returned by getEntityMembers()
+		if (this.getSuperClassDao() != null) {
+			query += "(" + this.getPrimaryKeyEntityMember().getName();
 			first = false;
 		}
 		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (entityMember != primaryKeyEntityMember) {
-				if (!first) {
+			if (entityMember.getValue(entity) != null) {
+				if (first) {
+					query += "(";
+				} else {
 					query += ", ";
 				}
 				query += "\"" + entityMember.getName() + "\"";
 				first = false;
 			}
 		}
-		query += ") VALUES (";
-		first = true;
-		if (!primaryKeyNull) {
-			query += "?";
-			first = false;
-		}
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (entityMember != primaryKeyEntityMember) {
-				if (!first) {
-					query += ", ";
-				}
-				query += "?";
+		// if no none null values
+		if (first) {
+			query += "DEFAULT VALUES ";
+		} else {
+			query += ") VALUES ";
+			first = true;
+			if (this.getSuperClassDao() != null) {
+				query += "(?";
 				first = false;
 			}
+			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+				if (entityMember.getValue(entity) != null) {
+					if (first) {
+						query += "(";
+					} else {
+						query += ", ";
+					}
+					query += "?";
+					first = false;
+				}
+			}
+			query += ") ";
 		}
-		query += ") RETURNING * ;";
+		query += "RETURNING * ;";
 
 		PreparedStatement preparedStatement = prepareStatement(query);
 
 		int i = 1;
-		if (!primaryKeyNull) {
-			primaryKeyEntityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+		if (this.getSuperClassDao() != null) {
+			this.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 			i++;
 		}
 		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (entityMember != primaryKeyEntityMember) {
+			if (entityMember.getValue(entity) != null) {
 				entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 				i++;
 			}

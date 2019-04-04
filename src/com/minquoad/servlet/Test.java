@@ -1,6 +1,7 @@
 package com.minquoad.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.Part;
 
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
+import com.minquoad.entity.User;
 import com.minquoad.service.StorageManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
@@ -38,6 +40,13 @@ public class Test extends ImprovedHttpServlet {
 		// System.out.println("contextPath = " + request.getContextPath());
 
 		ThingDao thingDao = getDaoFactory(request).getThingDao();
+
+		Thing thing2 = new Thing();
+		thing2.setId(15);
+		User owner = new User();
+		//owner.setId(5555);
+		//thing2.setOwner(owner);
+		thingDao.persist(thing2);
 
 		String descriptionMemberName = "description";
 
@@ -90,37 +99,35 @@ public class Test extends ImprovedHttpServlet {
 
 		if (idString != null && description != null) {
 
-			int id = 0;
-			if (!idString.isEmpty()) {
-				id = Integer.parseInt(idString);
-			}
-
-			if (id < 0) {
-
-				Thing thing = getDaoFactory(request).getThingDao().getByPk(-id);
-				if (thing != null) {
-					getDaoFactory(request).getThingDao().delete(thing);
+			if (idString.isEmpty()) {
+				if (!description.isEmpty()) {
+					Thing thing = new Thing();
+					thing.setDescription(description);
+					getDaoFactory(request).getThingDao().persist(thing);
 				}
 
 			} else {
+				int id = Integer.parseInt(idString);
 
-				if (!description.isEmpty()) {
+				if (id < 0) {
+					Thing thing = getDaoFactory(request).getThingDao().getByPk(-id);
+					getDaoFactory(request).getThingDao().delete(thing);
 
+				} else {
 					Thing thing = getDaoFactory(request).getThingDao().getByPk(id);
-
 					if (thing == null) {
-
 						thing = new Thing();
 						thing.setId(id);
 						thing.setDescription(description);
 						getDaoFactory(request).getThingDao().persist(thing);
-					} else {
 
+					} else {
 						thing.setDescription(description);
 						getDaoFactory(request).getThingDao().persist(thing);
 					}
 				}
 			}
+			
 		}
 
 		Part part = request.getPart("file");
