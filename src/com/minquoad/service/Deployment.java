@@ -27,7 +27,7 @@ public class Deployment implements ServletContextListener {
 		initConfiguration();
 		StorageManager.initTree();
 		Database.init();
-		CronManager.start();
+		//CronManager.start();
 	}
 
 	@Override

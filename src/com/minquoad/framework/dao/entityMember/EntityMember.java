@@ -32,15 +32,17 @@ public class EntityMember<Entity, MemberType> {
 	}
 
 	public void setValueOfResultSetInEntity(Entity entity, ResultSet resultSet) throws SQLException, DaoException {
-
-		MemberType value = getValueOfResultSet(resultSet);
-		this.setValue(entity, value);
+		this.setValue(entity, getValueOfResultSet(resultSet));
 	}
 
 	public MemberType getValueOfResultSet(ResultSet resultSet) throws SQLException, DaoException {
+		return getValueOfResultSet(resultSet, this.getName());
+	}
+
+	public MemberType getValueOfResultSet(ResultSet resultSet, String columnName) throws SQLException, DaoException {
 		MemberType value = this.getResultSetNonNullValueGetter().getNonNullValue(
 				resultSet,
-				this.getName());
+				columnName);
 		if (resultSet.wasNull()) {
 			value = null;
 		}
@@ -62,6 +64,10 @@ public class EntityMember<Entity, MemberType> {
 					parameterIndex,
 					value);
 		}
+	}
+
+	public void setValueOfResultSetInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, ResultSet resultSet, String resultSetColumnName) throws SQLException, DaoException {
+		setValueInPreparedStatement(preparedStatement, parameterIndex, getValueOfResultSet(resultSet, resultSetColumnName));
 	}
 
 	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion) throws SQLException, DaoException {

@@ -56,6 +56,10 @@ public class DaoInventory<PrimaryKey, Entity> {
 		return getMap().get(pkEntityMember.getValue(entity)) != null;
 	}
 
+	public Entity getByPrimaryKey(ResultSet resultSet, String pkColumnName) throws SQLException, DaoException {
+		return getMap().get(pkEntityMember.getValueOfResultSet(resultSet, pkColumnName));
+	}
+
 	public Entity getByPrimaryKey(ResultSet resultSet) throws SQLException, DaoException {
 		return getMap().get(pkEntityMember.getValueOfResultSet(resultSet));
 	}

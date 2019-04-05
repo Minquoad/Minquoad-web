@@ -16,7 +16,7 @@ public class CronManager {
 	static long lastDayStart;
 
 	static List<Runnable> minutelyCrons = new ArrayList<Runnable>();
-	
+
 	static {
 		
 	}

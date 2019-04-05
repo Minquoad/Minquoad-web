@@ -47,7 +47,7 @@ public class Test extends ImprovedHttpServlet {
 		//owner.setId(5555);
 		//thing2.setOwner(owner);
 		thingDao.persist(thing2);
-*/
+*//*
 		String descriptionMemberName = "description";
 
 		List<Thing> things;
@@ -86,7 +86,7 @@ public class Test extends ImprovedHttpServlet {
 			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(4));
 			thingDao.persist(thing);
 		}
-
+*/
 		request.setAttribute("things", thingDao.getAll());
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
