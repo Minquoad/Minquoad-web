@@ -130,7 +130,7 @@ public abstract class DaoImpl<Entity> {
 			if (resultSet.next()) {
 				entity = instantiateBlank();
 				this.hydrate(entity, resultSet, true);
-				getInventory().put(entity);
+				putInInventories(entity);
 				return entity;
 			} else {
 				return null;
@@ -177,7 +177,7 @@ public abstract class DaoImpl<Entity> {
 			try {
 				insertRecursivelyFromSuper(entity);
 
-				getInventory().put(entity);
+				putInInventories(entity);
 
 				return true;
 			} catch (SQLException | DaoException e) {
@@ -273,7 +273,7 @@ public abstract class DaoImpl<Entity> {
 
 				// if there is no subclass that handled the entity
 
-				getInventory().delete(entity);
+				deleteFromInventories(entity);
 
 				return deleteRecursivelyToSuper(entity);
 
@@ -570,7 +570,7 @@ public abstract class DaoImpl<Entity> {
 			if (entity == null) {
 				entity = instantiateBlank();
 				this.hydrate(entity, resultSet, true);
-				getInventory().put(entity);
+				putInInventories(entity);
 			}
 			return entity;
 		}
@@ -610,7 +610,7 @@ public abstract class DaoImpl<Entity> {
 			if (resultSet.next()) {
 				entity = instantiateBlank();
 				this.hydrate(entity, resultSet, true);
-				getInventory().put(entity);
+				putInInventories(entity);
 				return entity;
 			} else {
 				return null;
@@ -652,16 +652,13 @@ public abstract class DaoImpl<Entity> {
 
 			if (isPrimaryKeyInteger()) {
 				this.setIntegerInventory(new DaoInventory<Integer, Entity>(
-						getIntegerPrimaryKeyEntityMember(),
-						hasSuperClassDao() ? getSuperClassDao().getIntegerInventory() : null));
+						getIntegerPrimaryKeyEntityMember()));
 			} else if (isPrimaryKeyLong()) {
 				setLongInventory(new DaoInventory<Long, Entity>(
-						getLongPrimaryKeyEntityMember(),
-						hasSuperClassDao() ? getSuperClassDao().getLongInventory() : null));
+						getLongPrimaryKeyEntityMember()));
 			} else if (isPrimaryKeyString()) {
 				setStringInventory(new DaoInventory<String, Entity>(
-						getStringPrimaryKeyEntityMember(),
-						hasSuperClassDao() ? getSuperClassDao().getStringInventory() : null));
+						getStringPrimaryKeyEntityMember()));
 			} else {
 				throw new DaoException("Not all primary key types are handeled in initIfneeded()");
 			}
@@ -728,6 +725,20 @@ public abstract class DaoImpl<Entity> {
 
 	private void setStringInventory(DaoInventory<String, Entity> stringInventory) {
 		this.stringInventory = stringInventory;
+	}
+
+	private void putInInventories(Entity entity) throws DaoException {
+		getInventory().put(entity);
+		if (hasSuperClassDao()) {
+			getSuperClassDao().putInInventories(entity);
+		}
+	}
+
+	private void deleteFromInventories(Entity entity) throws DaoException {
+		getInventory().delete(entity);
+		if (hasSuperClassDao()) {
+			getSuperClassDao().delete(entity);
+		}
 	}
 
 	private DaoInventory<?, Entity> getInventory() throws DaoException {

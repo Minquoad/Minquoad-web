@@ -1,8 +1,6 @@
 package com.minquoad.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -13,7 +11,6 @@ import javax.servlet.http.Part;
 
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
-import com.minquoad.entity.User;
 import com.minquoad.service.StorageManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;

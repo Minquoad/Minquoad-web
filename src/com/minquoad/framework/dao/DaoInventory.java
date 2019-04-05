@@ -13,21 +13,15 @@ public class DaoInventory<PrimaryKey, Entity> {
 
 	private EntityMember<? super Entity, PrimaryKey> pkEntityMember;
 
-	private DaoInventory<PrimaryKey, ? super Entity> superEntityDaoInventory;
-
-	public DaoInventory(EntityMember<? super Entity, PrimaryKey> pkEntityMember, DaoInventory<PrimaryKey, ? super Entity> superEntityDaoInventory) {
+	public DaoInventory(EntityMember<? super Entity, PrimaryKey> pkEntityMember) {
 
 		setMap(new HashMap<PrimaryKey, Entity>());
 
 		setPkEntityMember(pkEntityMember);
-		setSuperEntityDaoInventory(superEntityDaoInventory);
 	}
 
 	public void delete(Entity entity) {
 		getMap().remove(getPkEntityMember().getValue(entity));
-		if (getSuperEntityDaoInventory() != null) {
-			getSuperEntityDaoInventory().delete(entity);
-		}
 	}
 
 	public void put(Entity entity) throws DaoException {
@@ -36,9 +30,6 @@ public class DaoInventory<PrimaryKey, Entity> {
 			throw new DaoException("Entity without initialised primary key cannot be put in a dao inventory.");
 		}
 		getMap().put(primaryKey, entity);
-		if (getSuperEntityDaoInventory() != null) {
-			getSuperEntityDaoInventory().put(entity);
-		}
 	}
 
 	public void checkPrimaryKeyUnchanged(Entity entity) throws DaoException {
@@ -82,14 +73,6 @@ public class DaoInventory<PrimaryKey, Entity> {
 
 	public void setPkEntityMember(EntityMember<? super Entity, PrimaryKey> pkEntityMember) {
 		this.pkEntityMember = pkEntityMember;
-	}
-
-	public DaoInventory<PrimaryKey, ? super Entity> getSuperEntityDaoInventory() {
-		return superEntityDaoInventory;
-	}
-
-	public void setSuperEntityDaoInventory(DaoInventory<PrimaryKey, ? super Entity> superEntityDaoInventory) {
-		this.superEntityDaoInventory = superEntityDaoInventory;
 	}
 
 }
