@@ -1,7 +1,6 @@
 package com.minquoad.servlet.account;
 
 import java.io.IOException;
-import java.time.Instant;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -66,10 +65,13 @@ public class AccountManagement extends ImprovedHttpServlet {
 						String fileName = PartTool.saveInNewFile(field.getValue(), StorageManager.communityPath);
 
 						image = new UserProfileImage();
-						image.setRelativePath(StorageManager.communityPath + fileName);
+						try {
+							image.setRelativePath(StorageManager.communityPath + fileName);
+						} catch (Exception e) {
+							throw new ServletException(e);
+						}
 						image.setOriginalName(field.getOriginalFileName(false));
 						image.setOriginalExtention(field.getOriginalFileExtention());
-						image.setLastModificationDate(Instant.now());
 						image.setUser(getUser(request));
 
 						userProfileImageDao.persist(image);

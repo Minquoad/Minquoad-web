@@ -70,4 +70,13 @@ public abstract class Database {
 		return new DaoFactoryImpl();
 	}
 
+	public static void close() {
+		for (Connection connection : connections) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+			}
+		}
+	}
+
 }

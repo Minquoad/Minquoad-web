@@ -1,10 +1,10 @@
 package com.minquoad.entity.file;
 
 import java.io.File;
-import java.time.Instant;
 
 import com.minquoad.entity.User;
 import com.minquoad.service.Deployment;
+import com.minquoad.service.Logger;
 
 public class ProtectedFile {
 
@@ -12,10 +12,9 @@ public class ProtectedFile {
 	private String relativePath;
 	private String originalName;
 	private String originalExtention;
-	private Instant lastModificationDate;
 
 	private File file;
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -23,13 +22,22 @@ public class ProtectedFile {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getRelativePath() {
 		return relativePath;
 	}
 
 	public void setRelativePath(String relativePath) {
-		this.relativePath = relativePath;
+		// relativePath is immutable
+		if (this.relativePath == null) {
+			this.relativePath = relativePath;
+		} else {
+			if (relativePath != this.relativePath) {
+				Exception e = new Exception("immutability violation");
+				e.printStackTrace();
+				Logger.logError(e);
+			}
+		}
 	}
 
 	public String getOriginalName() {
@@ -46,14 +54,6 @@ public class ProtectedFile {
 
 	public void setOriginalExtention(String originalExtention) {
 		this.originalExtention = originalExtention;
-	}
-
-	public Instant getLastModificationDate() {
-		return lastModificationDate;
-	}
-
-	public void setLastModificationDate(Instant lastModificationDate) {
-		this.lastModificationDate = lastModificationDate;
 	}
 
 	public boolean isDownloadableForUser(User user) {

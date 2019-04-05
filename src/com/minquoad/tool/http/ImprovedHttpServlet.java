@@ -105,13 +105,13 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			super.service(request, response);
 
 			if (isLoggingAllRequests()) {
-				requestLog.setServiceDuration((int)(Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
+				requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 				getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			}
 
 		} catch (Exception e) {
 			requestLog.setError(Logger.getStackTraceAsString(e));
-			requestLog.setServiceDuration((int)(Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
+			requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 			getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			throw e;
 		}
@@ -182,29 +182,25 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
 		String idString = request.getParameter(idRequestParameterName);
-		if (idString != null) {
-			try {
-				EntitySubclass entity;
-				int idInteger = Integer.parseInt(idString);
-				entity = dao.getByPk(idInteger);
-				if (entity != null) {
-					return entity;
-				}
-				long idLong = Long.parseLong(idString);
-				entity = dao.getByPk(idLong);
-				if (entity != null) {
-					return entity;
-				}
-				entity = dao.getByPk(idString);
-				if (entity != null) {
-					return entity;
-				}
-				return null;
 
-			} catch (NumberFormatException e) {
+		try {
+			EntitySubclass entity = dao.getByPk(Integer.parseInt(idString));
+			if (entity != null) {
+				return entity;
 			}
+		} catch (NumberFormatException e) {
 		}
-		return null;
+
+		try {
+			EntitySubclass entity = dao.getByPk(Long.parseLong(idString));
+			if (entity != null) {
+				return entity;
+			}
+		} catch (NumberFormatException e) {
+		}
+
+		EntitySubclass entity = dao.getByPk(idString);
+		return entity;
 	}
 
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {

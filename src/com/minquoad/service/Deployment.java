@@ -33,6 +33,7 @@ public class Deployment implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent) {
 		CronManager.stop();
+		Database.close();
 	}
 
 	public static void initConfiguration() {

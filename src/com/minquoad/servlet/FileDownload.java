@@ -23,7 +23,7 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
-		return protectedFile != null && protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
+		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
 	}
 
 	@Override
@@ -95,8 +95,9 @@ public class FileDownload extends ImprovedHttpServlet {
 
 	@Override
 	protected long getLastModified(HttpServletRequest request) {
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
-		return protectedFile.getLastModificationDate().toEpochMilli() / 1000l * 1000 + 1000l;
+		// for safety reason a fake constant old lastModified value is used
+		// considering ProtectedFile.relativePath is immutable, no browser cache issue should append
+		return 1000000000000l;
 	}
 
 }
