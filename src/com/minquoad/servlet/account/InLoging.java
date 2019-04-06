@@ -48,7 +48,9 @@ public class InLoging extends ImprovedHttpServlet {
 
 			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
 			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
-			failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+			if (failedInLoginigAttempt != null) {
+				failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
+			}
 
 		} else {
 			FailedInLoginigAttemptUnit failedInLoginigAttemptUnit = getUnitFactory(request).getFailedInLoginigAttemptUnit();
