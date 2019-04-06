@@ -9,7 +9,9 @@ import java.util.Random;
 
 import javax.servlet.http.Part;
 
+import com.minquoad.entity.file.ProtectedFile;
 import com.minquoad.service.Deployment;
+import com.minquoad.service.StorageManager;
 
 public abstract class PartTool {
 
@@ -30,20 +32,40 @@ public abstract class PartTool {
 		return null;
 	}
 
-	public static String saveInNewFile(Part part, String directoryPath) {
+	public static void saveInProtectedFile(Part part, ProtectedFile protectedFile) throws IOException {
+
+		File newFile = null;
+		String randomPath = null;
+
+		Random random = new Random();
+		
+		String randomDirPath = StorageManager.communityPath;
+		for (int i = 0; i < 2; i++) {
+			randomDirPath += random.nextInt(10) + "/";
+		}
+		StorageManager.initStorageFolderIfNotExists(randomDirPath);
+		while (newFile == null || newFile.exists()) {
+			String randomFileName = Integer.toString(Math.abs(random.nextInt()));
+			while (randomFileName.length() < 10) {
+				randomFileName = "0" + randomFileName;
+			}
+			randomPath = randomDirPath + randomFileName;
+
+			newFile = new File(Deployment.getStoragePath() + randomPath);
+		}
+
+		saveInFile(part, newFile);
+		protectedFile.setRelativePath(randomPath);
+	}
+
+	public static void saveInFile(Part part, File file) throws IOException {
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
-			String randomName = null;
-			File newFile = null;
-			while (newFile == null || newFile.exists()) {
-				randomName = Long.toString(Math.abs(new Random().nextLong()));
-				newFile = new File(Deployment.getStoragePath() + directoryPath + randomName);
-			}
 
 			int bufferSize = 102400;
 			input = new BufferedInputStream(part.getInputStream(), bufferSize);
-			output = new BufferedOutputStream(new FileOutputStream(newFile), bufferSize);
+			output = new BufferedOutputStream(new FileOutputStream(file), bufferSize);
 
 			byte[] buffer = new byte[bufferSize];
 			int length;
@@ -51,10 +73,9 @@ public abstract class PartTool {
 				output.write(buffer, 0, length);
 			}
 
-			return randomName;
-
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			try {
 				output.close();
@@ -65,7 +86,5 @@ public abstract class PartTool {
 			} catch (IOException ignore) {
 			}
 		}
-		return null;
 	}
-
 }

@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import com.minquoad.framework.dao.entityMember.EntityMember;
 import com.minquoad.framework.dao.entityMember.EntityMemberGetter;
@@ -44,6 +46,13 @@ public abstract class DaoImpl<Entity> {
 
 	public DaoImpl<? super Entity> getSuperClassDao() {
 		return null;
+	}
+
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		if (hasSuperClassDao()) {
+			return getSuperClassDao().isPrimaryKeyRandomlyGenerated();
+		}
+		return false;
 	}
 
 	public Entity getByPk(Integer pk) {
@@ -152,6 +161,11 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public boolean insert(Entity entity) {
+
+		if (isPrimaryKeyRandomlyGenerated() && getPrimaryKeyEntityMember().getValue(entity) == null) {
+			setRandomPrimaryKey(entity);
+		}
+
 		try {
 			if (insertRecursivelyFromSuper(entity)) {
 				putInInventories(entity);
@@ -161,6 +175,18 @@ public abstract class DaoImpl<Entity> {
 			throw new DaoException(e);
 		}
 		return false;
+	}
+
+	protected void setRandomPrimaryKey(Entity entity) {
+		if (isPrimaryKeyInteger()) {
+			getIntegerPrimaryKeyEntityMember().setValue(entity, Math.abs(new Random().nextInt()));
+		} else if (isPrimaryKeyLong()) {
+			getLongPrimaryKeyEntityMember().setValue(entity, Math.abs(new Random().nextLong()));
+		} else if (isPrimaryKeyString()) {
+			getStringPrimaryKeyEntityMember().setValue(entity, UUID.randomUUID().toString());
+		} else {
+			throw new DaoException("Not all primary key types are handeled in setRandomPrimaryKey()");
+		}
 	}
 
 	private boolean insertRecursivelyFromSuper(Entity entity) throws SQLException {
@@ -612,11 +638,16 @@ public abstract class DaoImpl<Entity> {
 			entityMembers = new ArrayList<EntityMember<Entity, ?>>();
 
 			if (hasSuperClassDao()) {
-				setIntegerPrimaryKeyEntityMember(getSuperClassDao().getIntegerPrimaryKeyEntityMember());
-				setLongPrimaryKeyEntityMember(getSuperClassDao().getLongPrimaryKeyEntityMember());
-				setStringPrimaryKeyEntityMember(getSuperClassDao().getStringPrimaryKeyEntityMember());
+				DaoImpl<? super Entity> superClassDao = getSuperClassDao();
+				setIntegerPrimaryKeyEntityMember(superClassDao.getIntegerPrimaryKeyEntityMember());
+				setLongPrimaryKeyEntityMember(superClassDao.getLongPrimaryKeyEntityMember());
+				setStringPrimaryKeyEntityMember(superClassDao.getStringPrimaryKeyEntityMember());
 				if (!hasPrimaryKey()) {
 					throw new DaoException("Not all primary key types are handeled in initIfneeded()");
+				}
+
+				if (superClassDao.isPrimaryKeyRandomlyGenerated() != this.isPrimaryKeyRandomlyGenerated()) {
+					throw new DaoException("Only super class's dao shoud override isPrimaryKeyRandomlyGenerated().");
 				}
 			}
 

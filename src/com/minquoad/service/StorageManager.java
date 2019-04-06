@@ -18,17 +18,21 @@ public abstract class StorageManager {
 
 	public static void initTree() {
 		initFolderIfNotExists(Deployment.getStoragePath());
-		initFolderIfNotExists(Deployment.getStoragePath() + internalPath);
-		initFolderIfNotExists(Deployment.getStoragePath() + tmpPath);
-		initFolderIfNotExists(Deployment.getStoragePath() + logPath);
-		initFolderIfNotExists(Deployment.getStoragePath() + uploadedPath);
-		initFolderIfNotExists(Deployment.getStoragePath() + communityPath);
+		initStorageFolderIfNotExists(internalPath);
+		initStorageFolderIfNotExists(tmpPath);
+		initStorageFolderIfNotExists(logPath);
+		initStorageFolderIfNotExists(uploadedPath);
+		initStorageFolderIfNotExists(communityPath);
+	}
+
+	public static boolean initStorageFolderIfNotExists(String filePath) {
+		return initFolderIfNotExists(Deployment.getStoragePath() + filePath);
 	}
 
 	public static boolean initFolderIfNotExists(String filePath) {
 		File file = new File(filePath);
 		if (!file.exists()) {
-			file.mkdir();
+			file.mkdirs();
 			return true;
 		}
 		return false;

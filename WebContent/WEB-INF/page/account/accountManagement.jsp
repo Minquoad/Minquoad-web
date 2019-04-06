@@ -21,7 +21,7 @@
 							<p>Actual profile picture:</p>
 
 							<c:url value="/ImageDownload" var="imageDownloadUrl">
-								<c:param name="protectedFileId" value="${userProfileImage.id}" />
+								<c:param name="id" value="${userProfileImage.id}" />
 							</c:url>
 							<div class="userProfileImageContainer">
 								<img src="${imageDownloadUrl}" class="userProfileImage">

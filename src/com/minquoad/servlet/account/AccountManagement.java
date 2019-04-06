@@ -15,7 +15,6 @@ import com.minquoad.frontComponent.form.account.UserParametersAlterationForm;
 import com.minquoad.frontComponent.form.account.UserPasswordAlterationForm;
 import com.minquoad.frontComponent.form.account.UserPictureAlterationForm;
 import com.minquoad.frontComponent.form.field.FormFileField;
-import com.minquoad.service.StorageManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
 
@@ -62,17 +61,13 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.userPictureKey);
 					if (field.hasFile()) {
-						String fileName = PartTool.saveInNewFile(field.getValue(), StorageManager.communityPath);
-
+						
 						image = new UserProfileImage();
-						try {
-							image.setRelativePath(StorageManager.communityPath + fileName);
-						} catch (Exception e) {
-							throw new ServletException(e);
-						}
 						image.setOriginalName(field.getOriginalFileName(false));
 						image.setOriginalExtention(field.getOriginalFileExtention());
 						image.setUser(getUser(request));
+
+						PartTool.saveInProtectedFile(field.getValue(), image);
 
 						userProfileImageDao.persist(image);
 					}

@@ -18,18 +18,20 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/FileDownload")
 public class FileDownload extends ImprovedHttpServlet {
 
+	private static final String PROTECTED_FILE_ID = "id";
+
 	private static final int DEFAULT_BUFFER_SIZE = 10240;
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
 	}
 
 	@Override
 	protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
@@ -40,7 +42,7 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, "protectedFileId", DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
 		File file = protectedFile.getFile();
 

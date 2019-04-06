@@ -1,6 +1,8 @@
 package com.minquoad.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -11,6 +13,7 @@ import javax.servlet.http.Part;
 
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
+import com.minquoad.service.Deployment;
 import com.minquoad.service.StorageManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
@@ -37,14 +40,7 @@ public class Test extends ImprovedHttpServlet {
 		// System.out.println("contextPath = " + request.getContextPath());
 
 		ThingDao thingDao = getDaoFactory(request).getThingDao();
-/*
-		Thing thing2 = new Thing();
-		thing2.setId(15);
-		User owner = new User();
-		//owner.setId(5555);
-		//thing2.setOwner(owner);
-		thingDao.persist(thing2);
-*//*
+
 		String descriptionMemberName = "description";
 
 		List<Thing> things;
@@ -83,7 +79,7 @@ public class Test extends ImprovedHttpServlet {
 			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(4));
 			thingDao.persist(thing);
 		}
-*/
+
 		request.setAttribute("things", thingDao.getAll());
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
@@ -129,7 +125,7 @@ public class Test extends ImprovedHttpServlet {
 
 		Part part = request.getPart("file");
 		if (PartTool.hasFile(part)) {
-			PartTool.saveInNewFile(part, StorageManager.communityPath);
+			PartTool.saveInFile(part, new File(Deployment.getStoragePath() + StorageManager.communityPath + "test"));
 		}
 
 		this.doGet(request, response);

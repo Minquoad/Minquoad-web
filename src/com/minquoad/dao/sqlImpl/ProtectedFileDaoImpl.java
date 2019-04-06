@@ -28,4 +28,8 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 		return new ProtectedFile();
 	}
 
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
+	}
+
 }

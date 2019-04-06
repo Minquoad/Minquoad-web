@@ -42,5 +42,9 @@ public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao 
 		}
 		return users;
 	}
+
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
+	}
 	
 }
