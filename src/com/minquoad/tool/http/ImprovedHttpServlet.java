@@ -42,6 +42,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		try {
 			requestLog.setInstant(serviceStartingInstant);
 			requestLog.setServletName(this.getServletName());
+			requestLog.setIpAddress(request.getRemoteAddr());
 
 			request.setCharacterEncoding("UTF-8");
 			response.setCharacterEncoding("UTF-8");
@@ -51,9 +52,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
 
 			if (user != null) {
-
 				requestLog.setUser(user);
-
 				setUser(request, user);
 
 				User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(controllingAdminIdKey));
@@ -68,6 +67,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					}
 
 				} else {
+					requestLog.setControllingAdmin(controllingAdmin);
 					setControllingAdmin(request, controllingAdmin);
 
 					controllingAdmin.setLastActivityInstant(Instant.now());

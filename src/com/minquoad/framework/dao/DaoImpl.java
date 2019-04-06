@@ -165,20 +165,41 @@ public abstract class DaoImpl<Entity> {
 
 	private boolean insertRecursivelyFromSuper(Entity entity) throws SQLException {
 
-		boolean success = true;
 		if (hasSuperClassDao()) {
-			success &= getSuperClassDao().insertRecursivelyFromSuper(entity);
+			if (!getSuperClassDao().insertRecursivelyFromSuper(entity)) {
+				return false;
+			}
 		}
 
-		if (success) {
-			String query = "INSERT INTO \""
-					+ getTableName()
-					+ "\" ";
-			boolean first = true;
-			// if the Entity has a superclass entity then the primary key member is not in
-			// the list returned by getEntityMembers()
+		String query = "INSERT INTO \""
+				+ getTableName()
+				+ "\" ";
+		boolean first = true;
+		// if the Entity has a superclass entity then the primary key member is not in
+		// the list returned by getEntityMembers()
+		if (hasSuperClassDao()) {
+			query += "(" + this.getPrimaryKeyEntityMember().getName();
+			first = false;
+		}
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+			if (entityMember.getValue(entity) != null) {
+				if (first) {
+					query += "(";
+				} else {
+					query += ", ";
+				}
+				query += "\"" + entityMember.getName() + "\"";
+				first = false;
+			}
+		}
+		// if no none null values
+		if (first) {
+			query += "DEFAULT VALUES ";
+		} else {
+			query += ") VALUES ";
+			first = true;
 			if (hasSuperClassDao()) {
-				query += "(" + this.getPrimaryKeyEntityMember().getName();
+				query += "(?";
 				first = false;
 			}
 			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
@@ -188,56 +209,33 @@ public abstract class DaoImpl<Entity> {
 					} else {
 						query += ", ";
 					}
-					query += "\"" + entityMember.getName() + "\"";
+					query += "?";
 					first = false;
 				}
 			}
-			// if no none null values
-			if (first) {
-				query += "DEFAULT VALUES ";
-			} else {
-				query += ") VALUES ";
-				first = true;
-				if (hasSuperClassDao()) {
-					query += "(?";
-					first = false;
-				}
-				for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-					if (entityMember.getValue(entity) != null) {
-						if (first) {
-							query += "(";
-						} else {
-							query += ", ";
-						}
-						query += "?";
-						first = false;
-					}
-				}
-				query += ") ";
-			}
-			query += "RETURNING * ;";
+			query += ") ";
+		}
+		query += "RETURNING * ;";
 
-			PreparedStatement preparedStatement = prepareStatement(query);
+		PreparedStatement preparedStatement = prepareStatement(query);
 
-			int i = 1;
-			if (hasSuperClassDao()) {
-				this.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+		int i = 1;
+		if (hasSuperClassDao()) {
+			this.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+			i++;
+		}
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+			if (entityMember.getValue(entity) != null) {
+				entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 				i++;
 			}
-			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-				if (entityMember.getValue(entity) != null) {
-					entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
-					i++;
-				}
-			}
-
-			ResultSet resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			this.hydrate(entity, resultSet, false);
-
-			return true;
 		}
-		return false;
+
+		ResultSet resultSet = preparedStatement.executeQuery();
+		resultSet.next();
+		this.hydrate(entity, resultSet, false);
+
+		return true;
 	}
 
 	public boolean delete(Entity entity) {

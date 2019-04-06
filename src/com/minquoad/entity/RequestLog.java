@@ -8,6 +8,8 @@ public class RequestLog {
 	private Instant instant;
 	private String url;
 	private User user;
+	private User controllingAdmin;
+	private String ipAddress;
 	private String error;
 	private Integer serviceDuration;
 	private String servletName;
@@ -53,6 +55,18 @@ public class RequestLog {
 	}
 	public void setServletName(String servletName) {
 		this.servletName = servletName;
+	}
+	public String getIpAddress() {
+		return ipAddress;
+	}
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+	public User getControllingAdmin() {
+		return controllingAdmin;
+	}
+	public void setControllingAdmin(User controllingAdmin) {
+		this.controllingAdmin = controllingAdmin;
 	}
 
 }
