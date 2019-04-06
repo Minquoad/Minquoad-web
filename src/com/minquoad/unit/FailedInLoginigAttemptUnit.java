@@ -42,16 +42,16 @@ public class FailedInLoginigAttemptUnit extends Unit {
 			return null;
 		} else {
 			Instant lastAttemptInstant = failedInLoginigAttempt.getLastArremptInstant();
-			int attemptsCount = failedInLoginigAttempt.getAttemptsCount();
+			long attemptsCount = failedInLoginigAttempt.getAttemptsCount();
 			
 			Duration duration = null;
 			
-			if (attemptsCount >= 5) {
-				if (attemptsCount < 8) {
+			if (attemptsCount >= 5l) {
+				if (attemptsCount < 8l) {
 					Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60);
 					duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
 				} else {
-					if (attemptsCount < 10) {
+					if (attemptsCount < 10l) {
 						Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60 * 10);
 						duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
 					} else {

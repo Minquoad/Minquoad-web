@@ -5,16 +5,16 @@ public class Consideration {
 	public static final int STATUS_FIEND = 0;
 	public static final int STATUS_BLOCKED = 1;
 
-	private Integer id;
+	private Long id;
 	private User consideringUser;
 	private User consideredUser;
 	private String statuString;
 	private Integer perceptionColor;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public User getConsideringUser() {

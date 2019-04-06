@@ -15,7 +15,7 @@ public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<Conversatio
 
 	@Override
 	public void initEntityMembers() throws DaoException {
-		this.addIntegerEntityMember("id", ConversationAccess::getId, ConversationAccess::setId, true);
+		this.addLongEntityMember("id", ConversationAccess::getId, ConversationAccess::setId, true);
 		this.addBooleanEntityMember("administrator", ConversationAccess::isAdministrator, ConversationAccess::setAdministrator);
 		this.addForeingKeyEntityMember("user", ConversationAccess::getUser, ConversationAccess::setUser, getDaoFactory().getUserDao());
 		this.addForeingKeyEntityMember("conversation", ConversationAccess::getConversation, ConversationAccess::setConversation, getDaoFactory().getConversationDao());
@@ -33,6 +33,11 @@ public class ConversationAccessDaoImpl extends ImprovedEntityDaoImpl<Conversatio
 		criteria[0] = new EntityCriterion(conversation, "conversation");
 		criteria[1] = new EntityCriterion(user, "user");
 		return this.getOneMatching(criteria);
+	}
+
+	@Override
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
 	}
 	
 }

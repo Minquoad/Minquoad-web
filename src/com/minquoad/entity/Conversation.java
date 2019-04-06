@@ -5,15 +5,15 @@ public class Conversation {
 	public static final int TYPE_MONOLOGUE = 0;
 	public static final int TYPE_MAIN_BETWEEN_TWO_USERS = 1;
 
-	private Integer id;
+	private Long id;
 	private String title;
 	private int type;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

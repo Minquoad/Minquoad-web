@@ -33,4 +33,8 @@ public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements Me
 		return this.getAllMatching(conversation, "conversation");
 	}
 
+	@Override
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
+	}
 }

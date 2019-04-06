@@ -11,7 +11,7 @@ public class User {
 
 	public static final int defaultDefaultColor = 8421504;
 
-	private Integer id;
+	private Long id;
 	private String mailAddress;
 	private String nickname;
 	private String hashedSaltedPassword;
@@ -24,11 +24,11 @@ public class User {
 	public static final int nicknameMaxlength = 25;
 	public static final int mailAddressMaxlength = 50;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

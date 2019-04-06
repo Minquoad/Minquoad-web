@@ -4,16 +4,16 @@ import java.time.Instant;
 
 public class FailedInLoginigAttempt {
 
-	private Integer id;
+	private Long id;
 	private String mailAddress;
-	private int attemptsCount;
+	private long attemptsCount;
 	private Instant lastArremptInstant;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -25,17 +25,17 @@ public class FailedInLoginigAttempt {
 		this.mailAddress = mailAddress;
 	}
 
-	public int getAttemptsCount() {
+	public long getAttemptsCount() {
 		return attemptsCount;
 	}
 
 	public void incrementAttemptsCount() {
-		if (attemptsCount != Integer.MAX_VALUE) {
+		if (attemptsCount != Long.MAX_VALUE) {
 			attemptsCount++;
 		}
 	}
 
-	public void setAttemptsCount(int attemptsCount) {
+	public void setAttemptsCount(long attemptsCount) {
 		this.attemptsCount = attemptsCount;
 	}
 

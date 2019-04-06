@@ -8,18 +8,18 @@ import com.minquoad.service.Logger;
 
 public class ProtectedFile {
 
-	private Integer id;
+	private Long id;
 	private String relativePath;
 	private String originalName;
 	private String originalExtention;
 
 	private File file;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

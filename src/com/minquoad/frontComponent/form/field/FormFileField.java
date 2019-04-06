@@ -1,10 +1,8 @@
 package com.minquoad.frontComponent.form.field;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
@@ -73,8 +71,7 @@ public class FormFileField extends FormField {
 	public void collectValue(HttpServletRequest request) {
 		try {
 			setValue(request.getPart(getName()));
-		} catch (IOException | ServletException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 		}
 	}
 

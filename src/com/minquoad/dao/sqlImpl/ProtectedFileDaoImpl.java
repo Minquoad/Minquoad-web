@@ -12,7 +12,7 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 
 	@Override
 	public void initEntityMembers() throws DaoException {
-		this.addIntegerEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
+		this.addLongEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
 		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
 		this.addStringEntityMember("originalName", ProtectedFile::getOriginalName, ProtectedFile::setOriginalName);
 		this.addStringEntityMember("originalExtention", ProtectedFile::getOriginalExtention, ProtectedFile::setOriginalExtention);

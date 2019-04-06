@@ -63,27 +63,26 @@ public abstract class FormField {
 	public abstract String getValueAsString();
 
 	public Integer getValueAsInteger() {
-		if (getValueAsString() == null || getValueAsString().equals("")) {
+		try {
+			return Integer.parseInt(getValueAsString());
+		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public Long getValueAsLong() {
 		try {
-			Integer value = Integer.parseInt(getValueAsString());
-			return value;
+			return Long.parseLong(getValueAsString());
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	public Float getValueAsFloat() {
-		if (getValueAsString() == null || getValueAsString().equals("")) {
+		try {
+			return Float.parseFloat(getValueAsString());
+		} catch (Exception e) {
 			return null;
-		} else {
-			try {
-				Float value = Float.parseFloat(getValueAsString());
-				return value;
-			} catch (Exception e) {
-				return null;
-			}
 		}
 	}
 
@@ -92,7 +91,19 @@ public abstract class FormField {
 	}
 
 	public <EntitySubclass> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
-		return dao.getByPk(getValueAsInteger());
+		try {
+			return dao.getByPk(getValueAsInteger());
+		} catch (Exception e) {
+		}
+		try {
+			return dao.getByPk(getValueAsLong());
+		} catch (Exception e) {
+		}
+		try {
+			return dao.getByPk(getValueAsString());
+		} catch (Exception e) {
+		}
+		return null;
 	}
 
 }

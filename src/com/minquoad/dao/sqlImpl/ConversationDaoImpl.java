@@ -17,7 +17,7 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 
 	@Override
 	public void initEntityMembers() throws DaoException {
-		this.addIntegerEntityMember("id", Conversation::getId, Conversation::setId, true);
+		this.addLongEntityMember("id", Conversation::getId, Conversation::setId, true);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
 	}
@@ -37,4 +37,8 @@ public class ConversationDaoImpl extends ImprovedEntityDaoImpl<Conversation> imp
 		return conversations;
 	}
 
+	@Override
+	public boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
+	}
 }

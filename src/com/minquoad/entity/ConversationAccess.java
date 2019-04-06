@@ -2,17 +2,17 @@ package com.minquoad.entity;
 
 public class ConversationAccess {
 
-	private Integer id;
+	private Long id;
 	private User user;
 	private Conversation conversation;
 	private boolean administrator;
 	private Message lastSeenMessage;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

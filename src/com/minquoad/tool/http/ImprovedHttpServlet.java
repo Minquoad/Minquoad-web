@@ -49,13 +49,13 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			requestLog.setUrl(getCurrentUrlWithArguments(request));
 
-			User user = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(userIdKey));
+			User user = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(userIdKey));
 
 			if (user != null) {
 				requestLog.setUser(user);
 				setUser(request, user);
 
-				User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Integer) request.getSession().getAttribute(controllingAdminIdKey));
+				User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(controllingAdminIdKey));
 
 				if (controllingAdmin == null) {
 					user.setLastActivityInstant(Instant.now());
@@ -182,35 +182,21 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
 		String idString = request.getParameter(idRequestParameterName);
-
 		if (idString == null) {
 			return null;
 		}
-		
 		try {
-			EntitySubclass entity = dao.getByPk(Integer.parseInt(idString));
-			if (entity != null) {
-				return entity;
-			}
+			return dao.getByPk(Integer.parseInt(idString));
 		} catch (Exception e) {
 		}
-
 		try {
-			EntitySubclass entity = dao.getByPk(Long.parseLong(idString));
-			if (entity != null) {
-				return entity;
-			}
+			return dao.getByPk(Long.parseLong(idString));
 		} catch (Exception e) {
 		}
-
 		try {
-			EntitySubclass entity = dao.getByPk(idString);
-			if (entity != null) {
-				return entity;
-			}
+			return dao.getByPk(idString);
 		} catch (Exception e) {
 		}
-
 		return null;
 	}
 

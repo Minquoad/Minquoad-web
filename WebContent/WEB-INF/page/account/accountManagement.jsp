@@ -14,6 +14,29 @@
 
 				<div class="borderedTile">
 					<div class="padded">
+						<h2>Default account color</h2>
+						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
+
+							<input type="hidden" name="formId" value="userParametersAlteration" />
+
+							<p>
+								<input type="color" name="defaultColor" id="defaultColor"  value="#${ requestScope.user.getDefaultColorAsHexString() }"/>
+								<c:if test="${ not empty requestScope.userParametersAlteration }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userParametersAlteration" />
+										<jsp:param name="fieldName" value="defaultColor" />
+									</jsp:include>
+								</c:if>
+							</p>
+							<div>
+								<input type="submit" value="Change" />
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="borderedTile">
+					<div class="padded">
 						<h2>Sent a new profile picture</h2>
 
 						<c:if test="${not empty userProfileImage}">
@@ -93,30 +116,6 @@
 						</form>
 					</div>
 				</div>
-
-				<div class="borderedTile">
-					<div class="padded">
-						<h2>Default account color</h2>
-						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
-
-							<input type="hidden" name="formId" value="userParametersAlteration" />
-
-							<p>
-								<input type="color" name="defaultColor" id="defaultColor"  value="#${ requestScope.user.getDefaultColorAsHexString() }"/>
-								<c:if test="${ not empty requestScope.userParametersAlteration }">
-									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-										<jsp:param name="formKey" value="userParametersAlteration" />
-										<jsp:param name="fieldName" value="defaultColor" />
-									</jsp:include>
-								</c:if>
-							</p>
-							<div>
-								<input type="submit" value="Change" />
-							</div>
-						</form>
-					</div>
-				</div>
-
 
 			</div>
 		</div>
