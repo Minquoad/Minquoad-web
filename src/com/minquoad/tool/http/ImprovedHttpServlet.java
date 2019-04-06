@@ -183,12 +183,16 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
 		String idString = request.getParameter(idRequestParameterName);
 
+		if (idString == null) {
+			return null;
+		}
+		
 		try {
 			EntitySubclass entity = dao.getByPk(Integer.parseInt(idString));
 			if (entity != null) {
 				return entity;
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 		}
 
 		try {
@@ -196,11 +200,18 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			if (entity != null) {
 				return entity;
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 		}
 
-		EntitySubclass entity = dao.getByPk(idString);
-		return entity;
+		try {
+			EntitySubclass entity = dao.getByPk(idString);
+			if (entity != null) {
+				return entity;
+			}
+		} catch (Exception e) {
+		}
+
+		return null;
 	}
 
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {

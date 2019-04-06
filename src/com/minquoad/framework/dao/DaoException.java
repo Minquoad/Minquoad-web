@@ -1,6 +1,6 @@
 package com.minquoad.framework.dao;
 
-public class DaoException extends Exception {
+public class DaoException extends RuntimeException {
 
 	public DaoException(String string) {
 		super(string);

@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import com.minquoad.framework.dao.DaoException;
 import com.minquoad.framework.dao.EntityCriterion;
 import com.minquoad.framework.dao.EntityModification;
 
@@ -31,15 +30,15 @@ public class EntityMember<Entity, MemberType> {
 		this.preparedStatementNonNullValueSetter = preparedStatementNonNullValueSetter;
 	}
 
-	public void setValueOfResultSetInEntity(Entity entity, ResultSet resultSet) throws SQLException, DaoException {
+	public void setValueOfResultSetInEntity(Entity entity, ResultSet resultSet) throws SQLException {
 		this.setValue(entity, getValueOfResultSet(resultSet));
 	}
 
-	public MemberType getValueOfResultSet(ResultSet resultSet) throws SQLException, DaoException {
+	public MemberType getValueOfResultSet(ResultSet resultSet) throws SQLException {
 		return getValueOfResultSet(resultSet, this.getName());
 	}
 
-	public MemberType getValueOfResultSet(ResultSet resultSet, String columnName) throws SQLException, DaoException {
+	public MemberType getValueOfResultSet(ResultSet resultSet, String columnName) throws SQLException {
 		MemberType value = this.getResultSetNonNullValueGetter().getNonNullValue(
 				resultSet,
 				columnName);
@@ -49,12 +48,12 @@ public class EntityMember<Entity, MemberType> {
 		return value;
 	}
 
-	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, Entity entity) throws SQLException, DaoException {
+	public void setValueOfEntityInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, Entity entity) throws SQLException {
 
 		setValueInPreparedStatement(preparedStatement, parameterIndex, getValue(entity));
 	}
 
-	public void setValueInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, MemberType value) throws SQLException, DaoException {
+	public void setValueInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, MemberType value) throws SQLException {
 
 		if (value == null) {
 			preparedStatement.setNull(parameterIndex, Types.NULL);
@@ -66,11 +65,11 @@ public class EntityMember<Entity, MemberType> {
 		}
 	}
 
-	public void setValueOfResultSetInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, ResultSet resultSet, String resultSetColumnName) throws SQLException, DaoException {
+	public void setValueOfResultSetInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, ResultSet resultSet, String resultSetColumnName) throws SQLException {
 		setValueInPreparedStatement(preparedStatement, parameterIndex, getValueOfResultSet(resultSet, resultSetColumnName));
 	}
 
-	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion) throws SQLException, DaoException {
+	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion) throws SQLException {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) criterion.getValue();
@@ -109,7 +108,7 @@ public class EntityMember<Entity, MemberType> {
 	// not used yet
 
 	public void setValueOfModificationInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex,
-			EntityModification modification) throws SQLException, DaoException {
+			EntityModification modification) throws SQLException {
 
 		@SuppressWarnings("unchecked")
 		MemberType value = (MemberType) modification.getValue();

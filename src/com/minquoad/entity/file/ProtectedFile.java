@@ -29,15 +29,12 @@ public class ProtectedFile {
 
 	public void setRelativePath(String relativePath) {
 		// relativePath is immutable
-		if (this.relativePath == null) {
-			this.relativePath = relativePath;
-		} else {
-			if (relativePath != this.relativePath) {
-				Exception e = new Exception("immutability violation");
-				e.printStackTrace();
-				Logger.logError(e);
-			}
+		if (this.relativePath != null && !relativePath.equals(this.relativePath)) {
+			Exception e = new Exception("immutability violation");
+			e.printStackTrace();
+			Logger.logError(e);
 		}
+		this.relativePath = relativePath;
 	}
 
 	public String getOriginalName() {
