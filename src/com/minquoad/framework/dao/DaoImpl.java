@@ -120,10 +120,7 @@ public abstract class DaoImpl<Entity> {
 		ResultSet resultSet = preparedStatement.executeQuery();
 
 		if (resultSet.next()) {
-			Entity entity = instantiateBlank();
-			this.hydrate(entity, resultSet, true);
-			putInInventories(entity);
-			return entity;
+			return instantiateFromResultSet(resultSet);
 		}
 
 		return null;
@@ -155,15 +152,13 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public boolean insert(Entity entity) {
-		if (entity != null) {
-			try {
-				if (insertRecursivelyFromSuper(entity)) {
-					putInInventories(entity);
-					return true;
-				}
-			} catch (SQLException e) {
-				throw new DaoException(e);
+		try {
+			if (insertRecursivelyFromSuper(entity)) {
+				putInInventories(entity);
+				return true;
 			}
+		} catch (SQLException e) {
+			throw new DaoException(e);
 		}
 		return false;
 	}
@@ -246,32 +241,35 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public boolean delete(Entity entity) {
-		if (entity != null) {
 
-			// the deepest subclass is in charged
-			for (DaoImpl<? extends Entity> subClassDao : getSubClassDaos()) {
-				if (subClassDao.deleteSuperEntity(entity, this)) {
-					return true;
-				}
-			}
-
-			// if there is no subclass that handled the entity
-			try {
-
-				if (deleteRecursivelyToSuper(entity)) {
-					deleteFromInventories(entity);
-					return true;
-				}
-
-			} catch (SQLException e) {
-				throw new DaoException(e);
+		// the deepest subclass is in charged
+		for (DaoImpl<? extends Entity> subClassDao : getSubClassDaos()) {
+			if (subClassDao.deleteSuperEntity(entity, this)) {
+				return true;
 			}
 		}
+
+		// if there is no subclass that handled the entity
+		try {
+
+			if (deleteRecursivelyToSuper(entity)) {
+				deleteFromInventories(entity);
+				return true;
+			}
+
+		} catch (SQLException e) {
+			throw new DaoException(e);
+		}
+
 		return false;
 	}
 
 	private <SuperEntity> boolean deleteSuperEntity(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) {
-		return delete(getFromSuperClassIfInstanceof(superEntity, superDao));
+		Entity entity = getFromSuperClassIfInstanceof(superEntity, superDao);
+		if (entity == null) {
+			return false;
+		}
+		return delete(entity);
 	}
 
 	private boolean deleteRecursivelyToSuper(Entity entity) throws SQLException {
@@ -280,25 +278,23 @@ public abstract class DaoImpl<Entity> {
 		PreparedStatement preparedStatement = prepareStatement(query);
 		getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
 
-		boolean success = 1 == preparedStatement.executeUpdate();
-
-		if (hasSuperClassDao()) {
-			success &= getSuperClassDao().deleteRecursivelyToSuper(entity);
-		}
-
-		return success;
-	}
-
-	public boolean update(Entity entity) {
-		if (entity != null) {
-			getInventory().checkPrimaryKeyUnchanged(entity);
-			try {
-				return updateChecked(entity);
-			} catch (SQLException e) {
-				throw new DaoException(e);
+		if (preparedStatement.executeUpdate() == 1) {
+			if (hasSuperClassDao()) {
+				return getSuperClassDao().deleteRecursivelyToSuper(entity);
+			} else {
+				return true;
 			}
 		}
 		return false;
+	}
+
+	public boolean update(Entity entity) {
+		getInventory().checkPrimaryKeyUnchanged(entity);
+		try {
+			return updateChecked(entity);
+		} catch (SQLException e) {
+			throw new DaoException(e);
+		}
 	}
 
 	private boolean updateChecked(Entity entity) throws SQLException {
@@ -314,7 +310,11 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	private <SuperEntity> boolean updateSuperEntity(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) throws SQLException {
-		return updateChecked(getFromSuperClassIfInstanceof(superEntity, superDao));
+		Entity entity = getFromSuperClassIfInstanceof(superEntity, superDao);
+		if (entity == null) {
+			return false;
+		}
+		return updateChecked(entity);
 	}
 
 	private boolean updateRecursivelyToSuper(Entity entity) throws SQLException {
@@ -339,13 +339,15 @@ public abstract class DaoImpl<Entity> {
 
 		getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 
-		boolean success = 1 == preparedStatement.executeUpdate();
-
-		if (hasSuperClassDao()) {
-			success &= getSuperClassDao().updateRecursivelyToSuper(entity);
+		if (preparedStatement.executeUpdate() == 1) {
+			if (hasSuperClassDao()) {
+				return getSuperClassDao().updateRecursivelyToSuper(entity);
+			} else {
+				return true;
+			}
 		}
 
-		return success;
+		return false;
 	}
 
 	public List<Entity> getAll() {
@@ -414,7 +416,11 @@ public abstract class DaoImpl<Entity> {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				toUnifiedInstance(resultSet, !getSubClassDaos().isEmpty());
+				if (getSubClassDaos().isEmpty()) {
+					toUnifiedInstance(resultSet);
+				} else {
+					getByPk(resultSet, getPrimaryKeyEntityMember().getName());
+				}
 			}
 
 		} catch (SQLException e) {
@@ -498,9 +504,13 @@ public abstract class DaoImpl<Entity> {
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			if (resultSet.next()) {
-				Entity entity = toUnifiedInstance(resultSet, !getSubClassDaos().isEmpty());
-				if (isEntityMachingCriteria(entity, criteria)) {
-					return entity;
+				if (getSubClassDaos().isEmpty()) {
+					Entity entity = toUnifiedInstance(resultSet);
+					if (isEntityMachingCriteria(entity, criteria)) {
+						return entity;
+					}
+				} else {
+					return getByPk(resultSet, getPrimaryKeyEntityMember().getName());
 				}
 			}
 
@@ -512,17 +522,15 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public boolean isEntityMachingCriteria(Entity entity, EntityCriterion[] criteria) {
-		if (criteria != null) {
-			for (EntityCriterion criterion : criteria) {
-				EntityMember<? super Entity, ?> member = getEntityMember(criterion.getName(), true);
-				if (criterion.getValue() == null) {
-					if (member.getValue(entity) != null) {
-						return false;
-					}
-				} else {
-					if (!criterion.getValue().equals(member.getValue(entity))) {
-						return false;
-					}
+		for (EntityCriterion criterion : criteria) {
+			EntityMember<? super Entity, ?> member = getEntityMember(criterion.getName(), true);
+			if (criterion.getValue() == null) {
+				if (member.getValue(entity) != null) {
+					return false;
+				}
+			} else {
+				if (!criterion.getValue().equals(member.getValue(entity))) {
+					return false;
 				}
 			}
 		}
@@ -538,18 +546,19 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	private Entity toUnifiedInstance(ResultSet resultSet, boolean pkOnlyInResultSet) throws SQLException {
-		if (pkOnlyInResultSet) {
-			return getByPk(resultSet, getPrimaryKeyEntityMember().getName());
-		} else {
-			Entity entity = getInventory().getByPrimaryKey(resultSet);
-			if (entity == null) {
-				entity = instantiateBlank();
-				this.hydrate(entity, resultSet, true);
-				putInInventories(entity);
-			}
+	private Entity toUnifiedInstance(ResultSet resultSet) throws SQLException {
+		Entity entity = getInventory().getByPrimaryKey(resultSet);
+		if (entity != null) {
 			return entity;
 		}
+		return instantiateFromResultSet(resultSet);
+	}
+
+	private Entity instantiateFromResultSet(ResultSet resultSet) throws SQLException {
+		Entity entity = instantiateBlank();
+		hydrate(entity, resultSet, true);
+		putInInventories(entity);
+		return entity;
 	}
 
 	private Entity getByPk(ResultSet pkResultSet, String keyColumnName) throws SQLException {
@@ -581,13 +590,10 @@ public abstract class DaoImpl<Entity> {
 		ResultSet resultSet = preparedStatement.executeQuery();
 
 		if (resultSet.next()) {
-			Entity entity = instantiateBlank();
-			this.hydrate(entity, resultSet, true);
-			putInInventories(entity);
-			return entity;
-		} else {
-			return null;
+			return instantiateFromResultSet(resultSet);
 		}
+
+		return null;
 	}
 
 	private <SuperEntity> Entity getFromSuperClassIfInstanceof(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) {
@@ -672,6 +678,33 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
+	private void putInInventories(Entity entity) {
+		getInventory().put(entity);
+		if (hasSuperClassDao()) {
+			getSuperClassDao().putInInventories(entity);
+		}
+	}
+
+	private void deleteFromInventories(Entity entity) throws SQLException {
+		getInventory().delete(entity);
+		if (hasSuperClassDao()) {
+			getSuperClassDao().deleteFromInventories(entity);
+		}
+	}
+
+	private DaoInventory<?, Entity> getInventory() {
+		if (isPrimaryKeyInteger()) {
+			return getIntegerInventory();
+		}
+		if (isPrimaryKeyLong()) {
+			return getLongInventory();
+		}
+		if (isPrimaryKeyString()) {
+			return getStringInventory();
+		}
+		throw new DaoException("Not all primary key types are handeled in getInventory()");
+	}
+
 	private DaoInventory<Integer, Entity> getIntegerInventory() {
 		initIfneeded();
 		return integerInventory;
@@ -699,31 +732,38 @@ public abstract class DaoImpl<Entity> {
 		this.stringInventory = stringInventory;
 	}
 
-	private void putInInventories(Entity entity) {
-		getInventory().put(entity);
-		if (hasSuperClassDao()) {
-			getSuperClassDao().putInInventories(entity);
+	private boolean hasPrimaryKey() {
+		try {
+			getPrimaryKeyEntityMember();
+			return true;
+		} catch (DaoException e) {
+			return false;
 		}
 	}
 
-	private void deleteFromInventories(Entity entity) throws SQLException {
-		getInventory().delete(entity);
-		if (hasSuperClassDao()) {
-			getSuperClassDao().deleteFromInventories(entity);
-		}
-	}
-
-	private DaoInventory<?, Entity> getInventory() {
+	private EntityMember<? super Entity, ?> getPrimaryKeyEntityMember() {
 		if (isPrimaryKeyInteger()) {
-			return getIntegerInventory();
+			return getIntegerPrimaryKeyEntityMember();
 		}
 		if (isPrimaryKeyLong()) {
-			return getLongInventory();
+			return getLongPrimaryKeyEntityMember();
 		}
 		if (isPrimaryKeyString()) {
-			return getStringInventory();
+			return getStringPrimaryKeyEntityMember();
 		}
-		throw new DaoException("Not all primary key types are handeled in getInventory()");
+		throw new DaoException("Not all primary key types are handeled in getPrimaryKeyEntityMember()");
+	}
+
+	private boolean isPrimaryKeyInteger() {
+		return getIntegerPrimaryKeyEntityMember() != null;
+	}
+
+	private boolean isPrimaryKeyLong() {
+		return getLongPrimaryKeyEntityMember() != null;
+	}
+
+	private boolean isPrimaryKeyString() {
+		return getStringPrimaryKeyEntityMember() != null;
 	}
 
 	private EntityMember<? super Entity, Integer> getIntegerPrimaryKeyEntityMember() {
@@ -753,46 +793,12 @@ public abstract class DaoImpl<Entity> {
 		this.stringPrimaryKeyEntityMember = stringPrimaryKeyEntityMember;
 	}
 
-	private boolean hasPrimaryKey() {
-		try {
-			getPrimaryKeyEntityMember();
-			return true;
-		} catch (DaoException e) {
-			return false;
-		}
-	}
-
 	private List<DaoImpl<? extends Entity>> getSubClassDaos() {
 		if (subClassDaos == null) {
 			subClassDaos = new ArrayList<DaoImpl<? extends Entity>>();
 			this.initSubClassDaos();
 		}
 		return subClassDaos;
-	}
-
-	private EntityMember<? super Entity, ?> getPrimaryKeyEntityMember() {
-		if (isPrimaryKeyInteger()) {
-			return getIntegerPrimaryKeyEntityMember();
-		}
-		if (isPrimaryKeyLong()) {
-			return getLongPrimaryKeyEntityMember();
-		}
-		if (isPrimaryKeyString()) {
-			return getStringPrimaryKeyEntityMember();
-		}
-		throw new DaoException("Not all primary key types are handeled in getPrimaryKeyEntityMember()");
-	}
-
-	private boolean isPrimaryKeyInteger() {
-		return getIntegerPrimaryKeyEntityMember() != null;
-	}
-
-	private boolean isPrimaryKeyLong() {
-		return getLongPrimaryKeyEntityMember() != null;
-	}
-
-	private boolean isPrimaryKeyString() {
-		return getStringPrimaryKeyEntityMember() != null;
 	}
 
 	public void addSubClassDao(DaoImpl<? extends Entity> dao) {
