@@ -13,4 +13,7 @@ $(document).ready(function() {
 			pushState : false
 		}
 	});
+	
+	detectImprovementSuggestionAdditionForm();
+	
 });

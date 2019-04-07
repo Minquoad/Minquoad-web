@@ -25,6 +25,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		MessageAdditionForm form = new MessageAdditionForm(request);
+		request.setAttribute("form", form);
 
 		User user = getUser(request);
 		Conversation conversation = form.getConversation();
@@ -35,7 +36,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		MessageAdditionForm form = new MessageAdditionForm(request);
+		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
 
 		if (form.isValide()) {
 			String text = form.getFieldValueAsString(MessageAdditionForm.textKey);

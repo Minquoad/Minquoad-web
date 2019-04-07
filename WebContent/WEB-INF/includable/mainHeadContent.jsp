@@ -24,4 +24,5 @@
 <script type="text/javascript" src="<c:url value="/js/tile.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/movableDiv.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/conversationDiv.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/improvementSuggestionAddition.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/main.js" />"></script>

@@ -58,6 +58,16 @@
 							</jsp:include>
 						</c:if>
 					</p>
+					<p>
+						<label for="upSigningCode">Up signing code : </label>
+						<input type="password" name="upSigningCode" id="upSigningCode" />
+						<c:if test="${ not empty requestScope.form }">
+							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+								<jsp:param name="formKey" value="form" />
+								<jsp:param name="fieldName" value="upSigningCode" />
+							</jsp:include>
+						</c:if>
+					</p>
 					<div>
 						<input type="submit" value="Sign up" />
 					</div>

@@ -15,6 +15,8 @@ public class UpSigningForm extends Form {
 	public static final String nicknameKey = "nickname";
 	public static final String passwordKey = "password";
 	public static final String passwordConfirmationKey = "passwordConfirmation";
+	public static final String upSigningCodeKey = "upSigningCode";
+	public static final String upSigningCode = "ttt";
 
 	public UpSigningForm(HttpServletRequest request) {
 		super(request);
@@ -96,6 +98,16 @@ public class UpSigningForm extends Form {
 			String password = this.getFieldValueAsString(passwordKey);
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";
+			} else
+				return null;
+		});
+		this.addField(field);
+
+		field = new FormStringField(upSigningCodeKey);
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
+			if (!value.equals(upSigningCode)) {
+				return "Wrong up signing code.";
 			} else
 				return null;
 		});
