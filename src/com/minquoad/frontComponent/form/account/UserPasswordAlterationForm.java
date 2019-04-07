@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.NonNullValueChecker;
 
 public class UserPasswordAlterationForm extends Form {
 
@@ -25,8 +24,8 @@ public class UserPasswordAlterationForm extends Form {
 		FormStringField field = null;
 
 		field = new FormStringField(oldPassowrdKey);
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 			if (getUser().isPassword(value)) {
 				return null;
 			} else {
@@ -44,19 +43,18 @@ public class UserPasswordAlterationForm extends Form {
 				return problemes;
 			}
 		};
-		field.addValueChecker(new NonNullValueChecker());
+		field.setRequired(true);
 		this.addField(field);
 
 		field = new FormStringField(newPasswordConfirmationKey);
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 			String password = this.getFieldValueAsString(newPasswordKey);
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";
 			} else
 				return null;
 		});
-		field.addValueChecker(new NonNullValueChecker());
 		this.addField(field);
 
 	}

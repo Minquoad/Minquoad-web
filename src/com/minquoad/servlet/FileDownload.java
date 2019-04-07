@@ -81,12 +81,12 @@ public class FileDownload extends ImprovedHttpServlet {
 	}
 
 	public String getContentDisposition(ProtectedFile protectedFile) {
-		return "attachment; filename=\"" + protectedFile.getApparentName() + "\"";
+		return "attachment; filename=\"" + protectedFile.getOriginalName() + "\"";
 	}
 
 	protected String getMimeType(ProtectedFile protectedFile) {
 
-		String mimeType = getServletContext().getMimeType(protectedFile.getFile().getName());
+		String mimeType = getServletContext().getMimeType(protectedFile.getOriginalName());
 
 		if (mimeType == null) {
 			mimeType = "application/octet-stream";

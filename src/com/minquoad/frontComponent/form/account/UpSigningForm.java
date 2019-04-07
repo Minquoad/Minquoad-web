@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.NonNullValueChecker;
+import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChecker;
 
 public class UpSigningForm extends Form {
 
@@ -40,13 +40,14 @@ public class UpSigningForm extends Form {
 				return problemes;
 			}
 		};
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker(new EmailAddressValueChecker());
+		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "mailAddress");
 			if (existingUser == null) {
 				return null;
 			} else {
-				return "The mail address \"" + value + "\" is alreadi taken.";
+				return "The mail address \"" + value + "\" is already taken.";
 			}
 		});
 		this.addField(field);
@@ -66,8 +67,8 @@ public class UpSigningForm extends Form {
 				return problemes;
 			}
 		};
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "nickname");
 			if (existingUser == null) {
 				return null;
@@ -86,12 +87,12 @@ public class UpSigningForm extends Form {
 				return problemes;
 			}
 		};
-		field.addValueChecker(new NonNullValueChecker());
+		field.setRequired(true);
 		this.addField(field);
 
 		field = new FormStringField(passwordConfirmationKey);
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 			String password = this.getFieldValueAsString(passwordKey);
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";

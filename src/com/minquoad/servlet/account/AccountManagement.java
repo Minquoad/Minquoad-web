@@ -45,6 +45,26 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 		if (formId != null) {
 
+			if (formId.equals("userParametersAlteration")) {
+
+				UserParametersAlterationForm form = new UserParametersAlterationForm(request);
+
+				if (form.isValide()) {
+					User user = getUser(request);
+
+					getUser(request).setNickname(form.getFieldValueAsString(UserParametersAlterationForm.nicknameKey));
+					getUser(request).setMailAddress(form.getFieldValueAsString(UserParametersAlterationForm.mailAddressKey));
+
+					String colorString = form.getFieldValueAsString(UserParametersAlterationForm.defaultColorKey);
+					int parseInt = Integer.parseInt(colorString.substring(1), 16);
+					user.setDefaultColor(parseInt);
+
+					getDaoFactory(request).getUserDao().persist(user);
+				} else {
+					request.setAttribute("userParametersAlteration", form);
+				}
+			}
+
 			if (formId.equals("userPictureAlteration")) {
 
 				UserPictureAlterationForm form = new UserPictureAlterationForm(request);
@@ -61,10 +81,9 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.userPictureKey);
 					if (field.hasFile()) {
-						
+
 						image = new UserProfileImage();
-						image.setOriginalName(field.getOriginalFileName(false));
-						image.setOriginalExtention(field.getOriginalFileExtention());
+						image.setOriginalName(field.getOriginalFileName());
 						image.setUser(getUser(request));
 
 						PartTool.saveInProtectedFile(field.getValue(), image);
@@ -89,35 +108,14 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 			}
 
-			if (formId.equals("userParametersAlteration")) {
-
-				UserParametersAlterationForm form = new UserParametersAlterationForm(request);
-
-				if (form.isValide()) {
-					User user = getUser(request);
-
-					String colorString = form.getFieldValueAsString(UserParametersAlterationForm.defaultColorKey);
-					if (colorString != null) {
-						try {
-							String substring = colorString.substring(1);
-							int parseInt = Integer.parseInt(substring, 16);
-							user.setDefaultColor(parseInt);
-						} catch (Exception e) {
-						}
-					}
-
-					getDaoFactory(request).getUserDao().persist(user);
-				} else {
-					request.setAttribute("userParametersAlteration", form);
-				}
-			}
-
 			forwardToView(request, response, viewPath);
 		}
 	}
 
 	@Override
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
+		request.setAttribute("mailAddressMaxlength", User.mailAddressMaxlength);
 
 		UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
 		UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));

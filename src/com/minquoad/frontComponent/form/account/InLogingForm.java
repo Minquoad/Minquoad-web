@@ -8,7 +8,6 @@ import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.NonNullValueChecker;
 import com.minquoad.unit.FailedInLoginigAttemptUnit;
 
 public class InLogingForm extends Form {
@@ -35,8 +34,8 @@ public class InLogingForm extends Form {
 				}
 			}
 		};
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 
 			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(value);
 
@@ -55,8 +54,8 @@ public class InLogingForm extends Form {
 		this.addField(field);
 
 		field = new FormStringField(passwordKey);
-		field.addValueChecker(new NonNullValueChecker());
-		field.addValueChecker((value) -> {
+		field.setRequired(true);
+		field.addValueChecker((form, thisField, value) -> {
 			if (getField(mailAddressKey).isValid()) {
 
 				UserDao userDao = getDaoFactory().getUserDao();

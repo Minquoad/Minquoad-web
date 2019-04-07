@@ -14,13 +14,47 @@
 
 				<div class="borderedTile">
 					<div class="padded">
-						<h2>Default account color</h2>
+						<h2>Account proprieties</h2>
 						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
 
 							<input type="hidden" name="formId" value="userParametersAlteration" />
-
 							<p>
-								<input type="color" name="defaultColor" id="defaultColor"  value="#${ requestScope.user.getDefaultColorAsHexString() }"/>
+								<label for="mailAddress">Mail address : </label>
+								<input type="email" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
+									<c:if test="${ not empty requestScope.userParametersAlteration }">
+										value="<c:out value="${ requestScope.userParametersAlteration.getFieldValueAsString('mailAddress') }" />"
+									</c:if>
+									<c:if test="${ empty requestScope.userParametersAlteration }">
+										value="<c:out value="${ requestScope.user.mailAddress }" />"
+									</c:if> 
+								/>
+								<c:if test="${ not empty requestScope.userParametersAlteration }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userParametersAlteration" />
+										<jsp:param name="fieldName" value="mailAddress" />
+									</jsp:include>
+								</c:if>
+							</p>
+							<p>
+								<label for="nickname">Nickname : </label>
+								<input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
+									<c:if test="${ not empty requestScope.userParametersAlteration }">
+										value="<c:out value="${ requestScope.userParametersAlteration.getFieldValueAsString('nickname') }" />"
+									</c:if> 
+									<c:if test="${ empty requestScope.userParametersAlteration }">
+										value="<c:out value="${ requestScope.user.nickname }" />"
+									</c:if> 
+								/>
+								<c:if test="${ not empty requestScope.userParametersAlteration }">
+									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+										<jsp:param name="formKey" value="userParametersAlteration" />
+										<jsp:param name="fieldName" value="nickname" />
+									</jsp:include>
+								</c:if>
+							</p>
+							<p>
+								<label for="defaultColor">Default account color : </label>
+								<input type="color" name="defaultColor" id="defaultColor" value="${ requestScope.user.getDefaultColorAsHtmlValue() }" />
 								<c:if test="${ not empty requestScope.userParametersAlteration }">
 									<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 										<jsp:param name="formKey" value="userParametersAlteration" />
@@ -37,7 +71,7 @@
 
 				<div class="borderedTile">
 					<div class="padded">
-						<h2>Sent a new profile picture</h2>
+						<h2>Send a new profile picture</h2>
 
 						<c:if test="${not empty userProfileImage}">
 

@@ -106,6 +106,9 @@ public class User {
 	}
 
 	public static String formatNickanameCase(String nickname) {
+		if (nickname.isEmpty()) {
+			return nickname;
+		}
 		return nickname.substring(0, 1).toUpperCase() + nickname.substring(1).toLowerCase();
 	}
 
@@ -244,11 +247,15 @@ public class User {
 		this.mailAddress = mailAddress;
 	}
 
-	public String getDefaultColorAsHexString() {
+	public String getDefaultColorAsHtmlValue() {
 		if (getDefaultColor() == null) {
 			return null;
 		} else {
-			return Integer.toHexString(getDefaultColor());
+			String hexString = Integer.toHexString(getDefaultColor());
+			while (hexString.length() < 6) {
+				hexString = "0" + hexString;
+			}
+			return "#" + hexString;
 		}
 	}
 

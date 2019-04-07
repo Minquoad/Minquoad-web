@@ -30,7 +30,7 @@ public class MessageAdditionForm extends Form {
 				}
 			}
 		};
-		textField.addValueChecker((value)-> {
+		textField.addValueChecker((form, field, value)-> {
 			if (value== null || value.equals("")) {
 				return "Empty message are forbidden.";
 			} else {

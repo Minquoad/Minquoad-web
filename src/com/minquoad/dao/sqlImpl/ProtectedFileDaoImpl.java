@@ -15,7 +15,6 @@ public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> i
 		this.addLongEntityMember("id", ProtectedFile::getId, ProtectedFile::setId, true);
 		this.addStringEntityMember("relativePath", ProtectedFile::getRelativePath, ProtectedFile::setRelativePath);
 		this.addStringEntityMember("originalName", ProtectedFile::getOriginalName, ProtectedFile::setOriginalName);
-		this.addStringEntityMember("originalExtention", ProtectedFile::getOriginalExtention, ProtectedFile::setOriginalExtention);
 	}
 
 	@Override

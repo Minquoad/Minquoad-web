@@ -16,9 +16,6 @@ import com.minquoad.service.StorageManager;
 public abstract class PartTool {
 
 	public static boolean hasFile(Part part) {
-		if (part == null) {
-			return false;
-		}
 		String fileName = getFileName(part);
 		return fileName != null && !fileName.isEmpty();
 	}
@@ -38,15 +35,15 @@ public abstract class PartTool {
 		String randomPath = null;
 
 		Random random = new Random();
-		
+
 		String randomDirPath = StorageManager.communityPath;
 		for (int i = 0; i < 2; i++) {
 			randomDirPath += random.nextInt(10) + "/";
 		}
 		StorageManager.initStorageFolderIfNotExists(randomDirPath);
 		while (newFile == null || newFile.exists()) {
-			String randomFileName = Integer.toString(Math.abs(random.nextInt()));
-			while (randomFileName.length() < 10) {
+			String randomFileName = Integer.toString(Math.abs(random.nextInt(1000000000)));
+			while (randomFileName.length() < 9) {
 				randomFileName = "0" + randomFileName;
 			}
 			randomPath = randomDirPath + randomFileName;

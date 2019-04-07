@@ -20,11 +20,8 @@ public class Form {
 	private HttpServletRequest request;
 
 	public Form(HttpServletRequest request) {
-
 		fileds = new HashMap<String, FormField>();
-
 		setRequest(request);
-
 		this.build();
 	}
 

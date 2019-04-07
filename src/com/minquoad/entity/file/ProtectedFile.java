@@ -11,7 +11,6 @@ public class ProtectedFile {
 	private Long id;
 	private String relativePath;
 	private String originalName;
-	private String originalExtention;
 
 	private File file;
 
@@ -46,19 +45,15 @@ public class ProtectedFile {
 	}
 
 	public String getOriginalExtention() {
-		return originalExtention;
-	}
-
-	public void setOriginalExtention(String originalExtention) {
-		this.originalExtention = originalExtention;
+		int lastIndexOfDot = getOriginalName().lastIndexOf('.');
+		if (lastIndexOfDot == -1) {
+			return "";
+		}
+		return getOriginalName().substring(lastIndexOfDot+1);
 	}
 
 	public boolean isDownloadableForUser(User user) {
 		return true;
-	}
-
-	public String getApparentName() {
-		return getOriginalName() + '.' + getOriginalExtention();
 	}
 
 	public File getFile() {

@@ -13,7 +13,8 @@
 			<div class="totallyCenteredContainer">
 				<form method="post" action="<c:url value="/UpSigning" />" accept-charset="UTF-8">
 					<p>
-						<label for="mailAddress">Mail address : </label> <input type="text" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
+						<label for="mailAddress">Mail address : </label>
+						<input type="email" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
 							<c:if test="${ not empty requestScope.form }">
 								value="<c:out value="${ requestScope.form.getFieldValueAsString('mailAddress') }" />"
 								</c:if> />
@@ -25,7 +26,8 @@
 						</c:if>
 					</p>
 					<p>
-						<label for="nickname">Nickname : </label> <input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
+						<label for="nickname">Nickname : </label>
+						<input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
 							<c:if test="${ not empty requestScope.form }">
 								value="<c:out value="${ requestScope.form.getFieldValueAsString('nickname') }" />"
 								</c:if> />
@@ -37,7 +39,8 @@
 						</c:if>
 					</p>
 					<p>
-						<label for="password">Password : </label> <input type="password" name="password" id="password" />
+						<label for="password">Password : </label>
+						<input type="password" name="password" id="password" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 								<jsp:param name="formKey" value="form" />
@@ -46,7 +49,8 @@
 						</c:if>
 					</p>
 					<p>
-						<label for="passwordConfirmation">Password : </label> <input type="password" name="passwordConfirmation" id="passwordConfirmation" />
+						<label for="passwordConfirmation">Password : </label>
+						<input type="password" name="passwordConfirmation" id="passwordConfirmation" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 								<jsp:param name="formKey" value="form" />

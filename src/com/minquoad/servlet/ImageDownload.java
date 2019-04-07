@@ -11,8 +11,4 @@ public class ImageDownload extends FileDownload {
 		return "inline";
 	}
 
-	protected String getMimeType(ProtectedFile protectedFile) {
-		return "image/" + protectedFile.getOriginalExtention();
-	}
-
 }

@@ -5,26 +5,34 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.minquoad.frontComponent.form.field.valueChecker.ValueChecker;
+import com.minquoad.frontComponent.form.field.valueChecker.StringValueChecker;
 
 public class FormStringField extends FormField {
 
 	private String value;
-	private List<ValueChecker> valueCheckers;
+	private List<StringValueChecker> valueCheckers;
 
 	public FormStringField(String name) {
 		super(name);
-		valueCheckers = new ArrayList<ValueChecker>();
+		valueCheckers = new ArrayList<StringValueChecker>();
 	}
 
 	protected void computeValueProblems() {
 		List<String> problems = new ArrayList<String>();
-		for (ValueChecker valueChecker : valueCheckers) {
-			String valueProblem = valueChecker.getValueProblem(getValue());
-			if (valueProblem != null) {
-				problems.add(valueProblem);
+		
+		if (getValue() == null) {
+			if (isRequired()) {
+				problems.add("The field is missing.");
+			}
+		} else {
+			for (StringValueChecker valueChecker : valueCheckers) {
+				String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
+				if (valueProblem != null) {
+					problems.add(valueProblem);
+				}
 			}
 		}
+		
 		this.setValueProblems(problems);
 	}
 
@@ -32,7 +40,7 @@ public class FormStringField extends FormField {
 		this.setValue(request.getParameter(getName()));
 	}
 
-	public void addValueChecker(ValueChecker valueChecker) {
+	public void addValueChecker(StringValueChecker valueChecker) {
 		this.valueCheckers.add(valueChecker);
 	}
 

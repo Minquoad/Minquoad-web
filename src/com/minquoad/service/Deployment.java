@@ -12,6 +12,8 @@ import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
+	public static final String version = "0.1.0";
+
 	public static final String configurationJsonPath = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
 	private static String storagePath;

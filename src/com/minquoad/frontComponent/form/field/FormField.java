@@ -14,11 +14,21 @@ public abstract class FormField {
 
 	private Form form;
 	private String name;
+	private boolean required;
 
 	private List<String> problems;
 
 	public FormField(String name) {
 		this.name = name;
+		required = false;
+	}
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 	public String getName() {
