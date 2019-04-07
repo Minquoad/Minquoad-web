@@ -4,7 +4,7 @@ import com.minquoad.dao.interfaces.ProtectedFileDao;
 import com.minquoad.entity.file.ProtectedFile;
 import com.minquoad.framework.dao.DaoException;
 
-public class ProtectedFileDaoImpl extends ImprovedEntityDaoImpl<ProtectedFile> implements ProtectedFileDao {
+public class ProtectedFileDaoImpl extends ImprovedDaoImpl<ProtectedFile> implements ProtectedFileDao {
 
 	public ProtectedFileDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

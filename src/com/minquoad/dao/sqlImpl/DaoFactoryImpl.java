@@ -1,6 +1,7 @@
 package com.minquoad.dao.sqlImpl;
 
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.service.Database;
 
 public class DaoFactoryImpl implements DaoFactory {
 
@@ -13,6 +14,16 @@ public class DaoFactoryImpl implements DaoFactory {
 	private ProtectedFileDaoImpl protectedFileDaoImpl;
 	private UserProfileImageDaoImpl userProfileImageDaoImpl;
 	private RequestLogDaoImpl requestLogDaoImpl;
+
+	private Database database;
+	
+	public DaoFactoryImpl(Database database) {
+		this.database = database;
+	}
+
+	public Database getDatabase() {
+		return database;
+	}
 
 	@Override
 	public ThingDaoImpl getThingDao() {

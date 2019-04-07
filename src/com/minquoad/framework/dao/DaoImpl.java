@@ -1,5 +1,6 @@
 package com.minquoad.framework.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +36,7 @@ public abstract class DaoImpl<Entity> {
 
 	protected abstract void initEntityMembers();
 
-	public abstract PreparedStatement prepareStatement(String statement) throws SQLException;
+	public abstract Connection getConnection() throws SQLException;
 
 	public abstract Entity instantiateBlank();
 
@@ -56,27 +57,15 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public Entity getByPk(Integer pk) {
-		try {
-			return getByPk(pk, DaoImpl::getIntegerPrimaryKeyEntityMember, DaoImpl::getIntegerInventory);
-		} catch (SQLException e) {
-			throw new DaoException(e);
-		}
+		return getByPk(pk, DaoImpl::getIntegerPrimaryKeyEntityMember, DaoImpl::getIntegerInventory);
 	}
 
 	public Entity getByPk(Long pk) {
-		try {
-			return getByPk(pk, DaoImpl::getLongPrimaryKeyEntityMember, DaoImpl::getLongInventory);
-		} catch (SQLException e) {
-			throw new DaoException(e);
-		}
+		return getByPk(pk, DaoImpl::getLongPrimaryKeyEntityMember, DaoImpl::getLongInventory);
 	}
 
 	public Entity getByPk(String pk) {
-		try {
-			return getByPk(pk, DaoImpl::getStringPrimaryKeyEntityMember, DaoImpl::getStringInventory);
-		} catch (SQLException e) {
-			throw new DaoException(e);
-		}
+		return getByPk(pk, DaoImpl::getStringPrimaryKeyEntityMember, DaoImpl::getStringInventory);
 	}
 
 	private interface PrimaryKeyMemberGetter<PrimaryKey> {
@@ -90,7 +79,7 @@ public abstract class DaoImpl<Entity> {
 	private <PrimaryKey> Entity getByPk(
 			PrimaryKey pk,
 			PrimaryKeyMemberGetter<PrimaryKey> primaryKeyMemberGetter,
-			InventoryGetter<PrimaryKey> inventorygetter) throws SQLException {
+			InventoryGetter<PrimaryKey> inventorygetter) {
 
 		return getByPk(pk, primaryKeyMemberGetter, inventorygetter, true);
 	}
@@ -99,7 +88,7 @@ public abstract class DaoImpl<Entity> {
 			PrimaryKey pk,
 			PrimaryKeyMemberGetter<PrimaryKey> primaryKeyMemberGetter,
 			InventoryGetter<PrimaryKey> inventorygetter,
-			boolean lookInInventory) throws SQLException {
+			boolean lookInInventory) {
 
 		EntityMember<? super Entity, PrimaryKey> primaryKeyMember = primaryKeyMemberGetter.getPrimaryKeyMember(this);
 		if (primaryKeyMember == null) {
@@ -124,15 +113,29 @@ public abstract class DaoImpl<Entity> {
 			}
 		}
 
-		PreparedStatement preparedStatement = prepareStatement(getIdBasedSelectAllQuery());
-		primaryKeyMember.setValueInPreparedStatement(preparedStatement, 1, pk);
-		ResultSet resultSet = preparedStatement.executeQuery();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 
-		if (resultSet.next()) {
-			return instantiateFromResultSet(resultSet);
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(getIdBasedSelectAllQuery());
+			primaryKeyMember.setValueInPreparedStatement(preparedStatement, 1, pk);
+			resultSet = preparedStatement.executeQuery();
+
+			Entity entity = null;
+			if (resultSet.next()) {
+				entity = instantiateFromResultSet(resultSet);
+			}
+
+			ConnectionManager.close(resultSet, preparedStatement, connection);
+
+			return entity;
+
+		} catch (Exception e) {
+			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+			throw new DaoException(e);
 		}
-
-		return null;
 	}
 
 	private String getIdBasedSelectAllQuery() {
@@ -152,29 +155,22 @@ public abstract class DaoImpl<Entity> {
 		return query;
 	}
 
-	public boolean persist(Entity entity) {
+	public void persist(Entity entity) {
 		if (getPrimaryKeyEntityMember().getValue(entity) == null || !getInventory().isInside(entity)) {
-			return this.insert(entity);
+			this.insert(entity);
 		} else {
-			return this.update(entity);
+			this.update(entity);
 		}
 	}
 
-	public boolean insert(Entity entity) {
+	public void insert(Entity entity) {
 
 		if (isPrimaryKeyRandomlyGenerated() && getPrimaryKeyEntityMember().getValue(entity) == null) {
 			setRandomPrimaryKey(entity);
 		}
 
-		try {
-			if (insertRecursivelyFromSuper(entity)) {
-				putInInventories(entity);
-				return true;
-			}
-		} catch (SQLException e) {
-			throw new DaoException(e);
-		}
-		return false;
+		insertRecursivelyFromSuper(entity);
+		putInInventories(entity);
 	}
 
 	protected void setRandomPrimaryKey(Entity entity) {
@@ -189,12 +185,10 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	private boolean insertRecursivelyFromSuper(Entity entity) throws SQLException {
+	private void insertRecursivelyFromSuper(Entity entity) {
 
 		if (hasSuperClassDao()) {
-			if (!getSuperClassDao().insertRecursivelyFromSuper(entity)) {
-				return false;
-			}
+			getSuperClassDao().insertRecursivelyFromSuper(entity);
 		}
 
 		String query = "INSERT INTO \""
@@ -243,49 +237,52 @@ public abstract class DaoImpl<Entity> {
 		}
 		query += "RETURNING * ;";
 
-		PreparedStatement preparedStatement = prepareStatement(query);
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 
-		int i = 1;
-		if (hasSuperClassDao()) {
-			this.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
-			i++;
-		}
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (entityMember.getValue(entity) != null) {
-				entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+		try {
+			connection = getConnection();
+
+			preparedStatement = connection.prepareStatement(query);
+
+			int i = 1;
+			if (hasSuperClassDao()) {
+				this.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
 				i++;
 			}
+			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+				if (entityMember.getValue(entity) != null) {
+					entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+					i++;
+				}
+			}
+
+			resultSet = preparedStatement.executeQuery();
+			resultSet.next();
+			this.hydrate(entity, resultSet, false);
+
+			ConnectionManager.close(resultSet, preparedStatement, connection);
+
+		} catch (Exception e) {
+			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+			throw new DaoException(e);
 		}
-
-		ResultSet resultSet = preparedStatement.executeQuery();
-		resultSet.next();
-		this.hydrate(entity, resultSet, false);
-
-		return true;
 	}
 
-	public boolean delete(Entity entity) {
+	public void delete(Entity entity) {
 
 		// the deepest subclass is in charged
 		for (DaoImpl<? extends Entity> subClassDao : getSubClassDaos()) {
 			if (subClassDao.deleteSuperEntity(entity, this)) {
-				return true;
+				return;
 			}
 		}
 
 		// if there is no subclass that handled the entity
-		try {
 
-			if (deleteRecursivelyToSuper(entity)) {
-				deleteFromInventories(entity);
-				return true;
-			}
-
-		} catch (SQLException e) {
-			throw new DaoException(e);
-		}
-
-		return false;
+		deleteRecursivelyToSuper(entity);
+		deleteFromInventories(entity);
 	}
 
 	private <SuperEntity> boolean deleteSuperEntity(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) {
@@ -293,55 +290,62 @@ public abstract class DaoImpl<Entity> {
 		if (entity == null) {
 			return false;
 		}
-		return delete(entity);
+		delete(entity);
+		return true;
 	}
 
-	private boolean deleteRecursivelyToSuper(Entity entity) throws SQLException {
+	private void deleteRecursivelyToSuper(Entity entity) {
 
-		String query = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? ;";
-		PreparedStatement preparedStatement = prepareStatement(query);
-		getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
-		if (preparedStatement.executeUpdate() == 1) {
-			if (hasSuperClassDao()) {
-				return getSuperClassDao().deleteRecursivelyToSuper(entity);
-			} else {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean update(Entity entity) {
-		getInventory().checkPrimaryKeyUnchanged(entity);
 		try {
-			return updateChecked(entity);
-		} catch (SQLException e) {
+
+			String query = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? ;";
+
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
+			preparedStatement.executeUpdate();
+			ConnectionManager.close(preparedStatement, connection);
+
+			if (hasSuperClassDao()) {
+				getSuperClassDao().deleteRecursivelyToSuper(entity);
+			}
+
+		} catch (Exception e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
 
-	private boolean updateChecked(Entity entity) throws SQLException {
+	public void update(Entity entity) {
+		getInventory().checkPrimaryKeyUnchanged(entity);
+		updateChecked(entity);
+	}
+
+	private void updateChecked(Entity entity) {
 
 		// the deepest subclass is in charged
 		for (DaoImpl<? extends Entity> subClassDao : getSubClassDaos()) {
 			if (subClassDao.updateSuperEntity(entity, this)) {
-				return true;
+				return;
 			}
 		}
 
-		return updateRecursivelyToSuper(entity);
+		updateRecursivelyToSuper(entity);
 	}
 
-	private <SuperEntity> boolean updateSuperEntity(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) throws SQLException {
+	private <SuperEntity> boolean updateSuperEntity(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) {
 		Entity entity = getFromSuperClassIfInstanceof(superEntity, superDao);
 		if (entity == null) {
 			return false;
 		}
-		return updateChecked(entity);
+		updateChecked(entity);
+		return true;
 	}
 
-	private boolean updateRecursivelyToSuper(Entity entity) throws SQLException {
+	private void updateRecursivelyToSuper(Entity entity) {
 
 		String query = "UPDATE \""
 				+ getTableName()
@@ -351,27 +355,34 @@ public abstract class DaoImpl<Entity> {
 				+ getPrimaryKeyEntityMember().getName()
 				+ "\"=? ;";
 
-		PreparedStatement preparedStatement = prepareStatement(query);
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 
-		int i = 1;
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			if (entityMember != getPrimaryKeyEntityMember()) {
-				entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
-				i++;
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(query);
+
+			int i = 1;
+			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+				if (entityMember != getPrimaryKeyEntityMember()) {
+					entityMember.setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+					i++;
+				}
 			}
-		}
 
-		getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+			getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, i, entity);
+			preparedStatement.executeUpdate();
 
-		if (preparedStatement.executeUpdate() == 1) {
+			ConnectionManager.close(preparedStatement, connection);
+
 			if (hasSuperClassDao()) {
-				return getSuperClassDao().updateRecursivelyToSuper(entity);
-			} else {
-				return true;
+				getSuperClassDao().updateRecursivelyToSuper(entity);
 			}
-		}
 
-		return false;
+		} catch (Exception e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
+			throw new DaoException(e);
+		}
 	}
 
 	public List<Entity> getAll() {
@@ -425,8 +436,13 @@ public abstract class DaoImpl<Entity> {
 		}
 		query += " ;";
 
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
 		try {
-			PreparedStatement preparedStatement = prepareStatement(query);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(query);
 
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
@@ -437,7 +453,7 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 				if (getSubClassDaos().isEmpty()) {
@@ -447,17 +463,20 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-		} catch (SQLException e) {
+			ConnectionManager.close(resultSet, preparedStatement, connection);
+
+			List<Entity> entities = new LinkedList<Entity>();
+			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
+				if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
+					entities.add(instantiatedEntity);
+				}
+			}
+			return entities;
+
+		} catch (Exception e) {
+			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
 			throw new DaoException(e);
 		}
-
-		List<Entity> entities = new LinkedList<Entity>();
-		for (Entity instantiatedEntity : getInstantiatedEntyties()) {
-			if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
-				entities.add(instantiatedEntity);
-			}
-		}
-		return entities;
 	}
 
 	public Entity getOneMatching(Object value, String memberName) {
@@ -513,8 +532,13 @@ public abstract class DaoImpl<Entity> {
 		}
 		query += " LIMIT 1 ;";
 
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+
 		try {
-			PreparedStatement preparedStatement = prepareStatement(query);
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(query);
 
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
@@ -525,24 +549,31 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			ResultSet resultSet = preparedStatement.executeQuery();
+			resultSet = preparedStatement.executeQuery();
 
+			Entity entity = null;
 			if (resultSet.next()) {
 				if (getSubClassDaos().isEmpty()) {
-					Entity entity = toUnifiedInstance(resultSet);
-					if (isEntityMachingCriteria(entity, criteria)) {
-						return entity;
+					Entity dbEntity = toUnifiedInstance(resultSet);
+					if (isEntityMachingCriteria(dbEntity, criteria)) {
+						entity = dbEntity;
 					}
 				} else {
-					return getByPk(resultSet, getPrimaryKeyEntityMember().getName());
+					Entity dbEntity = getByPk(resultSet, getPrimaryKeyEntityMember().getName());
+					if (isEntityMachingCriteria(dbEntity, criteria)) {
+						entity = dbEntity;
+					}
 				}
 			}
 
+			ConnectionManager.close(resultSet, preparedStatement, connection);
+
+			return entity;
+
 		} catch (SQLException e) {
+			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
 			throw new DaoException(e);
 		}
-
-		return null;
 	}
 
 	public boolean isEntityMachingCriteria(Entity entity, EntityCriterion[] criteria) {
@@ -609,15 +640,29 @@ public abstract class DaoImpl<Entity> {
 			}
 		}
 
-		PreparedStatement preparedStatement = prepareStatement(getIdBasedSelectAllQuery());
-		getPrimaryKeyEntityMember().setValueOfResultSetInPreparedStatement(preparedStatement, 1, pkResultSet, keyColumnName);
-		ResultSet resultSet = preparedStatement.executeQuery();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
 
-		if (resultSet.next()) {
-			return instantiateFromResultSet(resultSet);
+		try {
+			connection = getConnection();
+			preparedStatement = connection.prepareStatement(getIdBasedSelectAllQuery());
+			getPrimaryKeyEntityMember().setValueOfResultSetInPreparedStatement(preparedStatement, 1, pkResultSet, keyColumnName);
+			resultSet = preparedStatement.executeQuery();
+
+			Entity entity = null;
+			if (resultSet.next()) {
+				entity = instantiateFromResultSet(resultSet);
+			}
+
+			ConnectionManager.close(resultSet, preparedStatement, connection);
+
+			return entity;
+
+		} catch (Exception e) {
+			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+			throw new DaoException(e);
 		}
-
-		return null;
 	}
 
 	private <SuperEntity> Entity getFromSuperClassIfInstanceof(SuperEntity superEntity, DaoImpl<SuperEntity> superDao) {

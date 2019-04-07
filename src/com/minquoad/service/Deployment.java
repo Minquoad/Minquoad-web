@@ -2,17 +2,19 @@ package com.minquoad.service;
 
 import java.io.File;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.json.JSONObject;
 
-import com.minquoad.dao.Database;
 import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
 	public static final String version = "0.1.0";
+
+	public static final String databaseKey = "database";
 
 	public static final String configurationJsonPath = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
@@ -26,16 +28,21 @@ public class Deployment implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
+		ServletContext servletContext = contextEvent.getServletContext();
+
 		initConfiguration();
 		StorageManager.initTree();
-		Database.init();
-		//CronManager.start();
+		servletContext.setAttribute(databaseKey, new Database());
+		// CronManager.start();
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent) {
+		ServletContext servletContext = contextEvent.getServletContext();
+
 		CronManager.stop();
-		Database.close();
+		Database database = (Database) servletContext.getAttribute(Deployment.databaseKey);
+		database.close();
 	}
 
 	public static void initConfiguration() {

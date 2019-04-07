@@ -1,25 +1,24 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.PreparedStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.minquoad.dao.Database;
 import com.minquoad.framework.dao.DaoImpl;
 
-public abstract class ImprovedEntityDaoImpl<EntitySubclass> extends DaoImpl<EntitySubclass> {
+public abstract class ImprovedDaoImpl<EntitySubclass> extends DaoImpl<EntitySubclass> {
 
 	private String tableName;
 
 	private DaoFactoryImpl daoFactory;
 
-	public ImprovedEntityDaoImpl(DaoFactoryImpl daoFactory) {
+	public ImprovedDaoImpl(DaoFactoryImpl daoFactory) {
 		this.daoFactory = daoFactory;
 		this.tableName = this.instantiateBlank().getClass().getSimpleName();
 	}
 
 	@Override
-	public PreparedStatement prepareStatement(String statement) throws SQLException {
-		return Database.prepareStatement(statement);
+	public Connection getConnection() throws SQLException {
+		return getDaoFactory().getDatabase().getConnection();
 	}
 
 	@Override

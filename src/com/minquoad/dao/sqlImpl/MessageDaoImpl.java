@@ -7,7 +7,7 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.framework.dao.DaoException;
 
-public class MessageDaoImpl extends ImprovedEntityDaoImpl<Message> implements MessageDao {
+public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageDao {
 
 	public MessageDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

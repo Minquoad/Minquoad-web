@@ -8,11 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.dao.Database;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
+import com.minquoad.service.Database;
+import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
 import com.minquoad.unit.UnitFactory;
 
@@ -136,7 +137,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
 		if (request.getAttribute(daoFactoryKey) == null) {
-			request.setAttribute(daoFactoryKey, Database.instantiateDaoFactory());
+			Database database = (Database) request.getServletContext().getAttribute(Deployment.databaseKey);
+			request.setAttribute(daoFactoryKey, database.instantiateDaoFactory());
 		}
 		return (DaoFactory) request.getAttribute(daoFactoryKey);
 	}

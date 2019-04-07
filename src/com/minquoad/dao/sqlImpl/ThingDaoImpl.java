@@ -7,7 +7,7 @@ import com.minquoad.entity.Thing;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class ThingDaoImpl extends ImprovedEntityDaoImpl<Thing> implements ThingDao {
+public class ThingDaoImpl extends ImprovedDaoImpl<Thing> implements ThingDao {
 
 	public ThingDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

@@ -4,7 +4,7 @@ import com.minquoad.dao.interfaces.RequestLogDao;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.framework.dao.DaoException;
 
-public class RequestLogDaoImpl extends ImprovedEntityDaoImpl<RequestLog> implements RequestLogDao {
+public class RequestLogDaoImpl extends ImprovedDaoImpl<RequestLog> implements RequestLogDao {
 
 	public RequestLogDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

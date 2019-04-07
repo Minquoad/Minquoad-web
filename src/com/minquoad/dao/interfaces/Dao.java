@@ -12,13 +12,13 @@ public interface Dao<EntitySubclass> {
 
 	public EntitySubclass getByPk(String id);
 
-	public boolean persist(EntitySubclass entity);
+	public void persist(EntitySubclass entity);
 
-	public boolean insert(EntitySubclass entity);
+	public void insert(EntitySubclass entity);
 
-	public boolean update(EntitySubclass entity);
+	public void update(EntitySubclass entity);
 
-	public boolean delete(EntitySubclass entity);
+	public void delete(EntitySubclass entity);
 
 	public List<EntitySubclass> getAll();
 

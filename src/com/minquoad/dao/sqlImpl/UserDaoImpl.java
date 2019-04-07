@@ -9,7 +9,7 @@ import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class UserDaoImpl extends ImprovedEntityDaoImpl<User> implements UserDao {
+public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 
 	public UserDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

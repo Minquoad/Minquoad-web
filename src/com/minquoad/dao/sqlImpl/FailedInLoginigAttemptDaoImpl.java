@@ -4,7 +4,7 @@ import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.framework.dao.DaoException;
 
-public class FailedInLoginigAttemptDaoImpl extends ImprovedEntityDaoImpl<FailedInLoginigAttempt> implements FailedInLoginigAttemptDao {
+public class FailedInLoginigAttemptDaoImpl extends ImprovedDaoImpl<FailedInLoginigAttempt> implements FailedInLoginigAttemptDao {
 
 	public FailedInLoginigAttemptDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);

@@ -6,7 +6,7 @@ import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.framework.dao.DaoException;
 import com.minquoad.framework.dao.DaoImpl;
 
-public class UserProfileImageDaoImpl extends ImprovedEntityDaoImpl<UserProfileImage> implements UserProfileImageDao {
+public class UserProfileImageDaoImpl extends ImprovedDaoImpl<UserProfileImage> implements UserProfileImageDao {
 
 	public UserProfileImageDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
