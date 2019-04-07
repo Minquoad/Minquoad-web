@@ -714,7 +714,7 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	private void deleteFromInventories(Entity entity) throws SQLException {
+	private void deleteFromInventories(Entity entity) {
 		getInventory().delete(entity);
 		if (hasSuperClassDao()) {
 			getSuperClassDao().deleteFromInventories(entity);
@@ -783,7 +783,7 @@ public abstract class DaoImpl<Entity> {
 		throw new DaoException("Not all primary key types are handeled in getPrimaryKeyEntityMember()");
 	}
 
-	private boolean isPrimaryKeyInteger() {
+	public boolean isPrimaryKeyInteger() {
 		return getIntegerPrimaryKeyEntityMember() != null;
 	}
 
