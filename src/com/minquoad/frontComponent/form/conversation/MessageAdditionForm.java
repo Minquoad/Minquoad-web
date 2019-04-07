@@ -22,14 +22,7 @@ public class MessageAdditionForm extends Form {
 		FormStringField conversationIdField = new FormStringField(conversationIdKey);
 		this.addField(conversationIdField);
 
-		FormStringField textField = new FormStringField(textKey) {
-			@Override
-			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(value.trim());
-				}
-			}
-		};
+		FormStringField textField = new FormStringField(textKey);
 		textField.addValueChecker((form, field, value)-> {
 			if (value== null || value.equals("")) {
 				return "Empty message are forbidden.";

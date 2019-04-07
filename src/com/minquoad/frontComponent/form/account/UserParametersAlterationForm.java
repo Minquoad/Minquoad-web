@@ -28,8 +28,9 @@ public class UserParametersAlterationForm extends Form {
 		field = new FormStringField(mailAddressKey) {
 			@Override
 			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(User.formatMailAddressCase(value));
+				super.setValue(value);
+				if (getValue() != null) {
+					super.setValue(User.formatMailAddressCase(getValue()));
 				}
 			}
 			public List<String> getValueProblems() {
@@ -55,8 +56,9 @@ public class UserParametersAlterationForm extends Form {
 		field = new FormStringField(nicknameKey) {
 			@Override
 			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(User.formatNickanameCase(value));
+				super.setValue(value);
+				if (getValue() != null) {
+					super.setValue(User.formatNickanameCase(getValue()));
 				}
 			}
 

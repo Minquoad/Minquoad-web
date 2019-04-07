@@ -29,16 +29,15 @@ public class InLogingForm extends Form {
 		field = new FormStringField(mailAddressKey) {
 			@Override
 			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(User.formatMailAddressCase(value));
+				super.setValue(value);
+				if (getValue() != null) {
+					super.setValue(User.formatMailAddressCase(getValue()));
 				}
 			}
 		};
 		field.setRequired(true);
 		field.addValueChecker((form, thisField, value) -> {
-
 			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(value);
-
 			if (coolDown == null) {
 				return null;
 			} else {

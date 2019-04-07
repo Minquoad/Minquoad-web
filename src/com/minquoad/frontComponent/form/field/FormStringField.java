@@ -11,10 +11,12 @@ public class FormStringField extends FormField {
 
 	private String value;
 	private List<StringValueChecker> valueCheckers;
+	private boolean trimingValue;
 
 	public FormStringField(String name) {
 		super(name);
 		valueCheckers = new ArrayList<StringValueChecker>();
+		setTrimingValue(true);
 	}
 
 	protected void computeValueProblems() {
@@ -49,11 +51,22 @@ public class FormStringField extends FormField {
 	}
 
 	public void setValue(String value) {
+		if (isTrimingValue() && value != null) {
+			value = value.trim();
+		}
 		this.value = value;
 	}
 
 	public String getValueAsString() {
 		return getValue();
+	}
+
+	public boolean isTrimingValue() {
+		return trimingValue;
+	}
+
+	public void setTrimingValue(boolean trimingValue) {
+		this.trimingValue = trimingValue;
 	}
 
 }

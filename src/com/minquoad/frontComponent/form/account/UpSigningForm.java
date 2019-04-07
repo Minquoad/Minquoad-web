@@ -30,8 +30,9 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(mailAddressKey) {
 			@Override
 			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(User.formatMailAddressCase(value));
+				super.setValue(value);
+				if (getValue() != null) {
+					super.setValue(User.formatMailAddressCase(getValue()));
 				}
 			}
 			public List<String> getValueProblems() {
@@ -57,8 +58,9 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(nicknameKey) {
 			@Override
 			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(User.formatNickanameCase(value));
+				super.setValue(value);
+				if (getValue() != null) {
+					super.setValue(User.formatNickanameCase(getValue()));
 				}
 			}
 			public List<String> getValueProblems() {
@@ -106,7 +108,7 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(upSigningCodeKey);
 		field.setRequired(true);
 		field.addValueChecker((form, thisField, value) -> {
-			if (!value.equals(upSigningCode)) {
+			if (!upSigningCode.equals(value)) {
 				return "Wrong up signing code.";
 			} else
 				return null;
