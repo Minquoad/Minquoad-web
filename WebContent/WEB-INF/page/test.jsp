@@ -18,6 +18,11 @@
 
 						<h2>Uploader un fichier :</h2>
 
+						<c:url value="/FileDownload" var="url">
+							<c:param name="id" value="${ 0 }" />
+						</c:url>
+						<a href="${url}">Télécharger le dernier fichier uploadé</a>
+
 						<p>
 							<input type="file" name="file" id="file" />
 						</p>

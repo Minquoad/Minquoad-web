@@ -1,6 +1,5 @@
 package com.minquoad.servlet;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -11,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.minquoad.dao.interfaces.ProtectedFileDao;
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
-import com.minquoad.service.Deployment;
-import com.minquoad.service.StorageManager;
+import com.minquoad.entity.file.ProtectedFile;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
 
@@ -120,12 +119,23 @@ public class Test extends ImprovedHttpServlet {
 					}
 				}
 			}
-
 		}
 
 		Part part = request.getPart("file");
-		if (part != null && PartTool.hasFile(part)) {
-			PartTool.saveInFile(part, new File(Deployment.getStoragePath() + StorageManager.communityPath + "test"));
+		if (part != null) {
+			ProtectedFileDao protectedFileDao = getDaoFactory(request).getProtectedFileDao();
+			ProtectedFile pf = protectedFileDao.getByPk(0l);
+			if (pf != null) {
+				pf.getFile().delete();
+				protectedFileDao.delete(pf);
+			}
+			if (PartTool.hasFile(part)) {
+				pf = new ProtectedFile();
+				pf.setId(0l);
+				pf.setOriginalName(PartTool.getFileName(part));
+				PartTool.saveInProtectedFile(part, pf);
+				protectedFileDao.persist(pf);
+			}
 		}
 
 		this.doGet(request, response);
