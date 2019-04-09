@@ -59,10 +59,10 @@ public class Test extends ImprovedHttpServlet {
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("à admin", descriptionMemberName);
+		things = thingDao.getAllMatching("à Adminquo", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(1));
+			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(5611120057846513921l));
 			thingDao.persist(thing);
 		}
 
@@ -76,7 +76,7 @@ public class Test extends ImprovedHttpServlet {
 		things = thingDao.getAllMatching("à User-one", descriptionMemberName);
 
 		for (Thing thing : things) {
-			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(4));
+			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(7345364893521792127l));
 			thingDao.persist(thing);
 		}
 
@@ -93,11 +93,11 @@ public class Test extends ImprovedHttpServlet {
 		if (idString != null && description != null) {
 
 			if (idString.isEmpty()) {
+				Thing thing = new Thing();
 				if (!description.isEmpty()) {
-					Thing thing = new Thing();
 					thing.setDescription(description);
-					getDaoFactory(request).getThingDao().persist(thing);
 				}
+				getDaoFactory(request).getThingDao().persist(thing);
 
 			} else {
 				int id = Integer.parseInt(idString);
@@ -120,11 +120,11 @@ public class Test extends ImprovedHttpServlet {
 					}
 				}
 			}
-			
+
 		}
 
 		Part part = request.getPart("file");
-		if (PartTool.hasFile(part)) {
+		if (part != null && PartTool.hasFile(part)) {
 			PartTool.saveInFile(part, new File(Deployment.getStoragePath() + StorageManager.communityPath + "test"));
 		}
 

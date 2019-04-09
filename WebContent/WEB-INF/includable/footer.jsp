@@ -2,6 +2,8 @@
 
 	<div id="leftFooter">
 
+		<c:if test="${not empty requestScope.user}">
+		
 		<form
 			id="improvementSuggestionAdditionForm"
 			action="<c:url value="/ImprovementSuggestionAddition" />"
@@ -11,6 +13,8 @@
 				placeholder="You can suggest here an improvement for the website
 or report a bug. (Enter key to send)"></textarea>
 		</form>
+		
+		</c:if>
 
 	</div>
 

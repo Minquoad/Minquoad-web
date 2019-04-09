@@ -34,6 +34,8 @@ public abstract class DaoImpl<Entity> {
 	private DaoInventory<Long, Entity> longInventory;
 	private DaoInventory<String, Entity> stringInventory;
 
+	private List<StatementListener> statementListeners;
+
 	protected abstract void initEntityMembers();
 
 	public abstract Connection getConnection() throws SQLException;
@@ -119,7 +121,9 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(getIdBasedSelectAllQuery());
+			String statement = getIdBasedSelectAllStatement();
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 			primaryKeyMember.setValueInPreparedStatement(preparedStatement, 1, pk);
 			resultSet = preparedStatement.executeQuery();
 
@@ -138,21 +142,19 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	private String getIdBasedSelectAllQuery() {
-		String query = "SELECT * FROM \"" + getTableName() + "\"";
+	private String getIdBasedSelectAllStatement() {
+		String statement = "SELECT * FROM \"" + getTableName() + "\"";
 		String superTables = getSuperTableNamesInSingleString("\", \"");
 		if (superTables != null) {
-			query += ", \"" + superTables + "\" ";
-		} else {
-			query += " ";
+			statement += ", \"" + superTables + "\"";
 		}
-		query += "WHERE \"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\"=? ";
+		statement += " WHERE \"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\"=?";
 		String superTableJoinClause = getSuperTableJoinClause();
 		if (superTableJoinClause != null) {
-			query += "AND " + superTableJoinClause;
+			statement += " AND " + superTableJoinClause;
 		}
-		query += "LIMIT 1 ;";
-		return query;
+		statement += " LIMIT 1;";
+		return statement;
 	}
 
 	public void persist(Entity entity) {
@@ -191,51 +193,51 @@ public abstract class DaoImpl<Entity> {
 			getSuperClassDao().insertRecursivelyFromSuper(entity);
 		}
 
-		String query = "INSERT INTO \""
+		String statement = "INSERT INTO \""
 				+ getTableName()
-				+ "\" ";
+				+ "\"";
 		boolean first = true;
-		// if the Entity has a superclass entity then the primary key member is not in
+		// if the entity has a superclass entity then the primary key member is not in
 		// the list returned by getEntityMembers()
 		if (hasSuperClassDao()) {
-			query += "(" + this.getPrimaryKeyEntityMember().getName();
+			statement += " (\"" + this.getPrimaryKeyEntityMember().getName() + "\"";
 			first = false;
 		}
 		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 			if (entityMember.getValue(entity) != null) {
 				if (first) {
-					query += "(";
+					statement += " (";
 				} else {
-					query += ", ";
+					statement += ", ";
 				}
-				query += "\"" + entityMember.getName() + "\"";
+				statement += "\"" + entityMember.getName() + "\"";
 				first = false;
 			}
 		}
 		// if no none null values
 		if (first) {
-			query += "DEFAULT VALUES ";
+			statement += " DEFAULT VALUES";
 		} else {
-			query += ") VALUES ";
+			statement += ") VALUES";
 			first = true;
 			if (hasSuperClassDao()) {
-				query += "(?";
+				statement += " (?";
 				first = false;
 			}
 			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
 				if (entityMember.getValue(entity) != null) {
 					if (first) {
-						query += "(";
+						statement += " (";
 					} else {
-						query += ", ";
+						statement += ", ";
 					}
-					query += "?";
+					statement += "?";
 					first = false;
 				}
 			}
-			query += ") ";
+			statement += ")";
 		}
-		query += "RETURNING * ;";
+		statement += " RETURNING *;";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -244,7 +246,8 @@ public abstract class DaoImpl<Entity> {
 		try {
 			connection = getConnection();
 
-			preparedStatement = connection.prepareStatement(query);
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
 			if (hasSuperClassDao()) {
@@ -301,10 +304,11 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 
-			String query = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=? ;";
+			String statement = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=?;";
 
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(query);
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 			getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
 			preparedStatement.executeUpdate();
 			ConnectionManager.close(preparedStatement, connection);
@@ -347,20 +351,21 @@ public abstract class DaoImpl<Entity> {
 
 	private void updateRecursivelyToSuper(Entity entity) {
 
-		String query = "UPDATE \""
+		String statement = "UPDATE \""
 				+ getTableName()
 				+ "\" SET \""
 				+ getColumnNamesInSingleString("\"=?, \"", false)
 				+ "\"=? WHERE \""
 				+ getPrimaryKeyEntityMember().getName()
-				+ "\"=? ;";
+				+ "\"=?;";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(query);
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
 			for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
@@ -398,43 +403,50 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public List<Entity> getAllMatching(EntityCriterion[] criteria) {
-		String query = "SELECT ";
+		String statement = "SELECT";
 		if (getSubClassDaos().isEmpty()) {
-			query += "* ";
+			statement += " *";
 		} else {
-			query += "\"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\" ";
+			statement += " \"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\"";
 		}
-		query += "FROM \"" + getTableName() + "\"";
+		statement += " FROM \"" + getTableName() + "\"";
 		String superTables = getSuperTableNamesInSingleString("\", \"");
 		if (superTables != null) {
-			query += ", \"" + superTables + "\" ";
-		} else {
-			query += " ";
+			statement += ", \"" + superTables + "\"";
 		}
-		if (criteria.length != 0) {
-			query += "WHERE ";
-			for (EntityCriterion criterion : criteria) {
-				if (criterion != criteria[0]) {
-					query += "AND ";
-				}
-				query += "\"" + criterion.getName() + "\"";
-				if (criterion.getValue() == null) {
-					query += " IS NULL ";
-				} else {
-					query += "=? ";
-				}
+		boolean first = true;
+		for (EntityCriterion criterion : criteria) {
+			if (first) {
+				statement += " WHERE";
+			} else {
+				statement += " AND";
 			}
+			statement += " \"";
+			// if potentially ambiguous
+			if (criterion.getName().equals(getPrimaryKeyEntityMember().getName())) {
+				statement += getTableName() + "\".\"" + criterion.getName();
+			} else {
+				statement += criterion.getName();
+			}
+			statement += "\"";
+			if (criterion.getValue() == null) {
+				statement += " IS NULL";
+			} else {
+				statement += "=?";
+			}
+			first = false;
 		}
 		String superTableJoinClause = getSuperTableJoinClause();
 		if (superTableJoinClause != null) {
-			if (criteria.length == 0) {
-				query += "WHERE ";
+			if (first) {
+				statement += " WHERE ";
 			} else {
-				query += "AND ";
+				statement += " AND ";
 			}
-			query += superTableJoinClause;
+			statement += superTableJoinClause;
+			first = false;
 		}
-		query += " ;";
+		statement += ";";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -442,7 +454,8 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(query);
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
@@ -494,43 +507,50 @@ public abstract class DaoImpl<Entity> {
 			}
 		}
 
-		String query = "SELECT ";
+		String statement = "SELECT";
 		if (getSubClassDaos().isEmpty()) {
-			query += "* ";
+			statement += " *";
 		} else {
-			query += "\"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\" ";
+			statement += " \"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\"";
 		}
-		query += "FROM \"" + getTableName() + "\"";
+		statement += " FROM \"" + getTableName() + "\"";
 		String superTables = getSuperTableNamesInSingleString("\", \"");
 		if (superTables != null) {
-			query += ", \"" + superTables + "\" ";
-		} else {
-			query += " ";
+			statement += ", \"" + superTables + "\"";
 		}
-		if (criteria.length != 0) {
-			query += "WHERE ";
-			for (EntityCriterion criterion : criteria) {
-				if (criterion != criteria[0]) {
-					query += "AND ";
-				}
-				query += "\"" + criterion.getName() + "\"";
-				if (criterion.getValue() == null) {
-					query += " IS NULL ";
-				} else {
-					query += "=? ";
-				}
+		boolean first = true;
+		for (EntityCriterion criterion : criteria) {
+			if (first) {
+				statement += " WHERE";
+			} else {
+				statement += " AND";
 			}
+			statement += " \"";
+			// if potentially ambiguous
+			if (criterion.getName().equals(getPrimaryKeyEntityMember().getName())) {
+				statement += getTableName() + "\".\"" + criterion.getName();
+			} else {
+				statement += criterion.getName();
+			}
+			statement += "\"";
+			if (criterion.getValue() == null) {
+				statement += " IS NULL";
+			} else {
+				statement += "=?";
+			}
+			first = false;
 		}
 		String superTableJoinClause = getSuperTableJoinClause();
 		if (superTableJoinClause != null) {
-			if (criteria.length == 0) {
-				query += "WHERE ";
+			if (first) {
+				statement += " WHERE ";
 			} else {
-				query += "AND ";
+				statement += " AND ";
 			}
-			query += superTableJoinClause;
+			statement += superTableJoinClause;
+			first = false;
 		}
-		query += " LIMIT 1 ;";
+		statement += " LIMIT 1;";
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -538,7 +558,8 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(query);
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
 			for (EntityCriterion criterion : criteria) {
@@ -646,7 +667,9 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 			connection = getConnection();
-			preparedStatement = connection.prepareStatement(getIdBasedSelectAllQuery());
+			String statement = getIdBasedSelectAllStatement();
+			triggerStatementListener(statement);
+			preparedStatement = connection.prepareStatement(statement);
 			getPrimaryKeyEntityMember().setValueOfResultSetInPreparedStatement(preparedStatement, 1, pkResultSet, keyColumnName);
 			resultSet = preparedStatement.executeQuery();
 
@@ -919,14 +942,33 @@ public abstract class DaoImpl<Entity> {
 			return null;
 		}
 		String start = "\"";
-		String end = "\".\"" + getPrimaryKeyEntityMember().getName() + "\"=\"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\" ";
-		String separator = end + "AND \"";
+		String end = "\".\"" + getPrimaryKeyEntityMember().getName() + "\"=\"" + getTableName() + "\".\"" + getPrimaryKeyEntityMember().getName() + "\"";
+		String separator = end + " AND \"";
 
 		return start + getSuperTableNamesInSingleString(separator) + end;
 	}
 
 	protected Collection<Entity> getInstantiatedEntyties() {
 		return this.getInventory().values();
+	}
+
+	public interface StatementListener {
+		public void listenStatement(String statement);
+	}
+
+	public void addStatementListener(StatementListener statementListener) {
+		if (statementListeners == null) {
+			statementListeners = new LinkedList<StatementListener>();
+		}
+		statementListeners.add(statementListener);
+	}
+
+	private void triggerStatementListener(String statement) {
+		if (statementListeners != null) {
+			for (StatementListener statementListener : statementListeners) {
+				statementListener.listenStatement(statement);
+			}
+		}
 	}
 
 	// EntityMember adders

@@ -63,7 +63,7 @@ public class CronManager {
 	private static void runMinutlyCrons() {
 		
 		Logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.logPath + "cron.log");
-		
+
 		for (Runnable minutelyCron : minutelyCrons) {
 			try {
 				minutelyCron.run();

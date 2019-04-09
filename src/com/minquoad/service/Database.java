@@ -13,8 +13,8 @@ public class Database {
 	public static final String dataBaseProtocol = "jdbc";
 	public static final String dataBaseSubprotocol = "postgresql";
 
-	public static final int minConnectionsPerPartition = 5;
-	public static final int maxConnectionsPerPartition = 10;
+	public static final int minConnectionsPerPartition = 1;
+	public static final int maxConnectionsPerPartition = 64;
 	public static final int partitionCount = 2;
 
 	private BoneCP connectionPool;
@@ -49,11 +49,11 @@ public class Database {
 		return dataBaseProtocol + ":" + dataBaseSubprotocol + "://" + Deployment.getDatabaseHost() + ":" + Deployment.getDatabasePort() + "/" + Deployment.getDatabaseName();
 	}
 
-	public DaoFactory instantiateDaoFactory() {
-		return new DaoFactoryImpl(this);
+	public void close() {
 	}
 
-	public void close() {
+	public DaoFactory instantiateDaoFactory() {
+		return new DaoFactoryImpl(this);
 	}
 
 }

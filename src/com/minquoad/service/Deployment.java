@@ -34,6 +34,8 @@ public class Deployment implements ServletContextListener {
 		StorageManager.initTree();
 		servletContext.setAttribute(databaseKey, new Database());
 		// CronManager.start();
+
+		Logger.logInfo("Servlet context initialized");
 	}
 
 	@Override
@@ -43,6 +45,8 @@ public class Deployment implements ServletContextListener {
 		CronManager.stop();
 		Database database = (Database) servletContext.getAttribute(Deployment.databaseKey);
 		database.close();
+
+		Logger.logInfo("Servlet context destroyed");
 	}
 
 	public static void initConfiguration() {

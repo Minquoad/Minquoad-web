@@ -21,9 +21,9 @@ public class UnitFactory {
 	public ConversationUnit getConversationUnit() {
 		return new ConversationUnit(getDaoFactory());
 	}
-	
+
 	public FailedInLoginigAttemptUnit getFailedInLoginigAttemptUnit() {
 		return new FailedInLoginigAttemptUnit(getDaoFactory());
 	}
-	
+
 }

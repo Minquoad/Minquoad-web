@@ -11,10 +11,6 @@ import java.util.Date;
 
 public abstract class Logger {
 
-	public static void echoError(String string) {
-		System.out.println("ERROR : " + string);
-	}
-
 	public static void logError(Exception e) {
 		logError(getStackTraceAsString(e));
 	}
@@ -23,16 +19,8 @@ public abstract class Logger {
 		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "error.log");
 	}
 
-	public static void echoWarning(String string) {
-		System.out.println("WARNING : " + string);
-	}
-
 	public static void logWarning(String string) {
 		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "warning.log");
-	}
-
-	public static void echoInfo(String string) {
-		System.out.println("INFO : " + string);
 	}
 
 	public static void logInfo(String string) {
