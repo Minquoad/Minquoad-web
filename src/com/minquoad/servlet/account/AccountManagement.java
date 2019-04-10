@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.UserProfileImage;
-import com.minquoad.frontComponent.form.account.UserParametersAlterationForm;
-import com.minquoad.frontComponent.form.account.UserPasswordAlterationForm;
-import com.minquoad.frontComponent.form.account.UserPictureAlterationForm;
 import com.minquoad.frontComponent.form.field.FormFileField;
+import com.minquoad.frontComponent.form.impl.account.UserParametersAlterationForm;
+import com.minquoad.frontComponent.form.impl.account.UserPasswordAlterationForm;
+import com.minquoad.frontComponent.form.impl.account.UserPictureAlterationForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
 

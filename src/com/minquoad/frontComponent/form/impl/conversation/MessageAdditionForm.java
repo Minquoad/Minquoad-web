@@ -1,4 +1,4 @@
-package com.minquoad.frontComponent.form.conversation;
+package com.minquoad.frontComponent.form.impl.conversation;
 
 import javax.servlet.http.HttpServletRequest;
 

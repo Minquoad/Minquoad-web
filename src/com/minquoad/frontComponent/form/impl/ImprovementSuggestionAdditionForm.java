@@ -1,7 +1,8 @@
-package com.minquoad.frontComponent.form;
+package com.minquoad.frontComponent.form.impl;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class ImprovementSuggestionAdditionForm extends Form {

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.conversation.MessageAdditionForm;
+import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/MessageAddition")

@@ -1,4 +1,4 @@
-package com.minquoad.frontComponent.form.account;
+package com.minquoad.frontComponent.form.impl.account;
 
 import java.time.Duration;
 
