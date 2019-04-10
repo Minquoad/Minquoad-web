@@ -36,7 +36,7 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 	@Override
 	public List<User> getConversationUsers(Conversation conversation) {
 		List<User> users = new ArrayList<User>();
-		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching(conversation, "conversation");
+		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("conversation", conversation);
 		for (ConversationAccess conversationAccess : conversationAccesses) {
 			users.add(conversationAccess.getUser());
 		}

@@ -38,7 +38,7 @@ public class UpSigningForm extends Form {
 		field.setEmptyPermitted(false);
 		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
-			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "mailAddress");
+			User existingUser = getDaoFactory().getUserDao().getOneMatching("mailAddress", value);
 			if (existingUser == null) {
 				return null;
 			} else {
@@ -62,7 +62,7 @@ public class UpSigningForm extends Form {
 		};
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "nickname");
+			User existingUser = getDaoFactory().getUserDao().getOneMatching("nickname", value);
 			if (existingUser == null) {
 				return null;
 			} else {

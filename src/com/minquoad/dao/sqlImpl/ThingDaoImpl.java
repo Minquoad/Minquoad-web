@@ -27,7 +27,7 @@ public class ThingDaoImpl extends ImprovedDaoImpl<Thing> implements ThingDao {
 
 	@Override
 	public List<Thing> getUserThings(User user) {
-		return this.getAllMatching(user, "owner");
+		return this.getAllMatching("owner", user);
 	}
 
 }

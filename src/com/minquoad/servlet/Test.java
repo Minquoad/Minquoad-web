@@ -44,35 +44,35 @@ public class Test extends ImprovedHttpServlet {
 
 		List<Thing> things;
 
-		things = thingDao.getAllMatching("description \"\"", descriptionMemberName);
+		things = thingDao.getAllMatching(descriptionMemberName, "description \"\"");
 
 		for (Thing thing : things) {
 			thing.setDescription("");
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("description null", descriptionMemberName);
+		things = thingDao.getAllMatching(descriptionMemberName, "description null");
 
 		for (Thing thing : things) {
 			thing.setDescription(null);
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("à Adminquo", descriptionMemberName);
+		things = thingDao.getAllMatching(descriptionMemberName, "à Adminquo");
 
 		for (Thing thing : things) {
 			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(5611120057846513921l));
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("à null", descriptionMemberName);
+		things = thingDao.getAllMatching(descriptionMemberName, "à null");
 
 		for (Thing thing : things) {
 			thing.setOwner(null);
 			thingDao.persist(thing);
 		}
 
-		things = thingDao.getAllMatching("à User-one", descriptionMemberName);
+		things = thingDao.getAllMatching(descriptionMemberName, "à User-one");
 
 		for (Thing thing : things) {
 			thing.setOwner(getDaoFactory(request).getUserDao().getByPk(7345364893521792127l));

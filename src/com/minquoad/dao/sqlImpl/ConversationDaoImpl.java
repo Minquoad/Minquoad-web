@@ -29,7 +29,7 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 
 	@Override
 	public List<Conversation> getUserConversations(User user) {
-		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching(user, "user");
+		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("user", user);
 		List<Conversation> conversations = new ArrayList<Conversation>();
 		for (ConversationAccess conversationAccess : conversationAccesses) {
 			conversations.add(conversationAccess.getConversation());

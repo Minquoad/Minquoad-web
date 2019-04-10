@@ -19,7 +19,7 @@ public class FailedInLoginigAttemptUnit extends Unit {
 
 			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory().getFailedInLoginigAttemptDao();
 
-			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching("mailAddress", mailAddress);
 
 			if (failedInLoginigAttempt != null) {
 				failedInLoginigAttempt.incrementAttemptsCount();
@@ -37,7 +37,7 @@ public class FailedInLoginigAttemptUnit extends Unit {
 	}
 
 	public Duration getCoolDown(String mailAddress) {
-		FailedInLoginigAttempt failedInLoginigAttempt = getDaoFactory().getFailedInLoginigAttemptDao().getOneMatching(mailAddress, "mailAddress");
+		FailedInLoginigAttempt failedInLoginigAttempt = getDaoFactory().getFailedInLoginigAttemptDao().getOneMatching("mailAddress", mailAddress);
 		if (failedInLoginigAttempt == null) {
 			return null;
 		} else {

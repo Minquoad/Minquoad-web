@@ -22,13 +22,13 @@ public interface Dao<EntitySubclass> {
 
 	public List<EntitySubclass> getAll();
 
-	public List<EntitySubclass> getAllMatching(Object value, String memberName);
+	public List<EntitySubclass> getAllMatching(String memberName, Object value);
 
 	public List<EntitySubclass> getAllMatching(EntityCriterion criterion);
 
 	public List<EntitySubclass> getAllMatching(EntityCriterion[] criteria);
 
-	public EntitySubclass getOneMatching(Object value, String memberName);
+	public EntitySubclass getOneMatching(String memberName, Object value);
 
 	public EntitySubclass getOneMatching(EntityCriterion criterion);
 

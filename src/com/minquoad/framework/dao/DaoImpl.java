@@ -394,7 +394,7 @@ public abstract class DaoImpl<Entity> {
 		return this.getAllMatching(new EntityCriterion[0]);
 	}
 
-	public List<Entity> getAllMatching(Object value, String memberName) {
+	public List<Entity> getAllMatching(String memberName, Object value) {
 		return getAllMatching(new EntityCriterion(value, memberName));
 	}
 
@@ -492,7 +492,7 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	public Entity getOneMatching(Object value, String memberName) {
+	public Entity getOneMatching(String memberName, Object value) {
 		return getOneMatching(new EntityCriterion(value, memberName));
 	}
 

@@ -45,7 +45,7 @@ public class InLoging extends ImprovedHttpServlet {
 			setSessionUser(request, user);
 
 			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
-			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(user.getMailAddress(), "mailAddress");
+			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching("mailAddress", user.getMailAddress());
 			if (failedInLoginigAttempt != null) {
 				failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
 			}

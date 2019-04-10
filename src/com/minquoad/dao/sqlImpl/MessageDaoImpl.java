@@ -30,7 +30,7 @@ public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageD
 
 	@Override
 	public List<Message> getConversationMessages(Conversation conversation) {
-		return this.getAllMatching(conversation, "conversation");
+		return this.getAllMatching("conversation", conversation);
 	}
 
 	@Override

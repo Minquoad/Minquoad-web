@@ -61,7 +61,7 @@ public class InLogingForm extends Form {
 
 				FormStringField field2 = (FormStringField) form.getField(mailAddressKey);
 				if (field2.isValid()) {
-					User user = userDao.getOneMatching(field2.getValue(), "mailAddress");
+					User user = userDao.getOneMatching("mailAddress", field2.getValue());
 
 					if (user == null || !user.isPassword(value)) {
 						return "Mail address or password is incorrect.";
@@ -75,7 +75,7 @@ public class InLogingForm extends Form {
 	}
 
 	public User getInLoggingUser() {
-		return getDaoFactory().getUserDao().getOneMatching(getMailAddress(), "mailAddress");
+		return getDaoFactory().getUserDao().getOneMatching("mailAddress", getMailAddress());
 	}
 
 	public String getMailAddress() {
