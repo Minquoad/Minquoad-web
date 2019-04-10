@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.frontComponent.form.field.valueChecker.StringValueChecker;
+import com.minquoad.tool.http.DaoGetter;
 
 public class FormStringField extends FormField {
 
@@ -19,23 +21,17 @@ public class FormStringField extends FormField {
 		setTrimingValue(true);
 	}
 
-	protected void computeValueProblems() {
-		List<String> problems = new ArrayList<String>();
-		
-		if (getValue() == null) {
-			if (isRequired()) {
-				problems.add("The field is missing.");
-			}
-		} else {
+	@Override
+	public void computeValueProblems() {
+		super.computeValueProblems();
+		if (getValueProblems().isEmpty()) {
 			for (StringValueChecker valueChecker : valueCheckers) {
 				String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
 				if (valueProblem != null) {
-					problems.add(valueProblem);
+					getValueProblems().add(valueProblem);
 				}
 			}
 		}
-		
-		this.setValueProblems(problems);
 	}
 
 	public void collectValue(HttpServletRequest request) {
@@ -57,8 +53,48 @@ public class FormStringField extends FormField {
 		this.value = value;
 	}
 
-	public String getValueAsString() {
-		return getValue();
+	public Integer getValueAsInteger() {
+		try {
+			return Integer.parseInt(getValue());
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public Long getValueAsLong() {
+		try {
+			return Long.parseLong(getValue());
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public Float getValueAsFloat() {
+		try {
+			return Float.parseFloat(getValue());
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public <EntitySubclass> EntitySubclass getValueAsEntity(DaoGetter<EntitySubclass> daoGetter) {
+		return getValueAsEntity(daoGetter.getDao(getDaoFactory()));
+	}
+
+	public <EntitySubclass> EntitySubclass getValueAsEntity(Dao<EntitySubclass> dao) {
+		try {
+			return dao.getByPk(getValueAsInteger());
+		} catch (Exception e) {
+		}
+		try {
+			return dao.getByPk(getValueAsLong());
+		} catch (Exception e) {
+		}
+		try {
+			return dao.getByPk(getValue());
+		} catch (Exception e) {
+		}
+		return null;
 	}
 
 	public boolean isTrimingValue() {
@@ -67,6 +103,16 @@ public class FormStringField extends FormField {
 
 	public void setTrimingValue(boolean trimingValue) {
 		this.trimingValue = trimingValue;
+	}
+
+	@Override
+	protected boolean isValueEmpty() {
+		return getValue().isEmpty();
+	}
+
+	@Override
+	protected boolean isValueNull() {
+		return getValue() == null;
 	}
 
 }

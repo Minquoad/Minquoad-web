@@ -24,8 +24,10 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		MessageAdditionForm form = new MessageAdditionForm(request);
-		request.setAttribute("form", form);
+		initForms(request);
+
+		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
+		form.submit();
 
 		User user = getUser(request);
 		Conversation conversation = form.getConversation();
@@ -37,18 +39,20 @@ public class MessageAddition extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
+		form.submit();
 
 		if (form.isValide()) {
-			String text = form.getFieldValueAsString(MessageAdditionForm.textKey);
-			Conversation conversation = form.getConversation();
-
 			Message message = new Message();
-			message.setText(text);
+			message.setText(form.getText());
 			message.setUser(getUser(request));
-			message.setConversation(conversation);
+			message.setConversation(form.getConversation());
 			message.setInstant(Instant.now());
 			getDaoFactory(request).getMessageDao().persist(message);
 		}
+	}
+
+	private void initForms(HttpServletRequest request) {
+		request.setAttribute("form", new MessageAdditionForm(request));
 	}
 
 }

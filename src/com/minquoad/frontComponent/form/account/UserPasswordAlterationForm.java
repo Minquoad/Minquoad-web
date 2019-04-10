@@ -1,7 +1,5 @@
 package com.minquoad.frontComponent.form.account;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
@@ -24,7 +22,7 @@ public class UserPasswordAlterationForm extends Form {
 		FormStringField field = null;
 
 		field = new FormStringField(oldPassowrdKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			if (getUser().isPassword(value)) {
 				return null;
@@ -34,22 +32,19 @@ public class UserPasswordAlterationForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(newPasswordKey) {
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getPasswordProblems(getValue()));
-				}
-				return problemes;
-			}
-		};
-		field.setRequired(true);
+		field = new FormStringField(newPasswordKey);
+		field.setEmptyPermitted(false);
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
+			return null;
+		});
 		this.addField(field);
 
 		field = new FormStringField(newPasswordConfirmationKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			String password = this.getFieldValueAsString(newPasswordKey);
+			FormStringField newPasswordField = (FormStringField) form.getField(newPasswordKey);
+			String password = newPasswordField.getValue();
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";
 			} else
@@ -57,6 +52,11 @@ public class UserPasswordAlterationForm extends Form {
 		});
 		this.addField(field);
 
+	}
+
+	public String getNewPassword() {
+		FormStringField field = (FormStringField) this.getField(newPasswordKey);
+		return field.getValue();
 	}
 
 }

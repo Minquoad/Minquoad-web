@@ -20,7 +20,7 @@ public class Unpossession extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		setSessionUser(request, getControllingAdmin(request));
-		
+
 		request.getSession().removeAttribute(controllingAdminIdKey);
 		request.removeAttribute(controllingAdminKey);
 

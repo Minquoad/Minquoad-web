@@ -1,8 +1,10 @@
 package com.minquoad.frontComponent.form.field;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
@@ -22,14 +24,10 @@ public class FormFileField extends FormField {
 	}
 
 	@Override
-	protected void computeValueProblems() {
-		List<String> problems = new ArrayList<String>();
+	public void computeValueProblems() {
+		super.computeValueProblems();
+		if (getValueProblems().isEmpty()) {
 
-		if (getValue() == null || !PartTool.hasFile(getValue())) {
-			if (isRequired()) {
-				problems.add("The file is missing.");
-			}
-		} else {
 			if (!allowedExtentions.isEmpty()) {
 				boolean isExtentionAuthorized = false;
 				String originalExtention = getOriginalExtention();
@@ -49,20 +47,19 @@ public class FormFileField extends FormField {
 						problem += "." + allowedExtention;
 						first = false;
 					}
-					problems.add(problem);
+					getValueProblems().add(problem);
 				}
 			}
 
-			if (problems.isEmpty()) {
+			if (getValueProblems().isEmpty()) {
 				for (PartValueChecker valueChecker : valueCheckers) {
 					String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
 					if (valueProblem != null) {
-						problems.add(valueProblem);
+						getValueProblems().add(valueProblem);
 					}
 				}
 			}
 		}
-		this.setValueProblems(problems);
 	}
 
 	public String getOriginalFileName() {
@@ -78,14 +75,14 @@ public class FormFileField extends FormField {
 		if (lastIndexOfDot == -1) {
 			return "";
 		}
-		return getOriginalFileName().substring(lastIndexOfDot+1);
+		return getOriginalFileName().substring(lastIndexOfDot + 1);
 	}
 
 	@Override
 	public void collectValue(HttpServletRequest request) {
 		try {
 			setValue(request.getPart(getName()));
-		} catch (Exception e) {
+		} catch (IOException | ServletException e) {
 		}
 	}
 
@@ -97,13 +94,8 @@ public class FormFileField extends FormField {
 		this.value = value;
 	}
 
-	@Override
-	public String getValueAsString() {
-		return this.getOriginalFileName();
-	}
-
 	public boolean hasFile() {
-		return PartTool.hasFile(getValue());
+		return getValue() != null && PartTool.hasFile(getValue());
 	}
 
 	public void addAllowedExtention(String extention) {
@@ -112,6 +104,16 @@ public class FormFileField extends FormField {
 
 	public void addValueChecker(PartValueChecker valueChecker) {
 		this.valueCheckers.add(valueChecker);
+	}
+
+	@Override
+	protected boolean isValueEmpty() {
+		return !PartTool.hasFile(getValue());
+	}
+
+	@Override
+	protected boolean isValueNull() {
+		return getValue() == null;
 	}
 
 }

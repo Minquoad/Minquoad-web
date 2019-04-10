@@ -1,7 +1,5 @@
 package com.minquoad.frontComponent.form.account;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
@@ -16,7 +14,8 @@ public class UpSigningForm extends Form {
 	public static final String passwordKey = "password";
 	public static final String passwordConfirmationKey = "passwordConfirmation";
 	public static final String upSigningCodeKey = "upSigningCode";
-	public static final String upSigningCode = "ttt";
+
+	public static final String upSigningCode = "gyroroue";
 
 	public UpSigningForm(HttpServletRequest request) {
 		super(request);
@@ -35,15 +34,8 @@ public class UpSigningForm extends Form {
 					super.setValue(User.formatMailAddressCase(getValue()));
 				}
 			}
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getMailAddressProblems(getValue()));
-				}
-				return problemes;
-			}
 		};
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "mailAddress");
@@ -52,6 +44,10 @@ public class UpSigningForm extends Form {
 			} else {
 				return "The mail address \"" + value + "\" is already taken.";
 			}
+		});
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getMailAddressProblems(value));
+			return null;
 		});
 		this.addField(field);
 
@@ -63,15 +59,8 @@ public class UpSigningForm extends Form {
 					super.setValue(User.formatNickanameCase(getValue()));
 				}
 			}
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getNicknameProblems(getValue()));
-				}
-				return problemes;
-			}
 		};
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "nickname");
 			if (existingUser == null) {
@@ -80,25 +69,26 @@ public class UpSigningForm extends Form {
 				return "The nickname \"" + value + "\" is alreadi taken.";
 			}
 		});
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getNicknameProblems(value));
+			return null;
+		});
 		this.addField(field);
 
-		field = new FormStringField(passwordKey) {
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getPasswordProblems(getValue()));
-				}
-				return problemes;
-			}
-		};
-		field.setRequired(true);
+		field = new FormStringField(passwordKey);
+		field.setEmptyPermitted(false);
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
+			return null;
+		});
 		this.addField(field);
 
 		field = new FormStringField(passwordConfirmationKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			String password = this.getFieldValueAsString(passwordKey);
-			if (password != null && !password.equals(value)) {
+			FormStringField field2 = (FormStringField) form.getField(passwordKey);
+			String password = field2.getValue();
+			if (!value.equals(password)) {
 				return "The password confirmation is different to the password.";
 			} else
 				return null;
@@ -106,7 +96,7 @@ public class UpSigningForm extends Form {
 		this.addField(field);
 
 		field = new FormStringField(upSigningCodeKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			if (!upSigningCode.equals(value)) {
 				return "Wrong up signing code.";
@@ -115,6 +105,21 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
+	}
+
+	public String getMailAddress() {
+		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		return field.getValue();
+	}
+
+	public String getNickname() {
+		FormStringField field = (FormStringField) this.getField(nicknameKey);
+		return field.getValue();
+	}
+
+	public String getPassword() {
+		FormStringField field = (FormStringField) this.getField(passwordKey);
+		return field.getValue();
 	}
 
 }

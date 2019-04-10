@@ -29,11 +29,12 @@ public class ImprovementSuggestionAddition extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 
 		ImprovementSuggestionAdditionForm form = new ImprovementSuggestionAdditionForm(request);
+		form.submit();
 
 		if (form.isValide()) {
 			ImprovementSuggestion suggestion = new ImprovementSuggestion();
 			suggestion.setInstant(Instant.now());
-			suggestion.setText(form.getFieldValueAsString(ImprovementSuggestionAdditionForm.textKey));
+			suggestion.setText(form.getText());
 			suggestion.setUser(getUser(request));
 
 			getDaoFactory(request).getImprovementSuggestionDao().persist(suggestion);

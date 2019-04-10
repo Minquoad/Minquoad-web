@@ -15,22 +15,16 @@
 					<p>
 						<label for="mailAddress">Mail address : </label>
 						<input type="email" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
-							<c:if test="${ not empty requestScope.form }">
-								value="<c:out value="${ requestScope.form.getFieldValueAsString('mailAddress') }" />"
-								</c:if> />
-						<c:if test="${ not empty requestScope.form }">
-							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="formKey" value="form" />
-								<jsp:param name="fieldName" value="mailAddress" />
-							</jsp:include>
-						</c:if>
+							value="<c:out value="${ requestScope.form.fields.mailAddress.value }" />" />
+						<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+							<jsp:param name="formKey" value="form" />
+							<jsp:param name="fieldName" value="mailAddress" />
+						</jsp:include>
 					</p>
 					<p>
 						<label for="nickname">Nickname : </label>
 						<input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
-							<c:if test="${ not empty requestScope.form }">
-								value="<c:out value="${ requestScope.form.getFieldValueAsString('nickname') }" />"
-								</c:if> />
+							value="<c:out value="${ requestScope.form.fields.nickname.value }" />" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 								<jsp:param name="formKey" value="form" />

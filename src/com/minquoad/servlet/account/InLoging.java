@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
-import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.account.InLogingForm;
@@ -27,52 +26,53 @@ public class InLoging extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		initForms(request);
 
 		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		initForms(request);
 
-		InLogingForm form = new InLogingForm(request);
-
-		String mailAddress = form.getFieldValueAsString(InLogingForm.mailAddressKey);
+		InLogingForm form = (InLogingForm) request.getAttribute("form");
+		form.submit();
 
 		if (form.isValide()) {
 
-			UserDao userDao = getDaoFactory(request).getUserDao();
-
-			User user = userDao.getOneMatching(mailAddress, "mailAddress");
+			User user = form.getInLoggingUser();
 
 			setSessionUser(request, user);
 
 			FailedInLoginigAttemptDao failedInLoginigAttemptDao = getDaoFactory(request).getFailedInLoginigAttemptDao();
-			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(mailAddress, "mailAddress");
+			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching(user.getMailAddress(), "mailAddress");
 			if (failedInLoginigAttempt != null) {
 				failedInLoginigAttemptDao.delete(failedInLoginigAttempt);
 			}
-
+			
 		} else {
 			FailedInLoginigAttemptUnit failedInLoginigAttemptUnit = getUnitFactory(request).getFailedInLoginigAttemptUnit();
 
-			failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(mailAddress);
-
-			request.setAttribute("form", form);
+			failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(form.getMailAddress());
 		}
 
 		forwardToView(request, response, viewPath);
 	}
 
+	private void initForms(HttpServletRequest request) {
+		request.setAttribute("form", new InLogingForm(request));
+	}
+
 	@Override
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
 		if (getUser(request) != null) {
-
 			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedUrlKey);
 			if (lastRefusedUrl != null) {
 				response.sendRedirect(lastRefusedUrl);
 			} else {
 				response.sendRedirect(request.getContextPath() + "/");
 			}
+
 		} else {
 			super.forwardToView(request, response, viewPath);
 		}

@@ -1,6 +1,6 @@
 package com.minquoad.frontComponent.form;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +16,15 @@ import com.minquoad.unit.UnitFactory;
 public class Form {
 
 	private Map<String, FormField> fileds;
-
+	private List<FormField> filedsInOrder;
 	private HttpServletRequest request;
+	private boolean submitted;
 
 	public Form(HttpServletRequest request) {
 		fileds = new HashMap<String, FormField>();
+		filedsInOrder = new ArrayList<FormField>();
 		setRequest(request);
+		setSubmitted(false);
 		this.build();
 	}
 
@@ -29,7 +32,7 @@ public class Form {
 	}
 
 	public boolean isValide() {
-		for (FormField field : getFileds()) {
+		for (FormField field : getFiledsInOrder()) {
 			if (!field.isValid()) {
 				return false;
 			}
@@ -37,8 +40,8 @@ public class Form {
 		return true;
 	}
 
-	public Collection<FormField> getFileds() {
-		return fileds.values();
+	public Map<String, FormField> getFields() {
+		return fileds;
 	}
 
 	public List<String> getFieldValueProblems(String name) {
@@ -54,11 +57,27 @@ public class Form {
 	public void addField(FormField field) {
 		field.setForm(this);
 		fileds.put(field.getName(), field);
-		field.collectValue(request);
+		getFiledsInOrder().add(field);
 	}
 
 	public FormField getField(String name) {
 		return fileds.get(name);
+	}
+
+	public HttpServletRequest getRequest() {
+		return request;
+	}
+
+	private void setRequest(HttpServletRequest request) {
+		this.request = request;
+	}
+
+	public void submit() {
+		setSubmitted(true);
+		for (FormField field : getFiledsInOrder()) {
+			field.collectValue(request);
+			field.computeValueProblems();
+		}
 	}
 
 	public DaoFactory getDaoFactory() {
@@ -73,16 +92,16 @@ public class Form {
 		return ImprovedHttpServlet.getUser(getRequest());
 	}
 
-	public HttpServletRequest getRequest() {
-		return request;
+	public boolean isSubmitted() {
+		return submitted;
 	}
 
-	public void setRequest(HttpServletRequest request) {
-		this.request = request;
+	private void setSubmitted(boolean submitted) {
+		this.submitted = submitted;
 	}
 
-	public String getFieldValueAsString(String name) {
-		return this.getField(name).getValueAsString();
+	private List<FormField> getFiledsInOrder() {
+		return filedsInOrder;
 	}
 
 }

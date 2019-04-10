@@ -25,6 +25,10 @@ import com.minquoad.tool.http.PartTool;
 )
 public class AccountManagement extends ImprovedHttpServlet {
 
+	private static final String USER_PASSWORD_ALTERATION = "userPasswordAlteration";
+	private static final String USER_PICTURE_ALTERATION = "userPictureAlteration";
+	private static final String USER_PARAMETERS_ALTERATION = "userParametersAlteration";
+
 	public static final String viewPath = "/WEB-INF/page/account/accountManagement.jsp";
 
 	@Override
@@ -34,40 +38,42 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		initForms(request);
 
 		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		initForms(request);
 
 		String formId = request.getParameter("formId");
 
 		if (formId != null) {
 
-			if (formId.equals("userParametersAlteration")) {
+			if (formId.equals(USER_PARAMETERS_ALTERATION)) {
 
-				UserParametersAlterationForm form = new UserParametersAlterationForm(request);
+				UserParametersAlterationForm form = (UserParametersAlterationForm) request.getAttribute(USER_PARAMETERS_ALTERATION);
+				form.submit();
 
 				if (form.isValide()) {
 					User user = getUser(request);
 
-					getUser(request).setNickname(form.getFieldValueAsString(UserParametersAlterationForm.nicknameKey));
-					getUser(request).setMailAddress(form.getFieldValueAsString(UserParametersAlterationForm.mailAddressKey));
+					getUser(request).setNickname(form.getnickname());
+					getUser(request).setMailAddress(form.getmailAddress());
 
-					String colorString = form.getFieldValueAsString(UserParametersAlterationForm.defaultColorKey);
+					String colorString = form.getdefaultColor();
 					int parseInt = Integer.parseInt(colorString.substring(1), 16);
 					user.setDefaultColor(parseInt);
 
 					getDaoFactory(request).getUserDao().persist(user);
-				} else {
-					request.setAttribute("userParametersAlteration", form);
 				}
 			}
 
-			if (formId.equals("userPictureAlteration")) {
+			if (formId.equals(USER_PICTURE_ALTERATION)) {
 
-				UserPictureAlterationForm form = new UserPictureAlterationForm(request);
+				UserPictureAlterationForm form = (UserPictureAlterationForm) request.getAttribute(USER_PICTURE_ALTERATION);
+				form.submit();
 
 				if (form.isValide()) {
 
@@ -95,13 +101,14 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 			}
 
-			if (formId.equals("userPasswordAlteration")) {
+			if (formId.equals(USER_PASSWORD_ALTERATION)) {
 
-				UserPasswordAlterationForm form = new UserPasswordAlterationForm(request);
+				UserPasswordAlterationForm form = (UserPasswordAlterationForm) request.getAttribute(USER_PASSWORD_ALTERATION);
+				form.submit();
 
 				if (form.isValide()) {
 					User user = getUser(request);
-					user.setPassword(form.getFieldValueAsString(UserPasswordAlterationForm.newPasswordKey));
+					user.setPassword(form.getNewPassword());
 					getDaoFactory(request).getUserDao().persist(user);
 				} else {
 					request.setAttribute("userPasswordAlterationForm", form);
@@ -110,6 +117,12 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 			forwardToView(request, response, viewPath);
 		}
+	}
+
+	private void initForms(HttpServletRequest request) {
+		request.setAttribute(USER_PARAMETERS_ALTERATION, new UserParametersAlterationForm(request));
+		request.setAttribute(USER_PICTURE_ALTERATION, new UserPictureAlterationForm(request));
+		request.setAttribute(USER_PASSWORD_ALTERATION, new UserPasswordAlterationForm(request));
 	}
 
 	@Override

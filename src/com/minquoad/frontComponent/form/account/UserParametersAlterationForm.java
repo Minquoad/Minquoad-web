@@ -1,7 +1,5 @@
 package com.minquoad.frontComponent.form.account;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
@@ -33,15 +31,8 @@ public class UserParametersAlterationForm extends Form {
 					super.setValue(User.formatMailAddressCase(getValue()));
 				}
 			}
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getMailAddressProblems(getValue()));
-				}
-				return problemes;
-			}
 		};
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "mailAddress");
@@ -51,6 +42,11 @@ public class UserParametersAlterationForm extends Form {
 				return "The mail address \"" + value + "\" is already taken.";
 			}
 		});
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getMailAddressProblems(value));
+			return null;
+		});
+		field.setValue(getUser().getMailAddress());
 		this.addField(field);
 
 		field = new FormStringField(nicknameKey) {
@@ -61,16 +57,8 @@ public class UserParametersAlterationForm extends Form {
 					super.setValue(User.formatNickanameCase(getValue()));
 				}
 			}
-
-			public List<String> getValueProblems() {
-				List<String> problemes = super.getValueProblems();
-				if (getValue() != null) {
-					problemes.addAll(User.getNicknameProblems(getValue()));
-				}
-				return problemes;
-			}
 		};
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching(value, "nickname");
 			if (existingUser == null || existingUser == getUser()) {
@@ -79,13 +67,34 @@ public class UserParametersAlterationForm extends Form {
 				return "The nickname \"" + value + "\" is alreadi taken.";
 			}
 		});
+		field.addValueChecker((form, thisField, value) -> {
+			thisField.getValueProblems().addAll(User.getNicknameProblems(value));
+			return null;
+		});
+		field.setValue(getUser().getNickname());
 		this.addField(field);
 
 		field = new FormStringField(defaultColorKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker(new ColorValueChecker());
+		field.setValue(getUser().getDefaultColorAsHtmlValue());
 		this.addField(field);
 
+	}
+
+	public String getnickname() {
+		FormStringField field = (FormStringField) this.getField(nicknameKey);
+		return field.getValue();
+	}
+
+	public String getmailAddress() {
+		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		return field.getValue();
+	}
+
+	public String getdefaultColor() {
+		FormStringField field = (FormStringField) this.getField(defaultColorKey);
+		return field.getValue();
 	}
 
 }

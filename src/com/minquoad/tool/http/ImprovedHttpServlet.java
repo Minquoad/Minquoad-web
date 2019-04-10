@@ -2,6 +2,8 @@ package com.minquoad.tool.http;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
+import com.minquoad.frontComponent.form.Form;
 import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
@@ -19,12 +22,14 @@ import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
-	public static final String METHOD_GET = "GET";
-	public static final String HEADER_IFMODSINCE = "If-Modified-Since";
+	public static final String METHOD_POST = "POST";
+
+	public static final String formsKey = "forms";
 
 	// request keys
 	private final static String daoFactoryKey = "daoFactory";
 	private final static String unitFactoryKey = "unitFactory";
+
 	protected final static String userKey = "user";
 	protected final static String controllingAdminKey = "controllingAdmin";
 
@@ -103,6 +108,12 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				request.getSession().removeAttribute(lastRefusedUrlKey);
 			}
 
+			if (request.getMethod().equals(METHOD_POST)) {
+				for (Form form : getForms(request).values()) {
+					form.submit();
+				}
+			}
+
 			super.service(request, response);
 
 			if (isLoggingAllRequests()) {
@@ -116,6 +127,25 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			throw e;
 		}
+	}
+
+	public Form getForm(HttpServletRequest request, String key) {
+		return getForms(request).get(key);
+	}
+
+	public Map<String, Form> getForms(HttpServletRequest request) {
+		if (request.getAttribute(formsKey) == null) {
+			Map<String, Form> forms = new FormMap();
+			initForms(forms, request);
+			request.setAttribute(formsKey, forms);
+		}
+		return (FormMap) request.getAttribute(formsKey);
+	}
+
+	private class FormMap extends HashMap<String, Form> implements Map<String, Form> {
+	}
+
+	protected void initForms(Map<String, Form> forms, HttpServletRequest request) {
 	}
 
 	public String getCurrentUrlWithArguments(HttpServletRequest request) {

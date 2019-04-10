@@ -23,17 +23,17 @@ public class MessageAdditionForm extends Form {
 		this.addField(conversationIdField);
 
 		FormStringField textField = new FormStringField(textKey);
-		textField.addValueChecker((form, field, value)-> {
-			if (value== null || value.equals("")) {
-				return "Empty message are forbidden.";
-			} else {
-				return null;
-			}
-		});
+		textField.setEmptyPermitted(false);
 		this.addField(textField);
 	}
 
 	public Conversation getConversation() {
-		return this.getField(conversationIdKey).getValueAsEntity(DaoFactory::getConversationDao);
+		FormStringField field = (FormStringField) this.getField(conversationIdKey);
+		return field.getValueAsEntity(DaoFactory::getConversationDao);
+	}
+
+	public String getText() {
+		FormStringField field = (FormStringField) this.getField(textKey);
+		return field.getValue();
 	}
 }

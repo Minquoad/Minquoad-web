@@ -35,7 +35,7 @@ public class InLogingForm extends Form {
 				}
 			}
 		};
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(value);
 			if (coolDown == null) {
@@ -53,22 +53,34 @@ public class InLogingForm extends Form {
 		this.addField(field);
 
 		field = new FormStringField(passwordKey);
-		field.setRequired(true);
+		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			if (getField(mailAddressKey).isValid()) {
 
 				UserDao userDao = getDaoFactory().getUserDao();
 
-				User user = userDao.getOneMatching(getFieldValueAsString(mailAddressKey), "mailAddress");
+				FormStringField field2 = (FormStringField) form.getField(mailAddressKey);
+				if (field2.isValid()) {
+					User user = userDao.getOneMatching(field2.getValue(), "mailAddress");
 
-				if (user == null || !user.isPassword(value)) {
-					return "Mail address or password is incorrect.";
+					if (user == null || !user.isPassword(value)) {
+						return "Mail address or password is incorrect.";
+					}
 				}
 			}
 			return null;
 		});
 		this.addField(field);
 
+	}
+
+	public User getInLoggingUser() {
+		return getDaoFactory().getUserDao().getOneMatching(getMailAddress(), "mailAddress");
+	}
+
+	public String getMailAddress() {
+		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		return field.getValue();
 	}
 
 }

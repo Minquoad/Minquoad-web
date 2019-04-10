@@ -34,4 +34,9 @@ public class ImprovementSuggestionAdditionForm extends Form {
 
 	}
 
+	public String getText() {
+		FormStringField field = (FormStringField) getField(textKey);
+		return field.getValue();
+	}
+
 }

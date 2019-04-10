@@ -23,28 +23,34 @@ public class UpSigning extends ImprovedHttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		initForms(request);
 
 		forwardToView(request, response, viewPath);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		UpSigningForm form = new UpSigningForm(request);
+		initForms(request);
+		
+		UpSigningForm form = (UpSigningForm) request.getAttribute("form");
+		form.submit();
 
 		if (form.isValide()) {
 			User user = getUnitFactory(request).getUserUnit().createNewUser(
-					form.getFieldValueAsString(UpSigningForm.mailAddressKey),
-					form.getFieldValueAsString(UpSigningForm.nicknameKey),
-					form.getFieldValueAsString(UpSigningForm.passwordKey));
+					form.getMailAddress(),
+					form.getNickname(),
+					form.getPassword());
 
 			setSessionUser(request, user);
 			response.sendRedirect(request.getContextPath() + "/");
 
 		} else {
-			request.setAttribute("form", form);
 			forwardToView(request, response, viewPath);
 		}
+	}
+
+	private void initForms(HttpServletRequest request) {
+		request.setAttribute("form", new UpSigningForm(request));
 	}
 
 	@Override
