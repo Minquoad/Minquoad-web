@@ -1,11 +1,13 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.minquoad.dao.interfaces.ConversationAccessDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
-import com.minquoad.framework.dao.EntityCriterion;
 
 public class ConversationAccessDaoImpl extends ImprovedDaoImpl<ConversationAccess> implements ConversationAccessDao {
 
@@ -28,16 +30,16 @@ public class ConversationAccessDaoImpl extends ImprovedDaoImpl<ConversationAcces
 	}
 
 	@Override
-	public ConversationAccess getConversationAccess(User user, Conversation conversation) {
-		EntityCriterion[] criteria = new EntityCriterion[2];
-		criteria[0] = new EntityCriterion(conversation, "conversation");
-		criteria[1] = new EntityCriterion(user, "user");
-		return this.getOneMatching(criteria);
-	}
-
-	@Override
 	public boolean isPrimaryKeyRandomlyGenerated() {
 		return true;
 	}
-	
+
+	@Override
+	public ConversationAccess getConversationAccess(User user, Conversation conversation) {
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put("user", user);
+		criteria.put("conversation", conversation);
+		return this.getOneMatching(criteria);
+	}
+
 }

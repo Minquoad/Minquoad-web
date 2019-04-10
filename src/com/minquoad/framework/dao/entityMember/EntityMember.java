@@ -5,9 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import com.minquoad.framework.dao.EntityCriterion;
-import com.minquoad.framework.dao.EntityModification;
-
 public class EntityMember<Entity, MemberType> {
 
 	private String name;
@@ -69,12 +66,12 @@ public class EntityMember<Entity, MemberType> {
 		setValueInPreparedStatement(preparedStatement, parameterIndex, getValueOfResultSet(resultSet, resultSetColumnName));
 	}
 
-	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, EntityCriterion criterion) throws SQLException {
+	public void setValueOfCriterionInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex, Object value) throws SQLException {
 
 		@SuppressWarnings("unchecked")
-		MemberType value = (MemberType) criterion.getValue();
+		MemberType castedValue = (MemberType) value;
 
-		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
+		setValueInPreparedStatement(preparedStatement, parameterIndex, castedValue);
 	}
 
 	public MemberType getValue(Entity entity) {
@@ -103,25 +100,6 @@ public class EntityMember<Entity, MemberType> {
 
 	public PreparedStatementNonNullValueSetter<MemberType> getPreparedStatementNonNullValueSetter() {
 		return this.preparedStatementNonNullValueSetter;
-	}
-
-	// not used yet
-
-	public void setValueOfModificationInPreparedStatement(PreparedStatement preparedStatement, int parameterIndex,
-			EntityModification modification) throws SQLException {
-
-		@SuppressWarnings("unchecked")
-		MemberType value = (MemberType) modification.getValue();
-
-		setValueInPreparedStatement(preparedStatement, parameterIndex, value);
-	}
-
-	public void setValueOfModificationInEntity(Entity entity, EntityModification modification) {
-
-		@SuppressWarnings("unchecked")
-		MemberType value = (MemberType) modification.getValue();
-
-		setValue(entity, value);
 	}
 
 }

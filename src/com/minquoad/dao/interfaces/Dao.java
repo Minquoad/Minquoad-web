@@ -1,8 +1,7 @@
 package com.minquoad.dao.interfaces;
 
 import java.util.List;
-
-import com.minquoad.framework.dao.EntityCriterion;
+import java.util.Map;
 
 public interface Dao<EntitySubclass> {
 
@@ -24,14 +23,10 @@ public interface Dao<EntitySubclass> {
 
 	public List<EntitySubclass> getAllMatching(String memberName, Object value);
 
-	public List<EntitySubclass> getAllMatching(EntityCriterion criterion);
-
-	public List<EntitySubclass> getAllMatching(EntityCriterion[] criteria);
+	public List<EntitySubclass> getAllMatching(Map<String, Object> criteria);
 
 	public EntitySubclass getOneMatching(String memberName, Object value);
 
-	public EntitySubclass getOneMatching(EntityCriterion criterion);
-
-	public EntitySubclass getOneMatching(EntityCriterion[] criteria);
+	public EntitySubclass getOneMatching(Map<String, Object> criteria);
 
 }

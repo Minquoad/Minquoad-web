@@ -9,8 +9,10 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -391,18 +393,16 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public List<Entity> getAll() {
-		return this.getAllMatching(new EntityCriterion[0]);
+		return this.getAllMatching(new HashMap<String, Object>());
 	}
 
 	public List<Entity> getAllMatching(String memberName, Object value) {
-		return getAllMatching(new EntityCriterion(value, memberName));
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put(memberName, value);
+		return getAllMatching(criteria);
 	}
 
-	public List<Entity> getAllMatching(EntityCriterion criterion) {
-		return getAllMatching(criterion.toArray());
-	}
-
-	public List<Entity> getAllMatching(EntityCriterion[] criteria) {
+	public List<Entity> getAllMatching(Map<String, Object> criteria) {
 		String statement = "SELECT";
 		if (getSubClassDaos().isEmpty()) {
 			statement += " *";
@@ -415,7 +415,7 @@ public abstract class DaoImpl<Entity> {
 			statement += ", \"" + superTables + "\"";
 		}
 		boolean first = true;
-		for (EntityCriterion criterion : criteria) {
+		for (Map.Entry<String, Object> criterion : criteria.entrySet()) {
 			if (first) {
 				statement += " WHERE";
 			} else {
@@ -423,10 +423,10 @@ public abstract class DaoImpl<Entity> {
 			}
 			statement += " \"";
 			// if potentially ambiguous
-			if (criterion.getName().equals(getPrimaryKeyEntityMember().getName())) {
-				statement += getTableName() + "\".\"" + criterion.getName();
+			if (criterion.getKey().equals(getPrimaryKeyEntityMember().getName())) {
+				statement += getTableName() + "\".\"" + criterion.getKey();
 			} else {
-				statement += criterion.getName();
+				statement += criterion.getKey();
 			}
 			statement += "\"";
 			if (criterion.getValue() == null) {
@@ -458,10 +458,10 @@ public abstract class DaoImpl<Entity> {
 			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
-			for (EntityCriterion criterion : criteria) {
+			for (Map.Entry<String, Object> criterion : criteria.entrySet()) {
 				if (criterion.getValue() != null) {
-					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getName(), true);
-					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
+					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getKey(), true);
+					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion.getValue());
 					i++;
 				}
 			}
@@ -493,14 +493,12 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public Entity getOneMatching(String memberName, Object value) {
-		return getOneMatching(new EntityCriterion(value, memberName));
+		Map<String, Object> criteria = new HashMap<String, Object>();
+		criteria.put(memberName, value);
+		return getOneMatching(criteria);
 	}
 
-	public Entity getOneMatching(EntityCriterion criterion) {
-		return getOneMatching(criterion.toArray());
-	}
-
-	public Entity getOneMatching(EntityCriterion[] criteria) {
+	public Entity getOneMatching(Map<String, Object> criteria) {
 		for (Entity instantiatedEntity : getInstantiatedEntyties()) {
 			if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
 				return instantiatedEntity;
@@ -519,7 +517,7 @@ public abstract class DaoImpl<Entity> {
 			statement += ", \"" + superTables + "\"";
 		}
 		boolean first = true;
-		for (EntityCriterion criterion : criteria) {
+		for (Map.Entry<String, Object> criterion : criteria.entrySet()) {
 			if (first) {
 				statement += " WHERE";
 			} else {
@@ -527,10 +525,10 @@ public abstract class DaoImpl<Entity> {
 			}
 			statement += " \"";
 			// if potentially ambiguous
-			if (criterion.getName().equals(getPrimaryKeyEntityMember().getName())) {
-				statement += getTableName() + "\".\"" + criterion.getName();
+			if (criterion.getKey().equals(getPrimaryKeyEntityMember().getName())) {
+				statement += getTableName() + "\".\"" + criterion.getKey();
 			} else {
-				statement += criterion.getName();
+				statement += criterion.getKey();
 			}
 			statement += "\"";
 			if (criterion.getValue() == null) {
@@ -562,10 +560,10 @@ public abstract class DaoImpl<Entity> {
 			preparedStatement = connection.prepareStatement(statement);
 
 			int i = 1;
-			for (EntityCriterion criterion : criteria) {
+			for (Map.Entry<String, Object> criterion : criteria.entrySet()) {
 				if (criterion.getValue() != null) {
-					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getName(), true);
-					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion);
+					EntityMember<? super Entity, ?> entityMember = getEntityMember(criterion.getKey(), true);
+					entityMember.setValueOfCriterionInPreparedStatement(preparedStatement, i, criterion.getValue());
 					i++;
 				}
 			}
@@ -597,9 +595,9 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	public boolean isEntityMachingCriteria(Entity entity, EntityCriterion[] criteria) {
-		for (EntityCriterion criterion : criteria) {
-			EntityMember<? super Entity, ?> member = getEntityMember(criterion.getName(), true);
+	public boolean isEntityMachingCriteria(Entity entity, Map<String, Object> criteria) {
+		for (Map.Entry<String, Object> criterion : criteria.entrySet()) {
+			EntityMember<? super Entity, ?> member = getEntityMember(criterion.getKey(), true);
 			if (criterion.getValue() == null) {
 				if (member.getValue(entity) != null) {
 					return false;
