@@ -1,16 +1,17 @@
-package com.minquoad.unit;
+package com.minquoad.unit.impl;
 
 import java.time.Duration;
 import java.time.Instant;
 
-import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
+import com.minquoad.unit.Unit;
+import com.minquoad.unit.UnitFactory;
 
 public class FailedInLoginigAttemptUnit extends Unit {
 
-	public FailedInLoginigAttemptUnit(DaoFactory daoFactory) {
-		super(daoFactory);
+	public FailedInLoginigAttemptUnit(UnitFactory unitFactory) {
+		super(unitFactory);
 	}
 
 	public void registerFailedInLoginigAttempt(String mailAddress) {

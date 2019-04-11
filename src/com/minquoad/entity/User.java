@@ -86,18 +86,18 @@ public class User {
 		return hasAdminLvl(user.getAdminLevel() + 1);
 	}
 
-	public void setPassword(String password) {
-		this.setHashedSaltedPassword(toHashedSaltedPassword(password));
+	public void setPassword(String password, Deployment deployment) {
+		this.setHashedSaltedPassword(toHashedSaltedPassword(password, deployment));
 	}
 
-	public boolean isPassword(String password) {
-		return this.getHashedSaltedPassword().equals(toHashedSaltedPassword(password));
+	public boolean isPassword(String password, Deployment deployment) {
+		return this.getHashedSaltedPassword().equals(toHashedSaltedPassword(password, deployment));
 	}
 
-	public String toHashedSaltedPassword(String string) {
+	public String toHashedSaltedPassword(String string, Deployment deployment) {
 		try {
 
-			String saltedString = SecurityTool.getDynamicSalt(this) + Deployment.getUserPasswordSalt() + string;
+			String saltedString = SecurityTool.getDynamicSalt(this) + deployment.getUserPasswordSalt() + string;
 			return SecurityTool.toSha512(saltedString);
 
 		} catch (Exception ex) {

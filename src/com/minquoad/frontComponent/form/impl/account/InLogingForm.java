@@ -8,7 +8,8 @@ import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.unit.FailedInLoginigAttemptUnit;
+import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.unit.impl.FailedInLoginigAttemptUnit;
 
 public class InLogingForm extends Form {
 
@@ -63,7 +64,7 @@ public class InLogingForm extends Form {
 				if (field2.isValid()) {
 					User user = userDao.getOneMatching("mailAddress", field2.getValue());
 
-					if (user == null || !user.isPassword(value)) {
+					if (user == null || !user.isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
 						return "Mail address or password is incorrect.";
 					}
 				}

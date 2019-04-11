@@ -35,7 +35,7 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
-		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile().length()));
+		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getDeployment()).length()));
 		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
 	}
 
@@ -44,7 +44,7 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
-		File file = protectedFile.getFile();
+		File file = protectedFile.getFile(getDeployment());
 
 		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);

@@ -14,46 +14,26 @@ public class Deployment implements ServletContextListener {
 
 	public static final String version = "0.1.0";
 
+	public static final String deploymentKey = "deployment";
+	public static final String storageManagerKey = "storageManager";
+	public static final String cronManagerKey = "cronManager";
 	public static final String databaseKey = "database";
+	public static final String loggerKey = "logger";
 
 	public static final String configurationJsonPath = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
-	private static String storagePath;
-	private static String databaseHost;
-	private static String databasePort;
-	private static String databaseName;
-	private static String databaseUser;
-	private static String databasePassword;
-	private static String userPasswordSalt;
+	private String storagePath;
+	private String databaseHost;
+	private String databasePort;
+	private String databaseName;
+	private String databaseUser;
+	private String databasePassword;
+	private String userPasswordSalt;
 
-	@Override
-	public void contextInitialized(ServletContextEvent contextEvent) {
-		ServletContext servletContext = contextEvent.getServletContext();
-
-		initConfiguration();
-		StorageManager.initTree();
-		servletContext.setAttribute(databaseKey, new Database());
-		// CronManager.start();
-
-		Logger.logInfo("Servlet context initialized");
-	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent contextEvent) {
-		ServletContext servletContext = contextEvent.getServletContext();
-
-		CronManager.stop();
-		Database database = (Database) servletContext.getAttribute(Deployment.databaseKey);
-		database.close();
-
-		Logger.logInfo("Servlet context destroyed");
-	}
-
-	public static void initConfiguration() {
-
+	public Deployment() {
 		File file = new File(configurationJsonPath);
 		if (!file.exists()) {
-			new Exception("Configuration json not found at \"" + configurationJsonPath + "\".").printStackTrace();
+			new RuntimeException("Configuration json not found at \"" + configurationJsonPath + "\".");
 		} else {
 			JSONObject configurationJson = StorageManager.fileToJsonObject(configurationJsonPath);
 
@@ -67,35 +47,70 @@ public class Deployment implements ServletContextListener {
 			databaseUser = databaseJson.getString("user");
 			databasePassword = databaseJson.getString("password");
 			userPasswordSalt = databaseJson.getString("userPasswordSalt");
-
 		}
 	}
 
-	public static String getStoragePath() {
+	@Override
+	public void contextInitialized(ServletContextEvent contextEvent) {
+		ServletContext servletContext = contextEvent.getServletContext();
+
+		Deployment deployment = new Deployment();
+		servletContext.setAttribute(deploymentKey, deployment);
+
+		StorageManager storageManager = new StorageManager(servletContext);
+		servletContext.setAttribute(storageManagerKey, storageManager);
+
+		Logger logger = new Logger(servletContext);
+		servletContext.setAttribute(loggerKey, logger);
+
+		Database database = new Database(servletContext);
+		servletContext.setAttribute(databaseKey, database);
+
+		CronManager cronManager = new CronManager(servletContext);
+		servletContext.setAttribute(cronManagerKey, cronManager);
+
+		// cronManager.start();
+		logger.logInfo("Servlet context initialized");
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent contextEvent) {
+		ServletContext servletContext = contextEvent.getServletContext();
+
+		CronManager cronManager = (CronManager) servletContext.getAttribute(cronManagerKey);
+		Database database = (Database) servletContext.getAttribute(databaseKey);
+		Logger logger = (Logger) servletContext.getAttribute(loggerKey);
+
+		cronManager.stop();
+		database.close();
+		logger.logInfo("Servlet context destroyed");
+	}
+
+	public String getStoragePath() {
 		return storagePath;
 	}
 
-	public static String getDatabaseHost() {
+	public String getDatabaseHost() {
 		return databaseHost;
 	}
 
-	public static String getDatabasePort() {
+	public String getDatabasePort() {
 		return databasePort;
 	}
 
-	public static String getDatabaseName() {
+	public String getDatabaseName() {
 		return databaseName;
 	}
 
-	public static String getDatabaseUser() {
+	public String getDatabaseUser() {
 		return databaseUser;
 	}
 
-	public static String getDatabasePassword() {
+	public String getDatabasePassword() {
 		return databasePassword;
 	}
 
-	public static String getUserPasswordSalt() {
+	public String getUserPasswordSalt() {
 		return userPasswordSalt;
 	}
 

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
+import com.minquoad.tool.http.ImprovedHttpServlet;
 
 public class UserPasswordAlterationForm extends Form {
 
@@ -24,7 +25,7 @@ public class UserPasswordAlterationForm extends Form {
 		field = new FormStringField(oldPassowrdKey);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			if (getUser().isPassword(value)) {
+			if (getUser().isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
 				return null;
 			} else {
 				return "Old password not correct.";

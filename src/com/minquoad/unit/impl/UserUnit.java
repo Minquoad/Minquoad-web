@@ -1,15 +1,16 @@
-package com.minquoad.unit;
+package com.minquoad.unit.impl;
 
 import java.time.Instant;
 
-import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
+import com.minquoad.unit.Unit;
+import com.minquoad.unit.UnitFactory;
 
 public class UserUnit extends Unit {
 
-	public UserUnit(DaoFactory daoFactory) {
-		super(daoFactory);
+	public UserUnit(UnitFactory unitFactory) {
+		super(unitFactory);
 	}
 
 	public User createNewUser(String mailAddress, String nickname, String password) {
@@ -23,10 +24,9 @@ public class UserUnit extends Unit {
 		user.setLastActivityInstant(Instant.now());
 		user.setDefaultColor(User.defaultDefaultColor);
 		userDao.insert(user);
-		user.setPassword(password);
+		user.setPassword(password, getDeployment());
 		userDao.persist(user);
-
-		new ConversationUnit(getDaoFactory()).initUserConversations(user);
+		getUnitFactory().getConversationUnit().initUserConversations(user);
 
 		return user;
 	}

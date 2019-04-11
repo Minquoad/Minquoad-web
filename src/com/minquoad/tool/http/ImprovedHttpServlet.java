@@ -15,6 +15,7 @@ import com.minquoad.entity.User;
 import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
+import com.minquoad.service.StorageManager;
 import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
@@ -158,9 +159,25 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static UnitFactory getUnitFactory(HttpServletRequest request) {
 		if (request.getAttribute(unitFactoryKey) == null) {
-			request.setAttribute(unitFactoryKey, new UnitFactory(getDaoFactory(request)));
+			request.setAttribute(unitFactoryKey, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
 		}
 		return (UnitFactory) request.getAttribute(unitFactoryKey);
+	}
+
+	public StorageManager getStorageManager() {
+		return (StorageManager) getServletContext().getAttribute(Deployment.storageManagerKey);
+	}
+
+	public static StorageManager getStorageManager(HttpServletRequest request) {
+		return (StorageManager) request.getServletContext().getAttribute(Deployment.storageManagerKey);
+	}
+
+	public Deployment getDeployment() {
+		return (Deployment) getServletContext().getAttribute(Deployment.deploymentKey);
+	}
+
+	public static Deployment getDeployment(HttpServletRequest request) {
+		return (Deployment) request.getServletContext().getAttribute(Deployment.deploymentKey);
 	}
 
 	public abstract boolean isAccessible(HttpServletRequest request);

@@ -126,14 +126,14 @@ public class Test extends ImprovedHttpServlet {
 			ProtectedFileDao protectedFileDao = getDaoFactory(request).getProtectedFileDao();
 			ProtectedFile pf = protectedFileDao.getByPk(0l);
 			if (pf != null) {
-				pf.getFile().delete();
+				pf.getFile(getDeployment()).delete();
 				protectedFileDao.delete(pf);
 			}
 			if (PartTool.hasFile(part)) {
 				pf = new ProtectedFile();
 				pf.setId(0l);
 				pf.setOriginalName(PartTool.getFileName(part));
-				PartTool.saveInProtectedFile(part, pf);
+				PartTool.saveInProtectedFile(part, pf, getStorageManager());
 				protectedFileDao.persist(pf);
 			}
 		}

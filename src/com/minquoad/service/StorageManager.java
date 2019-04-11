@@ -4,20 +4,25 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
+import javax.servlet.ServletContext;
+
 import org.json.JSONObject;
 
-public abstract class StorageManager {
+public class StorageManager {
 
 	public static final String internalPath = "internal/";
-
 	public static final String tmpPath = internalPath + "tmp/";
-	public static final String logPath = internalPath + "log/";
 	public static final String uploadedPath = tmpPath + "uploaded/";
-
+	public static final String logPath = internalPath + "log/";
 	public static final String communityPath = "community/";
 
-	public static void initTree() {
-		initFolderIfNotExists(Deployment.getStoragePath());
+	private final ServletContext servletContext;
+
+	public StorageManager(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+
+		initFolderIfNotExists(deployment.getStoragePath());
 		initStorageFolderIfNotExists(internalPath);
 		initStorageFolderIfNotExists(tmpPath);
 		initStorageFolderIfNotExists(logPath);
@@ -25,8 +30,13 @@ public abstract class StorageManager {
 		initStorageFolderIfNotExists(communityPath);
 	}
 
-	public static boolean initStorageFolderIfNotExists(String filePath) {
-		return initFolderIfNotExists(Deployment.getStoragePath() + filePath);
+	public String getStoragePath(String relativePath) {
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+		return deployment.getStoragePath() + relativePath;
+	}
+
+	public boolean initStorageFolderIfNotExists(String filePath) {
+		return initFolderIfNotExists(getStoragePath(filePath));
 	}
 
 	public static boolean initFolderIfNotExists(String filePath) {

@@ -4,45 +4,46 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
+
+import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
 import com.minquoad.service.StorageManager;
 
 public class CronManager {
 
-	static boolean stopRequested;
-	
-	static long lastMinuteStart;
-	static long lastHoureStart;
-	static long lastDayStart;
+	private boolean stopRequested;
 
-	static List<Runnable> minutelyCrons = new ArrayList<Runnable>();
+	private long lastMinuteStart;
 
-	static {
-		
+	private List<Runnable> minutelyCrons = new ArrayList<Runnable>();
+
+	private final ServletContext servletContext;
+
+	public CronManager(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
-	
-	public static void start() {
-		
+
+	public void start() {
+
 		stopRequested = false;
-		
+
 		new Thread(new Runnable() {
 			public void run() {
 				long startTime = Instant.now().toEpochMilli();
 				lastMinuteStart = startTime;
-				lastHoureStart = startTime;
-				lastDayStart = startTime;
 
-				CronManager.loop();
+				CronManager.this.loop();
 			}
 		}).start();
-		
+
 	}
 
-	public static void stop() {
+	public void stop() {
 		stopRequested = true;
 	}
 
-	public static void loop() {
+	public void loop() {
 		while (!stopRequested) {
 
 			long timeToWait = 1000 * 60 + lastMinuteStart - Instant.now().toEpochMilli();
@@ -60,9 +61,10 @@ public class CronManager {
 		}
 	}
 
-	private static void runMinutlyCrons() {
-		
-		Logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.logPath + "cron.log");
+	private void runMinutlyCrons() {
+		Logger logger = (Logger) servletContext.getAttribute(Deployment.loggerKey);
+
+		logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.logPath + "cron.log");
 
 		for (Runnable minutelyCron : minutelyCrons) {
 			try {
@@ -70,7 +72,7 @@ public class CronManager {
 
 			} catch (Exception e) {
 				e.printStackTrace();
-				Logger.logError(e);
+				logger.logError(e);
 			}
 		}
 	}

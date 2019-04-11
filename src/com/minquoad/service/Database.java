@@ -3,6 +3,8 @@ package com.minquoad.service;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.servlet.ServletContext;
+
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.minquoad.dao.interfaces.DaoFactory;
@@ -17,17 +19,22 @@ public class Database {
 	public static final int maxConnectionsPerPartition = 64;
 	public static final int partitionCount = 2;
 
+	private final ServletContext servletContext;
+
 	private BoneCP connectionPool;
 
-	public Database() {
+	public Database(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+
 		try {
 			Class.forName("org.postgresql.Driver");
 
 			BoneCPConfig config = new BoneCPConfig();
 
 			config.setJdbcUrl(getDatabaseUrl());
-			config.setUsername(Deployment.getDatabaseUser());
-			config.setPassword(Deployment.getDatabasePassword());
+			config.setUsername(deployment.getDatabaseUser());
+			config.setPassword(deployment.getDatabasePassword());
 
 			config.setMinConnectionsPerPartition(minConnectionsPerPartition);
 			config.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
@@ -37,7 +44,8 @@ public class Database {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.logError(e);
+			Logger logger = (Logger) servletContext.getAttribute(Deployment.loggerKey);
+			logger.logError(e);
 		}
 	}
 
@@ -45,8 +53,9 @@ public class Database {
         return connectionPool.getConnection();
     }
 
-	public static String getDatabaseUrl() {
-		return dataBaseProtocol + ":" + dataBaseSubprotocol + "://" + Deployment.getDatabaseHost() + ":" + Deployment.getDatabasePort() + "/" + Deployment.getDatabaseName();
+	public String getDatabaseUrl() {
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+		return dataBaseProtocol + ":" + dataBaseSubprotocol + "://" + deployment.getDatabaseHost() + ":" + deployment.getDatabasePort() + "/" + deployment.getDatabaseName();
 	}
 
 	public void close() {

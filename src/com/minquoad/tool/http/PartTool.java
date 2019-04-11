@@ -10,7 +10,6 @@ import java.util.Random;
 import javax.servlet.http.Part;
 
 import com.minquoad.entity.file.ProtectedFile;
-import com.minquoad.service.Deployment;
 import com.minquoad.service.StorageManager;
 
 public abstract class PartTool {
@@ -29,7 +28,7 @@ public abstract class PartTool {
 		return null;
 	}
 
-	public static void saveInProtectedFile(Part part, ProtectedFile protectedFile) throws IOException {
+	public static void saveInProtectedFile(Part part, ProtectedFile protectedFile, StorageManager storageManager) throws IOException {
 
 		File newFile = null;
 		String randomPath = null;
@@ -40,7 +39,7 @@ public abstract class PartTool {
 		for (int i = 0; i < 2; i++) {
 			randomDirPath += random.nextInt(10) + "/";
 		}
-		StorageManager.initStorageFolderIfNotExists(randomDirPath);
+		storageManager.initStorageFolderIfNotExists(randomDirPath);
 		while (newFile == null || newFile.exists()) {
 			String randomFileName = Integer.toString(Math.abs(random.nextInt(1000000000)));
 			while (randomFileName.length() < 9) {
@@ -48,7 +47,7 @@ public abstract class PartTool {
 			}
 			randomPath = randomDirPath + randomFileName;
 
-			newFile = new File(Deployment.getStoragePath() + randomPath);
+			newFile = new File(storageManager.getStoragePath(randomPath));
 		}
 
 		saveInFile(part, newFile);

@@ -76,7 +76,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 					UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
 					if (image != null) {
-						image.getFile().delete();
+						image.getFile(getDeployment()).delete();
 						userProfileImageDao.delete(image);
 					}
 
@@ -87,7 +87,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 						image.setOriginalName(field.getOriginalFileName());
 						image.setUser(getUser(request));
 
-						PartTool.saveInProtectedFile(field.getValue(), image);
+						PartTool.saveInProtectedFile(field.getValue(), image, getStorageManager());
 
 						userProfileImageDao.persist(image);
 					}
@@ -103,7 +103,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 				if (form.isValide()) {
 					User user = getUser(request);
-					user.setPassword(form.getNewPassword());
+					user.setPassword(form.getNewPassword(), getDeployment());
 					getDaoFactory(request).getUserDao().persist(user);
 				} else {
 					request.setAttribute("userPasswordAlterationForm", form);

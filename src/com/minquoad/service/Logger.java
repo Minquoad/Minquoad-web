@@ -9,27 +9,37 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class Logger {
+import javax.servlet.ServletContext;
 
-	public static void logError(Exception e) {
+public class Logger {
+
+	private final ServletContext servletContext;
+
+	public Logger(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+
+	public void logError(Exception e) {
 		logError(getStackTraceAsString(e));
 	}
 
-	public static void logError(String string) {
+	public void logError(String string) {
 		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "error.log");
 	}
 
-	public static void logWarning(String string) {
+	public void logWarning(String string) {
 		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "warning.log");
 	}
 
-	public static void logInfo(String string) {
+	public void logInfo(String string) {
 		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "info.log");
 	}
 
-	public static void logInFile(String string, String filePath) {
+	public void logInFile(String string, String filePath) {
 		try {
-			File file = new File(Deployment.getStoragePath() + filePath);
+			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+
+			File file = new File(deployment.getStoragePath() + filePath);
 			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 				file.createNewFile();
@@ -60,5 +70,5 @@ public abstract class Logger {
 
 		return stackTrace;
 	}
-	
+
 }

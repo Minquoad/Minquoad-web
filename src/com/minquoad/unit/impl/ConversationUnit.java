@@ -1,18 +1,19 @@
-package com.minquoad.unit;
+package com.minquoad.unit.impl;
 
 import java.util.List;
 
 import com.minquoad.dao.interfaces.ConversationDao;
-import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
+import com.minquoad.unit.Unit;
+import com.minquoad.unit.UnitFactory;
 
 public class ConversationUnit extends Unit {
 
-	public ConversationUnit(DaoFactory daoFactory) {
-		super(daoFactory);
+	public ConversationUnit(UnitFactory unitFactory) {
+		super(unitFactory);
 	}
 
 	public void initUserConversations(User user) {

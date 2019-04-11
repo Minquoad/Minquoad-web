@@ -16,7 +16,7 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.ConversationResume;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.unit.ConversationUnit;
+import com.minquoad.unit.impl.ConversationUnit;
 
 @WebServlet("/Conversations")
 public class Conversations extends ImprovedHttpServlet {
@@ -56,10 +56,11 @@ public class Conversations extends ImprovedHttpServlet {
 					newConversation.setTitle("");
 					newConversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
 					conversationDao.insert(newConversation);
-					new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(user, newConversation);
-					new ConversationUnit(getDaoFactory(request)).giveAccessToConversation(getUser(request), newConversation);
-					selectedConversation = newConversation;
+					ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
+					conversationUnit.giveAccessToConversation(user, newConversation);
+					conversationUnit.giveAccessToConversation(getUser(request), newConversation);
 					conversations.add(newConversation);
+					selectedConversation = newConversation;
 				}
 			}
 		}
