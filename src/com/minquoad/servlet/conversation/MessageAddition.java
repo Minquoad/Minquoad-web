@@ -25,7 +25,6 @@ public class MessageAddition extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		initForms(request);
-
 		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
 		form.submit();
 
@@ -39,7 +38,6 @@ public class MessageAddition extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
-		form.submit();
 
 		if (form.isValide()) {
 			Message message = new Message();

@@ -9,19 +9,23 @@ $(document).click(function(event) {
 	let clickedMenuTriggerIfExists = $(event.target).closest(".dynamicMenuTrigger");
 
 	dynamicMenuTriggers.each(function() {
-		if ($(this).is(clickedMenuTriggerIfExists)) {
 
-			if ($(this).find(".dynamicMenu").css("display") == "none") {
-				$(this).find(".dynamicMenu").css("display", "block");
-				$(this).css("background-color", "var(--MENU_BACKGROUND_COLOR)");
-			} else {
-				$(this).find(".dynamicMenu").css("display", "none");
-				$(this).css("background-color", "inherit");
-			}
+		let dynamicMenuTrigger = $(this);
+		let dynamicMenu = dynamicMenuTrigger.find(".dynamicMenu");
+
+		if (dynamicMenuTrigger.is(clickedMenuTriggerIfExists) && dynamicMenu.css("display") == "none") {
+
+			dynamicMenu.css("display", "block");
+			dynamicMenuTrigger.css("background-color", "var(--MENU_BACKGROUND_COLOR)");
 
 		} else {
-			$(this).find(".dynamicMenu").css("display", "none");
-			$(this).css("background-color", "inherit");
+
+			let clickedMenuIfExists = $(event.target).closest(".dynamicMenu");
+
+			if (!dynamicMenu.is(clickedMenuIfExists)) {
+				dynamicMenu.css("display", "none");
+				dynamicMenuTrigger.css("background-color", "inherit");
+			}
 		}
 	});
 

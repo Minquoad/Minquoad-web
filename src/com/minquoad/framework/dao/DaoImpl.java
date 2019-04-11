@@ -265,6 +265,8 @@ public abstract class DaoImpl<Entity> {
 
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
+
+			getPrimaryKeyEntityMember().setValueOfResultSetInEntity(entity, resultSet);
 			this.hydrate(entity, resultSet, false);
 
 			ConnectionManager.close(resultSet, preparedStatement, connection);
@@ -611,15 +613,6 @@ public abstract class DaoImpl<Entity> {
 		return true;
 	}
 
-	private void hydrate(Entity entity, ResultSet resultSet, boolean resultSetContainingSuperMemberResults) throws SQLException {
-		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
-			entityMember.setValueOfResultSetInEntity(entity, resultSet);
-		}
-		if (resultSetContainingSuperMemberResults && hasSuperClassDao()) {
-			getSuperClassDao().hydrate(entity, resultSet, true);
-		}
-	}
-
 	private Entity toUnifiedInstance(ResultSet resultSet) throws SQLException {
 		Entity entity = getInventory().getByPrimaryKey(resultSet);
 		if (entity != null) {
@@ -628,10 +621,24 @@ public abstract class DaoImpl<Entity> {
 		return instantiateFromResultSet(resultSet);
 	}
 
+	private void hydrate(Entity entity, ResultSet resultSet, boolean resultSetContainingSuperMemberResults) throws SQLException {
+		for (EntityMember<Entity, ?> entityMember : getEntityMembers()) {
+			// the primary key should be set before hydration to exist in inventory
+			// and avoid infinite loop on self referencing entities
+			if (entityMember != getPrimaryKeyEntityMember()) {
+				entityMember.setValueOfResultSetInEntity(entity, resultSet);
+			}
+		}
+		if (resultSetContainingSuperMemberResults && hasSuperClassDao()) {
+			getSuperClassDao().hydrate(entity, resultSet, true);
+		}
+	}
+
 	private Entity instantiateFromResultSet(ResultSet resultSet) throws SQLException {
 		Entity entity = instantiateBlank();
-		hydrate(entity, resultSet, true);
+		getPrimaryKeyEntityMember().setValueOfResultSetInEntity(entity, resultSet);
 		putInInventories(entity);
+		hydrate(entity, resultSet, true);
 		return entity;
 	}
 

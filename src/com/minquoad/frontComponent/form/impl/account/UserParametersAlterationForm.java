@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormColorField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.ColorValueChecker;
 import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChecker;
 
 public class UserParametersAlterationForm extends Form {
@@ -74,9 +74,8 @@ public class UserParametersAlterationForm extends Form {
 		field.setValue(getUser().getNickname());
 		this.addField(field);
 
-		field = new FormStringField(defaultColorKey);
+		field = new FormColorField(defaultColorKey);
 		field.setEmptyPermitted(false);
-		field.addValueChecker(new ColorValueChecker());
 		field.setValue(getUser().getDefaultColorAsHtmlValue());
 		this.addField(field);
 
@@ -95,6 +94,11 @@ public class UserParametersAlterationForm extends Form {
 	public String getdefaultColor() {
 		FormStringField field = (FormStringField) this.getField(defaultColorKey);
 		return field.getValue();
+	}
+
+	public Integer getDefaultColor() {
+		FormStringField field = (FormStringField) this.getField(defaultColorKey);
+		return field.getValueAsInteger();
 	}
 
 }

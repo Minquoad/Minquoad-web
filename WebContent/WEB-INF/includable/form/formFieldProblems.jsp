@@ -6,12 +6,10 @@
 <c:set var="form" value="${ requestScope[param.formKey] }" scope="page" />
 <c:set var="fieldValueProblems" value="${ pageScope.form.getFieldValueProblems(param.fieldName) }" scope="page" />
 
-<c:if test="${ not empty pageScope.fieldValueProblems }">
-	<c:if test="${ fn:length(pageScope.fieldValueProblems) ne 0}">
-		<ul class="formErrors">
-			<c:forEach items="${ pageScope.fieldValueProblems }" var="problem" varStatus="status">
-				<li><c:out value="${ problem }" /></li>
-			</c:forEach>
-		</ul>
-	</c:if>
+<c:if test="${ fn:length(pageScope.fieldValueProblems) ne 0}">
+	<ul class="formErrors">
+		<c:forEach items="${ pageScope.fieldValueProblems }" var="problem" varStatus="status">
+			<li><c:out value="${ problem }" /></li>
+		</c:forEach>
+	</ul>
 </c:if>

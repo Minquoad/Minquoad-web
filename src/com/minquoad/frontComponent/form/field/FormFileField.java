@@ -26,7 +26,7 @@ public class FormFileField extends FormField {
 	@Override
 	public void computeValueProblems() {
 		super.computeValueProblems();
-		if (getValueProblems().isEmpty()) {
+		if (!isValueNull() && !isValueEmpty()) {
 
 			if (!allowedExtentions.isEmpty()) {
 				boolean isExtentionAuthorized = false;

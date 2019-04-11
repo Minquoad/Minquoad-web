@@ -31,7 +31,6 @@ public class UpSigning extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);
-		
 		UpSigningForm form = (UpSigningForm) request.getAttribute("form");
 		form.submit();
 

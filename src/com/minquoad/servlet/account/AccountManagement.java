@@ -58,14 +58,9 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 				if (form.isValide()) {
 					User user = getUser(request);
-
-					getUser(request).setNickname(form.getnickname());
-					getUser(request).setMailAddress(form.getmailAddress());
-
-					String colorString = form.getdefaultColor();
-					int parseInt = Integer.parseInt(colorString.substring(1), 16);
-					user.setDefaultColor(parseInt);
-
+					user.setNickname(form.getnickname());
+					user.setMailAddress(form.getmailAddress());
+					user.setDefaultColor(form.getDefaultColor());
 					getDaoFactory(request).getUserDao().persist(user);
 				}
 			}

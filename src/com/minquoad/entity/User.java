@@ -131,14 +131,8 @@ public class User {
 		List<Character> nicknameImpossibleChar = getNotNormalChars(nickname);
 		if (nicknameImpossibleChar.size() != 0) {
 			String impossibleCharsText = "The folowing characters are not allowed in a nickname: ";
-			boolean firstLoop = true;
 			for (Character character : nicknameImpossibleChar) {
-				if (!firstLoop) {
-					impossibleCharsText += ", ";
-				}
 				impossibleCharsText += character;
-
-				firstLoop = false;
 			}
 			problems.add(impossibleCharsText);
 		}
@@ -234,8 +228,7 @@ public class User {
 		if (unblockInstant == null) {
 			return false;
 		} else {
-			Instant dayBeforeUnblockInstant = Instant.ofEpochMilli(unblockInstant.toEpochMilli() - (1000l * 60l * 60l * 24l));
-			return Instant.now().isBefore(dayBeforeUnblockInstant);
+			return Instant.now().isBefore(unblockInstant);
 		}
 	}
 
@@ -266,5 +259,5 @@ public class User {
 	public void setDefaultColor(Integer defaultColor) {
 		this.defaultColor = defaultColor;
 	}
-	
+
 }

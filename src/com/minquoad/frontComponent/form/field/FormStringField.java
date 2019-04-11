@@ -24,7 +24,7 @@ public class FormStringField extends FormField {
 	@Override
 	public void computeValueProblems() {
 		super.computeValueProblems();
-		if (getValueProblems().isEmpty()) {
+		if (!isValueNull() && !isValueEmpty()) {
 			for (StringValueChecker valueChecker : valueCheckers) {
 				String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
 				if (valueProblem != null) {

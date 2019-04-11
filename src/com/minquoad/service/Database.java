@@ -52,8 +52,8 @@ public class Database {
 	public void close() {
 	}
 
-	public DaoFactory instantiateDaoFactory() {
-		return new DaoFactoryImpl(this);
+	public DaoFactory getNewDaoFactory() {
+		return DaoFactoryImpl.getNewDaoFactory(this);
 	}
 
 }

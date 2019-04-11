@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
+	$('.table').dynatable({
+		features : {
+			pushState : false
+		}
+	});
+
 	borderTiles();
 
 	detectDynamicMenuTriggers();
@@ -8,12 +14,6 @@ $(document).ready(function() {
 
 	detectMovableDivs();
 
-	$('.table').dynatable({
-		features : {
-			pushState : false
-		}
-	});
-	
 	detectImprovementSuggestionAdditionForm();
 	
 });

@@ -21,7 +21,7 @@ public class InLoging extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		return true;
+		return getUser(request) == null;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -34,7 +34,6 @@ public class InLoging extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);
-
 		InLogingForm form = (InLogingForm) request.getAttribute("form");
 		form.submit();
 
@@ -56,25 +55,20 @@ public class InLoging extends ImprovedHttpServlet {
 			failedInLoginigAttemptUnit.registerFailedInLoginigAttempt(form.getMailAddress());
 		}
 
-		forwardToView(request, response, viewPath);
-	}
-
-	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new InLogingForm(request));
-	}
-
-	@Override
-	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		if (getUser(request) != null) {
+		if (getUser(request) == null) {
+			forwardToView(request, response, viewPath);
+		} else {
 			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedUrlKey);
 			if (lastRefusedUrl != null) {
 				response.sendRedirect(lastRefusedUrl);
 			} else {
 				response.sendRedirect(request.getContextPath() + "/");
 			}
-
-		} else {
-			super.forwardToView(request, response, viewPath);
 		}
 	}
+
+	private void initForms(HttpServletRequest request) {
+		request.setAttribute("form", new InLogingForm(request));
+	}
+
 }

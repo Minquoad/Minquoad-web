@@ -1,0 +1,8 @@
+#blockingFormTrigger .dynamicMenu {
+	right: 0;
+	left: auto;
+}
+
+#blockingFormTrigger .dynamicMenuItem {
+	text-align: center;
+}

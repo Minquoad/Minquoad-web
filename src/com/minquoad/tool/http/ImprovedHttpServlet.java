@@ -2,8 +2,6 @@ package com.minquoad.tool.http;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +12,6 @@ import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.Form;
 import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
@@ -23,8 +20,6 @@ import com.minquoad.unit.UnitFactory;
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static final String METHOD_POST = "POST";
-
-	public static final String formsKey = "forms";
 
 	// request keys
 	private final static String daoFactoryKey = "daoFactory";
@@ -68,11 +63,24 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					getDaoFactory(request).getUserDao().persist(user);
 
 					if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount") && !request.getServletPath().equals("/OutLoging")) {
-						response.sendRedirect(request.getContextPath() + "/BlockedAccount");
+						if (isFullPage()) {
+							response.sendRedirect(request.getContextPath() + "/BlockedAccount");
+						} else {
+							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+						}
 						return;
 					}
 
 				} else {
+					if (controllingAdmin.isBlocked() && !request.getServletPath().equals("/Unpossession")) {
+						if (isFullPage()) {
+							response.sendRedirect(request.getContextPath() + "/Unpossession");
+						} else {
+							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+						}
+						return;
+					}
+
 					requestLog.setControllingAdmin(controllingAdmin);
 					setControllingAdmin(request, controllingAdmin);
 
@@ -108,12 +116,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				request.getSession().removeAttribute(lastRefusedUrlKey);
 			}
 
-			if (request.getMethod().equals(METHOD_POST)) {
-				for (Form form : getForms(request).values()) {
-					form.submit();
-				}
-			}
-
 			super.service(request, response);
 
 			if (isLoggingAllRequests()) {
@@ -127,25 +129,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			throw e;
 		}
-	}
-
-	public Form getForm(HttpServletRequest request, String key) {
-		return getForms(request).get(key);
-	}
-
-	public Map<String, Form> getForms(HttpServletRequest request) {
-		if (request.getAttribute(formsKey) == null) {
-			Map<String, Form> forms = new FormMap();
-			initForms(forms, request);
-			request.setAttribute(formsKey, forms);
-		}
-		return (FormMap) request.getAttribute(formsKey);
-	}
-
-	private class FormMap extends HashMap<String, Form> implements Map<String, Form> {
-	}
-
-	protected void initForms(Map<String, Form> forms, HttpServletRequest request) {
 	}
 
 	public String getCurrentUrlWithArguments(HttpServletRequest request) {
@@ -168,7 +151,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
 		if (request.getAttribute(daoFactoryKey) == null) {
 			Database database = (Database) request.getServletContext().getAttribute(Deployment.databaseKey);
-			request.setAttribute(daoFactoryKey, database.instantiateDaoFactory());
+			request.setAttribute(daoFactoryKey, database.getNewDaoFactory());
 		}
 		return (DaoFactory) request.getAttribute(daoFactoryKey);
 	}
@@ -218,15 +201,15 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			return null;
 		}
 		try {
-			return dao.getByPk(Integer.parseInt(idString));
-		} catch (Exception e) {
-		}
-		try {
 			return dao.getByPk(Long.parseLong(idString));
 		} catch (Exception e) {
 		}
 		try {
 			return dao.getByPk(idString);
+		} catch (Exception e) {
+		}
+		try {
+			return dao.getByPk(Integer.parseInt(idString));
 		} catch (Exception e) {
 		}
 		return null;

@@ -17,9 +17,13 @@ public class DaoFactoryImpl implements DaoFactory {
 	private ImprovementSuggestionDaoImpl improvementSuggestionDaoImpl;
 
 	private Database database;
-	
-	public DaoFactoryImpl(Database database) {
+
+	private DaoFactoryImpl(Database database) {
 		this.database = database;
+	}
+
+	public static DaoFactory getNewDaoFactory(Database database) {
+		return new DaoFactoryImpl(database);
 	}
 
 	public Database getDatabase() {

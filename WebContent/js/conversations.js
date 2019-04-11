@@ -22,7 +22,7 @@ function detectConversationResumes() {
 				borderTiles();
 			},
 			error : function(jqXHR) {
-				alert(jqXHR.status);
+				alert("ERROR " + jqXHR.status);
 				window.location.replace("");
 			}
 		});
@@ -50,7 +50,7 @@ function detectCurrentConversation() {
 				textarea.val("");
 			},
 			error : function(jqXHR) {
-				alert(jqXHR.status);
+				alert("ERROR " + jqXHR.status);
 				window.location.replace("");
 			}
 		});
@@ -96,7 +96,7 @@ $(document).ready(function() {
 					}
 				},
 				error : function(jqXHR) {
-					alert(jqXHR.status);
+					alert("ERROR " + jqXHR.status);
 					window.location.replace("");
 				}
 			});

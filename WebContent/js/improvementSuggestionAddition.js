@@ -21,7 +21,7 @@ function detectImprovementSuggestionAdditionForm() {
 							textarea.val("");
 						},
 						error : function(jqXHR) {
-							alert(jqXHR.status);
+							alert("ERROR " + jqXHR.status);
 							window.location.replace("");
 						}
 					});
