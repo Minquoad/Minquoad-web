@@ -20,9 +20,8 @@ function detectImprovementSuggestionAdditionForm() {
 							alert("Thank you :)");
 							textarea.val("");
 						},
-						error : function(jqXHR) {
-							alert("ERROR " + jqXHR.status);
-							window.location.replace("");
+						error : function(err) {
+							handleAjaxError(err);
 						}
 					});
 				}

@@ -21,9 +21,8 @@ function detectConversationResumes() {
 				detectCurrentConversation();
 				borderTiles();
 			},
-			error : function(jqXHR) {
-				alert("ERROR " + jqXHR.status);
-				window.location.replace("");
+			error : function(err) {
+				handleAjaxError(err);
 			}
 		});
 	});
@@ -49,9 +48,8 @@ function detectCurrentConversation() {
 			success : function() {
 				textarea.val("");
 			},
-			error : function(jqXHR) {
-				alert("ERROR " + jqXHR.status);
-				window.location.replace("");
+			error : function(err) {
+				handleAjaxError(err);
 			}
 		});
 	};
@@ -95,9 +93,8 @@ $(document).ready(function() {
 						messagesDiv.scrollTop = messagesDiv.scrollHeight;
 					}
 				},
-				error : function(jqXHR) {
-					alert("ERROR " + jqXHR.status);
-					window.location.replace("");
+				error : function(err) {
+					handleAjaxError(err);
 				}
 			});
 		}
