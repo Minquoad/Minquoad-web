@@ -64,19 +64,16 @@ public class FileDownload extends ImprovedHttpServlet {
 			while ((length = inputStream.read(buffer)) > 0) {
 				outputStream.write(buffer, 0, length);
 			}
-			inputStream.close();
-			outputStream.close();
 
-		} catch (Exception e) {
+		} finally {
 			try {
 				inputStream.close();
-			} catch (Exception e0) {
+			} catch (Exception e) {
 			}
 			try {
 				outputStream.close();
-			} catch (Exception e0) {
+			} catch (Exception e) {
 			}
-			throw e;
 		}
 	}
 

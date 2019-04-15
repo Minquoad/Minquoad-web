@@ -20,8 +20,8 @@ public class Blocking extends ImprovedHttpServlet {
 		BlockingForm form = (BlockingForm) request.getAttribute("form");
 		form.submit();
 
-		User target = form.getTarget();
 		User user = getUser(request);
+		User target = form.getTarget();
 		return user != null && target != null && user.canAdminister(target);
 	}
 
@@ -32,6 +32,7 @@ public class Blocking extends ImprovedHttpServlet {
 		if (form.isValide()) {
 			User target = form.getTarget();
 			target.setUnblockInstant(form.getUnblockDate());
+			target.setAdminLevel(0);
 			getDaoFactory(request).getUserDao().persist(target);
 		}
 

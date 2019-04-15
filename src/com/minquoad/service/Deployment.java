@@ -30,6 +30,8 @@ public class Deployment implements ServletContextListener {
 	private String databasePassword;
 	private String userPasswordSalt;
 
+	private boolean open;
+
 	public Deployment() {
 		File file = new File(configurationJsonPath);
 		if (!file.exists()) {
@@ -47,6 +49,8 @@ public class Deployment implements ServletContextListener {
 			databaseUser = databaseJson.getString("user");
 			databasePassword = databaseJson.getString("password");
 			userPasswordSalt = databaseJson.getString("userPasswordSalt");
+
+			setOpen(true);
 		}
 	}
 
@@ -112,6 +116,14 @@ public class Deployment implements ServletContextListener {
 
 	public String getUserPasswordSalt() {
 		return userPasswordSalt;
+	}
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
 	}
 
 }

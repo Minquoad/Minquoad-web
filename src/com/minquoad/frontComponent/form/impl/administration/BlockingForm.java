@@ -1,6 +1,9 @@
 package com.minquoad.frontComponent.form.impl.administration;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeParseException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,9 +27,11 @@ public class BlockingForm extends Form {
 
 		field = new FormStringField(targetIdKey);
 		field.setEmptyPermitted(false);
+		this.addField(field);
 
 		field = new FormStringField(dateKey);
 		field.setEmptyPermitted(false);
+		this.addField(field);
 	}
 
 	public User getTarget() {
@@ -35,8 +40,14 @@ public class BlockingForm extends Form {
 	}
 
 	public Instant getUnblockDate() {
-		//FormStringField field = (FormStringField) this.getField(dateKey);
-		return null;//TODO
+		FormStringField field = (FormStringField) this.getField(dateKey);
+		LocalDate date;
+		try {
+			date = LocalDate.parse(field.getValue());
+		} catch (DateTimeParseException e) {
+			return null;
+		}
+		return date.atStartOfDay().toInstant(ZoneOffset.UTC);
 	}
 	
 }

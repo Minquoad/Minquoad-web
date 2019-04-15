@@ -15,75 +15,99 @@
 			<div class="totallyCenteredContainer tileContainer">
 
 				<div class="borderedTile">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>Id</th>
-								<th>Nickname</th>
-								<th>Registration date</th>
-								<th>LastActivity date</th>
-								<th title="Possession">🕹️</th>
-								<th>Admin level</th>
-								<th title="Block">🚫</th>
-								<th>Unblock date</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${ requestScope.users }" var="user" varStatus="status">
-								<c:if test="${user != requestScope.user}">
-									<tr>
-										<td>
-											<c:out value="${ user.id }" />
-										</td>
-										<td>
-											<c:out value="${ user.nickname }" />
-										</td>
-										<td>
-											<c:out value="${ user.registrationInstant }" />
-										</td>
-										<td>
-											<c:out value="${ user.lastActivityInstant }" />
-										</td>
-										<td>
-											<c:if test="${ user.canAdminister(requestScope.user) }">
-												<c:url value="/Possession" var="possessUrl">
-													<c:param name="userId" value="${user.id}" />
-												</c:url>
-												<a title="Possession" href="${possessUrl}"> 🕹️ </a>
-											</c:if>
-										</td>
-										<td>
-											<c:out value="${ user.adminLevel }" />
-										</td>
-										<td>
-											<c:if test="${ user.canAdminister(requestScope.user) }">
-												<div title="Block" class="dynamicMenuTrigger" id="blockingFormTrigger">
-													🚫
-													<div class="dynamicMenu">
-														<div class="dynamicMenuItem">
-															<c:url value="/Unblocking" var="unblockUrl">
-																<c:param name="userId" value="${ user.id }" />
-															</c:url>
-															<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="Remove blocking date" />
+					<div class="padded">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Id</th>
+									<th>Nickname</th>
+									<th>Registration date</th>
+									<th>LastActivity date</th>
+									<th title="Possession">🕹️</th>
+									<th>Admin level</th>
+									<th title="Block">🚦</th>
+									<th>Unblock date</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${ requestScope.users }" var="loopUser" varStatus="status">
+									<c:if test="${loopUser != requestScope.user}">
+										<tr>
+											<td>
+												<c:out value="${ loopUser.id }" />
+											</td>
+											<td>
+												<c:out value="${ loopUser.nickname }" />
+											</td>
+											<td>
+												<c:out value="${ loopUser.registrationInstant }" />
+											</td>
+											<td>
+												<c:out value="${ loopUser.lastActivityInstant }" />
+											</td>
+											<td>
+												<c:if test="${ requestScope.user.canAdminister(loopUser) }">
+													<c:url value="/Possession" var="possessUrl">
+														<c:param name="userId" value="${ loopUser.id }" />
+													</c:url>
+													<a title="Possession" href="${possessUrl}"> 🕹️ </a>
+												</c:if>
+											</td>
+											<td>
+												<c:out value="${ loopUser.adminLevel }" />
+											</td>
+											<td>
+												<c:if test="${ requestScope.user.canAdminister(loopUser) }">
+													<div title="Block" class="dynamicMenuTrigger" id="blockingFormTrigger">
+														🚦
+														<div class="dynamicMenu">
+															<c:if test="${ loopUser.blocked }">
+																<div class="dynamicMenuItem">
+																	<c:url value="/Unblocking" var="unblockUrl">
+																		<c:param name="userId" value="${ loopUser.id }" />
+																	</c:url>
+																	<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="🔓 Remove blocking date" />
+																</div>
+															</c:if>
+															<form method="post" class="dynamicMenuItem" action="<c:url value="/Blocking" />" accept-charset="UTF-8">
+																<label for="unblockDate"> Set unblocking date :</label>
+																<input type="hidden" name="targetId" value="${ loopUser.id }" />
+																<input type="date" name="date" />
+																<input type="submit" value="🔒 Block" />
+															</form>
 														</div>
-														<form method="post" class="dynamicMenuItem" action="<c:url value="/Blocking" />" accept-charset="UTF-8">
-															<label for="unblockDate">Set unblocking date :</label>
-															<input type="hidden" name="targetId" value="${ user.id }" />
-															<input type="date" name="unblockDate" />
-															<input type="submit" value="Block" />
-														</form>
 													</div>
-												</div>
-											</c:if>
-										</td>
-										<td>
-											<c:out value="${ user.unblockInstant }" />
-										</td>
-									</tr>
-								</c:if>
-							</c:forEach>
-						</tbody>
-					</table>
+												</c:if>
+											</td>
+											<td>
+												<c:out value="${ loopUser.unblockInstant }" />
+											</td>
+										</tr>
+									</c:if>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="borderedTile">
+					<div class="padded">
+						<c:if test="${ applicationScope.deployment.open }">
+							<h2>The site is open.</h2>
+							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
+								<c:param name="open" value="false" />
+							</c:url>
+							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="Cose site" />
+						</c:if>
+						<c:if test="${ not applicationScope.deployment.open }">
+							<h2>⛔ The site is closed. ⛔</h2>
+							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
+								<c:param name="open" value="true" />
+							</c:url>
+							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="Open site" />
+						</c:if>
+					</div>
+
 				</div>
 
 			</div>

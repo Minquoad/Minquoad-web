@@ -78,12 +78,8 @@ public class User {
 		return getAdminLevel() != 0;
 	}
 
-	public boolean hasAdminLvl(int adminLevel) {
-		return getAdminLevel() >= adminLevel;
-	}
-
 	public boolean canAdminister(User user) {
-		return hasAdminLvl(user.getAdminLevel() + 1);
+		return this.getAdminLevel() > user.getAdminLevel();
 	}
 
 	public void setPassword(String password, Deployment deployment) {

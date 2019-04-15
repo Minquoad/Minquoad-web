@@ -53,17 +53,36 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			User user = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(userIdKey));
 
+			User controllingAdmin = null;
+
 			if (user != null) {
 				requestLog.setUser(user);
 				setUser(request, user);
 
-				User controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(controllingAdminIdKey));
+				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(controllingAdminIdKey));
 
 				if (controllingAdmin == null) {
 					user.setLastActivityInstant(Instant.now());
 					getDaoFactory(request).getUserDao().persist(user);
 
-					if (user.isBlocked() && !request.getServletPath().equals("/BlockedAccount") && !request.getServletPath().equals("/OutLoging")) {
+				} else {
+					requestLog.setControllingAdmin(controllingAdmin);
+					setControllingAdmin(request, controllingAdmin);
+
+					controllingAdmin.setLastActivityInstant(Instant.now());
+					getDaoFactory(request).getUserDao().persist(user);
+				}
+			}
+
+			if (controllingAdmin == null) {
+
+				if (getDeployment().isOpen()) {
+
+					if (user != null
+							&& user.isBlocked()
+							&& !request.getServletPath().equals("/BlockedAccount")
+							&& !request.getServletPath().equals("/OutLoging")) {
+
 						if (isFullPage()) {
 							response.sendRedirect(request.getContextPath() + "/BlockedAccount");
 						} else {
@@ -73,24 +92,38 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					}
 
 				} else {
-					if (controllingAdmin.isBlocked() && !request.getServletPath().equals("/Unpossession")) {
+
+					if ((user == null || !user.isAdmin())
+							&& !request.getServletPath().equals("/BlockedSite")
+							&& !request.getServletPath().equals("/InLoging")
+							&& !request.getServletPath().equals("/OutLoging")) {
+
 						if (isFullPage()) {
-							response.sendRedirect(request.getContextPath() + "/Unpossession");
+							response.sendRedirect(request.getContextPath() + "/BlockedSite");
 						} else {
 							response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 						}
 						return;
 					}
 
-					requestLog.setControllingAdmin(controllingAdmin);
-					setControllingAdmin(request, controllingAdmin);
-
-					controllingAdmin.setLastActivityInstant(Instant.now());
-					getDaoFactory(request).getUserDao().persist(user);
-
 				}
-			}
 
+			} else {
+
+				if (controllingAdmin != null
+						&& !controllingAdmin.isAdmin()
+						&& !request.getServletPath().equals("/Unpossession")) {
+
+					if (isFullPage()) {
+						response.sendRedirect(request.getContextPath() + "/Unpossession");
+					} else {
+						response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					}
+					return;
+				}
+
+			}
+			
 			if (!this.isAccessible(request)) {
 
 				if (user == null) {
@@ -119,16 +152,15 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			super.service(request, response);
 
-			if (isLoggingAllRequests()) {
+		} catch (Exception e) {
+			requestLog.setError(Logger.getStackTraceAsString(e));
+			throw e;
+
+		} finally {
+			if (isLoggingAllRequests() || requestLog.getError() != null) {
 				requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 				getDaoFactory(request).getRequestLogDao().persist(requestLog);
 			}
-
-		} catch (Exception e) {
-			requestLog.setError(Logger.getStackTraceAsString(e));
-			requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
-			getDaoFactory(request).getRequestLogDao().persist(requestLog);
-			throw e;
 		}
 	}
 
