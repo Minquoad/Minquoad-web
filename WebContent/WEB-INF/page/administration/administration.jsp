@@ -25,7 +25,7 @@
 									<th>LastActivity date</th>
 									<th title="Possession">🕹️</th>
 									<th>Admin level</th>
-									<th title="Block">🚦</th>
+									<th title="Block">🛂</th>
 									<th>Unblock date</th>
 								</tr>
 							</thead>
@@ -48,7 +48,7 @@
 											<td>
 												<c:if test="${ requestScope.user.canAdminister(loopUser) }">
 													<c:url value="/Possession" var="possessUrl">
-														<c:param name="userId" value="${ loopUser.id }" />
+														<c:param name="targetId" value="${ loopUser.id }" />
 													</c:url>
 													<a title="Possession" href="${possessUrl}"> 🕹️ </a>
 												</c:if>
@@ -59,21 +59,28 @@
 											<td>
 												<c:if test="${ requestScope.user.canAdminister(loopUser) }">
 													<div title="Block" class="dynamicMenuTrigger" id="blockingFormTrigger">
-														🚦
+
+														<c:if test="${ loopUser.blocked }">
+															⛔
+														</c:if>
+														<c:if test="${ not loopUser.blocked }">
+															🆗
+														</c:if>
+
 														<div class="dynamicMenu">
 															<c:if test="${ loopUser.blocked }">
 																<div class="dynamicMenuItem">
 																	<c:url value="/Unblocking" var="unblockUrl">
-																		<c:param name="userId" value="${ loopUser.id }" />
+																		<c:param name="targetId" value="${ loopUser.id }" />
 																	</c:url>
-																	<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="🔓 Remove blocking date" />
+																	<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="🆗 Remove blocking date" />
 																</div>
 															</c:if>
 															<form method="post" class="dynamicMenuItem" action="<c:url value="/Blocking" />" accept-charset="UTF-8">
 																<label for="unblockDate"> Set unblocking date :</label>
 																<input type="hidden" name="targetId" value="${ loopUser.id }" />
 																<input type="date" name="date" />
-																<input type="submit" value="🔒 Block" />
+																<input type="submit" value="⛔ Block" />
 															</form>
 														</div>
 													</div>
@@ -93,18 +100,18 @@
 				<div class="borderedTile">
 					<div class="padded">
 						<c:if test="${ applicationScope.deployment.open }">
-							<h2>The site is open.</h2>
+							<h2>🔓 The site is open.</h2>
 							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
 								<c:param name="open" value="false" />
 							</c:url>
-							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="Cose site" />
+							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="🔒 Cose site" />
 						</c:if>
 						<c:if test="${ not applicationScope.deployment.open }">
-							<h2>⛔ The site is closed. ⛔</h2>
+							<h2>🔒 The site is closed.</h2>
 							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
 								<c:param name="open" value="true" />
 							</c:url>
-							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="Open site" />
+							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="🔓 Open site" />
 						</c:if>
 					</div>
 

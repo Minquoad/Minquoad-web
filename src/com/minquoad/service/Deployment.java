@@ -12,15 +12,15 @@ import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
-	public static final String version = "0.1.0";
+	public static final String VERSION = "0.1.0";
 
-	public static final String deploymentKey = "deployment";
-	public static final String storageManagerKey = "storageManager";
-	public static final String cronManagerKey = "cronManager";
-	public static final String databaseKey = "database";
-	public static final String loggerKey = "logger";
+	public static final String DEPLOYMENT_KEY = "deployment";
+	public static final String STORAGE_MANAGER_KEY = "storageManager";
+	public static final String CRON_MANAGER_KEY = "cronManager";
+	public static final String DATABASE_KEY = "database";
+	public static final String LOGGER_KEY = "logger";
 
-	public static final String configurationJsonPath = System.getProperty("user.home") + "/minquoad-web-configuration.json";
+	public static final String CONFIGURATION_JSON_PATH = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
 	private String storagePath;
 	private String databaseHost;
@@ -33,11 +33,11 @@ public class Deployment implements ServletContextListener {
 	private boolean open;
 
 	public Deployment() {
-		File file = new File(configurationJsonPath);
+		File file = new File(CONFIGURATION_JSON_PATH);
 		if (!file.exists()) {
-			new RuntimeException("Configuration json not found at \"" + configurationJsonPath + "\".");
+			new RuntimeException("Configuration json not found at \"" + CONFIGURATION_JSON_PATH + "\".");
 		} else {
-			JSONObject configurationJson = StorageManager.fileToJsonObject(configurationJsonPath);
+			JSONObject configurationJson = StorageManager.fileToJsonObject(CONFIGURATION_JSON_PATH);
 
 			storagePath = configurationJson.getString("storagePath");
 
@@ -59,31 +59,31 @@ public class Deployment implements ServletContextListener {
 		ServletContext servletContext = contextEvent.getServletContext();
 
 		Deployment deployment = new Deployment();
-		servletContext.setAttribute(deploymentKey, deployment);
+		servletContext.setAttribute(DEPLOYMENT_KEY, deployment);
 
 		StorageManager storageManager = new StorageManager(servletContext);
-		servletContext.setAttribute(storageManagerKey, storageManager);
+		servletContext.setAttribute(STORAGE_MANAGER_KEY, storageManager);
 
 		Logger logger = new Logger(servletContext);
-		servletContext.setAttribute(loggerKey, logger);
+		servletContext.setAttribute(LOGGER_KEY, logger);
 
 		Database database = new Database(servletContext);
-		servletContext.setAttribute(databaseKey, database);
+		servletContext.setAttribute(DATABASE_KEY, database);
 
 		CronManager cronManager = new CronManager(servletContext);
-		servletContext.setAttribute(cronManagerKey, cronManager);
+		servletContext.setAttribute(CRON_MANAGER_KEY, cronManager);
 
 		// cronManager.start();
-		logger.logInfo("Servlet context initialized");
+		logger.logInfo("Servlet context initialized. Running version : " + VERSION);
 	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent contextEvent) {
 		ServletContext servletContext = contextEvent.getServletContext();
 
-		CronManager cronManager = (CronManager) servletContext.getAttribute(cronManagerKey);
-		Database database = (Database) servletContext.getAttribute(databaseKey);
-		Logger logger = (Logger) servletContext.getAttribute(loggerKey);
+		CronManager cronManager = (CronManager) servletContext.getAttribute(CRON_MANAGER_KEY);
+		Database database = (Database) servletContext.getAttribute(DATABASE_KEY);
+		Logger logger = (Logger) servletContext.getAttribute(LOGGER_KEY);
 
 		cronManager.stop();
 		database.close();

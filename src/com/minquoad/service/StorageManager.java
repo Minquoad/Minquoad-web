@@ -10,28 +10,28 @@ import org.json.JSONObject;
 
 public class StorageManager {
 
-	public static final String internalPath = "internal/";
-	public static final String tmpPath = internalPath + "tmp/";
-	public static final String uploadedPath = tmpPath + "uploaded/";
-	public static final String logPath = internalPath + "log/";
-	public static final String communityPath = "community/";
+	public static final String INTERNAL_PATH = "internal/";
+	public static final String TMP_PATH = INTERNAL_PATH + "tmp/";
+	public static final String UPLOADED_PATH = TMP_PATH + "uploaded/";
+	public static final String LOG_PATH = INTERNAL_PATH + "log/";
+	public static final String COMMUNITY_PATH = "community/";
 
 	private final ServletContext servletContext;
 
 	public StorageManager(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
 
 		initFolderIfNotExists(deployment.getStoragePath());
-		initStorageFolderIfNotExists(internalPath);
-		initStorageFolderIfNotExists(tmpPath);
-		initStorageFolderIfNotExists(logPath);
-		initStorageFolderIfNotExists(uploadedPath);
-		initStorageFolderIfNotExists(communityPath);
+		initStorageFolderIfNotExists(INTERNAL_PATH);
+		initStorageFolderIfNotExists(TMP_PATH);
+		initStorageFolderIfNotExists(LOG_PATH);
+		initStorageFolderIfNotExists(UPLOADED_PATH);
+		initStorageFolderIfNotExists(COMMUNITY_PATH);
 	}
 
 	public String getStoragePath(String relativePath) {
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
 		return deployment.getStoragePath() + relativePath;
 	}
 

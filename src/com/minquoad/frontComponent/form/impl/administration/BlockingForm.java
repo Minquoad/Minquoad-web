@@ -14,8 +14,8 @@ import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class BlockingForm extends Form {
 
-	public static final String targetIdKey = "targetId";
-	public static final String dateKey = "date";
+	public static final String TARGET_ID_KEY = "targetId";
+	public static final String DATE_KEY = "date";
 
 	public BlockingForm(HttpServletRequest request) {
 		super(request);
@@ -25,22 +25,22 @@ public class BlockingForm extends Form {
 	protected void build() {
 		FormStringField field = null;
 
-		field = new FormStringField(targetIdKey);
+		field = new FormStringField(TARGET_ID_KEY);
 		field.setEmptyPermitted(false);
 		this.addField(field);
 
-		field = new FormStringField(dateKey);
+		field = new FormStringField(DATE_KEY);
 		field.setEmptyPermitted(false);
 		this.addField(field);
 	}
 
 	public User getTarget() {
-		FormStringField field = (FormStringField) this.getField(targetIdKey);
+		FormStringField field = (FormStringField) this.getField(TARGET_ID_KEY);
 		return field.getValueAsEntity(DaoFactory::getUserDao);
 	}
 
 	public Instant getUnblockDate() {
-		FormStringField field = (FormStringField) this.getField(dateKey);
+		FormStringField field = (FormStringField) this.getField(DATE_KEY);
 		LocalDate date;
 		try {
 			date = LocalDate.parse(field.getValue());

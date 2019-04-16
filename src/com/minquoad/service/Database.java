@@ -12,12 +12,12 @@ import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
 
 public class Database {
 
-	public static final String dataBaseProtocol = "jdbc";
-	public static final String dataBaseSubprotocol = "postgresql";
+	public static final String DATABASE_PROTOCOL_NAME = "jdbc";
+	public static final String DATABASE_SUBPROTOCOL_NAME = "postgresql";
 
-	public static final int minConnectionsPerPartition = 1;
-	public static final int maxConnectionsPerPartition = 64;
-	public static final int partitionCount = 2;
+	public static final int CONNECTIONS_PER_PARTITION_MIN = 1;
+	public static final int CONNECTIONS_PER_PARTITION_MAX = 64;
+	public static final int PARTITION_COUNT = 2;
 
 	private final ServletContext servletContext;
 
@@ -25,7 +25,7 @@ public class Database {
 
 	public Database(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
 
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -36,15 +36,15 @@ public class Database {
 			config.setUsername(deployment.getDatabaseUser());
 			config.setPassword(deployment.getDatabasePassword());
 
-			config.setMinConnectionsPerPartition(minConnectionsPerPartition);
-			config.setMaxConnectionsPerPartition(maxConnectionsPerPartition);
-			config.setPartitionCount(partitionCount);
+			config.setMinConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MIN);
+			config.setMaxConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MAX);
+			config.setPartitionCount(PARTITION_COUNT);
 
 			connectionPool = new BoneCP(config);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger logger = (Logger) servletContext.getAttribute(Deployment.loggerKey);
+			Logger logger = (Logger) servletContext.getAttribute(Deployment.LOGGER_KEY);
 			logger.logError(e);
 		}
 	}
@@ -54,8 +54,8 @@ public class Database {
     }
 
 	public String getDatabaseUrl() {
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
-		return dataBaseProtocol + ":" + dataBaseSubprotocol + "://" + deployment.getDatabaseHost() + ":" + deployment.getDatabasePort() + "/" + deployment.getDatabaseName();
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
+		return DATABASE_PROTOCOL_NAME + ":" + DATABASE_SUBPROTOCOL_NAME + "://" + deployment.getDatabaseHost() + ":" + deployment.getDatabasePort() + "/" + deployment.getDatabaseName();
 	}
 
 	public void close() {

@@ -13,7 +13,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Administration")
 public class Administration extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/administration/administration.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/administration/administration.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -24,7 +24,7 @@ public class Administration extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 }

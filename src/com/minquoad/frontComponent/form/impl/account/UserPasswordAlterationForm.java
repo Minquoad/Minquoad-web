@@ -9,9 +9,9 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 
 public class UserPasswordAlterationForm extends Form {
 
-	public static final String oldPassowrdKey = "oldPassowrd";
-	public static final String newPasswordKey = "newPassword";
-	public static final String newPasswordConfirmationKey = "newPasswordConfirmation";
+	public static final String OLD_PASSOWRD_KEY = "oldPassowrd";
+	public static final String NEW_PASSWORD_KEY = "newPassword";
+	public static final String NEW_PASSWORD_CONFIRMATION_KEY = "newPasswordConfirmation";
 
 	public UserPasswordAlterationForm(HttpServletRequest request) {
 		super(request);
@@ -22,7 +22,7 @@ public class UserPasswordAlterationForm extends Form {
 
 		FormStringField field = null;
 
-		field = new FormStringField(oldPassowrdKey);
+		field = new FormStringField(OLD_PASSOWRD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			if (getUser().isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
@@ -33,7 +33,7 @@ public class UserPasswordAlterationForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(newPasswordKey);
+		field = new FormStringField(NEW_PASSWORD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
@@ -41,10 +41,10 @@ public class UserPasswordAlterationForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(newPasswordConfirmationKey);
+		field = new FormStringField(NEW_PASSWORD_CONFIRMATION_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			FormStringField newPasswordField = (FormStringField) form.getField(newPasswordKey);
+			FormStringField newPasswordField = (FormStringField) form.getField(NEW_PASSWORD_KEY);
 			String password = newPasswordField.getValue();
 			if (password != null && !password.equals(value)) {
 				return "The password confirmation is different to the password.";
@@ -56,7 +56,7 @@ public class UserPasswordAlterationForm extends Form {
 	}
 
 	public String getNewPassword() {
-		FormStringField field = (FormStringField) this.getField(newPasswordKey);
+		FormStringField field = (FormStringField) this.getField(NEW_PASSWORD_KEY);
 		return field.getValue();
 	}
 

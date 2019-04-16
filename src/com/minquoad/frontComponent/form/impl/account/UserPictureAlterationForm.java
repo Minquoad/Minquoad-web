@@ -9,7 +9,7 @@ import com.minquoad.tool.ImageTool;
 
 public class UserPictureAlterationForm extends Form {
 
-	public static final String userPictureKey = "userPicture";
+	public static final String USER_PICTURE_KEY = "userPicture";
 
 	public UserPictureAlterationForm(HttpServletRequest request) {
 		super(request);
@@ -17,7 +17,7 @@ public class UserPictureAlterationForm extends Form {
 
 	@Override
 	protected void build() {
-		FormFileField field = new FormFileField(userPictureKey);
+		FormFileField field = new FormFileField(USER_PICTURE_KEY);
 		for (String extention : ImageTool.getPossibleImageExtentions()) {
 			field.addAllowedExtention(extention);
 		}

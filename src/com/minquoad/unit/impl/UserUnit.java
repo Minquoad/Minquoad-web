@@ -22,7 +22,7 @@ public class UserUnit extends Unit {
 		user.setNickname(nickname);
 		user.setRegistrationInstant(Instant.now());
 		user.setLastActivityInstant(Instant.now());
-		user.setDefaultColor(User.defaultDefaultColor);
+		user.setDefaultColor(User.DEFAULT_DEFAULT_COLOR);
 		userDao.insert(user);
 		user.setPassword(password, getDeployment());
 		userDao.persist(user);

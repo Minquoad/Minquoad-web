@@ -14,7 +14,7 @@
 				<form method="post" action="<c:url value="/InLoging" />" accept-charset="UTF-8">
 					<p>
 						<label for="mailAddress">Mail address : </label>
-						<input type="text" name="mailAddress" id="nickname" value="<c:out value="${ requestScope.form.fields.mailAddress.value }" />" />
+						<input type="email" name="mailAddress" id="nickname" value="<c:out value="${ requestScope.form.fields.mailAddress.value }" />" />
 						<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 							<jsp:param name="formKey" value="form" />
 							<jsp:param name="fieldName" value="mailAddress" />

@@ -17,7 +17,7 @@ import com.minquoad.unit.impl.FailedInLoginigAttemptUnit;
 @WebServlet("/InLoging")
 public class InLoging extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/account/inLoging.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/account/inLoging.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -28,7 +28,7 @@ public class InLoging extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 		initForms(request);
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -56,9 +56,9 @@ public class InLoging extends ImprovedHttpServlet {
 		}
 
 		if (getUser(request) == null) {
-			forwardToView(request, response, viewPath);
+			forwardToView(request, response, VIEW_PATH);
 		} else {
-			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.lastRefusedUrlKey);
+			String lastRefusedUrl = (String) request.getSession().getAttribute(ImprovedHttpServlet.LAST_REFUSED_URL_KEY);
 			if (lastRefusedUrl != null) {
 				response.sendRedirect(lastRefusedUrl);
 			} else {

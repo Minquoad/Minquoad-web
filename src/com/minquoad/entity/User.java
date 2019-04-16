@@ -9,8 +9,6 @@ import com.minquoad.tool.security.SecurityTool;
 
 public class User {
 
-	public static final int defaultDefaultColor = 8421504;
-
 	private Long id;
 	private String mailAddress;
 	private String nickname;
@@ -21,8 +19,9 @@ public class User {
 	private Instant unblockInstant;
 	private Integer defaultColor;
 
-	public static final int nicknameMaxlength = 25;
-	public static final int mailAddressMaxlength = 50;
+	public static final int DEFAULT_DEFAULT_COLOR = 8421504;
+	public static final int NICKNAME_MAX_LENGTH = 25;
+	public static final int MAIL_ADDRESS_MAX_LENGTH = 50;
 
 	public Long getId() {
 		return id;
@@ -90,10 +89,10 @@ public class User {
 		return this.getHashedSaltedPassword().equals(toHashedSaltedPassword(password, deployment));
 	}
 
-	public String toHashedSaltedPassword(String string, Deployment deployment) {
+	public String toHashedSaltedPassword(String password, Deployment deployment) {
 		try {
 
-			String saltedString = SecurityTool.getDynamicSalt(this) + deployment.getUserPasswordSalt() + string;
+			String saltedString = SecurityTool.getDynamicSalt(this) + deployment.getUserPasswordSalt() + password;
 			return SecurityTool.toSha512(saltedString);
 
 		} catch (Exception ex) {
@@ -120,7 +119,7 @@ public class User {
 			return problems;
 		}
 
-		if (nickname.length() > nicknameMaxlength) {
+		if (nickname.length() > NICKNAME_MAX_LENGTH) {
 			problems.add("The nickname must contain at maximum 25 characters.");
 		}
 

@@ -19,7 +19,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/CurrentConversation")
 public class CurrentConversation extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/conversation/currentConversation.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/conversation/currentConversation.jsp";
 
 	@Override
 	public boolean isFullPage() {
@@ -57,7 +57,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 			request.setAttribute("participants", conversationUsers);
 		}
 		
-		includeView(request, response, viewPath);
+		includeView(request, response, VIEW_PATH);
 
 	}
 

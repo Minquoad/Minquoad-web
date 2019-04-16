@@ -21,7 +21,7 @@ import com.minquoad.unit.impl.ConversationUnit;
 @WebServlet("/Conversations")
 public class Conversations extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/conversation/conversations.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/conversation/conversations.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -81,6 +81,6 @@ public class Conversations extends ImprovedHttpServlet {
 		request.setAttribute("conversationResumes", conversationResumes);
 		request.setAttribute("selectedConversation", selectedConversation);
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 }

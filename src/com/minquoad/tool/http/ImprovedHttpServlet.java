@@ -20,19 +20,19 @@ import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
-	public static final String METHOD_POST = "POST";
+	public static final String POST_METHOD = "POST";
 
 	// request keys
-	private final static String daoFactoryKey = "daoFactory";
-	private final static String unitFactoryKey = "unitFactory";
+	private final static String DAO_FACTORY_KEY = "daoFactory";
+	private final static String UNIT_FACTORY_KEY = "unitFactory";
 
-	protected final static String userKey = "user";
-	protected final static String controllingAdminKey = "controllingAdmin";
+	protected final static String USER_KEY = "user";
+	protected final static String CONTROLLING_ADMIN_KEY = "controllingAdmin";
 
 	// session keys
-	protected final static String userIdKey = "userId";
-	protected final static String lastRefusedUrlKey = "lastRefusedUrl";
-	protected final static String controllingAdminIdKey = "controllingAdminId";
+	protected final static String USER_ID_KEY = "userId";
+	protected final static String LAST_REFUSED_URL_KEY = "lastRefusedUrl";
+	protected final static String CONTROLLING_ADMIN_ID_KEY = "controllingAdminId";
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +51,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			requestLog.setUrl(getCurrentUrlWithArguments(request));
 
-			User user = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(userIdKey));
+			User user = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(USER_ID_KEY));
 
 			User controllingAdmin = null;
 
@@ -59,7 +59,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				requestLog.setUser(user);
 				setUser(request, user);
 
-				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(controllingAdminIdKey));
+				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(CONTROLLING_ADMIN_ID_KEY));
 
 				if (controllingAdmin == null) {
 					user.setLastActivityInstant(Instant.now());
@@ -105,7 +105,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 						}
 						return;
 					}
-
 				}
 
 			} else {
@@ -121,20 +120,20 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					}
 					return;
 				}
-
 			}
-			
+
 			if (!this.isAccessible(request)) {
 
 				if (user == null) {
 					if (isFullPage()) {
-						request.getSession().setAttribute(lastRefusedUrlKey, getCurrentUrlWithArguments(request));
+						request.getSession().setAttribute(LAST_REFUSED_URL_KEY, getCurrentUrlWithArguments(request));
 						response.sendRedirect(request.getContextPath() + "/InLoging");
 						return;
 					} else {
 						response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 						return;
 					}
+
 				} else {
 					if (isFullPage()) {
 						response.sendRedirect(request.getContextPath() + "/");
@@ -143,11 +142,10 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					}
 					return;
 				}
-
 			}
 
 			if (!request.getServletPath().equals("/InLoging")) {
-				request.getSession().removeAttribute(lastRefusedUrlKey);
+				request.getSession().removeAttribute(LAST_REFUSED_URL_KEY);
 			}
 
 			super.service(request, response);
@@ -182,61 +180,61 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
-		if (request.getAttribute(daoFactoryKey) == null) {
-			Database database = (Database) request.getServletContext().getAttribute(Deployment.databaseKey);
-			request.setAttribute(daoFactoryKey, database.getNewDaoFactory());
+		if (request.getAttribute(DAO_FACTORY_KEY) == null) {
+			Database database = (Database) request.getServletContext().getAttribute(Deployment.DATABASE_KEY);
+			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
 		}
-		return (DaoFactory) request.getAttribute(daoFactoryKey);
+		return (DaoFactory) request.getAttribute(DAO_FACTORY_KEY);
 	}
 
 	public static UnitFactory getUnitFactory(HttpServletRequest request) {
-		if (request.getAttribute(unitFactoryKey) == null) {
-			request.setAttribute(unitFactoryKey, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
+		if (request.getAttribute(UNIT_FACTORY_KEY) == null) {
+			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
 		}
-		return (UnitFactory) request.getAttribute(unitFactoryKey);
+		return (UnitFactory) request.getAttribute(UNIT_FACTORY_KEY);
 	}
 
 	public StorageManager getStorageManager() {
-		return (StorageManager) getServletContext().getAttribute(Deployment.storageManagerKey);
+		return (StorageManager) getServletContext().getAttribute(Deployment.STORAGE_MANAGER_KEY);
 	}
 
 	public static StorageManager getStorageManager(HttpServletRequest request) {
-		return (StorageManager) request.getServletContext().getAttribute(Deployment.storageManagerKey);
+		return (StorageManager) request.getServletContext().getAttribute(Deployment.STORAGE_MANAGER_KEY);
 	}
 
 	public Deployment getDeployment() {
-		return (Deployment) getServletContext().getAttribute(Deployment.deploymentKey);
+		return (Deployment) getServletContext().getAttribute(Deployment.DEPLOYMENT_KEY);
 	}
 
 	public static Deployment getDeployment(HttpServletRequest request) {
-		return (Deployment) request.getServletContext().getAttribute(Deployment.deploymentKey);
+		return (Deployment) request.getServletContext().getAttribute(Deployment.DEPLOYMENT_KEY);
 	}
 
 	public abstract boolean isAccessible(HttpServletRequest request);
 
 	public static User getUser(HttpServletRequest request) {
-		return (User) request.getAttribute(userKey);
+		return (User) request.getAttribute(USER_KEY);
 	}
 
 	private static void setUser(HttpServletRequest request, User user) {
-		request.setAttribute(userKey, user);
+		request.setAttribute(USER_KEY, user);
 	}
 
 	public static void setSessionUser(HttpServletRequest request, User user) {
-		request.getSession().setAttribute(userIdKey, user.getId());
+		request.getSession().setAttribute(USER_ID_KEY, user.getId());
 		setUser(request, user);
 	}
 
 	public static User getControllingAdmin(HttpServletRequest request) {
-		return (User) request.getAttribute(controllingAdminKey);
+		return (User) request.getAttribute(CONTROLLING_ADMIN_KEY);
 	}
 
 	private static void setControllingAdmin(HttpServletRequest request, User user) {
-		request.setAttribute(controllingAdminKey, user);
+		request.setAttribute(CONTROLLING_ADMIN_KEY, user);
 	}
 
 	public static void setSessionControllingAdmin(HttpServletRequest request, User user) {
-		request.getSession().setAttribute(controllingAdminIdKey, user.getId());
+		request.getSession().setAttribute(CONTROLLING_ADMIN_ID_KEY, user.getId());
 		setControllingAdmin(request, user);
 	}
 

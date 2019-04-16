@@ -62,9 +62,9 @@ public class CronManager {
 	}
 
 	private void runMinutlyCrons() {
-		Logger logger = (Logger) servletContext.getAttribute(Deployment.loggerKey);
+		Logger logger = (Logger) servletContext.getAttribute(Deployment.LOGGER_KEY);
 
-		logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.logPath + "cron.log");
+		logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.LOG_PATH + "cron.log");
 
 		for (Runnable minutelyCron : minutelyCrons) {
 			try {

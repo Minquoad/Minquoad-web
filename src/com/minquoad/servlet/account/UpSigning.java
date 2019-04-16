@@ -14,7 +14,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/UpSigning")
 public class UpSigning extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/account/upSigning.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/account/upSigning.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -25,7 +25,7 @@ public class UpSigning extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 		initForms(request);
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +44,7 @@ public class UpSigning extends ImprovedHttpServlet {
 			response.sendRedirect(request.getContextPath() + "/");
 
 		} else {
-			forwardToView(request, response, viewPath);
+			forwardToView(request, response, VIEW_PATH);
 		}
 	}
 
@@ -54,8 +54,8 @@ public class UpSigning extends ImprovedHttpServlet {
 
 	@Override
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
-		request.setAttribute("mailAddressMaxlength", User.mailAddressMaxlength);
+		request.setAttribute("nicknameMaxlength", User.NICKNAME_MAX_LENGTH);
+		request.setAttribute("mailAddressMaxlength", User.MAIL_ADDRESS_MAX_LENGTH);
 		super.forwardToView(request, response, viewPath);
 	}
 

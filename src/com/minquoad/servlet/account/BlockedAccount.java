@@ -13,7 +13,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/BlockedAccount")
 public class BlockedAccount extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/account/blockedAccount.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/account/blockedAccount.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -22,7 +22,7 @@ public class BlockedAccount extends ImprovedHttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 }

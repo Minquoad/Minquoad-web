@@ -16,7 +16,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Profile")
 public class Profile extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/profile.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/profile.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -35,7 +35,7 @@ public class Profile extends ImprovedHttpServlet {
 			request.setAttribute("userProfileImage", image);
 
 			request.setAttribute("showedUser", user);
-			forwardToView(request, response, viewPath);
+			forwardToView(request, response, VIEW_PATH);
 		} else {
 			response.sendRedirect(request.getContextPath() + "/");
 		}

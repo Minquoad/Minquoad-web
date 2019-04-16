@@ -8,13 +8,14 @@ import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
+import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChecker;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.unit.impl.FailedInLoginigAttemptUnit;
 
 public class InLogingForm extends Form {
 
-	public static final String mailAddressKey = "mailAddress";
-	public static final String passwordKey = "password";
+	public static final String MAIL_ADDRESS_KEY = "mailAddress";
+	public static final String PASSWORD_KEY = "password";
 
 	public InLogingForm(HttpServletRequest request) {
 		super(request);
@@ -27,7 +28,7 @@ public class InLogingForm extends Form {
 
 		FormStringField field = null;
 
-		field = new FormStringField(mailAddressKey) {
+		field = new FormStringField(MAIL_ADDRESS_KEY) {
 			@Override
 			public void setValue(String value) {
 				super.setValue(value);
@@ -37,6 +38,7 @@ public class InLogingForm extends Form {
 			}
 		};
 		field.setEmptyPermitted(false);
+		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
 			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(value);
 			if (coolDown == null) {
@@ -53,20 +55,18 @@ public class InLogingForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(passwordKey);
+		field = new FormStringField(PASSWORD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			if (getField(mailAddressKey).isValid()) {
+			FormStringField mailAddressField = (FormStringField) form.getField(MAIL_ADDRESS_KEY);
+			if (mailAddressField.isValid()) {
 
 				UserDao userDao = getDaoFactory().getUserDao();
 
-				FormStringField field2 = (FormStringField) form.getField(mailAddressKey);
-				if (field2.isValid()) {
-					User user = userDao.getOneMatching("mailAddress", field2.getValue());
+				User user = userDao.getOneMatching("mailAddress", mailAddressField.getValue());
 
-					if (user == null || !user.isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
-						return "Mail address or password is incorrect.";
-					}
+				if (user == null || !user.isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
+					return "Mail address or password is incorrect.";
 				}
 			}
 			return null;
@@ -80,7 +80,7 @@ public class InLogingForm extends Form {
 	}
 
 	public String getMailAddress() {
-		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		FormStringField field = (FormStringField) this.getField(MAIL_ADDRESS_KEY);
 		return field.getValue();
 	}
 

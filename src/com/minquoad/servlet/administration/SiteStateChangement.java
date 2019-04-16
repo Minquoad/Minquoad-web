@@ -12,7 +12,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/SiteStateChangement")
 public class SiteStateChangement extends ImprovedHttpServlet {
 
-	public final String openKey = "open";
+	public static final String OPEN_KEY = "open";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -22,7 +22,7 @@ public class SiteStateChangement extends ImprovedHttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		getDeployment().setOpen("true".equals(request.getParameter(openKey)));
+		getDeployment().setOpen("true".equals(request.getParameter(OPEN_KEY)));
 
 		response.sendRedirect(request.getContextPath() + "/Administration");
 	}

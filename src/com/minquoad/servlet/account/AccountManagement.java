@@ -29,7 +29,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 	private static final String USER_PICTURE_ALTERATION = "userPictureAlteration";
 	private static final String USER_PARAMETERS_ALTERATION = "userParametersAlteration";
 
-	public static final String viewPath = "/WEB-INF/page/account/accountManagement.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/account/accountManagement.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -40,7 +40,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 		initForms(request);
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -80,7 +80,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 						userProfileImageDao.delete(image);
 					}
 
-					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.userPictureKey);
+					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.USER_PICTURE_KEY);
 					if (field.hasFile()) {
 
 						image = new UserProfileImage();
@@ -110,7 +110,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 			}
 
-			forwardToView(request, response, viewPath);
+			forwardToView(request, response, VIEW_PATH);
 		}
 	}
 
@@ -122,8 +122,8 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 	@Override
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		request.setAttribute("nicknameMaxlength", User.nicknameMaxlength);
-		request.setAttribute("mailAddressMaxlength", User.mailAddressMaxlength);
+		request.setAttribute("nicknameMaxlength", User.NICKNAME_MAX_LENGTH);
+		request.setAttribute("mailAddressMaxlength", User.MAIL_ADDRESS_MAX_LENGTH);
 
 		UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
 		UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));

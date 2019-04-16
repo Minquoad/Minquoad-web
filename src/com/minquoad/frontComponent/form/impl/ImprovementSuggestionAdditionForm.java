@@ -7,7 +7,7 @@ import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class ImprovementSuggestionAdditionForm extends Form {
 
-	public static final String textKey = "text";
+	public static final String TEXT_KEY = "text";
 
 	public ImprovementSuggestionAdditionForm(HttpServletRequest request) {
 		super(request);
@@ -16,7 +16,7 @@ public class ImprovementSuggestionAdditionForm extends Form {
 	@Override
 	protected void build() {
 
-		FormStringField textField = new FormStringField(textKey) {
+		FormStringField textField = new FormStringField(TEXT_KEY) {
 			@Override
 			public void setValue(String value) {
 				if (value != null) {
@@ -36,7 +36,7 @@ public class ImprovementSuggestionAdditionForm extends Form {
 	}
 
 	public String getText() {
-		FormStringField field = (FormStringField) getField(textKey);
+		FormStringField field = (FormStringField) getField(TEXT_KEY);
 		return field.getValue();
 	}
 

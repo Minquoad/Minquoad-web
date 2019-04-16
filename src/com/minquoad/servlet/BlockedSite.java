@@ -12,7 +12,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/BlockedSite")
 public class BlockedSite extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/blockedSite.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/blockedSite.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -21,7 +21,7 @@ public class BlockedSite extends ImprovedHttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 }

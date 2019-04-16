@@ -10,9 +10,9 @@ import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChec
 
 public class UserParametersAlterationForm extends Form {
 
-	public static final String mailAddressKey = "mailAddress";
-	public static final String nicknameKey = "nickname";
-	public static final String defaultColorKey = "defaultColor";
+	public static final String MAIL_ADDRESS_KEY = "mailAddress";
+	public static final String NICKNAME_KEY = "nickname";
+	public static final String DEFAULT_COLOR_KEY = "defaultColor";
 
 	public UserParametersAlterationForm(HttpServletRequest request) {
 		super(request);
@@ -23,7 +23,7 @@ public class UserParametersAlterationForm extends Form {
 
 		FormStringField field = null;
 
-		field = new FormStringField(mailAddressKey) {
+		field = new FormStringField(MAIL_ADDRESS_KEY) {
 			@Override
 			public void setValue(String value) {
 				super.setValue(value);
@@ -49,7 +49,7 @@ public class UserParametersAlterationForm extends Form {
 		field.setValue(getUser().getMailAddress());
 		this.addField(field);
 
-		field = new FormStringField(nicknameKey) {
+		field = new FormStringField(NICKNAME_KEY) {
 			@Override
 			public void setValue(String value) {
 				super.setValue(value);
@@ -74,7 +74,7 @@ public class UserParametersAlterationForm extends Form {
 		field.setValue(getUser().getNickname());
 		this.addField(field);
 
-		field = new FormColorField(defaultColorKey);
+		field = new FormColorField(DEFAULT_COLOR_KEY);
 		field.setEmptyPermitted(false);
 		field.setValue(getUser().getDefaultColorAsHtmlValue());
 		this.addField(field);
@@ -82,22 +82,22 @@ public class UserParametersAlterationForm extends Form {
 	}
 
 	public String getnickname() {
-		FormStringField field = (FormStringField) this.getField(nicknameKey);
+		FormStringField field = (FormStringField) this.getField(NICKNAME_KEY);
 		return field.getValue();
 	}
 
 	public String getmailAddress() {
-		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		FormStringField field = (FormStringField) this.getField(MAIL_ADDRESS_KEY);
 		return field.getValue();
 	}
 
 	public String getdefaultColor() {
-		FormStringField field = (FormStringField) this.getField(defaultColorKey);
+		FormStringField field = (FormStringField) this.getField(DEFAULT_COLOR_KEY);
 		return field.getValue();
 	}
 
 	public Integer getDefaultColor() {
-		FormStringField field = (FormStringField) this.getField(defaultColorKey);
+		FormStringField field = (FormStringField) this.getField(DEFAULT_COLOR_KEY);
 		return field.getValueAsInteger();
 	}
 

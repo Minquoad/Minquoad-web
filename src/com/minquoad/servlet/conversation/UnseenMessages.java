@@ -19,7 +19,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/UnseenMessages")
 public class UnseenMessages extends ImprovedHttpServlet {
 
-	public static final String viewPath = "/WEB-INF/page/conversation/unseenMessages.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/conversation/unseenMessages.jsp";
 
 	@Override
 	public boolean isFullPage() {
@@ -70,7 +70,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 		request.setAttribute("messages", unseenMessages);
 
-		forwardToView(request, response, viewPath);
+		forwardToView(request, response, VIEW_PATH);
 
 	}
 

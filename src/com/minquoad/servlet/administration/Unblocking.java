@@ -14,16 +14,16 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Unblocking")
 public class Unblocking extends ImprovedHttpServlet {
 
-	public final String userIdKey = "userId";
+	public static final String TARGET_ID_KEY = "targetId";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		User target = getEntityFromIdParameter(request, userIdKey, DaoFactory::getUserDao);
+		User target = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 		return getUser(request) != null && target != null && getUser(request).canAdminister(target);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		User target = getEntityFromIdParameter(request, userIdKey, DaoFactory::getUserDao);
+		User target = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 
 		target.setUnblockInstant(null);
 

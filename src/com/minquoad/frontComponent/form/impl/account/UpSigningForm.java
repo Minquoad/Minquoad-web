@@ -9,13 +9,13 @@ import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChec
 
 public class UpSigningForm extends Form {
 
-	public static final String mailAddressKey = "mailAddress";
-	public static final String nicknameKey = "nickname";
-	public static final String passwordKey = "password";
-	public static final String passwordConfirmationKey = "passwordConfirmation";
-	public static final String upSigningCodeKey = "upSigningCode";
+	public static final String MAIL_ADDRESS_KEY = "mailAddress";
+	public static final String NICKNAME_KEY = "nickname";
+	public static final String PASSWORD_KEY = "password";
+	public static final String PASSWORD_CONFIRMATION_KEY = "passwordConfirmation";
+	public static final String UP_SIGNING_CODE_KEY = "upSigningCode";
 
-	public static final String upSigningCode = "gyroroue";
+	public static final String UP_SIGNING_CODE = "gyroroue";
 
 	public UpSigningForm(HttpServletRequest request) {
 		super(request);
@@ -26,7 +26,7 @@ public class UpSigningForm extends Form {
 
 		FormStringField field = null;
 
-		field = new FormStringField(mailAddressKey) {
+		field = new FormStringField(MAIL_ADDRESS_KEY) {
 			@Override
 			public void setValue(String value) {
 				super.setValue(value);
@@ -51,7 +51,7 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(nicknameKey) {
+		field = new FormStringField(NICKNAME_KEY) {
 			@Override
 			public void setValue(String value) {
 				super.setValue(value);
@@ -75,7 +75,7 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(passwordKey);
+		field = new FormStringField(PASSWORD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
@@ -83,10 +83,10 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(passwordConfirmationKey);
+		field = new FormStringField(PASSWORD_CONFIRMATION_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			FormStringField field2 = (FormStringField) form.getField(passwordKey);
+			FormStringField field2 = (FormStringField) form.getField(PASSWORD_KEY);
 			String password = field2.getValue();
 			if (!value.equals(password)) {
 				return "The password confirmation is different to the password.";
@@ -95,10 +95,10 @@ public class UpSigningForm extends Form {
 		});
 		this.addField(field);
 
-		field = new FormStringField(upSigningCodeKey);
+		field = new FormStringField(UP_SIGNING_CODE_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			if (!upSigningCode.equals(value)) {
+			if (!UP_SIGNING_CODE.equals(value)) {
 				return "Wrong up signing code.";
 			} else
 				return null;
@@ -108,17 +108,17 @@ public class UpSigningForm extends Form {
 	}
 
 	public String getMailAddress() {
-		FormStringField field = (FormStringField) this.getField(mailAddressKey);
+		FormStringField field = (FormStringField) this.getField(MAIL_ADDRESS_KEY);
 		return field.getValue();
 	}
 
 	public String getNickname() {
-		FormStringField field = (FormStringField) this.getField(nicknameKey);
+		FormStringField field = (FormStringField) this.getField(NICKNAME_KEY);
 		return field.getValue();
 	}
 
 	public String getPassword() {
-		FormStringField field = (FormStringField) this.getField(passwordKey);
+		FormStringField field = (FormStringField) this.getField(PASSWORD_KEY);
 		return field.getValue();
 	}
 

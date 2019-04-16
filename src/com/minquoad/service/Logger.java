@@ -24,20 +24,20 @@ public class Logger {
 	}
 
 	public void logError(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "error.log");
+		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "error.log");
 	}
 
 	public void logWarning(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "warning.log");
+		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "warning.log");
 	}
 
 	public void logInfo(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.logPath + "info.log");
+		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "info.log");
 	}
 
 	public void logInFile(String string, String filePath) {
 		try {
-			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.deploymentKey);
+			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
 
 			File file = new File(deployment.getStoragePath() + filePath);
 			if (!file.exists()) {

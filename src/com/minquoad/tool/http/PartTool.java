@@ -35,7 +35,7 @@ public abstract class PartTool {
 
 		Random random = new Random();
 
-		String randomDirPath = StorageManager.communityPath;
+		String randomDirPath = StorageManager.COMMUNITY_PATH;
 		for (int i = 0; i < 2; i++) {
 			randomDirPath += random.nextInt(10) + "/";
 		}

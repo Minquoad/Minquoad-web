@@ -14,10 +14,12 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Possession")
 public class Possession extends ImprovedHttpServlet {
 
+	public static final String TARGET_ID_KEY = "targetId";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
-		User userToControl = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
+		User userToControl = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 
 		return user != null && userToControl != null && user.canAdminister(userToControl);
 	}
@@ -28,7 +30,7 @@ public class Possession extends ImprovedHttpServlet {
 		if (getControllingAdmin(request) == null) {
 			setSessionControllingAdmin(request, getUser(request));
 		}
-		User userToControl = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
+		User userToControl = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 		setSessionUser(request, userToControl);
 
 		response.sendRedirect(request.getContextPath() + "/");
