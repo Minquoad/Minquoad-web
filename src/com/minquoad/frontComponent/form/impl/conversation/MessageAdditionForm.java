@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.Conversation;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormEntityField;
 import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class MessageAdditionForm extends Form {
@@ -19,8 +20,18 @@ public class MessageAdditionForm extends Form {
 	@Override
 	protected void build() {
 
-		FormStringField conversationIdField = new FormStringField(CONVERSATION_ID_KEY);
-		this.addField(conversationIdField);
+		FormEntityField<Conversation> conversationField =
+				new FormEntityField<Conversation>(CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
+
+		conversationField.setEmptyPermitted(false);
+		conversationField.addValueChecker((form, field, value) -> {
+			if (getUnitFactory().getConversationUnit().hasUserConversationAccess(getUser(), value)) {
+				return null;
+			} else {
+				return "conversation access problem";
+			}
+		});
+		this.addField(conversationField);
 
 		FormStringField textField = new FormStringField(TEXT_KEY);
 		textField.setEmptyPermitted(false);
@@ -28,8 +39,9 @@ public class MessageAdditionForm extends Form {
 	}
 
 	public Conversation getConversation() {
-		FormStringField field = (FormStringField) this.getField(CONVERSATION_ID_KEY);
-		return field.getValueAsEntity(DaoFactory::getConversationDao);
+		@SuppressWarnings("unchecked")
+		FormEntityField<Conversation> field = (FormEntityField<Conversation>) this.getField(CONVERSATION_ID_KEY);
+		return field.getValue();
 	}
 
 	public String getText() {

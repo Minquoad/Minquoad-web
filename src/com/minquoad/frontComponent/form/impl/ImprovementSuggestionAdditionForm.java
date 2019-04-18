@@ -15,24 +15,9 @@ public class ImprovementSuggestionAdditionForm extends Form {
 
 	@Override
 	protected void build() {
-
-		FormStringField textField = new FormStringField(TEXT_KEY) {
-			@Override
-			public void setValue(String value) {
-				if (value != null) {
-					super.setValue(value.trim());
-				}
-			}
-		};
-		textField.addValueChecker((form, field, value)-> {
-			if (value== null || value.equals("")) {
-				return "The text field is empty.";
-			} else {
-				return null;
-			}
-		});
+		FormStringField textField = new FormStringField(TEXT_KEY);
+		textField.setEmptyPermitted(false);
 		this.addField(textField);
-
 	}
 
 	public String getText() {

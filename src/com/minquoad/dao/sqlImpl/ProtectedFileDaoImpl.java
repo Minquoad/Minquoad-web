@@ -27,6 +27,7 @@ public class ProtectedFileDaoImpl extends ImprovedDaoImpl<ProtectedFile> impleme
 		return new ProtectedFile();
 	}
 
+	@Override
 	public boolean isPrimaryKeyRandomlyGenerated() {
 		return true;
 	}

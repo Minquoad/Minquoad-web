@@ -4,8 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChecker;
 
 public class UpSigningForm extends Form {
 
@@ -26,17 +26,8 @@ public class UpSigningForm extends Form {
 
 		FormStringField field = null;
 
-		field = new FormStringField(MAIL_ADDRESS_KEY) {
-			@Override
-			public void setValue(String value) {
-				super.setValue(value);
-				if (getValue() != null) {
-					super.setValue(User.formatMailAddressCase(getValue()));
-				}
-			}
-		};
+		field = new FormEmailField(MAIL_ADDRESS_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("mailAddress", value);
 			if (existingUser == null) {

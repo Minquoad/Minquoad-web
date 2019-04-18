@@ -7,10 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.frontComponent.form.field.valueChecker.EmailAddressValueChecker;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.unit.impl.FailedInLoginigAttemptUnit;
 
 public class InLogingForm extends Form {
 
@@ -24,23 +23,12 @@ public class InLogingForm extends Form {
 	@Override
 	public void build() {
 
-		FailedInLoginigAttemptUnit failedInLoginigAttemptUnit = getUnitFactory().getFailedInLoginigAttemptUnit();
-
 		FormStringField field = null;
 
-		field = new FormStringField(MAIL_ADDRESS_KEY) {
-			@Override
-			public void setValue(String value) {
-				super.setValue(value);
-				if (getValue() != null) {
-					super.setValue(User.formatMailAddressCase(getValue()));
-				}
-			}
-		};
+		field = new FormEmailField(MAIL_ADDRESS_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker(new EmailAddressValueChecker());
 		field.addValueChecker((form, thisField, value) -> {
-			Duration coolDown = failedInLoginigAttemptUnit.getCoolDown(value);
+			Duration coolDown = getUnitFactory().getFailedInLoginigAttemptUnit().getCoolDown(value);
 			if (coolDown == null) {
 				return null;
 			} else {

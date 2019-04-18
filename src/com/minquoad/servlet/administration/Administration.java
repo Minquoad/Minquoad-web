@@ -21,6 +21,7 @@ public class Administration extends ImprovedHttpServlet {
 		return user != null && user.isAdmin();
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
 

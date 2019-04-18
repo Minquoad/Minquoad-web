@@ -19,6 +19,7 @@ public class Home extends ImprovedHttpServlet {
 		return true;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

@@ -24,6 +24,7 @@ public class Possession extends ImprovedHttpServlet {
 		return user != null && userToControl != null && user.canAdminister(userToControl);
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

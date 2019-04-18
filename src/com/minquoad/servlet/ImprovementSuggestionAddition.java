@@ -25,6 +25,7 @@ public class ImprovementSuggestionAddition extends ImprovedHttpServlet {
 		return getUser(request) != null;
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

@@ -19,6 +19,7 @@ public class Community extends ImprovedHttpServlet {
 		return getUser(request) != null;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
 		

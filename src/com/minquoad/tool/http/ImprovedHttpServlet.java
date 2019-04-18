@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.dao.interfaces.DaoGetter;
 import com.minquoad.entity.RequestLog;
 import com.minquoad.entity.User;
 import com.minquoad.service.Database;

@@ -35,6 +35,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
@@ -74,6 +75,7 @@ public class UnseenMessages extends ImprovedHttpServlet {
 
 	}
 
+	@Override
 	public boolean isLoggingAllRequests() {
 		return false;
 	}

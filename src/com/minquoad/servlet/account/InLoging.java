@@ -24,6 +24,7 @@ public class InLoging extends ImprovedHttpServlet {
 		return getUser(request) == null;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);
@@ -31,6 +32,7 @@ public class InLoging extends ImprovedHttpServlet {
 		forwardToView(request, response, VIEW_PATH);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);

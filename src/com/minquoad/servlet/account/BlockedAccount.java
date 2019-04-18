@@ -21,6 +21,7 @@ public class BlockedAccount extends ImprovedHttpServlet {
 		return user != null && user.isBlocked();
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		forwardToView(request, response, VIEW_PATH);
 	}

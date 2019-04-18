@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormEntityField;
 import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class BlockingForm extends Form {
@@ -23,20 +24,29 @@ public class BlockingForm extends Form {
 
 	@Override
 	protected void build() {
-		FormStringField field = null;
 
-		field = new FormStringField(TARGET_ID_KEY);
-		field.setEmptyPermitted(false);
-		this.addField(field);
+		FormEntityField<User> targetField = 
+				new FormEntityField<User>(TARGET_ID_KEY, DaoFactory::getUserDao);
 
-		field = new FormStringField(DATE_KEY);
-		field.setEmptyPermitted(false);
-		this.addField(field);
+		targetField.setEmptyPermitted(false);
+		targetField.addValueChecker((form, thisField, value) -> {
+			if (getUser().canAdminister(value)) {
+				return null;
+			} else {
+				return "administration hierarchy not respected";
+			}
+		});
+		this.addField(targetField);
+
+		FormStringField dateField = new FormStringField(DATE_KEY);
+		dateField.setEmptyPermitted(false);
+		this.addField(dateField);
 	}
 
 	public User getTarget() {
-		FormStringField field = (FormStringField) this.getField(TARGET_ID_KEY);
-		return field.getValueAsEntity(DaoFactory::getUserDao);
+		@SuppressWarnings("unchecked")
+		FormEntityField<User> field = (FormEntityField<User>) this.getField(TARGET_ID_KEY);
+		return field.getValue();
 	}
 
 	public Instant getUnblockDate() {

@@ -4,8 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormFileField;
-import com.minquoad.frontComponent.form.field.valueChecker.ImageChecker;
-import com.minquoad.tool.ImageTool;
+import com.minquoad.frontComponent.form.field.FormImageField;
 
 public class UserPictureAlterationForm extends Form {
 
@@ -17,11 +16,7 @@ public class UserPictureAlterationForm extends Form {
 
 	@Override
 	protected void build() {
-		FormFileField field = new FormFileField(USER_PICTURE_KEY);
-		for (String extention : ImageTool.getPossibleImageExtentions()) {
-			field.addAllowedExtention(extention);
-		}
-		field.addValueChecker(new ImageChecker());
+		FormFileField field = new FormImageField(USER_PICTURE_KEY);
 		this.addField(field);
 	}
 

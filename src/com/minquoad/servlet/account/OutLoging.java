@@ -17,6 +17,7 @@ public class OutLoging extends ImprovedHttpServlet {
 		return getUser(request) != null;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

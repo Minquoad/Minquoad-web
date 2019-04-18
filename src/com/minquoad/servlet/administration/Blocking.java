@@ -16,18 +16,14 @@ public class Blocking extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		initForms(request);
-		BlockingForm form = (BlockingForm) request.getAttribute("form");
-		form.submit();
-
-		User user = getUser(request);
-		User target = form.getTarget();
-		return user != null && target != null && user.canAdminister(target);
+		return getUser(request) != null;
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		initForms(request);
 		BlockingForm form = (BlockingForm) request.getAttribute("form");
+		form.submit();
 
 		if (form.isValide()) {
 			User target = form.getTarget();

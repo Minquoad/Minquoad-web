@@ -31,6 +31,7 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 		this.addIntegerEntityMember("adminLevel", User::getAdminLevel, User::setAdminLevel);
 		this.addInstantEntityMember("unblockInstant", User::getUnblockInstant, User::setUnblockInstant);
 		this.addIntegerEntityMember("defaultColor", User::getDefaultColor, User::setDefaultColor);
+		this.addStringEntityMember("language", User::getLanguage, User::setLanguage);
 	}
 
 	@Override
@@ -43,6 +44,7 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 		return users;
 	}
 
+	@Override
 	public boolean isPrimaryKeyRandomlyGenerated() {
 		return true;
 	}

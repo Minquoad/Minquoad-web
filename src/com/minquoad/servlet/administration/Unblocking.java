@@ -22,6 +22,7 @@ public class Unblocking extends ImprovedHttpServlet {
 		return getUser(request) != null && target != null && getUser(request).canAdminister(target);
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User target = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 

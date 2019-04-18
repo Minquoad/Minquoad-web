@@ -17,6 +17,7 @@ public class Unpossession extends ImprovedHttpServlet {
 		return getControllingAdmin(request) != null;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		setSessionUser(request, getControllingAdmin(request));

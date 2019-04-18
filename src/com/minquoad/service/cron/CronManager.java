@@ -29,6 +29,7 @@ public class CronManager {
 		stopRequested = false;
 
 		new Thread(new Runnable() {
+			@Override
 			public void run() {
 				long startTime = Instant.now().toEpochMilli();
 				lastMinuteStart = startTime;

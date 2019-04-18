@@ -9,6 +9,10 @@ import com.minquoad.tool.security.SecurityTool;
 
 public class User {
 
+	public static final int DEFAULT_DEFAULT_COLOR = 8421504;
+	public static final int NICKNAME_MAX_LENGTH = 25;
+	public static final int MAIL_ADDRESS_MAX_LENGTH = 50;
+
 	private Long id;
 	private String mailAddress;
 	private String nickname;
@@ -18,10 +22,7 @@ public class User {
 	private int adminLevel = 0;
 	private Instant unblockInstant;
 	private Integer defaultColor;
-
-	public static final int DEFAULT_DEFAULT_COLOR = 8421504;
-	public static final int NICKNAME_MAX_LENGTH = 25;
-	public static final int MAIL_ADDRESS_MAX_LENGTH = 50;
+	private String language;
 
 	public Long getId() {
 		return id;
@@ -105,10 +106,6 @@ public class User {
 			return nickname;
 		}
 		return nickname.substring(0, 1).toUpperCase() + nickname.substring(1).toLowerCase();
-	}
-
-	public static String formatMailAddressCase(String mailAddress) {
-		return mailAddress.toLowerCase();
 	}
 
 	public static List<String> getNicknameProblems(String nickname) {
@@ -253,6 +250,14 @@ public class User {
 
 	public void setDefaultColor(Integer defaultColor) {
 		this.defaultColor = defaultColor;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 }

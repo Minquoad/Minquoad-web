@@ -29,6 +29,7 @@ public class Test extends ImprovedHttpServlet {
 		return true;
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -83,6 +84,7 @@ public class Test extends ImprovedHttpServlet {
 		this.getServletContext().getRequestDispatcher("/WEB-INF/page/test.jsp").forward(request, response);
 	}
 
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

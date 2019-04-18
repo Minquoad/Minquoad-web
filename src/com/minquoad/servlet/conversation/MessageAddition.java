@@ -8,9 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
-import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
@@ -24,20 +22,14 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
+		return getUser(request) != null;
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initForms(request);
 		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
 		form.submit();
-
-		User user = getUser(request);
-		Conversation conversation = form.getConversation();
-
-		return user != null && conversation != null
-				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		MessageAdditionForm form = (MessageAdditionForm) request.getAttribute("form");
 
 		if (form.isValide()) {
 			Message message = new Message();
@@ -46,6 +38,9 @@ public class MessageAddition extends ImprovedHttpServlet {
 			message.setConversation(form.getConversation());
 			message.setInstant(Instant.now());
 			getDaoFactory(request).getMessageDao().persist(message);
+
+		} else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 	}
 
