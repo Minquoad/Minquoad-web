@@ -10,7 +10,7 @@ public abstract class SecurityTool {
 
 	private static SecretTool secretTool = new SecretToolImpl();
 
-	public static String toSha512(String stringHash) {
+	public static String getSha512(String stringHash) {
 		String generatedPassword = null;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-512");

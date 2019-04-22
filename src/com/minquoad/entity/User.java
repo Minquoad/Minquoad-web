@@ -94,7 +94,7 @@ public class User {
 		try {
 
 			String saltedString = SecurityTool.getDynamicSalt(this) + deployment.getUserPasswordSalt() + password;
-			return SecurityTool.toSha512(saltedString);
+			return SecurityTool.getSha512(saltedString);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);

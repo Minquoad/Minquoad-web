@@ -1,17 +1,14 @@
 package com.minquoad.frontComponent.form.impl.administration;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeParseException;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormDateField;
 import com.minquoad.frontComponent.form.field.FormEntityField;
-import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class BlockingForm extends Form {
 
@@ -38,7 +35,7 @@ public class BlockingForm extends Form {
 		});
 		this.addField(targetField);
 
-		FormStringField dateField = new FormStringField(DATE_KEY);
+		FormDateField dateField = new FormDateField(DATE_KEY);
 		dateField.setEmptyPermitted(false);
 		this.addField(dateField);
 	}
@@ -50,14 +47,8 @@ public class BlockingForm extends Form {
 	}
 
 	public Instant getUnblockDate() {
-		FormStringField field = (FormStringField) this.getField(DATE_KEY);
-		LocalDate date;
-		try {
-			date = LocalDate.parse(field.getValue());
-		} catch (DateTimeParseException e) {
-			return null;
-		}
-		return date.atStartOfDay().toInstant(ZoneOffset.UTC);
+		FormDateField field = (FormDateField) this.getField(DATE_KEY);
+		return field.getInstant();
 	}
 	
 }
