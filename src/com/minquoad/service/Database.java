@@ -62,7 +62,7 @@ public class Database {
 	}
 
 	public DaoFactory getNewDaoFactory() {
-		return DaoFactoryImpl.getNewDaoFactory(this);
+		return new DaoFactoryImpl(this);
 	}
 
 }

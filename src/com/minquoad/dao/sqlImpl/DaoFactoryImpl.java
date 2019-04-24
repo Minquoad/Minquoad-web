@@ -18,12 +18,8 @@ public class DaoFactoryImpl implements DaoFactory {
 
 	private Database database;
 
-	private DaoFactoryImpl(Database database) {
+	public DaoFactoryImpl(Database database) {
 		this.database = database;
-	}
-
-	public static DaoFactory getNewDaoFactory(Database database) {
-		return new DaoFactoryImpl(database);
 	}
 
 	public Database getDatabase() {
