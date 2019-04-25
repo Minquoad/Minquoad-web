@@ -1,6 +1,7 @@
 package com.minquoad.servlet.account;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -63,7 +64,10 @@ public class AccountManagement extends ImprovedHttpServlet {
 					user.setNickname(form.getnickname());
 					user.setMailAddress(form.getmailAddress());
 					user.setDefaultColor(form.getDefaultColor());
+					user.setLanguage(form.getLanguage());
 					getDaoFactory(request).getUserDao().persist(user);
+
+					setLocale(request, new Locale(user.getLanguage(), getLocale(request).getCountry()));
 				}
 			}
 

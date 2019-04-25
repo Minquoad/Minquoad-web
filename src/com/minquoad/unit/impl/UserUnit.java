@@ -13,7 +13,7 @@ public class UserUnit extends Unit {
 		super(unitFactory);
 	}
 
-	public User createNewUser(String mailAddress, String nickname, String password) {
+	public User createNewUser(String mailAddress, String nickname, String password, String language) {
 
 		UserDao userDao = getDaoFactory().getUserDao();
 
@@ -22,6 +22,7 @@ public class UserUnit extends Unit {
 		user.setNickname(nickname);
 		user.setRegistrationInstant(Instant.now());
 		user.setLastActivityInstant(Instant.now());
+		user.setLanguage(language);
 		user.setDefaultColor(User.DEFAULT_DEFAULT_COLOR);
 		userDao.insert(user);
 		user.setPassword(password, getDeployment());

@@ -2,11 +2,13 @@ package com.minquoad.tool.http;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
@@ -17,6 +19,7 @@ import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
 import com.minquoad.service.StorageManager;
+import com.minquoad.tool.InternationalizationTool;
 import com.minquoad.unit.UnitFactory;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
@@ -31,6 +34,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	protected final static String CONTROLLING_ADMIN_KEY = "controllingAdmin";
 
 	// session keys
+	protected final static String LOCAL_KEY = "local";
 	protected final static String USER_ID_KEY = "userId";
 	protected final static String LAST_REFUSED_URL_KEY = "lastRefusedUrl";
 	protected final static String CONTROLLING_ADMIN_ID_KEY = "controllingAdminId";
@@ -52,7 +56,9 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			requestLog.setUrl(getCurrentUrlWithArguments(request));
 
-			User user = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(USER_ID_KEY));
+			HttpSession session = request.getSession();
+
+			User user = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(USER_ID_KEY));
 
 			User controllingAdmin = null;
 
@@ -60,7 +66,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				requestLog.setUser(user);
 				setUser(request, user);
 
-				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) request.getSession().getAttribute(CONTROLLING_ADMIN_ID_KEY));
+				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY));
 
 				if (controllingAdmin == null) {
 					user.setLastActivityInstant(Instant.now());
@@ -71,7 +77,20 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					setControllingAdmin(request, controllingAdmin);
 
 					controllingAdmin.setLastActivityInstant(Instant.now());
-					getDaoFactory(request).getUserDao().persist(user);
+					getDaoFactory(request).getUserDao().persist(controllingAdmin);
+				}
+			}
+
+			Locale locale = getLocale(session);
+			if (user == null) {
+				if (locale == null) {
+					setLocale(session, InternationalizationTool.getClosestValidLocale(request.getLocales()));
+				}
+
+			} else {
+				if (locale == null || user.getLanguage() != locale.getLanguage()) {
+					locale = new Locale(user.getLanguage(), request.getLocale().getCountry());
+					setLocale(session, locale);
 				}
 			}
 
@@ -127,7 +146,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 				if (user == null) {
 					if (isFullPage()) {
-						request.getSession().setAttribute(LAST_REFUSED_URL_KEY, getCurrentUrlWithArguments(request));
+						session.setAttribute(LAST_REFUSED_URL_KEY, getCurrentUrlWithArguments(request));
 						response.sendRedirect(request.getContextPath() + "/InLoging");
 						return;
 					} else {
@@ -146,7 +165,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			}
 
 			if (!request.getServletPath().equals("/InLoging")) {
-				request.getSession().removeAttribute(LAST_REFUSED_URL_KEY);
+				session.removeAttribute(LAST_REFUSED_URL_KEY);
 			}
 
 			super.service(request, response);
@@ -237,6 +256,22 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	public static void setSessionControllingAdmin(HttpServletRequest request, User user) {
 		request.getSession().setAttribute(CONTROLLING_ADMIN_ID_KEY, user.getId());
 		setControllingAdmin(request, user);
+	}
+
+	public static Locale getLocale(HttpServletRequest request) {
+		return (Locale) getLocale(request.getSession());
+	}
+
+	public static Locale getLocale(HttpSession session) {
+		return (Locale) session.getAttribute(LOCAL_KEY);
+	}
+
+	public static void setLocale(HttpServletRequest request, Locale locale) {
+		setLocale(request.getSession(), locale);
+	}
+
+	public static void setLocale(HttpSession session, Locale locale) {
+		session.setAttribute(LOCAL_KEY, locale);
 	}
 
 	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {

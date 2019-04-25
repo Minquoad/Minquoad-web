@@ -6,12 +6,15 @@ import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormColorField;
 import com.minquoad.frontComponent.form.field.FormEmailField;
+import com.minquoad.frontComponent.form.field.FormListField;
 import com.minquoad.frontComponent.form.field.FormStringField;
+import com.minquoad.tool.InternationalizationTool;
 
 public class UserParametersAlterationForm extends Form {
 
 	public static final String MAIL_ADDRESS_KEY = "mailAddress";
 	public static final String NICKNAME_KEY = "nickname";
+	public static final String LANGUAGE_KEY = "language";
 	public static final String DEFAULT_COLOR_KEY = "defaultColor";
 
 	public UserParametersAlterationForm(HttpServletRequest request) {
@@ -65,6 +68,14 @@ public class UserParametersAlterationForm extends Form {
 		field.setValue(getUser().getNickname());
 		this.addField(field);
 
+		FormListField languageField = new FormListField(LANGUAGE_KEY);
+		languageField.setEmptyPermitted(false);
+		for (String supportedLanguageCode : InternationalizationTool.supportedLanguageCodes) {
+			languageField.addPossibleValue(supportedLanguageCode);
+		}
+		languageField.setValue(getUser().getLanguage());
+		this.addField(languageField);
+
 		field = new FormColorField(DEFAULT_COLOR_KEY);
 		field.setEmptyPermitted(false);
 		field.setValue(getUser().getDefaultColorAsHtmlValue());
@@ -90,6 +101,11 @@ public class UserParametersAlterationForm extends Form {
 	public Integer getDefaultColor() {
 		FormStringField field = (FormStringField) this.getField(DEFAULT_COLOR_KEY);
 		return field.getValueAsInteger();
+	}
+
+	public String getLanguage() {
+		FormStringField field = (FormStringField) this.getField(LANGUAGE_KEY);
+		return field.getValue();
 	}
 
 }

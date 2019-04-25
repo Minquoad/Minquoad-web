@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//WebContent/WEB-INF/includable/header.jsp=UTF-8
 encoding//WebContent/WEB-INF/includable/mainHeadContent.jsp=UTF-8
+encoding//WebContent/WEB-INF/page/account/accountManagement.jsp=UTF-8
 encoding//WebContent/WEB-INF/page/blockedSite.jsp=UTF-8
 encoding//WebContent/WEB-INF/page/conversation/conversations.jsp=UTF-8
 encoding//WebContent/WEB-INF/page/conversation/currentConversation.jsp=UTF-8

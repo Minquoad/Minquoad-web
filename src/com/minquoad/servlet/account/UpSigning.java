@@ -40,7 +40,8 @@ public class UpSigning extends ImprovedHttpServlet {
 			User user = getUnitFactory(request).getUserUnit().createNewUser(
 					form.getMailAddress(),
 					form.getNickname(),
-					form.getPassword());
+					form.getPassword(),
+					getLocale(request).getLanguage());
 
 			setSessionUser(request, user);
 			response.sendRedirect(request.getContextPath() + "/");

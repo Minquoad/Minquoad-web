@@ -37,6 +37,24 @@
 								</jsp:include>
 							</p>
 							<p>
+								<label for="language">Language : </label>
+								<select id="language" name="language">
+									<option value="en"
+										<c:if test="${ requestScope.userParametersAlteration.fields.language.value eq 'en' }">
+										selected
+									</c:if>>English</option>
+									<option value="fr"
+										<c:if test="${ requestScope.userParametersAlteration.fields.language.value eq 'fr' }">
+										selected
+									</c:if>>Français</option>
+
+								</select>
+								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+									<jsp:param name="formKey" value="userParametersAlteration" />
+									<jsp:param name="fieldName" value="language" />
+								</jsp:include>
+							</p>
+							<p>
 								<label for="defaultColor">Default account color : </label>
 								<input type="color" name="defaultColor" id="defaultColor" value="${ requestScope.user.defaultColorAsHtmlValue }" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
