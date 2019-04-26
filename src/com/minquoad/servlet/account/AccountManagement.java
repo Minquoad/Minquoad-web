@@ -77,7 +77,6 @@ public class AccountManagement extends ImprovedHttpServlet {
 				form.submit();
 
 				if (form.isValide()) {
-
 					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
 
 					UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
@@ -97,6 +96,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 						userProfileImageDao.persist(image);
 					}
+
 				} else {
 					request.setAttribute("userPictureAlterationForm", form);
 				}
@@ -111,6 +111,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 					User user = getUser(request);
 					user.setPassword(form.getNewPassword(), getDeployment());
 					getDaoFactory(request).getUserDao().persist(user);
+
 				} else {
 					request.setAttribute("userPasswordAlterationForm", form);
 				}

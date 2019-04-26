@@ -1,6 +1,7 @@
 package com.minquoad.servlet;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +24,14 @@ public class Home extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		ResourceBundle messages = ResourceBundle.getBundle("Test", getLocale(request));
+
+		String str = messages.getString("testStr");
+
+		System.out.println(str);
+
 		forwardToView(request, response, VIEW_PATH);
+
 	}
 
 }

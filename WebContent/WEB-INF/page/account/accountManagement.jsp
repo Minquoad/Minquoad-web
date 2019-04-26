@@ -47,7 +47,6 @@
 										<c:if test="${ requestScope.userParametersAlteration.fields.language.value eq 'fr' }">
 										selected
 									</c:if>>Français</option>
-
 								</select>
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
@@ -75,7 +74,7 @@
 
 						<c:if test="${not empty userProfileImage}">
 
-							<p>Actual profile picture:</p>
+							<p>Actual profile picture :</p>
 
 							<c:url value="/ImageDownload" var="imageDownloadUrl">
 								<c:param name="id" value="${userProfileImage.id}" />

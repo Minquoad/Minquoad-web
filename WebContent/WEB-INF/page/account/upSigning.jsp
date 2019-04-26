@@ -43,7 +43,7 @@
 						</c:if>
 					</p>
 					<p>
-						<label for="passwordConfirmation">Password : </label>
+						<label for="passwordConfirmation">Password (confirmation) : </label>
 						<input type="password" name="passwordConfirmation" id="passwordConfirmation" />
 						<c:if test="${ not empty requestScope.form }">
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">

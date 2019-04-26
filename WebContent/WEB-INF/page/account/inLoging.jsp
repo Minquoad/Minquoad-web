@@ -5,7 +5,7 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Log In" />
+		<jsp:param name="pageTitle" value="Log in" />
 	</jsp:include>
 
 	<div id="mainContainer">

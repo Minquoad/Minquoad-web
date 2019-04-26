@@ -2,6 +2,7 @@ package com.minquoad.service;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -59,6 +60,7 @@ public class Deployment implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent contextEvent) {
 
 		Locale.setDefault(new Locale("en", "US"));
+		ResourceBundle.clearCache();
 
 		ServletContext servletContext = contextEvent.getServletContext();
 

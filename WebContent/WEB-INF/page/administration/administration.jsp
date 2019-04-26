@@ -104,7 +104,7 @@
 							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
 								<c:param name="open" value="false" />
 							</c:url>
-							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="🔒 Cose site" />
+							<input type="button" onclick="window.location.href = '${ siteStateChangementUrl }';" value="🔒 Close site" />
 						</c:if>
 						<c:if test="${ not applicationScope.deployment.open }">
 							<h2>🔒 The site is closed.</h2>
