@@ -23,12 +23,15 @@
 		<div class="centererContainer">
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div class="horizontallyPadded">
-					<a href="<c:url value="/Test" />" class="headerItem">Test</a>
-					<c:if test="${not empty requestScope.user}">
+					<div class="headerItem dynamicMenuTrigger">
+						▼ Activities
+						<div class="dynamicMenu">
+							<a class="dynamicMenuItem" href="<c:url value="/Test" />">Test</a>
+						</div>
+					</div>
+					<c:if test="${ not empty requestScope.user }">
 						<a href="<c:url value="/Conversations" />" class="headerItem">🗪 Conversation</a>
-					</c:if>
-					<a href="<c:url value="/Community" />" class="headerItem">👥 Community</a>
-					<c:if test="${not empty requestScope.user}">
+						<a href="<c:url value="/Community" />" class="headerItem">👥 Community</a>
 						<div class="headerItem dynamicMenuTrigger">
 							▼
 							<c:out value="${ requestScope.user.nickname }" />
@@ -38,8 +41,25 @@
 							</div>
 						</div>
 					</c:if>
-					<c:if test="${empty requestScope.user}">
+					<c:if test="${ empty requestScope.user }">
 						<a href="<c:url value="/InLoging" />" class="headerItem">👤 Log in</a>
+						<div class="headerItem dynamicMenuTrigger">
+							<img class="flag" src="<c:url value="/img/languageFlag/${ sessionScope.locale.language }.png" />" />
+							<div class="dynamicMenu">
+
+								<c:forEach items="en,fr" var="language">
+									<c:if test="${ language ne sessionScope.locale.language }">
+										<c:url value="/LanguageChangement" var="languageChangementUrl">
+											<c:param name="language" value="${ language }" />
+										</c:url>
+										<a class="dynamicMenuItem" href="${ languageChangementUrl }">
+											<img class="flag" src="<c:url value="/img/languageFlag/${ language }.png" />" />
+										</a>
+									</c:if>
+								</c:forEach>
+
+							</div>
+						</div>
 					</c:if>
 				</div>
 			</div>

@@ -25,6 +25,7 @@ import com.minquoad.unit.UnitFactory;
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static final String POST_METHOD = "POST";
+	public static final String REFERER_HEADER_KEY = "referer";
 
 	// request keys
 	private final static String DAO_FACTORY_KEY = "daoFactory";
@@ -34,7 +35,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	protected final static String CONTROLLING_ADMIN_KEY = "controllingAdmin";
 
 	// session keys
-	protected final static String LOCAL_KEY = "local";
+	protected final static String LOCALE_KEY = "locale";
 	protected final static String USER_ID_KEY = "userId";
 	protected final static String LAST_REFUSED_URL_KEY = "lastRefusedUrl";
 	protected final static String CONTROLLING_ADMIN_ID_KEY = "controllingAdminId";
@@ -263,7 +264,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static Locale getLocale(HttpSession session) {
-		return (Locale) session.getAttribute(LOCAL_KEY);
+		return (Locale) session.getAttribute(LOCALE_KEY);
 	}
 
 	public static void setLocale(HttpServletRequest request, Locale locale) {
@@ -271,7 +272,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static void setLocale(HttpSession session, Locale locale) {
-		session.setAttribute(LOCAL_KEY, locale);
+		session.setAttribute(LOCALE_KEY, locale);
 	}
 
 	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {

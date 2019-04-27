@@ -53,3 +53,7 @@
 	right: 0;
 	left: auto;
 }
+
+#rightHeader .flag {
+	max-height: 10px;
+}
