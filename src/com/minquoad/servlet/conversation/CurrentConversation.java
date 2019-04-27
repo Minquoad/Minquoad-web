@@ -57,8 +57,8 @@ public class CurrentConversation extends ImprovedHttpServlet {
 			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
 			request.setAttribute("participants", conversationUsers);
 		}
-		
-		includeView(request, response, VIEW_PATH);
+
+		forwardToView(request, response, VIEW_PATH);
 
 	}
 

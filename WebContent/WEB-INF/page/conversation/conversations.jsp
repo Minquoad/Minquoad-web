@@ -56,10 +56,6 @@
 			</div>
 
 			<div id="current">
-				<c:set var="currentConversationServletPath" value="/CurrentConversation" />
-				<jsp:include page="${ currentConversationServletPath }">
-					<jsp:param name="conversationId" value="${ selectedConversation.id }" />
-				</jsp:include>
 			</div>
 
 		</div>
