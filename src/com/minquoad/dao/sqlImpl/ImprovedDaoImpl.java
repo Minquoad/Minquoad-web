@@ -12,7 +12,7 @@ public abstract class ImprovedDaoImpl<EntitySubclass> extends DaoImpl<EntitySubc
 	private DaoFactoryImpl daoFactory;
 
 	public ImprovedDaoImpl(DaoFactoryImpl daoFactory) {
-		//this.addStatementListener((statement) -> Logger.logInFile(statement, StorageManager.logPath + "statements.sql"));
+		//this.addStatementListener((statement) -> System.out.println(statement));
 		this.daoFactory = daoFactory;
 		this.tableName = this.instantiateBlank().getClass().getSimpleName();
 	}	

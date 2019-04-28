@@ -93,3 +93,7 @@
 	font-size: var(--MAIN_FONT_SIZE);
 	vertical-align: top;
 }
+
+.noneDisplayed {
+	display: none;
+}

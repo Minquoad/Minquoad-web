@@ -10,3 +10,7 @@ function handleAjaxError(error) {
 	alert(message);
 	window.location.replace("");
 }
+
+function displayLoading(element) {
+	element.html($("#loadingDiv").html());
+}

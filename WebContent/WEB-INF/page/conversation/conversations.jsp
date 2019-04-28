@@ -22,7 +22,8 @@
 							<c:param name="conversationId" value="${ conversationResume.conversation.id }" />
 						</c:url>
 						<div class="borderedTile" data-currentConversationUrl="${ currentConversationUrl }">
-							<div class="
+							<div
+								class="
 							fullSize resume
 							${ conversationResume.conversation eq requestScope.selectedConversation ? 'selectedConversation' : '' }
 							">
@@ -62,6 +63,7 @@
 	</div>
 
 	<jsp:include page="/WEB-INF/includable/footer.jsp" />
+	<jsp:include page="/WEB-INF/includable/utilityDiv.jsp" />
 
 </body>
 </html>

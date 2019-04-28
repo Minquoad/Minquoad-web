@@ -8,7 +8,7 @@ function detectConversationResumes() {
 
 		conversationResumeTile = $(this);
 
-		current.empty();
+		displayLoading(current);
 		conversationResumeTiles.find(".resume").removeClass("selectedConversation");
 
 		$.ajax({
@@ -17,6 +17,7 @@ function detectConversationResumes() {
 			dataType : "html",
 			success : function(data) {
 				conversationResumeTile.find(".resume").addClass("selectedConversation");
+				current.empty();
 				current.append(data);
 				detectCurrentConversation();
 				borderTiles();
@@ -74,7 +75,7 @@ function detectCurrentConversation() {
 }
 
 $(document).ready(function() {
-	
+
 	detectConversationResumes();
 	$("#conversations #list .borderedTile .selectedConversation").trigger("click");
 
