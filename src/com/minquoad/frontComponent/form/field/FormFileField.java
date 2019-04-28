@@ -38,7 +38,7 @@ public class FormFileField extends FormField {
 					}
 				}
 				if (!isExtentionAuthorized) {
-					String problem = "Unauthorized extention. Authorized extentions are : ";
+					String problem = getText("UnauthorizedExtension") + " ";
 					boolean first = true;
 					for (String allowedExtention : allowedExtentions) {
 						if (!first) {

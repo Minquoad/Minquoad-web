@@ -19,7 +19,7 @@ public class FormListField extends FormStringField {
 				return null;
 			}
 		}
-		return "This value is not acceptable.";
+		return getText("ValueNotInAcceptedValues");
 	}
 
 	public void addPossibleValue(String value) {

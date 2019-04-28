@@ -14,7 +14,7 @@ public class FormImageField extends FormFileField {
 			if (ImageTool.isImage(value)) {
 				return null;
 			}
-			return "There is a problem in the image file.";
+			return getText("UnreadableImage");
 		});
 	}
 

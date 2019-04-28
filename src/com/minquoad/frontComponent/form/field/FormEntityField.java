@@ -34,7 +34,7 @@ public class FormEntityField<Entity> extends FormField {
 		super.computeValueProblems();
 		if (!isValueNull() && !isValueEmpty()) {
 			if (getValue() == null) {
-				getValueProblems().add("Entity not founded");
+				getValueProblems().add(getText("EntityNotFound"));
 			} else {
 				for (EntityValueChecker<Entity> valueChecker : valueCheckers) {
 					String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());

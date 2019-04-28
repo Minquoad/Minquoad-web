@@ -44,10 +44,10 @@ public abstract class FormField {
 
 	public void computeValueProblems() {
 		if (!isNullPermitted() && isValueNull()) {
-			valueProblems.add("The field is missing.");
+			valueProblems.add(getText("FieldIsMissing"));
 		} else {
 			if (!isEmptyPermitted() && isValueEmpty()) {
-				valueProblems.add("The field can not be empty.");
+				valueProblems.add(getText("FieldIsEmpty"));
 			}
 		}
 	}
@@ -68,6 +68,10 @@ public abstract class FormField {
 
 	protected User getUser() {
 		return getForm().getUser();
+	}
+
+	protected String getText(String key) {
+		return getForm().getText(key);
 	}
 
 	protected DaoFactory getDaoFactory() {

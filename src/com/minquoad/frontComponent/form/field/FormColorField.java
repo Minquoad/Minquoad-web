@@ -24,7 +24,7 @@ public class FormColorField extends FormStringField {
 			} catch (Exception e) {
 			}
 		}
-		return "Wrong format (should be like #0f0f0f)";
+		return getText("ColorWrongFormat");
 	}
 
 }

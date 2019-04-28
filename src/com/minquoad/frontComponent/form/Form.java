@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.field.FormField;
+import com.minquoad.tool.InternationalizationTool;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.unit.UnitFactory;
 
@@ -90,6 +91,10 @@ public class Form {
 
 	public User getUser() {
 		return ImprovedHttpServlet.getUser(getRequest());
+	}
+
+	public String getText(String key) {
+		return InternationalizationTool.getText(key, "resources.Form", ImprovedHttpServlet.getLocale(getRequest()));
 	}
 
 	public boolean isSubmitted() {

@@ -25,7 +25,7 @@ public class FormEmailField extends FormStringField {
 						+ "9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7"
 						+ "f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])")) {
 
-			return "This doesn't appear to be a mail address.";
+			return getText("EmailWrongFormat");
 		}
 		return null;
 	}

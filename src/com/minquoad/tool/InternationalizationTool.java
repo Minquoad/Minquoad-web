@@ -2,10 +2,15 @@ package com.minquoad.tool;
 
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 public abstract class InternationalizationTool {
 
 	public final static String[] supportedLanguageCodes = { "en", "fr" };
+
+	public static String getText(String key, String bundleBaseName, Locale locale) {
+		return ResourceBundle.getBundle(bundleBaseName, locale).getString(key);
+	}
 
 	public static Locale getClosestValidLocale(Enumeration<Locale> locales) {
 

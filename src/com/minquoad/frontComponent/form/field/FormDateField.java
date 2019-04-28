@@ -25,7 +25,7 @@ public class FormDateField extends FormStringField {
 			}
 		} catch (DateTimeParseException e) {
 		}
-		return "Wrong format (should be dd-mm-yyyy)";
+		return getText("DateWrongFormat");
 	}
 
 	public Instant getInstant() {
