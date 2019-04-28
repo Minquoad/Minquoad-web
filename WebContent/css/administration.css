@@ -1,8 +1,31 @@
-#blockingFormTrigger .dynamicMenu {
+#administration #nav {
+	display: inline-block;
+	height: 100%;
+	width: 220px;
+	border-right: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+}
+
+#administration #nav>* {
+	cursor: pointer;
+	padding: 20px 10px 20px 10px;
+	border-bottom: solid var(--BORDER_COLOR) 1px;
+}
+
+#administration #nav>*.selectedSubPage {
+	background-color: var(--MENU_BACKGROUND_COLOR);
+}
+
+#administration #currentSubPage {
+	display: inline-block;
+	height: 100%;
+	width: calc(100% - 220px - 1px);
+}
+
+#administration #blockingFormTrigger .dynamicMenu {
 	right: 0;
 	left: auto;
 }
 
-#blockingFormTrigger .dynamicMenuItem {
+#administration #blockingFormTrigger .dynamicMenuItem {
 	text-align: center;
 }

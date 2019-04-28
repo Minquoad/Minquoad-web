@@ -1,26 +1,24 @@
 function detectConversationResumes() {
 
 	let current = $("#conversations #current");
-
 	let conversationResumeTiles = $("#conversations #list .borderedTile");
 
 	conversationResumeTiles.on("click", function(e) {
 
-		conversationResumeTile = $(this);
+		let conversationResumeTile = $(this);
 
-		displayLoading(current);
 		conversationResumeTiles.find(".resume").removeClass("selectedConversation");
+		displayLoading(current);
+		conversationResumeTile.find(".resume").addClass("selectedConversation");
 
 		$.ajax({
 			type : "GET",
-			url : $(this).attr("data-currentConversationUrl"),
+			url : conversationResumeTile.attr("data-currentConversationUrl"),
 			dataType : "html",
 			success : function(data) {
-				conversationResumeTile.find(".resume").addClass("selectedConversation");
 				current.empty();
 				current.append(data);
 				detectCurrentConversation();
-				borderTiles();
 			},
 			error : function(err) {
 				handleAjaxError(err);
@@ -30,13 +28,13 @@ function detectConversationResumes() {
 }
 
 function detectCurrentConversation() {
+	borderTiles();
 	detectDynamicMenuTriggers();
 
 	let messagesDiv = document.getElementById("messages");
 	messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
 	let form = $('#messageEditorForm');
-
 	let textarea = $('#conversations #current #messageEditor textarea');
 	let emojis = $('#conversations #current #messageEditor #sepcialChars span');
 	let button = $('#conversations #current #messageEditor [type="button"]');

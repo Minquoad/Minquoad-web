@@ -3,7 +3,7 @@ function borderTiles() {
 	let borderedTiles = $(".borderedTile");
 
 	borderedTiles.each(function() {
-		borderedTile = $(this);
+		let borderedTile = $(this);
 
 		if (!borderedTile.children().first().hasClass("topTileBorderAdder")) {
 			borderedTile.wrapInner("<div class='borderedTilebackgroundCorrector'></div>");

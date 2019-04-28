@@ -32,7 +32,7 @@ public class Blocking extends ImprovedHttpServlet {
 			getDaoFactory(request).getUserDao().persist(target);
 		}
 
-		response.sendRedirect(request.getContextPath() + "/Administration");
+		response.sendRedirect(request.getContextPath() + "/Administration?currentSubPage=UsersManagement");
 	}
 	
 	private void initForms(HttpServletRequest request) {

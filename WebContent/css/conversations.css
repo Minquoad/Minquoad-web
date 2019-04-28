@@ -3,7 +3,6 @@
 	height: 100%;
 	width: 220px;
 	border-right: solid var(--BANNER_BACKGROUND_COLOR) 1px;
-	font-size: var(--MAIN_FONT_SIZE);
 }
 
 #conversations #list .tileContainer {
@@ -35,7 +34,6 @@
 	display: inline-block;
 	height: 100%;
 	width: calc(100% - 220px - 1px);
-	font-size: var(--MAIN_FONT_SIZE);
 }
 
 #conversations #current #title {

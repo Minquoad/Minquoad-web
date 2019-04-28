@@ -7,25 +7,23 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.entity.User;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
-@WebServlet("/Unpossession")
-public class Unpossession extends ImprovedHttpServlet {
+@WebServlet("/SiteManagement")
+public class SiteManagement extends ImprovedHttpServlet {
+
+	public static final String VIEW_PATH = "/WEB-INF/page/administration/siteManagement.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		return getControllingAdmin(request) != null;
+		User user = getUser(request);
+		return user != null && user.isAdmin();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		setSessionUser(request, getControllingAdmin(request));
-
-		request.getSession().removeAttribute(CONTROLLING_ADMIN_ID_KEY);
-		request.removeAttribute(CONTROLLING_ADMIN_KEY);
-
-		response.sendRedirect(request.getContextPath() + "/Administration?currentSubPage=UsersManagement");
+		forwardToView(request, response, VIEW_PATH);
 	}
 
 }

@@ -56,8 +56,7 @@
 				</div>
 			</div>
 
-			<div id="current">
-			</div>
+			<div id="current"></div>
 
 		</div>
 	</div>

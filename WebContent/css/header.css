@@ -37,12 +37,14 @@
 
 #rightHeader {
 	text-align: right;
+	font-size: 0;
 	width: calc(100% - 200px - 313px);
 }
 
 #header .headerItem {
 	padding: 10px;
 	display: inline-block;
+	font-size: var(--MAIN_FONT_SIZE);
 }
 
 #rightHeader .headerItem:not(:first-child) {
