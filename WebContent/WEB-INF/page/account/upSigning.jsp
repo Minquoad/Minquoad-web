@@ -2,20 +2,27 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.UpSigning" var="upSigningBundle" />
 </head>
 <body>
+	<fmt:message key="SignUp" bundle="${ upSigningBundle }" var="upSigningLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Sign up" />
+		<jsp:param name="pageTitle" value="${ upSigningLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer tileContainer">
 				<div class="borderedTile">
-					<form class="padded" method="post" action="<c:url value="/UpSigning" />" accept-charset="UTF-8">
+					<form class="padded" method="post" action="<c:url value="/UpSigning" />"
+						accept-charset="UTF-8">
 						<p>
-							<label for="mailAddress">Mail address : </label>
-							<input type="email" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
+							<label for="mailAddress">
+								<fmt:message key="MailAddress" bundle="${ upSigningBundle }" />
+								:
+							</label>
+							<input type="email" name="mailAddress" id="mailAddress"
+								maxlength="${ requestScope.mailAddressMaxlength }"
 								value="<c:out value="${ requestScope.form.fields.mailAddress.value }" />" />
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 								<jsp:param name="formKey" value="form" />
@@ -23,8 +30,12 @@
 							</jsp:include>
 						</p>
 						<p>
-							<label for="nickname">Nickname : </label>
-							<input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
+							<label for="nickname">
+								<fmt:message key="Nickname" bundle="${ upSigningBundle }" />
+								:
+							</label>
+							<input type="text" name="nickname" id="nickname"
+								maxlength="${ requestScope.nicknameMaxlength }"
 								value="<c:out value="${ requestScope.form.fields.nickname.value }" />" />
 							<c:if test="${ not empty requestScope.form }">
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
@@ -34,7 +45,10 @@
 							</c:if>
 						</p>
 						<p>
-							<label for="password">Password : </label>
+							<label for="password">
+								<fmt:message key="Password" bundle="${ upSigningBundle }" />
+								:
+							</label>
 							<input type="password" name="password" id="password" />
 							<c:if test="${ not empty requestScope.form }">
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
@@ -44,8 +58,12 @@
 							</c:if>
 						</p>
 						<p>
-							<label for="passwordConfirmation">Password (confirmation) : </label>
-							<input type="password" name="passwordConfirmation" id="passwordConfirmation" />
+							<label for="passwordConfirmation">
+								<fmt:message key="PasswordConfirmation" bundle="${ upSigningBundle }" />
+								:
+							</label>
+							<input type="password" name="passwordConfirmation"
+								id="passwordConfirmation" />
 							<c:if test="${ not empty requestScope.form }">
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="form" />
@@ -54,7 +72,10 @@
 							</c:if>
 						</p>
 						<p>
-							<label for="upSigningCode">Up signing code : </label>
+							<label for="upSigningCode">
+								<fmt:message key="UpSigningCode" bundle="${ upSigningBundle }" />
+								:
+							</label>
 							<input type="password" name="upSigningCode" id="upSigningCode" />
 							<c:if test="${ not empty requestScope.form }">
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
@@ -64,10 +85,13 @@
 							</c:if>
 						</p>
 						<div>
-							<input type="submit" value="Sign up" />
+							<input type="submit"
+								value="<fmt:message key="SignUp" bundle="${ upSigningBundle }" />" />
 						</div>
 						<p>
-							<a href="<c:url value="/InLoging" />">Already registered? Log in.</a>
+							<a href="<c:url value="/InLoging" />">
+								<fmt:message key="logInLink" bundle="${ upSigningBundle }" />
+							</a>
 						</p>
 					</form>
 				</div>

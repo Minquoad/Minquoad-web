@@ -2,6 +2,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.BlockedSite" var="blockedSiteBundle" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -11,11 +12,11 @@
 	<div id="mainContainer">
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer padded centeredText darkorangeText">
-				Website in mantenance.
+				<fmt:message key="BlockedSiteLine0" bundle="${ blockedSiteBundle }" />
 				<br />
 				🛠
 				<br />
-				Our services will be reopen verry soon.
+				<fmt:message key="BlockedSiteLine1" bundle="${ blockedSiteBundle }" />
 			</div>
 		</div>
 	</div>

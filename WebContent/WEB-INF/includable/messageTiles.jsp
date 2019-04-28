@@ -1,11 +1,10 @@
 <c:set var="messages" value="${requestScope[param.messages]}" scope="page" />
 
-<c:set var="newLineChar" value="
-" scope="page" />
+<fmt:setBundle basename="resources.MessageTiles" var="messageTilesBundle" />
 
 <c:forEach items="${ pageScope.messages }" var="message">
 	<div class="borderedTile fullWidth" data-messageId="${ message.id }" <c:if test="${ message.edited }">
-	title="Original message : <c:out value="${ message.text }" />"
+	title="<fmt:message key="OriginalMessage" bundle="${ messageTilesBundle }" /> : <c:out value="${ message.text }" />"
 	</c:if>>
 		<div class="messageMetaData">
 			<div>
@@ -25,6 +24,7 @@
 					<c:out value="${ message.editedText }" />
 				</c:if>
 			</c:set>
+			<fmt:message key="newLineChar" bundle="${ messageTilesBundle }" var="newLineChar" />
 			${fn:replace(text, pageScope.newLineChar, '<br/>')}
 		</div>
 	</div>

@@ -2,10 +2,14 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.AccountManagement"
+	var="accountManagementBundle" />
 </head>
 <body>
+	<fmt:message key="AccountManagement" bundle="${ accountManagementBundle }"
+		var="accountManagementLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Account management" />
+		<jsp:param name="pageTitle" value="${ accountManagementLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">
@@ -14,13 +18,21 @@
 
 				<div class="borderedTile">
 					<div class="padded">
-						<h2>Account proprieties</h2>
-						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
+						<h2>
+							<fmt:message key="AccountProperties"
+								bundle="${ accountManagementBundle }" />
+						</h2>
+						<form method="post" action="<c:url value="/AccountManagement" />"
+							accept-charset="UTF-8">
 
 							<input type="hidden" name="formId" value="userParametersAlteration" />
 							<p>
-								<label for="mailAddress">Mail address : </label>
-								<input type="email" name="mailAddress" id="mailAddress" maxlength="${ requestScope.mailAddressMaxlength }"
+								<label for="mailAddress">
+									<fmt:message key="MailAddress" bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="email" name="mailAddress" id="mailAddress"
+									maxlength="${ requestScope.mailAddressMaxlength }"
 									value="<c:out value="${ requestScope.userParametersAlteration.fields.mailAddress.value }" />" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
@@ -28,8 +40,12 @@
 								</jsp:include>
 							</p>
 							<p>
-								<label for="nickname">Nickname : </label>
-								<input type="text" name="nickname" id="nickname" maxlength="${ requestScope.nicknameMaxlength }"
+								<label for="nickname">
+									<fmt:message key="Nickname" bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="text" name="nickname" id="nickname"
+									maxlength="${ requestScope.nicknameMaxlength }"
 									value="<c:out value="${ requestScope.userParametersAlteration.fields.nickname.value }" />" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
@@ -37,7 +53,10 @@
 								</jsp:include>
 							</p>
 							<p>
-								<label for="language">Language : </label>
+								<label for="language">
+									<fmt:message key="Language" bundle="${ accountManagementBundle }" />
+									:
+								</label>
 								<select id="language" name="language">
 									<option value="en"
 										<c:if test="${ requestScope.userParametersAlteration.fields.language.value eq 'en' }">
@@ -54,15 +73,21 @@
 								</jsp:include>
 							</p>
 							<p>
-								<label for="defaultColor">Default account color : </label>
-								<input type="color" name="defaultColor" id="defaultColor" value="${ requestScope.user.defaultColorAsHtmlValue }" />
+								<label for="defaultColor">
+									<fmt:message key="DefaultAccountColor"
+										bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="color" name="defaultColor" id="defaultColor"
+									value="${ requestScope.user.defaultColorAsHtmlValue }" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
 									<jsp:param name="fieldName" value="defaultColor" />
 								</jsp:include>
 							</p>
 							<div>
-								<input type="submit" value="Save" />
+								<input type="submit"
+									value="<fmt:message key="Save" bundle="${ accountManagementBundle }" />" />
 							</div>
 						</form>
 					</div>
@@ -70,11 +95,18 @@
 
 				<div class="borderedTile">
 					<div class="padded">
-						<h2>Send a new profile picture</h2>
+						<h2>
+							<fmt:message key="SendANewProfilePicture"
+								bundle="${ accountManagementBundle }" />
+						</h2>
 
 						<c:if test="${not empty userProfileImage}">
 
-							<p>Actual profile picture :</p>
+							<p>
+								<fmt:message key="ActualProfilePicture"
+									bundle="${ accountManagementBundle }" />
+								:
+							</p>
 
 							<c:url value="/ImageDownload" var="imageDownloadUrl">
 								<c:param name="id" value="${userProfileImage.id}" />
@@ -85,7 +117,8 @@
 
 						</c:if>
 
-						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8" enctype="multipart/form-data">
+						<form method="post" action="<c:url value="/AccountManagement" />"
+							accept-charset="UTF-8" enctype="multipart/form-data">
 
 							<input type="hidden" name="formId" value="userPictureAlteration" />
 
@@ -96,9 +129,13 @@
 									<jsp:param name="fieldName" value="userPicture" />
 								</jsp:include>
 							</p>
-							<p>Submit without file to return back to the default picture.</p>
+							<p>
+								<fmt:message key="removeProfilePictureInstruction"
+									bundle="${ accountManagementBundle }" />
+							</p>
 							<div>
-								<input type="submit" value="Submit" />
+								<input type="submit"
+									value="<fmt:message key="Submit" bundle="${ accountManagementBundle }" />" />
 							</div>
 						</form>
 					</div>
@@ -106,13 +143,19 @@
 
 				<div class="borderedTile">
 					<div class="padded">
-						<h2>Change password</h2>
-						<form method="post" action="<c:url value="/AccountManagement" />" accept-charset="UTF-8">
+						<h2>
+							<fmt:message key="ChangePassword" bundle="${ accountManagementBundle }" />
+						</h2>
+						<form method="post" action="<c:url value="/AccountManagement" />"
+							accept-charset="UTF-8">
 
 							<input type="hidden" name="formId" value="userPasswordAlteration" />
 
 							<p>
-								<label for="oldPassowrd">Old Password : </label>
+								<label for="oldPassowrd">
+									<fmt:message key="OldPassword" bundle="${ accountManagementBundle }" />
+									:
+								</label>
 								<input type="password" name="oldPassowrd" id="oldPassowrd" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userPasswordAlterationForm" />
@@ -120,7 +163,10 @@
 								</jsp:include>
 							</p>
 							<p>
-								<label for="newPassword">New password : </label>
+								<label for="newPassword">
+									<fmt:message key="NewPassword" bundle="${ accountManagementBundle }" />
+									:
+								</label>
 								<input type="password" name="newPassword" id="newPassword" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userPasswordAlterationForm" />
@@ -128,15 +174,19 @@
 								</jsp:include>
 							</p>
 							<p>
-								<label for="newPasswordConfirmation">Confirm new password : </label>
-								<input type="password" name="newPasswordConfirmation" id="newPasswordConfirmation" />
+								<label for="newPasswordConfirmation">
+									<fmt:message key="ConfirmNewPassword" bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="password" name="newPasswordConfirmation"
+									id="newPasswordConfirmation" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userPasswordAlterationForm" />
 									<jsp:param name="fieldName" value="newPasswordConfirmation" />
 								</jsp:include>
 							</p>
 							<div>
-								<input type="submit" value="Change" />
+								<input type="submit" value="<fmt:message key="Change" bundle="${ accountManagementBundle }" />" />
 							</div>
 						</form>
 					</div>

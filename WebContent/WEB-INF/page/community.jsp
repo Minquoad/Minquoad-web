@@ -3,10 +3,12 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.Community" var="communityBundle" />
 </head>
 <body>
+	<fmt:message key="Community" bundle="${ communityBundle }" var="communityLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Community" />
+		<jsp:param name="pageTitle" value="${ communityLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">

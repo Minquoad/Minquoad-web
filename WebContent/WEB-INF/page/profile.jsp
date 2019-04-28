@@ -3,10 +3,12 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.Profile" var="profileBundle" />
 </head>
 <body>
+	<fmt:message key="Profile" bundle="${ profileBundle }" var="profileLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Profile" />
+		<jsp:param name="pageTitle" value="${ profileLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">

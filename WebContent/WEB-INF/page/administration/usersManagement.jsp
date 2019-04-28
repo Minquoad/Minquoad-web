@@ -1,3 +1,5 @@
+<fmt:setBundle basename="resources.Administration" var="administrationBundle" />
+
 <div class="scrollableContainer centererContainer">
 	<div class="totallyCenteredContainer tileContainer">
 
@@ -6,14 +8,14 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>Id</th>
-							<th>Nickname</th>
-							<th>Registration date</th>
-							<th>LastActivity date</th>
-							<th title="Possession">🕹️</th>
-							<th>Admin level</th>
-							<th title="Block">🛂</th>
-							<th>Unblock date</th>
+							<th><fmt:message key="Id" bundle="${ administrationBundle }" /></th>
+							<th><fmt:message key="Nickname" bundle="${ administrationBundle }" /></th>
+							<th><fmt:message key="Registrationdate" bundle="${ administrationBundle }" /></th>
+							<th><fmt:message key="LastActivityDate" bundle="${ administrationBundle }" /></th>
+							<th title="<fmt:message key="Possession" bundle="${ administrationBundle }" />">🕹️</th>
+							<th><fmt:message key="AdminLevel" bundle="${ administrationBundle }" /></th>
+							<th title="<fmt:message key="Block" bundle="${ administrationBundle }" />">🛂</th>
+							<th><fmt:message key="UnblockDate" bundle="${ administrationBundle }" /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -37,7 +39,7 @@
 											<c:url value="/Possession" var="possessUrl">
 												<c:param name="targetId" value="${ loopUser.id }" />
 											</c:url>
-											<a title="Possession" href="${possessUrl}"> 🕹️ </a>
+											<a title="<fmt:message key="Possession" bundle="${ administrationBundle }" />" href="${possessUrl}"> 🕹️ </a>
 										</c:if>
 									</td>
 									<td>
@@ -60,11 +62,11 @@
 															<c:url value="/Unblocking" var="unblockUrl">
 																<c:param name="targetId" value="${ loopUser.id }" />
 															</c:url>
-															<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="🆗 Remove blocking date" />
+															<input type="button" onclick="window.location.href = '${ unblockUrl }';" value="🆗 <fmt:message key="RemoveBlockingDate" bundle="${ administrationBundle }" />" />
 														</div>
 													</c:if>
 													<form method="post" class="dynamicMenuItem" action="<c:url value="/Blocking" />" accept-charset="UTF-8">
-														<label for="unblockDate"> Set unblocking date :</label>
+														<label for="unblockDate"><fmt:message key="SetUnblockingDate" bundle="${ administrationBundle }" /> :</label>
 														<input type="hidden" name="targetId" value="${ loopUser.id }" />
 														<input type="date" name="date" />
 														<input type="submit" value="⛔ Block" />

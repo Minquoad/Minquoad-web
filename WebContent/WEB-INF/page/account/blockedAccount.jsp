@@ -2,6 +2,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<fmt:setBundle basename="resources.BlockedAccount" var="blockedAccountBundle" />
 </head>
 <body>
 	<jsp:include page="/WEB-INF/includable/header.jsp">
@@ -10,7 +11,9 @@
 
 	<div id="mainContainer">
 		<div class="scrollableContainer centererContainer">
-			<div class="totallyCenteredContainer padded centeredText redText">Account blocked</div>
+			<div class="totallyCenteredContainer padded centeredText redText">
+				<fmt:message key="AccountBlocked" bundle="${ blockedAccountBundle }" />
+			</div>
 		</div>
 	</div>
 

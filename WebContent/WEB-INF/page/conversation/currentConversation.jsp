@@ -1,9 +1,12 @@
+<fmt:setBundle basename="resources.CurrentConversation" var="currentConversationBundle" />
+
 <div id="title" class="centererContainer">
 	<div class="totallyCenteredContainer">
 		<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
 			<c:forEach items="${ requestScope.participants }" var="loopUser">
 				<c:if test="${ loopUser ne requestScope.user }">
-					Main conversation with <c:out value="${ loopUser.nickname }" />
+					<fmt:message key="MainConversationWith" bundle="${ currentConversationBundle }" />
+					<c:out value="${ loopUser.nickname }" />
 				</c:if>
 			</c:forEach>
 		</c:if>
@@ -74,6 +77,6 @@
 				</div>
 			</div>
 		</div>
-		<input type="button" value="Send" />
+		<input type="button" value="<fmt:message key="Send" bundle="${ currentConversationBundle }" />" />
 	</form>
 </div>

@@ -5,10 +5,12 @@
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/conversations.css" />" />
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
+<fmt:setBundle basename="resources.Conversations" var="conversationsBundle" />
 </head>
 <body>
+	<fmt:message key="Conversation" bundle="${ conversationsBundle }" var="conversationsLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="Conversation" />
+		<jsp:param name="pageTitle" value="${ conversationsLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">

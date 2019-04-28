@@ -1,3 +1,5 @@
+<fmt:setBundle basename="resources.Header" var="headerBundle" />
+
 <div id="header">
 	<div id="siteNameHeader">
 		<div class="centererContainer">
@@ -24,25 +26,39 @@
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div class="horizontallyPadded">
 					<div class="headerItem dynamicMenuTrigger">
-						▼ Activities
+						▼ <fmt:message key="Activities" bundle="${ headerBundle }" />
 						<div class="dynamicMenu">
-							<a class="dynamicMenuItem" href="<c:url value="/Test" />">Test</a>
+							<a class="dynamicMenuItem" href="<c:url value="/Test" />">
+								<fmt:message key="Test" bundle="${ headerBundle }" />
+							</a>
 						</div>
 					</div>
 					<c:if test="${ not empty requestScope.user }">
-						<a href="<c:url value="/Conversations" />" class="headerItem">🗪 Conversation</a>
+						<a href="<c:url value="/Conversations" />" class="headerItem">
+						🗪
+						<fmt:message key="Conversation" bundle="${ headerBundle }" />
+						</a>
 						<a href="<c:url value="/Community" />" class="headerItem">👥 Community</a>
 						<div class="headerItem dynamicMenuTrigger">
 							▼
 							<c:out value="${ requestScope.user.nickname }" />
 							<div class="dynamicMenu">
-								<a class="dynamicMenuItem" href="<c:url value="/AccountManagement" />">👤 Account management </a>
-								<a class="dynamicMenuItem" href="<c:url value="/OutLoging" />">✖ Log out</a>
+								<a class="dynamicMenuItem" href="<c:url value="/AccountManagement" />">
+								👤
+								<fmt:message key="AccountManagement" bundle="${ headerBundle }" />
+								</a>
+								<a class="dynamicMenuItem" href="<c:url value="/OutLoging" />">
+								✖
+								<fmt:message key="LogOut" bundle="${ headerBundle }" />
+								</a>
 							</div>
 						</div>
 					</c:if>
 					<c:if test="${ empty requestScope.user }">
-						<a href="<c:url value="/InLoging" />" class="headerItem">👤 Log in</a>
+						<a href="<c:url value="/InLoging" />" class="headerItem">
+						👤
+						<fmt:message key="LogIn" bundle="${ headerBundle }" />
+						</a>
 						<div class="headerItem dynamicMenuTrigger">
 							<img class="flag" src="<c:url value="/img/languageFlag/${ sessionScope.locale.language }.png" />" />
 							<div class="dynamicMenu">
