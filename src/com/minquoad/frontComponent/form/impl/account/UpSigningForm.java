@@ -6,6 +6,7 @@ import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormStringField;
+import com.minquoad.unit.impl.UserUnit;
 
 public class UpSigningForm extends Form {
 
@@ -36,10 +37,6 @@ public class UpSigningForm extends Form {
 				return getText("MailAdressAlreadytaken", value);
 			}
 		});
-		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getMailAddressProblems(value));
-			return null;
-		});
 		this.addField(field);
 
 		field = new FormStringField(NICKNAME_KEY) {
@@ -47,7 +44,7 @@ public class UpSigningForm extends Form {
 			public void setValue(String value) {
 				super.setValue(value);
 				if (getValue() != null) {
-					super.setValue(User.formatNickanameCase(getValue()));
+					super.setValue(UserUnit.formatNickanameCase(getValue()));
 				}
 			}
 		};
@@ -61,7 +58,7 @@ public class UpSigningForm extends Form {
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getNicknameProblems(value));
+			thisField.getValueProblems().addAll(UserUnit.getNicknameProblems(value, getLocale()));
 			return null;
 		});
 		this.addField(field);
@@ -69,7 +66,7 @@ public class UpSigningForm extends Form {
 		field = new FormStringField(PASSWORD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
+			thisField.getValueProblems().addAll(UserUnit.getPasswordProblems(value, getLocale()));;
 			return null;
 		});
 		this.addField(field);

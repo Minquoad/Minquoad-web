@@ -9,6 +9,7 @@ import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormListField;
 import com.minquoad.frontComponent.form.field.FormStringField;
 import com.minquoad.tool.InternationalizationTool;
+import com.minquoad.unit.impl.UserUnit;
 
 public class UserParametersAlterationForm extends Form {
 
@@ -36,10 +37,6 @@ public class UserParametersAlterationForm extends Form {
 				return getText("MailAdressAlreadytaken", value);
 			}
 		});
-		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getMailAddressProblems(value));
-			return null;
-		});
 		field.setValue(getUser().getMailAddress());
 		this.addField(field);
 
@@ -48,7 +45,7 @@ public class UserParametersAlterationForm extends Form {
 			public void setValue(String value) {
 				super.setValue(value);
 				if (getValue() != null) {
-					super.setValue(User.formatNickanameCase(getValue()));
+					super.setValue(UserUnit.formatNickanameCase(getValue()));
 				}
 			}
 		};
@@ -62,7 +59,7 @@ public class UserParametersAlterationForm extends Form {
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getNicknameProblems(value));
+			thisField.getValueProblems().addAll(UserUnit.getNicknameProblems(value, getLocale()));
 			return null;
 		});
 		field.setValue(getUser().getNickname());

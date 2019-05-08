@@ -3,6 +3,7 @@ package com.minquoad.frontComponent.form;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +100,7 @@ public class Form {
 		return InternationalizationTool.getText(
 				key,
 				formResourceBundleName,
-				ImprovedHttpServlet.getLocale(getRequest()),
+				getLocale(),
 				args);
 	}
 
@@ -107,9 +108,13 @@ public class Form {
 		return InternationalizationTool.getText(
 				key,
 				formResourceBundleName,
-				ImprovedHttpServlet.getLocale(getRequest()));
+				getLocale());
 	}
 
+	public Locale getLocale() {
+		return ImprovedHttpServlet.getLocale(getRequest());
+	}
+	
 	public boolean isSubmitted() {
 		return submitted;
 	}

@@ -2,10 +2,10 @@ package com.minquoad.frontComponent.form.impl.account;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormStringField;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.unit.impl.UserUnit;
 
 public class UserPasswordAlterationForm extends Form {
 
@@ -36,7 +36,7 @@ public class UserPasswordAlterationForm extends Form {
 		field = new FormStringField(NEW_PASSWORD_KEY);
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
-			thisField.getValueProblems().addAll(User.getPasswordProblems(value));;
+			thisField.getValueProblems().addAll(UserUnit.getPasswordProblems(value, getLocale()));;
 			return null;
 		});
 		this.addField(field);
