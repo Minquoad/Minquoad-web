@@ -14,7 +14,7 @@ import com.minquoad.service.cron.CronManager;
 
 public class Deployment implements ServletContextListener {
 
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.1.2";
 
 	public static final String DEPLOYMENT_KEY = "deployment";
 	public static final String STORAGE_MANAGER_KEY = "storageManager";
@@ -132,4 +132,8 @@ public class Deployment implements ServletContextListener {
 		this.open = open;
 	}
 
+	public String getVersion() {
+		return VERSION;
+	}
+	
 }

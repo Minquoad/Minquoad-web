@@ -69,17 +69,14 @@ public abstract class PartTool {
 				output.write(buffer, 0, length);
 			}
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw e;
 		} finally {
 			try {
 				output.close();
-			} catch (IOException ignore) {
+			} catch (Exception ignore) {
 			}
 			try {
 				input.close();
-			} catch (IOException ignore) {
+			} catch (Exception ignore) {
 			}
 		}
 	}

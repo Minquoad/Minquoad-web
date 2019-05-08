@@ -16,6 +16,11 @@ public class SiteManagement extends ImprovedHttpServlet {
 	public static final String VIEW_PATH = "/WEB-INF/page/administration/siteManagement.jsp";
 
 	@Override
+	public boolean isFullPage() {
+		return false;
+	}
+
+	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
 		return user != null && user.isAdmin();
