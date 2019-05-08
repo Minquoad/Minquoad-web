@@ -33,7 +33,7 @@ public class UserParametersAlterationForm extends Form {
 			if (existingUser == null || existingUser == getUser()) {
 				return null;
 			} else {
-				return "The mail address \"" + value + "\" is already taken.";
+				return getText("MailAdressAlreadytaken", value);
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {
@@ -58,7 +58,7 @@ public class UserParametersAlterationForm extends Form {
 			if (existingUser == null || existingUser == getUser()) {
 				return null;
 			} else {
-				return "The nickname \"" + value + "\" is alreadi taken.";
+				return getText("NicknameAlreadytaken", value);
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {

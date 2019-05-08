@@ -33,7 +33,7 @@ public class UpSigningForm extends Form {
 			if (existingUser == null) {
 				return null;
 			} else {
-				return "The mail address \"" + value + "\" is already taken.";
+				return getText("MailAdressAlreadytaken", value);
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {
@@ -57,7 +57,7 @@ public class UpSigningForm extends Form {
 			if (existingUser == null) {
 				return null;
 			} else {
-				return "The nickname \"" + value + "\" is alreadi taken.";
+				return getText("NicknameAlreadytaken", value);
 			}
 		});
 		field.addValueChecker((form, thisField, value) -> {
@@ -80,7 +80,7 @@ public class UpSigningForm extends Form {
 			FormStringField field2 = (FormStringField) form.getField(PASSWORD_KEY);
 			String password = field2.getValue();
 			if (!value.equals(password)) {
-				return "The password confirmation is different to the password.";
+				return getText("PasswordConfirmationFail");
 			} else
 				return null;
 		});
@@ -90,7 +90,7 @@ public class UpSigningForm extends Form {
 		field.setEmptyPermitted(false);
 		field.addValueChecker((form, thisField, value) -> {
 			if (!UP_SIGNING_CODE.equals(value)) {
-				return "Wrong up signing code.";
+				return getText("WrongUpSigningCode");
 			} else
 				return null;
 		});

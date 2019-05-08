@@ -38,7 +38,10 @@
 						🗪
 						<fmt:message key="Conversation" bundle="${ headerBundle }" />
 						</a>
-						<a href="<c:url value="/Community" />" class="headerItem">👥 Community</a>
+						<a href="<c:url value="/Community" />" class="headerItem">
+						👥
+						<fmt:message key="Community" bundle="${ headerBundle }" />
+						</a>
 						<div class="headerItem dynamicMenuTrigger">
 							▼
 							<c:out value="${ requestScope.user.nickname }" />

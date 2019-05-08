@@ -28,7 +28,7 @@ public class UserPasswordAlterationForm extends Form {
 			if (getUser().isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
 				return null;
 			} else {
-				return "Old password not correct.";
+				return getText("OldPasswordNotCorrect");
 			}
 		});
 		this.addField(field);
@@ -47,7 +47,7 @@ public class UserPasswordAlterationForm extends Form {
 			FormStringField newPasswordField = (FormStringField) form.getField(NEW_PASSWORD_KEY);
 			String password = newPasswordField.getValue();
 			if (password != null && !password.equals(value)) {
-				return "The password confirmation is different to the password.";
+				return getText("PasswordConfirmationFail");
 			} else
 				return null;
 		});

@@ -1,5 +1,6 @@
 package com.minquoad.tool;
 
+import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -7,6 +8,10 @@ import java.util.ResourceBundle;
 public abstract class InternationalizationTool {
 
 	public final static String[] supportedLanguageCodes = { "en", "fr" };
+
+	public static String getText(String key, String bundleBaseName, Locale locale, Object... args) {
+		return MessageFormat.format(getText(key, bundleBaseName, locale), args);
+	}
 
 	public static String getText(String key, String bundleBaseName, Locale locale) {
 		return ResourceBundle.getBundle(bundleBaseName, locale).getString(key);

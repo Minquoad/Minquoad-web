@@ -32,13 +32,11 @@ public class InLogingForm extends Form {
 			if (coolDown == null) {
 				return null;
 			} else {
-				return "Too manny failed connection trials have been done with the mail address "
-						+ value
-						+ ". This mail address will not be usable for "
-						+ coolDown.getSeconds() / 60
-						+ " minutes and "
-						+ coolDown.getSeconds() % 60
-						+ " seconds.";
+				return getText(
+						"TooMannyFailedInLoginigAttempt",
+						value,
+						coolDown.getSeconds() / 60,
+						coolDown.getSeconds() % 60);
 			}
 		});
 		this.addField(field);
@@ -54,7 +52,7 @@ public class InLogingForm extends Form {
 				User user = userDao.getOneMatching("mailAddress", mailAddressField.getValue());
 
 				if (user == null || !user.isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
-					return "Mail address or password is incorrect.";
+					return getText("MailAddressOrPasswordIsIncorrect");
 				}
 			}
 			return null;

@@ -89,8 +89,13 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 				}
 
 			} else {
-				if (locale == null || user.getLanguage() != locale.getLanguage()) {
-					locale = new Locale(user.getLanguage(), request.getLocale().getCountry());
+				User definingLocalUser = user;
+				if (controllingAdmin != null) {
+					definingLocalUser = controllingAdmin;
+				}
+
+				if (locale == null || definingLocalUser.getLanguage() != locale.getLanguage()) {
+					locale = new Locale(definingLocalUser.getLanguage(), request.getLocale().getCountry());
 					setLocale(session, locale);
 				}
 			}
@@ -130,8 +135,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			} else {
 
-				if (controllingAdmin != null
-						&& !controllingAdmin.isAdmin()
+				if (!controllingAdmin.isAdmin()
 						&& !request.getServletPath().equals("/Unpossession")) {
 
 					if (isFullPage()) {

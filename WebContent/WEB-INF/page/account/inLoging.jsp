@@ -5,7 +5,7 @@
 <fmt:setBundle basename="resources.InLoging" var="inLogingBundle" />
 </head>
 <body>
-	<fmt:message key="Community" bundle="${ inLogingBundle }" var="inLogingLabel" />
+	<fmt:message key="LogIn" bundle="${ inLogingBundle }" var="inLogingLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
 		<jsp:param name="pageTitle" value="${ inLogingLabel }" />
 	</jsp:include>

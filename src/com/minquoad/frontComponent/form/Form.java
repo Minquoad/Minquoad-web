@@ -16,6 +16,8 @@ import com.minquoad.unit.UnitFactory;
 
 public class Form {
 
+	public static final String formResourceBundleName = "resources.Form";
+
 	private Map<String, FormField> fileds;
 	private List<FormField> filedsInOrder;
 	private HttpServletRequest request;
@@ -93,8 +95,19 @@ public class Form {
 		return ImprovedHttpServlet.getUser(getRequest());
 	}
 
+	public String getText(String key, Object... args) {
+		return InternationalizationTool.getText(
+				key,
+				formResourceBundleName,
+				ImprovedHttpServlet.getLocale(getRequest()),
+				args);
+	}
+
 	public String getText(String key) {
-		return InternationalizationTool.getText(key, "resources.Form", ImprovedHttpServlet.getLocale(getRequest()));
+		return InternationalizationTool.getText(
+				key,
+				formResourceBundleName,
+				ImprovedHttpServlet.getLocale(getRequest()));
 	}
 
 	public boolean isSubmitted() {

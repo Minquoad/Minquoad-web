@@ -10,7 +10,7 @@
 <fmt:setBundle basename="resources.Administration" var="administrationBundle" />
 </head>
 <body>
-	<fmt:message key="Community" bundle="${ administrationBundle }"
+	<fmt:message key="Administration" bundle="${ administrationBundle }"
 		var="administrationLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
 		<jsp:param name="pageTitle" value="${ administrationLabel }" />
