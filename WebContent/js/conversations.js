@@ -72,11 +72,27 @@ function detectCurrentConversation() {
 	});
 }
 
+function getCookieValue(key) {
+    var b = document.cookie.match('(^|[^;]+)\\s*' + key + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
+}
+
 $(document).ready(function() {
 
 	detectConversationResumes();
 	$("#conversations #list .borderedTile .selectedConversation").trigger("click");
 
+	let websocket = new WebSocket("ws://localhost:8080/Minquoad-web/TestWebsocket");
+
+	websocket.onmessage = function(e) {
+		console.log(e.data);
+	};
+
+	websocket.onerror = function(e) {
+		//TODO send error to a specific servlet
+	};
+
+/*
 	setInterval(function() {
 		let messages = $("#messages");
 		if (messages) {
@@ -99,5 +115,5 @@ $(document).ready(function() {
 			});
 		}
 	}, 3500);
-
+*/
 });

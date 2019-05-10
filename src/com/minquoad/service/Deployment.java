@@ -7,11 +7,13 @@ import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 import org.json.JSONObject;
 
 import com.minquoad.service.cron.CronManager;
 
+@WebListener
 public class Deployment implements ServletContextListener {
 
 	public static final String VERSION = "0.1.2";
