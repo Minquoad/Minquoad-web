@@ -58,7 +58,7 @@
 				</div>
 			</div>
 
-			<div id="current"></div>
+			<div id="currentContainer"></div>
 
 		</div>
 	</div>

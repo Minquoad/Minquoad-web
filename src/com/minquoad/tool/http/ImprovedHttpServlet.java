@@ -2,6 +2,7 @@ package com.minquoad.tool.http;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
@@ -18,9 +19,12 @@ import com.minquoad.entity.User;
 import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
+import com.minquoad.service.SessionManager;
 import com.minquoad.service.StorageManager;
 import com.minquoad.tool.InternationalizationTool;
 import com.minquoad.unit.UnitFactory;
+import com.minquoad.websocketEndpoint.ImprovedEndpoint;
+import com.minquoad.websocketEndpoint.ImprovedEndpoint.ImprovedEndpointFilter;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
@@ -35,10 +39,10 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	protected final static String CONTROLLING_ADMIN_KEY = "controllingAdmin";
 
 	// session keys
-	protected final static String LOCALE_KEY = "locale";
-	protected final static String USER_ID_KEY = "userId";
-	protected final static String LAST_REFUSED_URL_KEY = "lastRefusedUrl";
-	protected final static String CONTROLLING_ADMIN_ID_KEY = "controllingAdminId";
+	public final static String LOCALE_KEY = "locale";
+	public final static String USER_ID_KEY = "userId";
+	public final static String LAST_REFUSED_URL_KEY = "lastRefusedUrl";
+	public final static String CONTROLLING_ADMIN_ID_KEY = "controllingAdminId";
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -206,7 +210,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
 		if (request.getAttribute(DAO_FACTORY_KEY) == null) {
-			Database database = (Database) request.getServletContext().getAttribute(Deployment.DATABASE_KEY);
+			Database database = (Database) request.getServletContext().getAttribute(Database.class.getName());
 			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
 		}
 		return (DaoFactory) request.getAttribute(DAO_FACTORY_KEY);
@@ -220,19 +224,27 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public StorageManager getStorageManager() {
-		return (StorageManager) getServletContext().getAttribute(Deployment.STORAGE_MANAGER_KEY);
+		return (StorageManager) getServletContext().getAttribute(StorageManager.class.getName());
 	}
 
 	public static StorageManager getStorageManager(HttpServletRequest request) {
-		return (StorageManager) request.getServletContext().getAttribute(Deployment.STORAGE_MANAGER_KEY);
+		return (StorageManager) request.getServletContext().getAttribute(StorageManager.class.getName());
 	}
 
 	public Deployment getDeployment() {
-		return (Deployment) getServletContext().getAttribute(Deployment.DEPLOYMENT_KEY);
+		return (Deployment) getServletContext().getAttribute(Deployment.class.getName());
 	}
 
 	public static Deployment getDeployment(HttpServletRequest request) {
-		return (Deployment) request.getServletContext().getAttribute(Deployment.DEPLOYMENT_KEY);
+		return (Deployment) request.getServletContext().getAttribute(Deployment.class.getName());
+	}
+
+	public SessionManager getSessionManager() {
+		return (SessionManager) getServletContext().getAttribute(SessionManager.class.getName());
+	}
+
+	public static SessionManager getSessionManager(HttpServletRequest request) {
+		return (SessionManager) request.getServletContext().getAttribute(SessionManager.class.getName());
 	}
 
 	public abstract boolean isAccessible(HttpServletRequest request);
@@ -311,4 +323,24 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		this.getServletContext().getRequestDispatcher(viewPath).include(request, response);
 	}
 
+	public static void sendTextToClients(HttpServletRequest request, String text, ImprovedEndpointFilter filter) {
+		sendTextToClients(getSessionManager(request), text, filter);
+	}
+
+	public void sendTextToClients(String text, ImprovedEndpointFilter filter) {
+		sendTextToClients(getSessionManager(), text, filter);
+	}
+
+	public static void sendTextToClients(SessionManager sessionManager, String text, ImprovedEndpointFilter filter) {
+		List<ImprovedEndpoint> endpoints = sessionManager.getImprovedEndpoints();
+		for (ImprovedEndpoint endpoint : endpoints) {
+			try {
+				if (filter.accept(endpoint)) {
+					endpoint.sendText(text);
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+	
 }

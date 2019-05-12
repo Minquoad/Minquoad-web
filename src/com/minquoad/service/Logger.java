@@ -19,8 +19,8 @@ public class Logger {
 		this.servletContext = servletContext;
 	}
 
-	public void logError(Exception e) {
-		logError(getStackTraceAsString(e));
+	public void logError(Throwable throwable) {
+		logError(getStackTraceAsString(throwable));
 	}
 
 	public void logError(String string) {
@@ -37,7 +37,7 @@ public class Logger {
 
 	public void logInFile(String string, String filePath) {
 		try {
-			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
+			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
 
 			File file = new File(deployment.getStoragePath() + filePath);
 			if (!file.exists()) {
@@ -61,11 +61,11 @@ public class Logger {
 		return formatter.format(new Date());
 	}
 
-	public static String getStackTraceAsString(Exception e) {
+	public static String getStackTraceAsString(Throwable throwable) {
 
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
+		throwable.printStackTrace(pw);
 		String stackTrace = sw.toString();
 
 		return stackTrace;

@@ -1,28 +1,12 @@
 package com.minquoad.service;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 
 import org.json.JSONObject;
 
-import com.minquoad.service.cron.CronManager;
-
-@WebListener
-public class Deployment implements ServletContextListener {
+public class Deployment {
 
 	public static final String VERSION = "0.1.2";
-
-	public static final String DEPLOYMENT_KEY = "deployment";
-	public static final String STORAGE_MANAGER_KEY = "storageManager";
-	public static final String CRON_MANAGER_KEY = "cronManager";
-	public static final String DATABASE_KEY = "database";
-	public static final String LOGGER_KEY = "logger";
 
 	public static final String CONFIGURATION_JSON_PATH = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
@@ -56,46 +40,6 @@ public class Deployment implements ServletContextListener {
 
 			setOpen(true);
 		}
-	}
-
-	@Override
-	public void contextInitialized(ServletContextEvent contextEvent) {
-
-		Locale.setDefault(new Locale("en", "US"));
-		ResourceBundle.clearCache();
-
-		ServletContext servletContext = contextEvent.getServletContext();
-
-		Deployment deployment = new Deployment();
-		servletContext.setAttribute(DEPLOYMENT_KEY, deployment);
-
-		StorageManager storageManager = new StorageManager(servletContext);
-		servletContext.setAttribute(STORAGE_MANAGER_KEY, storageManager);
-
-		Logger logger = new Logger(servletContext);
-		servletContext.setAttribute(LOGGER_KEY, logger);
-
-		Database database = new Database(servletContext);
-		servletContext.setAttribute(DATABASE_KEY, database);
-
-		CronManager cronManager = new CronManager(servletContext);
-		servletContext.setAttribute(CRON_MANAGER_KEY, cronManager);
-
-		// cronManager.start();
-		logger.logInfo("Servlet context initialized. Running version : " + VERSION);
-	}
-
-	@Override
-	public void contextDestroyed(ServletContextEvent contextEvent) {
-		ServletContext servletContext = contextEvent.getServletContext();
-
-		CronManager cronManager = (CronManager) servletContext.getAttribute(CRON_MANAGER_KEY);
-		Database database = (Database) servletContext.getAttribute(DATABASE_KEY);
-		Logger logger = (Logger) servletContext.getAttribute(LOGGER_KEY);
-
-		cronManager.stop();
-		database.close();
-		logger.logInfo("Servlet context destroyed");
 	}
 
 	public String getStoragePath() {

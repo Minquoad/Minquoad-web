@@ -1,3 +1,7 @@
+<%-- 
+	params
+		messages : the key to get the messages in the requestScope
+ --%>
 <c:set var="messages" value="${requestScope[param.messages]}" scope="page" />
 
 <fmt:setBundle basename="resources.MessageTiles" var="messageTilesBundle" />

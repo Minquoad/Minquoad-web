@@ -3,38 +3,26 @@ package com.minquoad.service;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.websocket.Session;
+import com.minquoad.websocketEndpoint.ImprovedEndpoint;
 
-@WebListener
-public class SessionManager implements HttpSessionListener {
+public class SessionManager {
 
-	private List<HttpSession> httpSessions;
-	private List<Session> websocketSessions;
+	private List<ImprovedEndpoint> improvedEndpoints;
 
 	public SessionManager() {
-		httpSessions = new LinkedList<HttpSession>();
+		improvedEndpoints = new LinkedList<ImprovedEndpoint>();
 	}
 
-	@Override
-	public void sessionCreated(HttpSessionEvent event) {
-		httpSessions.add(event.getSession());
+	public void add(ImprovedEndpoint improvedEndpoint) {
+		improvedEndpoints.add(improvedEndpoint);
 	}
 
-	@Override
-	public void sessionDestroyed(HttpSessionEvent event) {
-		httpSessions.remove(event.getSession());
+	public void remove(ImprovedEndpoint improvedEndpoint) {
+		improvedEndpoints.remove(improvedEndpoint);
 	}
 
-	public void add(Session websocketSession) {
-		websocketSessions.add(websocketSession);
+	public List<ImprovedEndpoint> getImprovedEndpoints() {
+		return improvedEndpoints;
 	}
 
-	public void remove(Session websocketSession) {
-		websocketSessions.remove(websocketSession);
-	}
-	
 }

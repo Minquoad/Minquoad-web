@@ -2,6 +2,7 @@ package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.Message;
+import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
+import com.minquoad.frontComponent.json.MessageAdditionJson;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/MessageAddition")
@@ -38,6 +41,16 @@ public class MessageAddition extends ImprovedHttpServlet {
 			message.setConversation(form.getConversation());
 			message.setInstant(Instant.now());
 			getDaoFactory(request).getMessageDao().persist(message);
+
+			String text = new MessageAdditionJson(message).toJson();
+			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(form.getConversation());
+
+			sendTextToClients(
+					text,
+					(endpoint) -> {
+						return "conversationUpdating".equals(endpoint.getRole())
+								&& conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
+					});
 
 		} else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

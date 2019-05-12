@@ -1,6 +1,6 @@
 function detectConversationResumes() {
 
-	let current = $("#conversations #current");
+	let currentContainer = $("#conversations #currentContainer");
 	let conversationResumeTiles = $("#conversations #list .borderedTile");
 
 	conversationResumeTiles.on("click", function(e) {
@@ -8,7 +8,7 @@ function detectConversationResumes() {
 		let conversationResumeTile = $(this);
 
 		conversationResumeTiles.find(".resume").removeClass("selectedConversation");
-		displayLoading(current);
+		displayLoading(currentContainer);
 		conversationResumeTile.find(".resume").addClass("selectedConversation");
 
 		$.ajax({
@@ -16,8 +16,8 @@ function detectConversationResumes() {
 			url : conversationResumeTile.attr("data-currentConversationUrl"),
 			dataType : "html",
 			success : function(data) {
-				current.empty();
-				current.append(data);
+				currentContainer.empty();
+				currentContainer.append(data);
 				detectCurrentConversation();
 			},
 			error : function(err) {
@@ -40,17 +40,19 @@ function detectCurrentConversation() {
 	let button = $('#conversations #current #messageEditor [type="button"]');
 
 	let postMessage = function() {
-		$.ajax({
-			url : form.attr('action'),
-			type : "POST",
-			data : form.serialize(),
-			success : function() {
-				textarea.val("");
-			},
-			error : function(err) {
-				handleAjaxError(err);
-			}
-		});
+		if (textarea.val() != "") {
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : form.serialize(),
+				success : function() {
+					textarea.val("");
+				},
+				error : function(err) {
+					handleAjaxError(err);
+				}
+			});
+		}
 	};
 
 	button.on('click', function(e) {
@@ -67,53 +69,46 @@ function detectCurrentConversation() {
 	});
 
 	emojis.on('click', function(e) {
-		textarea.val(textarea.val()+$(this).text());
+		textarea.val(textarea.val() + $(this).text());
 		textarea.focus();
 	});
 }
 
-function getCookieValue(key) {
-    var b = document.cookie.match('(^|[^;]+)\\s*' + key + '\\s*=\\s*([^;]+)');
-    return b ? b.pop() : '';
-}
+$(document).ready(
+		function() {
 
-$(document).ready(function() {
+			detectConversationResumes();
+			$("#conversations #list .borderedTile .selectedConversation").trigger("click");
 
-	detectConversationResumes();
-	$("#conversations #list .borderedTile .selectedConversation").trigger("click");
+			creteWebsocketWithRole("conversationUpdating").onmessage = function(e) {
+				let message = JSON.parse(e.data);
 
-	let websocket = new WebSocket("ws://localhost:8080/Minquoad-web/TestWebsocket");
+				let current = $("#current");
+				
+				if (current.attr("data-conversationid") == message.conversation) {
 
-	websocket.onmessage = function(e) {
-		console.log(e.data);
-	};
+					current.find("#messages").append(
+							'<div class="borderedTile fullWidth" data-messageId="' + message.id + '">'
+							+ '<div class="messageMetaData">'
+							+ '<div>'
+							+ '<span style="color: ' + message.user.defaultColor + '">'
+							+ toHtmlEquivalent(message.user.nickname)
+							+ '</span> :'
+							+ '</div>'
+							+ '<div>'
+							+ message.instant
+							+'</div>'
+							+ '</div>'
+							+ '<div class="messageText">'
+							+ toHtmlEquivalent(message.text)
+							+ '</div>'
+							+ '</div>');
+	
+					borderTiles();
+					messagesDiv = document.getElementById("messages");
+					messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-	websocket.onerror = function(e) {
-		//TODO send error to a specific servlet
-	};
-
-/*
-	setInterval(function() {
-		let messages = $("#messages");
-		if (messages) {
-			$.ajax({
-				type : "GET",
-				url : messages.attr("data-unseenMessagesUrl"),
-				dataType : "html",
-				success : function(data) {
-					if (data.trim() != "") {
-						messages.append(data);
-						borderTiles();
-
-						let messagesDiv = document.getElementById("messages");
-						messagesDiv.scrollTop = messagesDiv.scrollHeight;
-					}
-				},
-				error : function(err) {
-					handleAjaxError(err);
 				}
-			});
-		}
-	}, 3500);
-*/
-});
+			};
+
+		});

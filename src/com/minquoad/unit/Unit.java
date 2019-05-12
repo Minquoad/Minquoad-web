@@ -27,11 +27,11 @@ public abstract class Unit {
 	}
 
 	public Deployment getDeployment() {
-		return (Deployment) unitFactory.getServletContext().getAttribute(Deployment.DEPLOYMENT_KEY);
+		return (Deployment) unitFactory.getServletContext().getAttribute(Deployment.class.getName());
 	}
 
 	public StorageManager getStorageManager() {
-		return (StorageManager) getServletContext().getAttribute(Deployment.STORAGE_MANAGER_KEY);
+		return (StorageManager) getServletContext().getAttribute(StorageManager.class.getName());
 	}
 
 }

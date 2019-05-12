@@ -30,10 +30,15 @@
 	font-size: 12px;
 }
 
-#conversations #current {
+#conversations #currentContainer {
 	display: inline-block;
 	height: 100%;
 	width: calc(100% - 220px - 1px);
+}
+
+#conversations #current {
+	height: 100%;
+	width: 100%;
 }
 
 #conversations #current #title {

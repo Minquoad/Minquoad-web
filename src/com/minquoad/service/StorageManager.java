@@ -20,7 +20,7 @@ public class StorageManager {
 
 	public StorageManager(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
 
 		initFolderIfNotExists(deployment.getStoragePath());
 		initStorageFolderIfNotExists(INTERNAL_PATH);
@@ -31,7 +31,7 @@ public class StorageManager {
 	}
 
 	public String getStoragePath(String relativePath) {
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.DEPLOYMENT_KEY);
+		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
 		return deployment.getStoragePath() + relativePath;
 	}
 
