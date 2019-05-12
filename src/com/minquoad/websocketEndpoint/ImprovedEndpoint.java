@@ -51,12 +51,19 @@ public class ImprovedEndpoint extends Endpoint {
 
 	@Override
 	public void onError(Session session, Throwable throwable) {
-		ServletContext context = getContext();
-		SessionManager sessionManager = (SessionManager) context.getAttribute(SessionManager.class.getName());
-		sessionManager.remove(this);
+		try {
+			ServletContext context = getContext();
 
-		Logger logger = (Logger) context.getAttribute(Logger.class.getName());
-		logger.logError(throwable);
+			Logger logger = (Logger) context.getAttribute(Logger.class.getName());
+			logger.logError(throwable);
+
+			context = getContext();
+			SessionManager sessionManager = (SessionManager) context.getAttribute(SessionManager.class.getName());
+			sessionManager.remove(this);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Session getWebsocketSession() {

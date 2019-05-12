@@ -1,5 +1,7 @@
 <fmt:setBundle basename="resources.Administration" var="administrationBundle" />
 
+<c:set var="deployment" value="${ applicationScope['com.minquoad.service.Deployment'] }" scope="page" />
+
 <div class="scrollableContainer centererContainer">
 	<div class="totallyCenteredContainer tileContainer">
 		<div class="borderedTile">
@@ -7,10 +9,10 @@
 				<ul>
 					<li>
 						<fmt:message key="Version" bundle="${ administrationBundle }" />
-						: ${ applicationScope.deployment.version }
+						: ${ deployment.version }
 					</li>
 					<li>
-						<c:if test="${ applicationScope.deployment.open }">
+						<c:if test="${ deployment.open }">
 						🔓
 						<fmt:message key="openSite" bundle="${ administrationBundle }" />
 							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">
@@ -20,7 +22,7 @@
 								onclick="window.location.href = '${ siteStateChangementUrl }';"
 								value="🔒 <fmt:message key="CoseSite" bundle="${ administrationBundle }" />" />
 						</c:if>
-						<c:if test="${ not applicationScope.deployment.open }">
+						<c:if test="${ not deployment.open }">
 						🔒
 						<fmt:message key="siteClosed" bundle="${ administrationBundle }" />
 							<c:url value="/SiteStateChangement" var="siteStateChangementUrl">

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 public class Deployment {
 
-	public static final String VERSION = "0.1.2";
+	public static final String VERSION = "0.2.0";
 
 	public static final String CONFIGURATION_JSON_PATH = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 

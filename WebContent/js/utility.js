@@ -34,7 +34,7 @@ function creteWebsocketWithRole(role) {
 	};
 
 	websocket.onerror = function(e) {
-		console.log(e);
+		console.error(e);
 		if (confirm("An error occured. Do you want to refresh the page?")) {
 			window.location.replace("");
 		}
