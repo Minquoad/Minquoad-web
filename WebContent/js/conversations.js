@@ -60,18 +60,24 @@ function detectCurrentConversation() {
 		postMessage();
 	});
 
-	textarea.keypress(function(event) {
-		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if (keycode == '13' && !event.shiftKey) {
-			event.preventDefault();
-			postMessage();
-		}
-	});
-
 	emojis.on('click', function(e) {
 		textarea.val(textarea.val() + $(this).text());
 		textarea.focus();
 	});
+
+	improveTextField(textarea);
+
+	textarea.keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (!event.shiftKey) {
+
+			if (keycode == '13') {
+				event.preventDefault();
+				postMessage();
+			}
+		}
+	});
+
 }
 
 $(document).ready(
@@ -84,26 +90,14 @@ $(document).ready(
 				let message = JSON.parse(e.data);
 
 				let current = $("#current");
-				
+
 				if (current.attr("data-conversationid") == message.conversation) {
 
 					current.find("#messages").append(
-							'<div class="borderedTile fullWidth" data-messageId="' + message.id + '">'
-							+ '<div class="messageMetaData">'
-							+ '<div>'
-							+ '<span style="color: ' + message.user.defaultColor + '">'
-							+ toHtmlEquivalent(message.user.nickname)
-							+ '</span> :'
-							+ '</div>'
-							+ '<div>'
-							+ message.instant
-							+'</div>'
-							+ '</div>'
-							+ '<div class="messageText">'
-							+ toHtmlEquivalent(message.text)
-							+ '</div>'
-							+ '</div>');
-	
+							'<div class="borderedTile fullWidth" data-messageId="' + message.id + '">' + '<div class="messageMetaData">' + '<div>' + '<span style="color: ' + message.user.defaultColor
+									+ '">' + toHtmlEquivalent(message.user.nickname) + '</span> :' + '</div>' + '<div>' + message.instant + '</div>' + '</div>' + '<div class="messageText">'
+									+ toHtmlEquivalent(message.text) + '</div>' + '</div>');
+
 					borderTiles();
 					messagesDiv = document.getElementById("messages");
 					messagesDiv.scrollTop = messagesDiv.scrollHeight;

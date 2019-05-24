@@ -7,7 +7,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.service.Deployment;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet({ "/Home", "/" })
@@ -23,7 +22,7 @@ public class Home extends ImprovedHttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-System.out.println(Deployment.class.getName());
+
 		forwardToView(request, response, VIEW_PATH);
 	}
 
