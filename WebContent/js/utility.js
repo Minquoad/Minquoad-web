@@ -1,7 +1,7 @@
 function toHtmlEquivalent(original) {
 	var tmpElement = document.createElement("div");
 	tmpElement.append(document.createTextNode(original));
-	return tmpElement.innerHTML.replace("\n", "<br/>");
+	return tmpElement.innerHTML;
 }
 
 function handleAjaxError(error) {
@@ -13,8 +13,9 @@ function handleAjaxError(error) {
 	} else if (error.status / 100 == 5) {
 		message = "Internal Server Error";
 	}
-	alert(message);
-	window.location.replace("");
+	if (confirm(message + ". Refresh page?")) {
+		window.location.replace("");
+	}
 }
 
 function displayLoading(element) {
@@ -35,7 +36,7 @@ function creteWebsocketWithRole(role) {
 
 	websocket.onerror = function(e) {
 		console.error(e);
-		if (confirm("An error occured. Do you want to refresh the page?")) {
+		if (confirm("An error occured. Refresh page?")) {
 			window.location.replace("");
 		}
 	};
@@ -87,4 +88,57 @@ function improveTextField(textField) {
 			}
 		}
 	});
+}
+
+function improveReadability(originalText) {
+
+	let newText = "";
+
+	let parenthesisOpeningPosition = originalText.indexOf("(");
+	let parenthesisClosingPosition = originalText.indexOf(")");
+	let firstQuotePosition = originalText.indexOf("\"");
+	let secondQuotePosition = -1;
+	if (firstQuotePosition != -1) {
+		secondQuotePosition = firstQuotePosition + 1 + originalText.substring(firstQuotePosition + 1).indexOf("\"");
+	}
+	let parenthesisPossible = parenthesisOpeningPosition != -1 && parenthesisClosingPosition != -1 && parenthesisOpeningPosition < parenthesisClosingPosition;
+	let quotePossible = firstQuotePosition != -1 && secondQuotePosition != -1;
+
+	if (parenthesisPossible || quotePossible) {
+
+		let parenthesisFirst = null;
+
+		if (parenthesisPossible && quotePossible) {
+			parenthesisFirst = parenthesisOpeningPosition < firstQuotePosition;
+		} else if (parenthesisPossible) {
+			parenthesisFirst = true;
+		} else {
+			parenthesisFirst = false;
+		}
+
+		if (parenthesisFirst) {
+			newText += originalText.substring(0, parenthesisOpeningPosition);
+			newText += '<span class="parenthesis">';
+			newText += "(";
+			newText += improveReadability(originalText.substring(parenthesisOpeningPosition + 1, parenthesisClosingPosition));
+			newText += ")";
+			newText += '</span>';
+			newText += improveReadability(originalText.substring(parenthesisClosingPosition + 1));
+
+		} else {
+			newText += originalText.substring(0, firstQuotePosition);
+			newText += "\"";
+			newText += '<span class="italic">';
+			newText += improveReadability(originalText.substring(firstQuotePosition + 1, secondQuotePosition));
+			newText += '</span>';
+			newText += "\"";
+			newText += improveReadability(originalText.substring(secondQuotePosition + 1));
+
+		}
+
+	} else {
+		newText += originalText;
+	}
+
+	return newText.replace("\n", "<br/>");
 }

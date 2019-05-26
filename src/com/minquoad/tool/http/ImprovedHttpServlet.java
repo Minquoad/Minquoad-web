@@ -19,6 +19,7 @@ import com.minquoad.entity.User;
 import com.minquoad.service.Database;
 import com.minquoad.service.Deployment;
 import com.minquoad.service.Logger;
+import com.minquoad.service.ServicesManager;
 import com.minquoad.service.SessionManager;
 import com.minquoad.service.StorageManager;
 import com.minquoad.tool.InternationalizationTool;
@@ -60,6 +61,11 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 
 			requestLog.setUrl(getCurrentUrlWithArguments(request));
+
+			Database database = ServicesManager.getService(request, Database.class);
+			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
+
+			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
 
 			HttpSession session = request.getSession();
 
@@ -209,42 +215,27 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static DaoFactory getDaoFactory(HttpServletRequest request) {
-		if (request.getAttribute(DAO_FACTORY_KEY) == null) {
-			Database database = (Database) request.getServletContext().getAttribute(Database.class.getName());
-			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
-		}
 		return (DaoFactory) request.getAttribute(DAO_FACTORY_KEY);
 	}
 
 	public static UnitFactory getUnitFactory(HttpServletRequest request) {
-		if (request.getAttribute(UNIT_FACTORY_KEY) == null) {
-			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
-		}
 		return (UnitFactory) request.getAttribute(UNIT_FACTORY_KEY);
 	}
 
 	public StorageManager getStorageManager() {
-		return (StorageManager) getServletContext().getAttribute(StorageManager.class.getName());
-	}
-
-	public static StorageManager getStorageManager(HttpServletRequest request) {
-		return (StorageManager) request.getServletContext().getAttribute(StorageManager.class.getName());
+		return getService(StorageManager.class);
 	}
 
 	public Deployment getDeployment() {
-		return (Deployment) getServletContext().getAttribute(Deployment.class.getName());
-	}
-
-	public static Deployment getDeployment(HttpServletRequest request) {
-		return (Deployment) request.getServletContext().getAttribute(Deployment.class.getName());
+		return getService(Deployment.class);
 	}
 
 	public SessionManager getSessionManager() {
-		return (SessionManager) getServletContext().getAttribute(SessionManager.class.getName());
+		return getService(SessionManager.class);
 	}
 
-	public static SessionManager getSessionManager(HttpServletRequest request) {
-		return (SessionManager) request.getServletContext().getAttribute(SessionManager.class.getName());
+	public <ServiceClass> ServiceClass getService(Class<ServiceClass> serviceClass) {
+		return ServicesManager.getService(getServletContext(), serviceClass);
 	}
 
 	public abstract boolean isAccessible(HttpServletRequest request);
@@ -324,7 +315,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static void sendTextToClients(HttpServletRequest request, String text, ImprovedEndpointFilter filter) {
-		sendTextToClients(getSessionManager(request), text, filter);
+		sendTextToClients(ServicesManager.getService(request, SessionManager.class), text, filter);
 	}
 
 	public void sendTextToClients(String text, ImprovedEndpointFilter filter) {

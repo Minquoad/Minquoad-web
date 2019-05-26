@@ -9,7 +9,8 @@ import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.service.Deployment;
+import com.minquoad.service.ServicesManager;
 
 public class InLogingForm extends Form {
 
@@ -51,7 +52,7 @@ public class InLogingForm extends Form {
 
 				User user = userDao.getOneMatching("mailAddress", mailAddressField.getValue());
 
-				if (user == null || !user.isPassword(value, ImprovedHttpServlet.getDeployment(form.getRequest()))) {
+				if (user == null || !user.isPassword(value, ServicesManager.getService(form.getRequest(), Deployment.class))) {
 					return getText("MailAddressOrPasswordIsIncorrect");
 				}
 			}

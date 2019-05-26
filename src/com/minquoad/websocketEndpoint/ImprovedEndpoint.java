@@ -1,7 +1,5 @@
 package com.minquoad.websocketEndpoint;
 
-import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
@@ -74,8 +72,8 @@ public class ImprovedEndpoint extends Endpoint {
 		return httpSession;
 	}
 
-	public RemoteEndpoint.Basic getRemote() {
-		return websocketSession.getBasicRemote();
+	public RemoteEndpoint.Async getRemote() {
+		return websocketSession.getAsyncRemote();
 	}
 
 	public ServletContext getContext() {
@@ -85,14 +83,9 @@ public class ImprovedEndpoint extends Endpoint {
 	public User getUser(DaoFactory daoFactory) {
 		return daoFactory.getUserDao().getByPk((Long) httpSession.getAttribute(ImprovedHttpServlet.USER_ID_KEY));
 	}
-	
+
 	public void sendText(String text) {
-		try {
-			getRemote().sendText(text);
-		} catch (IOException e) {
-			e.printStackTrace();
-			this.onError(getWebsocketSession(), e);
-		}
+		getRemote().sendText(text);
 	}
 
 	public String getRole() {
@@ -106,5 +99,5 @@ public class ImprovedEndpoint extends Endpoint {
 	public interface ImprovedEndpointFilter {
 		public boolean accept(ImprovedEndpoint endpoint);
 	}
-	
+
 }

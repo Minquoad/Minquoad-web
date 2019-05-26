@@ -97,3 +97,16 @@
 .invisible {
 	display: none;
 }
+
+.italic {
+	font-style: italic;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.parenthesis {
+	font-size: 13;
+	color: rgba(255, 255, 255, 0.3);;
+}

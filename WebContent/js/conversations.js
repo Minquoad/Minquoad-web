@@ -30,6 +30,11 @@ function detectConversationResumes() {
 function detectCurrentConversation() {
 	borderTiles();
 	detectDynamicMenuTriggers();
+	
+	$("#conversations .messageText").each(function() {
+		let messageText = $(this);
+		messageText.html(improveReadability(messageText.html().trim()));
+	});
 
 	let messagesDiv = document.getElementById("messages");
 	messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -40,7 +45,7 @@ function detectCurrentConversation() {
 	let button = $('#conversations #current #messageEditor [type="button"]');
 
 	let postMessage = function() {
-		if (textarea.val() != "") {
+		if (textarea.val().trim() != "") {
 			$.ajax({
 				url : form.attr('action'),
 				type : "POST",
@@ -93,11 +98,29 @@ $(document).ready(
 
 				if (current.attr("data-conversationid") == message.conversation) {
 
-					current.find("#messages").append(
-							'<div class="borderedTile fullWidth" data-messageId="' + message.id + '">' + '<div class="messageMetaData">' + '<div>' + '<span style="color: ' + message.user.defaultColor
-									+ '">' + toHtmlEquivalent(message.user.nickname) + '</span> :' + '</div>' + '<div>' + message.instant + '</div>' + '</div>' + '<div class="messageText">'
-									+ toHtmlEquivalent(message.text) + '</div>' + '</div>');
-
+					let messageDiv = "";
+					messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
+					messageDiv += message.id;
+					messageDiv += '">';
+					messageDiv += '<div class="messageMetaData">';
+					messageDiv += '<div>';
+					messageDiv += '<span style="color: ';
+					messageDiv += message.user.defaultColor;
+					messageDiv += '">';
+					messageDiv += toHtmlEquivalent(message.user.nickname);
+					messageDiv += '</span> :';
+					messageDiv += '</div>';
+					messageDiv += '<div>';
+					messageDiv += message.instant;
+					messageDiv += '</div>';
+					messageDiv += '</div>';
+					messageDiv += '<div class="messageText">';
+					messageDiv += improveReadability(toHtmlEquivalent(message.text));
+					messageDiv += '</div>';
+					messageDiv += '</div>';
+					
+					current.find("#messages").append(messageDiv);
+					
 					borderTiles();
 					messagesDiv = document.getElementById("messages");
 					messagesDiv.scrollTop = messagesDiv.scrollHeight;
