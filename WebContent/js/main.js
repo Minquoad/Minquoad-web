@@ -6,6 +6,8 @@ $(document).ready(function() {
 		}
 	});
 
+	formatDates();
+
 	borderTiles();
 
 	detectDynamicMenuTriggers();

@@ -55,11 +55,4 @@ public class UpSigning extends ImprovedHttpServlet {
 		request.setAttribute("form", new UpSigningForm(request));
 	}
 
-	@Override
-	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		request.setAttribute("nicknameMaxlength", User.NICKNAME_MAX_LENGTH);
-		request.setAttribute("mailAddressMaxlength", User.MAIL_ADDRESS_MAX_LENGTH);
-		super.forwardToView(request, response, viewPath);
-	}
-
 }

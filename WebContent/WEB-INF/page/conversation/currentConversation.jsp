@@ -41,10 +41,15 @@
 		<form id="messageEditorForm" action="<c:url value="/MessageAddition" />">
 			<input type="hidden" name="conversationId"
 				value="${ requestScope.conversation.id }">
-			<textarea name="text" placeholder="Type your message here."></textarea>
+			<input type="button" value="⟰" />
+			<textarea name="text"
+				placeholder="<fmt:message key="TypeYourMessageHere" bundle="${ currentConversationBundle }" />"></textarea>
 			<div id="sepcialChars">
 				<div class="centererContainer dynamicMenuTrigger">
-					<div class="totallyCenteredContainer centeredText">😃 😭 😍 🤬 😨 😯</div>
+					<div class="totallyCenteredContainer centeredText">
+						<span>😃</span> <span>😭</span> <span>😍</span> <span>🤬</span> <span>😨</span>
+						<span>😯</span>
+					</div>
 					<div class="dynamicMenu">
 						<div class="dynamicMenuItem">
 							<span>😃</span><span>😄</span><span>😅</span><span>😆</span><span>😊</span><span>😎</span><span>😇</span><span>😈</span><span>😋</span><span>😏</span><span>😌</span><span>😁</span><span>😀</span><span>😂</span><span>🤣</span><span>🤠</span><span>🤡</span>
@@ -91,8 +96,6 @@
 					</div>
 				</div>
 			</div>
-			<input type="button"
-				value="<fmt:message key="Send" bundle="${ currentConversationBundle }" />" />
 		</form>
 	</div>
 </div>

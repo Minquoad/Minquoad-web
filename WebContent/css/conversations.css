@@ -2,7 +2,7 @@
 	display: inline-block;
 	height: 100%;
 	width: 220px;
-	border-right: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	border-right: solid var(--BORDER_COLOR) 1px;
 }
 
 #conversations #list .tileContainer {
@@ -18,7 +18,7 @@
 }
 
 #conversations #list .selectedConversation {
-	background-color: var(--MENU_BACKGROUND_COLOR);
+	background-color: rgb(28, 28, 28);
 }
 
 #conversations #list .conversationTitle {
@@ -44,8 +44,8 @@
 #conversations #current #title {
 	height: 45px;
 	font-size: 16px;
-	background-color: var(--MENU_BACKGROUND_COLOR);
-	border-bottom: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	background-color: rgb(28, 28, 28);
+	border-bottom: solid var(--BORDER_COLOR) 1px;
 }
 
 #conversations #current #messages {
@@ -84,9 +84,9 @@
 }
 
 #conversations #current #messageEditor textarea {
-	height: 45px;
-	width: 90%;
-	padding: 0;
+	height: calc(45px - 2*3px);
+	width: calc(100% - 82px - 45px - 2*3px);
+	padding: 3px;
 	margin: 0;
 	border: 0;
 	resize: none;
@@ -96,7 +96,7 @@
 #conversations #current #messageEditor #sepcialChars {
 	display: inline-block;
 	height: 45px;
-	width: 5%;
+	width: 82px;
 	padding: 0;
 	margin: 0;
 	border: 0;
@@ -117,7 +117,7 @@
 #conversations #current #messageEditor [type="button"] {
 	vertical-align: top;
 	height: calc(45px);/* why not - 4px for the borders ? */
-	width: calc(5%);/* why not - 4px for the borders ? */
+	width: calc(45px);/* why not - 4px for the borders ? */
 	padding: 0;
 	margin: 0;
 	border: solid 2px var(--HIGHLIGHTING_COLOR);

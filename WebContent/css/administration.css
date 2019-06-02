@@ -12,7 +12,7 @@
 }
 
 #administration #nav>*.selectedSubPage {
-	background-color: var(--MENU_BACKGROUND_COLOR);
+	background-color: rgb(28, 28, 28);
 }
 
 #administration #currentSubPage {

@@ -1,3 +1,5 @@
+<%@page import="com.minquoad.entity.User"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +34,7 @@
 									:
 								</label>
 								<input type="email" name="mailAddress" id="mailAddress"
-									maxlength="${ requestScope.mailAddressMaxlength }"
+									maxlength="${ User.MAIL_ADDRESS_MAX_LENGTH }"
 									value="<c:out value="${ requestScope.userParametersAlteration.fields.mailAddress.value }" />" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
@@ -45,7 +47,7 @@
 									:
 								</label>
 								<input type="text" name="nickname" id="nickname"
-									maxlength="${ requestScope.nicknameMaxlength }"
+									maxlength="${ User.NICKNAME_MAX_LENGTH }"
 									value="<c:out value="${ requestScope.userParametersAlteration.fields.nickname.value }" />" />
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
@@ -99,6 +101,10 @@
 							<fmt:message key="SendANewProfilePicture"
 								bundle="${ accountManagementBundle }" />
 						</h2>
+
+						<c:set var="userProfileImage"
+							value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImageDao(requestScope.user) }"
+							scope="page" />
 
 						<c:if test="${not empty userProfileImage}">
 
@@ -175,7 +181,8 @@
 							</p>
 							<p>
 								<label for="newPasswordConfirmation">
-									<fmt:message key="ConfirmNewPassword" bundle="${ accountManagementBundle }" />
+									<fmt:message key="ConfirmNewPassword"
+										bundle="${ accountManagementBundle }" />
 									:
 								</label>
 								<input type="password" name="newPasswordConfirmation"
@@ -186,7 +193,8 @@
 								</jsp:include>
 							</p>
 							<div>
-								<input type="submit" value="<fmt:message key="Change" bundle="${ accountManagementBundle }" />" />
+								<input type="submit"
+									value="<fmt:message key="Change" bundle="${ accountManagementBundle }" />" />
 							</div>
 						</form>
 					</div>

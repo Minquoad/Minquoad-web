@@ -12,11 +12,11 @@
 	title="<fmt:message key="OriginalMessage" bundle="${ messageTilesBundle }" /> : <c:out value="${ message.text }" />"
 	</c:if>>
 		<div class="messageMetaData">
-			<div>
+			<div class="name">
 				<span style="color: ${ message.user.getDefaultColorAsHtmlValue() };"><c:out
 						value="${ message.user.nickname }" /></span> :
 			</div>
-			<div>
+			<div class="dateToFormat" data-format="1">
 				<c:out value="${ message.instant }" />
 			</div>
 		</div>

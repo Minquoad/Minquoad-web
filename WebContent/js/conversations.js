@@ -28,9 +28,10 @@ function detectConversationResumes() {
 }
 
 function detectCurrentConversation() {
+	formatDates();
 	borderTiles();
 	detectDynamicMenuTriggers();
-	
+
 	$("#conversations .messageText").each(function() {
 		let messageText = $(this);
 		messageText.html(improveReadability(messageText.html().trim()));
@@ -41,7 +42,7 @@ function detectCurrentConversation() {
 
 	let form = $('#messageEditorForm');
 	let textarea = $('#conversations #current #messageEditor textarea');
-	let emojis = $('#conversations #current #messageEditor #sepcialChars span');
+	let emojis = $('#conversations #current #messageEditor #sepcialChars .dynamicMenuItem span');
 	let button = $('#conversations #current #messageEditor [type="button"]');
 
 	let postMessage = function() {
@@ -103,7 +104,7 @@ $(document).ready(
 					messageDiv += message.id;
 					messageDiv += '">';
 					messageDiv += '<div class="messageMetaData">';
-					messageDiv += '<div>';
+					messageDiv += '<div class="name">';
 					messageDiv += '<span style="color: ';
 					messageDiv += message.user.defaultColor;
 					messageDiv += '">';

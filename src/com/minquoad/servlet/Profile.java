@@ -8,9 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.DaoFactory;
-import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
-import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/Profile")
@@ -30,13 +28,9 @@ public class Profile extends ImprovedHttpServlet {
 		User user = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
 
 		if (user != null) {
-
-			UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
-			UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(user);
-			request.setAttribute("userProfileImage", image);
-
 			request.setAttribute("showedUser", user);
 			forwardToView(request, response, VIEW_PATH);
+
 		} else {
 			response.sendRedirect(request.getContextPath() + "/");
 		}

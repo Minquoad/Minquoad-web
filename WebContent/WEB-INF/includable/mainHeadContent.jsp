@@ -2,6 +2,17 @@
 
 <title>Minquoad</title>
 
+<style>
+	:root {
+		<c:if test="${ empty requestScope.user }">
+
+		</c:if>
+		<c:if test="${ not empty requestScope.user }">
+
+		</c:if>
+	}
+</style>
+
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/ext/jquery.dynatable.css" />" />
 
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/variable.css" />" />
@@ -23,7 +34,8 @@
 <script type="text/javascript" src="<c:url value="/js/utility.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/dynamicMenu.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/tile.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/improvementSuggestionAddition.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/dateFormatter.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/movableDiv.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/conversationDiv.js" />"></script>
-<script type="text/javascript" src="<c:url value="/js/improvementSuggestionAddition.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/main.js" />"></script>

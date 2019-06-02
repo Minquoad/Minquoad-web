@@ -1,5 +1,5 @@
 #header {
-	height: 50px;
+	height: 41px;
 	background: var(--BANNER_BACKGROUND_COLOR);
 	overflow: visible;
 	font-size: 0;
@@ -8,7 +8,7 @@
 #header>* {
 	font-size: var(--MAIN_FONT_SIZE);
 	display: inline-block;
-	height: 50px;
+	height: 100%;
 	vertical-align: middle;
 }
 
@@ -16,29 +16,30 @@
 	text-decoration: inherit;
 }
 
-#pageTitleHeader {
-	text-align: left;
-	width: 313px;
-	font-size: 25px;
-}
-
-#pageTitle {
-	padding-left: 13px;
-	padding-right: 13px;
-}
-
 #siteNameHeader {
 	text-align: center;
 	color: var(--HIGHLIGHTING_COLOR);
 	font-weight: bold;
-	font-size: 25px;
-	width: 200px;
+	font-size: 23px;
+	width: 206px;
+	font-family: Copperplate Gothic;
+}
+
+#pageTitleHeader {
+	text-align: left;
+	width: 220px;
+	font-size: 21px;
+}
+
+#pageTitle {
+	padding-left: 6px;
+	padding-right: 6px;
 }
 
 #rightHeader {
 	text-align: right;
 	font-size: 0;
-	width: calc(100% - 200px - 313px);
+	width: calc(100% - 206px - 220px);
 }
 
 #header .headerItem {
@@ -47,7 +48,7 @@
 	font-size: var(--MAIN_FONT_SIZE);
 }
 
-#rightHeader .headerItem:not(:first-child) {
+#rightHeader .headerItem {
 	border-left: solid var(--BORDER_COLOR) 1px;
 }
 

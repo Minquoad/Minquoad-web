@@ -2,11 +2,11 @@
 	--HIGHLIGHTING_COLOR: rgb(28, 104, 123);
 	--OVER_BLACK: rgb(19, 71, 84);
 	--BACKGROUND_COLOR: rgb(18, 18, 18);
-	--MENU_BACKGROUND_COLOR: rgb(28, 28, 28);
+	--MENU_BACKGROUND_COLOR: rgb(11, 11, 11);
 	--MOVABLE_BACKGROUND_COLOR: rgb(28, 28, 28);
 	--BANNER_BACKGROUND_COLOR: rgb(35, 35, 35);
 	--FOREGROUND_COLOR: rgba(255, 255, 255, 0.75);
 	--BORDER_COLOR: rgba(255, 255, 255, 0.08);
 	--MAIN_FONT_SIZE: 16px;
-	--MAIN_FONT_FAMILY: sans-serif;
+	--MAIN_FONT_FAMILY: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
 }

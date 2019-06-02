@@ -18,6 +18,7 @@ function detectNavDivs() {
 			success : function(data) {
 				currentSubPage.empty();
 				currentSubPage.append(data);
+				formatDates();
 				borderTiles();
 				detectDynamicMenuTriggers();
 			},

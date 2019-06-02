@@ -1,3 +1,5 @@
+<%@page import="com.minquoad.entity.User"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +24,7 @@
 								:
 							</label>
 							<input type="email" name="mailAddress" id="mailAddress"
-								maxlength="${ requestScope.mailAddressMaxlength }"
+								maxlength="${ User.MAIL_ADDRESS_MAX_LENGTH }"
 								value="<c:out value="${ requestScope.form.fields.mailAddress.value }" />" />
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 								<jsp:param name="formKey" value="form" />
@@ -35,7 +37,7 @@
 								:
 							</label>
 							<input type="text" name="nickname" id="nickname"
-								maxlength="${ requestScope.nicknameMaxlength }"
+								maxlength="${ User.NICKNAME_MAX_LENGTH }"
 								value="<c:out value="${ requestScope.form.fields.nickname.value }" />" />
 							<c:if test="${ not empty requestScope.form }">
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
