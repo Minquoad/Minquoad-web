@@ -6,4 +6,4 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<fmt:setLocale value="${ sessionScope.locale.toString() }" />
+<fmt:setLocale value="${ sessionScope.locale }" />

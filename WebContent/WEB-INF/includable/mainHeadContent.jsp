@@ -27,6 +27,11 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/movableDiv.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/account.css" />" />
 
+<script>
+	let currentContext = "<c:url value="/" />";
+	let language = "${ sessionScope.locale.toLanguageTag() }";
+</script>
+
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <script type="text/javascript" src="<c:url value="/js/ext/jquery.dynatable.js" />"></script>

@@ -18,7 +18,7 @@ function formatDates() {
 				};
 			}
 
-			dateToFormat.text(date.toLocaleDateString(navigator.language, options));
+			dateToFormat.text(date.toLocaleDateString(language, options));
 
 		}
 

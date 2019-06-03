@@ -24,7 +24,6 @@ function displayLoading(element) {
 
 function creteWebsocketWithRole(role) {
 
-	let currentContext = $("#variousData").attr("data-currentContext");
 	let baseUrl = window.location.href.substring(window.location.href.indexOf(window.location.hostname));
 	baseUrl = baseUrl.substring(0, baseUrl.indexOf(currentContext) + currentContext.length);
 
@@ -132,7 +131,7 @@ function improveReadability(originalText) {
 		}
 
 	} else {
-		return improveQuotesReadability(originalText);
+		return improveQuotesReadability(originalText).split("\n").join("<br/>");
 	}
 }
 
