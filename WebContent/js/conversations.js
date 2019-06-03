@@ -111,7 +111,7 @@ $(document).ready(
 					messageDiv += toHtmlEquivalent(message.user.nickname);
 					messageDiv += '</span> :';
 					messageDiv += '</div>';
-					messageDiv += '<div>';
+					messageDiv += '<div class="dateToFormat" data-format="1">';
 					messageDiv += message.instant;
 					messageDiv += '</div>';
 					messageDiv += '</div>';
@@ -121,7 +121,8 @@ $(document).ready(
 					messageDiv += '</div>';
 					
 					current.find("#messages").append(messageDiv);
-					
+
+					formatDates();
 					borderTiles();
 					messagesDiv = document.getElementById("messages");
 					messagesDiv.scrollTop = messagesDiv.scrollHeight;

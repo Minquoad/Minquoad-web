@@ -92,53 +92,72 @@ function improveTextField(textField) {
 
 function improveReadability(originalText) {
 
-	let newText = "";
-
 	let parenthesisOpeningPosition = originalText.indexOf("(");
-	let parenthesisClosingPosition = originalText.indexOf(")");
-	let firstQuotePosition = originalText.indexOf("\"");
-	let secondQuotePosition = -1;
-	if (firstQuotePosition != -1) {
-		secondQuotePosition = firstQuotePosition + 1 + originalText.substring(firstQuotePosition + 1).indexOf("\"");
-	}
-	let parenthesisPossible = parenthesisOpeningPosition != -1 && parenthesisClosingPosition != -1 && parenthesisOpeningPosition < parenthesisClosingPosition;
-	let quotePossible = firstQuotePosition != -1 && secondQuotePosition != -1;
 
-	if (parenthesisPossible || quotePossible) {
+	if (parenthesisOpeningPosition != -1) {
+		let parenthesisClosingPosition = -1;
 
-		let parenthesisFirst = null;
-
-		if (parenthesisPossible && quotePossible) {
-			parenthesisFirst = parenthesisOpeningPosition < firstQuotePosition;
-		} else if (parenthesisPossible) {
-			parenthesisFirst = true;
-		} else {
-			parenthesisFirst = false;
+		let nesting = 0;
+		for (let i = parenthesisOpeningPosition + 1; i < originalText.length && parenthesisClosingPosition == -1; i++) {
+			let char = originalText.charAt(i);
+			if (char == ")") {
+				if (nesting == 0) {
+					parenthesisClosingPosition = i;
+				} else {
+					nesting--;
+				}
+			}
+			if (char == "(") {
+				nesting++;
+			}
 		}
 
-		if (parenthesisFirst) {
-			newText += originalText.substring(0, parenthesisOpeningPosition);
+		if (parenthesisClosingPosition != -1) {
+			let newText = "";
+			newText += improveReadability(originalText.substring(0, parenthesisOpeningPosition));
 			newText += '<span class="parenthesis">';
 			newText += "(";
 			newText += improveReadability(originalText.substring(parenthesisOpeningPosition + 1, parenthesisClosingPosition));
 			newText += ")";
 			newText += '</span>';
 			newText += improveReadability(originalText.substring(parenthesisClosingPosition + 1));
+			return newText;
 
 		} else {
-			newText += originalText.substring(0, firstQuotePosition);
-			newText += "\"";
-			newText += '<span class="italic">';
-			newText += improveReadability(originalText.substring(firstQuotePosition + 1, secondQuotePosition));
-			newText += '</span>';
-			newText += "\"";
-			newText += improveReadability(originalText.substring(secondQuotePosition + 1));
-
+			let newText = "";
+			newText += improveReadability(originalText.substring(0, parenthesisOpeningPosition));
+			newText += "(";
+			newText += improveReadability(originalText.substring(parenthesisOpeningPosition + 1));
+			return newText;
 		}
 
 	} else {
-		newText += originalText;
+		return improveQuotesReadability(originalText);
+	}
+}
+
+function improveQuotesReadability(originalText) {
+
+	let firstQuotePosition = originalText.indexOf("\"");
+	let secondQuotePosition = -1;
+	if (firstQuotePosition != -1 && firstQuotePosition + 1 != originalText.length) {
+		let secondQuoteRelativePosition = originalText.substring(firstQuotePosition + 1).indexOf("\"");
+		if (secondQuoteRelativePosition != -1) {
+			secondQuotePosition = firstQuotePosition + 1 + secondQuoteRelativePosition;
+		}
 	}
 
-	return newText.replace("\n", "<br/>");
+	if (firstQuotePosition != -1 && secondQuotePosition != -1) {
+		let newText = "";
+		newText += originalText.substring(0, firstQuotePosition);
+		newText += "\"";
+		newText += '<span class="italic">';
+		newText += originalText.substring(firstQuotePosition + 1, secondQuotePosition);
+		newText += '</span>';
+		newText += "\"";
+		newText += improveQuotesReadability(originalText.substring(secondQuotePosition + 1));
+		return newText;
+	}
+
+	return originalText;
 }
