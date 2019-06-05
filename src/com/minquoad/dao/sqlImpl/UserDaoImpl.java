@@ -32,6 +32,8 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 		this.addInstantEntityMember("unblockInstant", User::getUnblockInstant, User::setUnblockInstant);
 		this.addIntegerEntityMember("defaultColor", User::getDefaultColor, User::setDefaultColor);
 		this.addStringEntityMember("language", User::getLanguage, User::setLanguage);
+		this.addBooleanEntityMember("readabilityImprovementActivated", User::isReadabilityImprovementActivated, User::setReadabilityImprovementActivated);
+		this.addBooleanEntityMember("typingAssistanceActivated", User::isTypingAssistanceActivated, User::setTypingAssistanceActivated);
 	}
 
 	@Override

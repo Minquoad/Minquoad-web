@@ -45,6 +45,10 @@ function creteWebsocketWithRole(role) {
 
 function improveTextField(textField) {
 
+	if (!typingAssistanceActivated) {
+		return;
+	}
+
 	textField.keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if (!event.shiftKey && textField.prop('selectionStart') == textField.prop('selectionEnd')) {
@@ -90,6 +94,10 @@ function improveTextField(textField) {
 }
 
 function improveReadability(originalText) {
+
+	if (!readabilityImprovementActivated) {
+		return originalText.split("\n").join("<br/>");
+	}
 
 	let parenthesisOpeningPosition = originalText.indexOf("(");
 

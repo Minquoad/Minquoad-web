@@ -56,6 +56,8 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 			if (formId.equals(USER_PARAMETERS_ALTERATION)) {
 
+				//TODO rendre l'aide à la saisie optionnel
+
 				UserParametersAlterationForm form = (UserParametersAlterationForm) request.getAttribute(USER_PARAMETERS_ALTERATION);
 				form.submit();
 
@@ -65,6 +67,8 @@ public class AccountManagement extends ImprovedHttpServlet {
 					user.setMailAddress(form.getmailAddress());
 					user.setDefaultColor(form.getDefaultColor());
 					user.setLanguage(form.getLanguage());
+					user.setReadabilityImprovementActivated(form.isReadabilityImprovementActivated());
+					user.setTypingAssistanceActivated(form.isTypingAssistanceActivated());
 					getDaoFactory(request).getUserDao().persist(user);
 
 					setLocale(request, new Locale(user.getLanguage(), getLocale(request).getCountry()));

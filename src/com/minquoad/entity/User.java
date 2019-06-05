@@ -7,7 +7,6 @@ import com.minquoad.tool.security.SecurityTool;
 
 public class User {
 
-	public static final int DEFAULT_DEFAULT_COLOR = 8421504;
 	public static final int NICKNAME_MIN_LENGTH = 6;
 	public static final int NICKNAME_MAX_LENGTH = 25;
 	public static final int MAIL_ADDRESS_MAX_LENGTH = 50;
@@ -20,8 +19,10 @@ public class User {
 	private Instant lastActivityInstant;
 	private int adminLevel = 0;
 	private Instant unblockInstant;
-	private Integer defaultColor;
+	private Integer defaultColor = 8421504;
 	private String language;
+	private boolean readabilityImprovementActivated = true;
+	private boolean typingAssistanceActivated = true;
 
 	public Long getId() {
 		return id;
@@ -144,6 +145,22 @@ public class User {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+
+	public boolean isReadabilityImprovementActivated() {
+		return readabilityImprovementActivated;
+	}
+
+	public void setReadabilityImprovementActivated(boolean readabilityImprovementActivated) {
+		this.readabilityImprovementActivated = readabilityImprovementActivated;
+	}
+
+	public boolean isTypingAssistanceActivated() {
+		return typingAssistanceActivated;
+	}
+
+	public void setTypingAssistanceActivated(boolean typingAssistanceActivated) {
+		this.typingAssistanceActivated = typingAssistanceActivated;
 	}
 
 }

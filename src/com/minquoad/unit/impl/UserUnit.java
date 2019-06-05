@@ -28,7 +28,6 @@ public class UserUnit extends Unit {
 		user.setRegistrationInstant(Instant.now());
 		user.setLastActivityInstant(Instant.now());
 		user.setLanguage(language);
-		user.setDefaultColor(User.DEFAULT_DEFAULT_COLOR);
 		userDao.insert(user);
 		user.setPassword(password, getDeployment());
 		userDao.persist(user);

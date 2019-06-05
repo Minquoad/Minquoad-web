@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
+import com.minquoad.frontComponent.form.field.FormBooleanField;
 import com.minquoad.frontComponent.form.field.FormColorField;
 import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormListField;
@@ -17,6 +18,8 @@ public class UserParametersAlterationForm extends Form {
 	public static final String NICKNAME_KEY = "nickname";
 	public static final String LANGUAGE_KEY = "language";
 	public static final String DEFAULT_COLOR_KEY = "defaultColor";
+	public static final String READABILITY_IMPROVEMENT_ACTIVATED = "readabilityImprovementActivated";
+	public static final String TYPING_ASSISTANCE_ACTIVATED = "typingAssistanceActivated";
 
 	public UserParametersAlterationForm(HttpServletRequest request) {
 		super(request);
@@ -78,6 +81,15 @@ public class UserParametersAlterationForm extends Form {
 		field.setValue(getUser().getDefaultColorAsHtmlValue());
 		this.addField(field);
 
+		FormBooleanField checkboxField = null;
+		
+		checkboxField = new FormBooleanField(READABILITY_IMPROVEMENT_ACTIVATED);
+		checkboxField.setChecked(getUser().isReadabilityImprovementActivated());
+		this.addField(checkboxField);
+
+		checkboxField = new FormBooleanField(TYPING_ASSISTANCE_ACTIVATED);
+		checkboxField.setChecked(getUser().isTypingAssistanceActivated());
+		this.addField(checkboxField);
 	}
 
 	public String getnickname() {
@@ -103,6 +115,16 @@ public class UserParametersAlterationForm extends Form {
 	public String getLanguage() {
 		FormStringField field = (FormStringField) this.getField(LANGUAGE_KEY);
 		return field.getValue();
+	}
+
+	public boolean isReadabilityImprovementActivated() {
+		FormBooleanField field = (FormBooleanField) this.getField(READABILITY_IMPROVEMENT_ACTIVATED);
+		return field.isChecked();
+	}
+
+	public boolean isTypingAssistanceActivated() {
+		FormBooleanField field = (FormBooleanField) this.getField(TYPING_ASSISTANCE_ACTIVATED);
+		return field.isChecked();
 	}
 
 }

@@ -87,6 +87,38 @@
 									<jsp:param name="fieldName" value="defaultColor" />
 								</jsp:include>
 							</p>
+							<p>
+								<label for="readabilityImprovementActivated">
+									<fmt:message key="readabilityImprovement"
+										bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="checkbox" name="readabilityImprovementActivated"
+									id="readabilityImprovementActivated"
+									<c:if test="${ requestScope.userParametersAlteration.fields.readabilityImprovementActivated.checked }">
+										checked
+									</c:if> />
+								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+									<jsp:param name="formKey" value="userParametersAlteration" />
+									<jsp:param name="fieldName" value="readabilityImprovementActivated" />
+								</jsp:include>
+							</p>
+							<p>
+								<label for="typingAssistanceActivated">
+									<fmt:message key="typingAssistance"
+										bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="checkbox" name="typingAssistanceActivated"
+									id="typingAssistanceActivated"
+									<c:if test="${ requestScope.userParametersAlteration.fields.typingAssistanceActivated.checked }">
+										checked
+									</c:if> />
+								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+									<jsp:param name="formKey" value="userParametersAlteration" />
+									<jsp:param name="fieldName" value="typingAssistanceActivated" />
+								</jsp:include>
+							</p>
 							<div>
 								<input type="submit"
 									value="<fmt:message key="Save" bundle="${ accountManagementBundle }" />" />
