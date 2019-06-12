@@ -71,6 +71,13 @@
 	text-align: right;
 }
 
+#conversations #current .messageEditionButton {
+	border: solid 1px var(--BORDER_COLOR);
+	padding: 0 2px 0 2px;
+	cursor: pointer;
+	display: inline-block;
+}
+
 #conversations #current #messageEditor {
 	height: 45px;
 }
@@ -89,7 +96,6 @@
 	padding: 3px;
 	margin: 0;
 	border: 0;
-	resize: none;
 	vertical-align: top;
 }
 
@@ -121,4 +127,46 @@
 	padding: 0;
 	margin: 0;
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
+}
+
+#conversations #messages .messageText {
+	white-space: pre-line;
+}
+#conversations #messages .messageText form div {
+	vertical-align: top;
+	display: inline-block;
+	height: 45px;
+	width: 45px;
+}
+
+#conversations #messages .messageText form textarea {
+	display: inline-block;
+	height: calc(45px - 2*3px);
+	width: calc(100% - 45px - 2*3px);
+	padding: 3px;
+	margin: 0;
+	border: 0;
+	vertical-align: top;
+}
+
+#conversations #messages .messageText form [type="button"] {
+	vertical-align: top;
+	padding: 0;
+	margin: 0;
+	border: solid 2px var(--HIGHLIGHTING_COLOR);
+}
+
+#conversations #messages .messageText form [type="button"][value="⭆"] {
+	width: 45px;
+	height: 23px;
+}
+
+#conversations #messages .messageText form [type="button"][value="✖"] {
+	width: 23px;
+	height: 22px;
+}
+
+#conversations #messages .messageText form [type="button"][value="🗑"] {
+	width: 22px;
+	height: 22px;
 }

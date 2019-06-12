@@ -50,12 +50,16 @@ public class Database {
 	}
 
 	public Connection getConnection() throws SQLException {
-        return connectionPool.getConnection();
-    }
+		return connectionPool.getConnection();
+	}
 
 	public String getDatabaseUrl() {
 		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
-		return DATABASE_PROTOCOL_NAME + ":" + DATABASE_SUBPROTOCOL_NAME + "://" + deployment.getDatabaseHost() + ":" + deployment.getDatabasePort() + "/" + deployment.getDatabaseName();
+		return DATABASE_PROTOCOL_NAME
+				+ ":" + DATABASE_SUBPROTOCOL_NAME
+				+ "://" + deployment.getDatabaseHost()
+				+ ":" + deployment.getDatabasePort()
+				+ "/" + deployment.getDatabaseName();
 	}
 
 	public void close() {

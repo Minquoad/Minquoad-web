@@ -114,3 +114,12 @@
 .name {
 	font-family: Copperplate Gothic;
 }
+
+.loadingDiv {
+	white-space: normal;
+}
+
+.loadingDiv .totallyCenteredContainer {
+	height: 64px;
+	width: 64px;
+}

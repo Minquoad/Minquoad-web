@@ -55,8 +55,11 @@ public class FormStringField extends FormField {
 	}
 
 	public void setValue(String value) {
-		if (isTrimingValue() && value != null) {
-			value = value.trim();
+		if (value != null) {
+			value = value.replace("\r", "");
+			if (isTrimingValue()) {
+				value = value.trim();
+			}
 		}
 		this.value = value;
 	}

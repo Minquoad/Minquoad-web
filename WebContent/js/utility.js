@@ -1,5 +1,5 @@
 function toHtmlEquivalent(original) {
-	var tmpElement = document.createElement("div");
+	let tmpElement = document.createElement("div");
 	tmpElement.append(document.createTextNode(original));
 	return tmpElement.innerHTML;
 }
@@ -18,29 +18,40 @@ function handleAjaxError(error) {
 	}
 }
 
+let loadingDiv = null;
 function displayLoading(element) {
-	element.html($("#loadingDiv").html());
+	if (loadingDiv == null) {
+		loadingDiv = $("#loadingDiv");
+	}
+	element.html(loadingDiv.html().trim());
 }
 
-function creteWebsocketWithRole(role) {
+let websockets = {};
 
-	let baseUrl = window.location.href.substring(window.location.href.indexOf(window.location.hostname));
-	baseUrl = baseUrl.substring(0, baseUrl.indexOf(currentContext) + currentContext.length);
+function getWebsocketWithRole(role) {
 
-	let websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
+	if (!websockets.hasOwnProperty(role)) {
+	
+		let baseUrl = window.location.href.substring(window.location.href.indexOf(window.location.hostname));
+		baseUrl = baseUrl.substring(0, baseUrl.indexOf(currentContext) + currentContext.length);
+	
+		let websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
+	
+		websocket.onopen = function(evt) {
+			websocket.send(role);
+		};
 
-	websocket.onopen = function(evt) {
-		websocket.send(role);
-	};
+		websocket.onerror = function(e) {
+			console.error(e);
+			if (confirm("An error occured. Refresh page?")) {
+				window.location.replace("");
+			}
+		};
 
-	websocket.onerror = function(e) {
-		console.error(e);
-		if (confirm("An error occured. Refresh page?")) {
-			window.location.replace("");
-		}
-	};
+		websockets.role = websocket;
+	}
 
-	return websocket;
+	return websockets.role
 }
 
 function improveTextField(textField) {
@@ -96,7 +107,7 @@ function improveTextField(textField) {
 function improveReadability(originalText) {
 
 	if (!readabilityImprovementActivated) {
-		return originalText.split("\n").join("<br/>");
+		return originalText;
 	}
 
 	let parenthesisOpeningPosition = originalText.indexOf("(");
@@ -139,7 +150,7 @@ function improveReadability(originalText) {
 		}
 
 	} else {
-		return improveQuotesReadability(originalText).split("\n").join("<br/>");
+		return improveQuotesReadability(originalText);
 	}
 }
 

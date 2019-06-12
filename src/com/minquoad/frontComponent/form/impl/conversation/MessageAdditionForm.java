@@ -48,4 +48,5 @@ public class MessageAdditionForm extends Form {
 		FormStringField field = (FormStringField) this.getField(TEXT_KEY);
 		return field.getValue();
 	}
+	
 }

@@ -68,11 +68,8 @@ public class FileDownload extends ImprovedHttpServlet {
 		} finally {
 			try {
 				inputStream.close();
-			} catch (Exception e) {
-			}
-			try {
+			} finally {
 				outputStream.close();
-			} catch (Exception e) {
 			}
 		}
 	}

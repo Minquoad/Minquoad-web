@@ -15,7 +15,7 @@ public class CronManager {
 
 	private long lastMinuteStart;
 
-	private List<Runnable> minutelyCrons = new ArrayList<Runnable>();
+	private List<Cron> minutelyCrons = new ArrayList<Cron>();
 
 	private final ServletContext servletContext;
 
@@ -30,9 +30,7 @@ public class CronManager {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				long startTime = Instant.now().toEpochMilli();
-				lastMinuteStart = startTime;
-
+				lastMinuteStart = Instant.now().toEpochMilli();
 				CronManager.this.loop();
 			}
 		}).start();
@@ -57,19 +55,18 @@ public class CronManager {
 
 			lastMinuteStart += 1000 * 60;
 
-			runMinutlyCrons();
+			runMinutlyCrons(Instant.ofEpochMilli(lastMinuteStart));
 		}
 	}
 
-	private void runMinutlyCrons() {
+	private void runMinutlyCrons(Instant instant) {
 		Logger logger = (Logger) servletContext.getAttribute(Logger.class.getName());
 
 		logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.LOG_PATH + "cron.log");
 
-		for (Runnable minutelyCron : minutelyCrons) {
+		for (Cron minutelyCron : minutelyCrons) {
 			try {
-				minutelyCron.run();
-
+				minutelyCron.listenTime(instant);
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.logError(e);

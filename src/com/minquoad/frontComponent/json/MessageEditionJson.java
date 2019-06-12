@@ -5,13 +5,13 @@ import org.json.JSONObject;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 
-public class MessageAdditionJson implements Jsonable {
+public class MessageEditionJson implements Jsonable {
 
-	public static final String enventKey = "MessageAddition";
+	public static final String enventKey = "MessageEdition";
 	
 	private Message message;
 
-	public MessageAdditionJson(Message message) {
+	public MessageEditionJson(Message message) {
 		this.message = message;
 	}
 
@@ -21,7 +21,6 @@ public class MessageAdditionJson implements Jsonable {
 		eventJsonObject.put("enventKey", enventKey);
 
 		JSONObject messageJsonObject = new JSONObject();
-
 		messageJsonObject.put("id", Long.toString(message.getId()));
 		messageJsonObject.put("text", message.getText());
 		messageJsonObject.put("editedText", 

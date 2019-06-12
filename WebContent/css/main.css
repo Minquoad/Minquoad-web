@@ -40,3 +40,7 @@ h2:last-child {
 ul {
 	margin: 0;
 }
+
+textarea {
+	resize: none;
+}

@@ -1,5 +1,5 @@
-<fmt:setBundle basename="resources.CurrentConversation"
-	var="currentConversationBundle" />
+<fmt:setBundle basename="resources.Conversations"
+	var="conversationsBundle" />
 
 <div id="current" data-conversationId="${ requestScope.conversation.id }">
 	<div id="title" class="centererContainer">
@@ -8,7 +8,7 @@
 				<c:forEach items="${ requestScope.participants }" var="loopUser">
 					<c:if test="${ loopUser ne requestScope.user }">
 						<fmt:message key="MainConversationWith"
-							bundle="${ currentConversationBundle }" />
+							bundle="${ conversationsBundle }" />
 						<c:out value="${ loopUser.nickname }" />
 					</c:if>
 				</c:forEach>
@@ -20,30 +20,17 @@
 	</div>
 
 	<div id="messages" class="tileContainer">
-		<div id="messageExample" class="invisible">
-			<div class="borderedTile fullWidth">
-				<div class="messageMetaData">
-					<div>
-						<span class="messageUserNickname"><c:out
-								value="${ message.user.nickname }" /></span> :
-					</div>
-					<div class="messageInstant">
-						<c:out value="${ message.instant }" />
-					</div>
-				</div>
-			</div>
-		</div>
 		<jsp:include page="/WEB-INF/includable/messageTiles.jsp">
 			<jsp:param name="messages" value="messages" />
 		</jsp:include>
 	</div>
 	<div id="messageEditor">
-		<form id="messageEditorForm" action="<c:url value="/MessageAddition" />">
+		<form id="messageEditorForm" action="<c:url value="/MessageAddition" />" method="post">
 			<input type="hidden" name="conversationId"
 				value="${ requestScope.conversation.id }">
 			<input type="button" value="⟰" />
 			<textarea name="text"
-				placeholder="<fmt:message key="TypeYourMessageHere" bundle="${ currentConversationBundle }" />"></textarea>
+				placeholder="<fmt:message key="TypeYourMessageHere" bundle="${ conversationsBundle }" />"></textarea>
 			<div id="sepcialChars">
 				<div class="centererContainer dynamicMenuTrigger">
 					<div class="totallyCenteredContainer centeredText">
