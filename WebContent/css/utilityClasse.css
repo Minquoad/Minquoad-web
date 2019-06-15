@@ -123,3 +123,7 @@
 	height: 64px;
 	width: 64px;
 }
+
+.interpretLineBreak {
+	white-space: pre-line;
+}

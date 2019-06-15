@@ -13,14 +13,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${ requestScope.improvementSuggestions }" var="improvementSuggestion">
+						<c:forEach items="${ requestScope.improvementSuggestions }"
+							var="improvementSuggestion">
 							<tr>
 								<td>
 									<c:out value="${ improvementSuggestion.user.nickname }" />
 								</td>
-								<td>
-									<c:out value="${ improvementSuggestion.text }" />
-								</td>
+								<td class="interpretLineBreak"><c:out value="${ improvementSuggestion.text }" /></td>
 								<td>
 									<c:out value="${ improvementSuggestion.instant }" />
 								</td>

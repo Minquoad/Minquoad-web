@@ -23,10 +23,8 @@ public class OutLoging extends ImprovedHttpServlet {
 
 		if (getControllingAdmin(request) == null) {
 
-			request.getSession().removeAttribute(USER_ID_KEY);
-			request.getSession().removeAttribute(LOCALE_KEY);
+			request.getSession().invalidate();
 			request.removeAttribute(USER_KEY);
-
 			response.sendRedirect(request.getContextPath() + "/");
 
 		} else {
