@@ -43,11 +43,15 @@ public abstract class FormField {
 	}
 
 	public void computeValueProblems() {
-		if (!isNullPermitted() && isValueNull()) {
-			valueProblems.add(getText("FieldIsMissing"));
+		if (isValueNull()) {
+			if (!isNullPermitted()) {
+				valueProblems.add(getText("FieldIsMissing"));
+			}
 		} else {
-			if (!isEmptyPermitted() && isValueEmpty()) {
-				valueProblems.add(getText("FieldIsEmpty"));
+			if (isValueEmpty()) {
+				if (!isEmptyPermitted()) {
+					valueProblems.add(getText("FieldIsEmpty"));
+				}
 			}
 		}
 	}

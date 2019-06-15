@@ -12,7 +12,6 @@
 	let messageEditionUrl = "<c:url value="/MessageEdition" />";
 	let updateButtonTitle = "<fmt:message key="updateButtonTitle" bundle="${ conversationsBundle }" />";
 	let cancelButtonTitle = "<fmt:message key="cancelButtonTitle" bundle="${ conversationsBundle }" />";
-	let deleteButtonTitle = "<fmt:message key="deleteButtonTitle" bundle="${ conversationsBundle }" />";
 </script>
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
 </head>

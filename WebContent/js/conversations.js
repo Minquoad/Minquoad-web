@@ -59,8 +59,6 @@ function detectCurrentConversation() {
 				url : form.attr('action'),
 				type : "POST",
 				data : formData,
-				success : function() {
-				},
 				error : function(err) {
 					handleAjaxError(err);
 				}
@@ -104,7 +102,7 @@ function detectMessageEditionButtons(container) {
 			if (messageTextDiv.find("form").length == 0) {
 
 				let editionDiv = "";
-				editionDiv += '<form class="fullSize" method="post" action="';
+				editionDiv += '<form class="fullSize messageEditionForm" method="post" action="';
 				editionDiv += messageEditionUrl;
 				editionDiv += '">';
 
@@ -114,9 +112,6 @@ function detectMessageEditionButtons(container) {
 				editionDiv += '" />';
 				editionDiv += '<input type="button" value="✖" title="';
 				editionDiv += cancelButtonTitle;
-				editionDiv += '" />';
-				editionDiv += '<input type="button" value="🗑" title="';
-				editionDiv += deleteButtonTitle;
 				editionDiv += '" />';
 				editionDiv += '</div>';
 
@@ -133,26 +128,22 @@ function detectMessageEditionButtons(container) {
 				messageTextDiv.empty();
 				messageTextDiv.append(editionDiv);
 
-				let form = messageTextDiv.find('form');
-				let textarea = form.find('textarea');
-				let sendButton = form.find('[type="button"][value="⭆"]');
-				let cancelButton = form.find('[type="button"][value="✖"]');
-				let deleteButton = form.find('[type="button"][value="🗑"]');
-
+				let messageEditionForm = messageTextDiv.find('.messageEditionForm');
+				let textarea = messageEditionForm.find('textarea');
 				improveTextField(textarea);
+				let sendButton = messageEditionForm.find('[type="button"][value="⭆"]');
+				let cancelButton = messageEditionForm.find('[type="button"][value="✖"]');
 
 				let postMessage = function() {
 					if (textarea.val().trim() != "") {
 
-						let data = form.serialize();
+						let data = messageEditionForm.serialize();
 						displayLoading(messageTextDiv);
 
 						$.ajax({
-							url : form.attr('action'),
+							url : messageEditionForm.attr('action'),
 							type : "POST",
 							data : data,
-							success : function() {
-							},
 							error : function(err) {
 								handleAjaxError(err);
 							}
@@ -164,11 +155,6 @@ function detectMessageEditionButtons(container) {
 					e.preventDefault();
 					messageTextDiv.empty();
 					messageTextDiv.append(oldHtml);
-				});
-
-				deleteButton.on('click', function(e) {
-					e.preventDefault();
-					alert("TODO");
 				});
 
 				sendButton.on('click', function(e) {
@@ -196,8 +182,7 @@ $(document).ready(function() {
 	detectConversationResumes();
 	$("#conversations #list .borderedTile .selectedConversation").trigger("click");
 
-	getWebsocketWithRole("conversationUpdating").onmessage = function(e) {
-		let event = JSON.parse(e.data);
+	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
 
 		if (event.enventKey == "MessageAddition") {
 			let message = event.data;
@@ -246,7 +231,10 @@ $(document).ready(function() {
 				detectMessageEditionButtons(messages.children().last());
 			}
 		}
+	});
 
+	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
+		
 		if (event.enventKey == "MessageEdition") {
 			let message = event.data;
 			let current = $("#current");
@@ -263,6 +251,6 @@ $(document).ready(function() {
 				}
 			}
 		}
-	};
+	});
 
 });

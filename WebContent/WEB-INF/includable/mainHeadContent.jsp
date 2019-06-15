@@ -32,7 +32,7 @@
 	let language = "${ sessionScope.locale.toLanguageTag() }";
 	let readabilityImprovementActivated = ${ empty requestScope.user ? true : requestScope.user.readabilityImprovementActivated };
 	let typingAssistanceActivated = ${ empty requestScope.user ? true : requestScope.user.typingAssistanceActivated };
-	let userId = ${ empty requestScope.user ? null : requestScope.user.id };
+	let userId = ${ empty requestScope.user ? "null" : requestScope.user.id };
 </script>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

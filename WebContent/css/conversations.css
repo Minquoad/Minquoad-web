@@ -132,17 +132,18 @@
 #conversations #messages .messageText {
 	white-space: pre-line;
 }
+
 #conversations #messages .messageText form div {
 	vertical-align: top;
 	display: inline-block;
 	height: 45px;
-	width: 45px;
+	width: 23px;
 }
 
 #conversations #messages .messageText form textarea {
 	display: inline-block;
 	height: calc(45px - 2*3px);
-	width: calc(100% - 45px - 2*3px);
+	width: calc(100% - 23px - 2*3px);
 	padding: 3px;
 	margin: 0;
 	border: 0;
@@ -157,16 +158,11 @@
 }
 
 #conversations #messages .messageText form [type="button"][value="⭆"] {
-	width: 45px;
+	width: 23px;
 	height: 23px;
 }
 
 #conversations #messages .messageText form [type="button"][value="✖"] {
 	width: 23px;
-	height: 22px;
-}
-
-#conversations #messages .messageText form [type="button"][value="🗑"] {
-	width: 22px;
 	height: 22px;
 }

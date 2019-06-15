@@ -62,5 +62,5 @@ public class Message {
 	public boolean isEdited() {
 		return getEditedText() != null;
 	}
-	
+
 }
