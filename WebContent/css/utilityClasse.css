@@ -127,3 +127,11 @@
 .interpretLineBreak {
 	white-space: pre-line;
 }
+
+.inputFileTrigger {
+	cursor: pointer;
+}
+
+.inputFileTrigger input[type="file"] {
+	display: none;
+}

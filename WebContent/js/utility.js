@@ -18,104 +18,14 @@ function handleAjaxError(error) {
 	}
 }
 
-let loadingDiv = null;
 function displayLoading(element) {
-	if (loadingDiv == null) {
-		loadingDiv = $("#loadingDiv");
-	}
-	element.html(loadingDiv.html().trim());
-}
-
-let websockets = {};
-let websocketJsonListeners = {};
-function addRoledJsonWebsocketListener(role, listener) {
-
-	if (!websockets.hasOwnProperty(role)) {
-
-		let baseUrl = window.location.href.substring(window.location.href.indexOf(window.location.hostname));
-		baseUrl = baseUrl.substring(0, baseUrl.indexOf(currentContext) + currentContext.length);
-
-		let websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
-
-		websocket.onopen = function(evt) {
-			websocket.send(role);
-		};
-
-		websocket.onclose = function() {
-			if (confirm("Connection with server lost. Refresh page?")) {
-				window.location.replace("");
-			}
-		};
-
-		websocket.onerror = function(e) {
-			console.error(e);
-			if (confirm("An error occured. Refresh page?")) {
-				window.location.replace("");
-			}
-		};
-
-		websocket.onmessage = function(event) {
-			let parsedEvent = JSON.parse(event.data);
-			for (let listener of websocketJsonListeners[role]) {
-				listener(parsedEvent);
-			}
-		};
-
-		websockets[role] = websocket;
-		websocketJsonListeners[role] = [];
-	}
-
-	websocketJsonListeners[role].push(listener);
-}
-
-function improveTextField(textField) {
-
-	if (!typingAssistanceActivated) {
-		return;
-	}
-
-	textField.keypress(function(event) {
-		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if (!event.shiftKey && textField.prop('selectionStart') == textField.prop('selectionEnd')) {
-
-			if (keycode == '40') {
-				event.preventDefault();
-
-				let position = textField.prop('selectionStart');
-				textField.val(textField.val().substring(0, position) + '()' + textField.val().substring(position));
-				textField.prop('selectionStart', position + 1);
-				textField.prop('selectionEnd', position + 1);
-
-			} else if (keycode == '41') {
-				let position = textField.prop('selectionStart');
-				if (position != textField.val().length && textField.val().substring(position, position + 1) == ")") {
-					event.preventDefault();
-					textField.prop('selectionStart', position + 1);
-					textField.prop('selectionEnd', position + 1);
-				}
-
-			} else if (keycode == '34') {
-
-				let quoteCount = 0;
-				let originalText = textField.val();
-				for (let i = 0; i < originalText.length; i++) {
-					if (originalText.charAt(i) == "\"") {
-						quoteCount++;
-					}
-				}
-				if (quoteCount % 2 == 0) {
-					event.preventDefault();
-
-					let position = textField.prop('selectionStart');
-					if (position == textField.val().length || textField.val().substring(position, position + 1) != "\"") {
-						textField.val(textField.val().substring(0, position) + "\"\"" + textField.val().substring(position));
-					}
-					textField.prop('selectionStart', position + 1);
-					textField.prop('selectionEnd', position + 1);
-				}
-			}
-		}
-	});
+	let html = "";
+	html += '<div class="centererContainer fullSize loadingDiv">';
+	html += '<div class="totallyCenteredContainer">';
+	html += '<img height="64" width="64" src="' + loadingImgUrl + '" />';
+	html += '</div>';
+	html += '</div>';
+	element.html(html);
 }
 
 function improveReadability(originalText) {

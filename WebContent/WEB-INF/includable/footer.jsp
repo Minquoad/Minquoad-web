@@ -6,7 +6,7 @@
 
 		<c:if test="${not empty requestScope.user}">
 
-			<form id="improvementSuggestionAdditionForm"
+			<form id="improvementSuggestionAdditionForm" accept-charset="UTF-8"
 				action="<c:url value="/ImprovementSuggestionAddition" />" class="fullSize">
 				<textarea name="text"
 					placeholder="<fmt:message key="improvementSuggestionAdditionFormPlaceholder" bundle="${ footerBundle }" />"></textarea>

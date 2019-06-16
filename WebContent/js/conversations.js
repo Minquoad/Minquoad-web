@@ -31,6 +31,7 @@ function detectCurrentConversation() {
 	formatDates();
 	borderTiles();
 	detectDynamicMenuTriggers();
+	detectInputFileButtonTrigger();
 
 	let current = $("#conversations #current");
 
@@ -104,7 +105,7 @@ function detectMessageEditionButtons(container) {
 				let editionDiv = "";
 				editionDiv += '<form class="fullSize messageEditionForm" method="post" action="';
 				editionDiv += messageEditionUrl;
-				editionDiv += '">';
+				editionDiv += '" accept-charset="UTF-8">';
 
 				editionDiv += '<div>';
 				editionDiv += '<input type="button" value="⭆" title="';

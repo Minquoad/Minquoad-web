@@ -1,5 +1,4 @@
-<fmt:setBundle basename="resources.Conversations"
-	var="conversationsBundle" />
+<fmt:setBundle basename="resources.Conversations" var="conversationsBundle" />
 
 <div id="current" data-conversationId="${ requestScope.conversation.id }">
 	<div id="title" class="centererContainer">
@@ -7,8 +6,7 @@
 			<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
 				<c:forEach items="${ requestScope.participants }" var="loopUser">
 					<c:if test="${ loopUser ne requestScope.user }">
-						<fmt:message key="MainConversationWith"
-							bundle="${ conversationsBundle }" />
+						<fmt:message key="MainConversationWith" bundle="${ conversationsBundle }" />
 						<c:out value="${ loopUser.nickname }" />
 					</c:if>
 				</c:forEach>
@@ -25,7 +23,8 @@
 		</jsp:include>
 	</div>
 	<div id="messageEditor">
-		<form id="messageEditorForm" action="<c:url value="/MessageAddition" />" method="post">
+		<form id="messageEditorForm" action="<c:url value="/MessageAddition" />"
+			method="post" accept-charset="UTF-8" enctype="multipart/form-data">
 			<input type="hidden" name="conversationId"
 				value="${ requestScope.conversation.id }">
 			<input type="button" value="⟰" />
@@ -82,6 +81,12 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="inputFileTrigger">
+				<div class="centererContainer">
+					<div class="totallyCenteredContainer">📁</div>
+				</div>
+				<input type="file" name="file" />
 			</div>
 		</form>
 	</div>

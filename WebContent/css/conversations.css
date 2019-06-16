@@ -88,15 +88,25 @@
 
 #conversations #current #messageEditor #messageEditorForm>* {
 	font-size: var(--MAIN_FONT_SIZE);
+	vertical-align: top;
 }
 
 #conversations #current #messageEditor textarea {
 	height: calc(45px - 2*3px);
-	width: calc(100% - 82px - 45px - 2*3px);
+	width: calc(100% - 82px - 45px - 2*3px - 45px);
 	padding: 3px;
 	margin: 0;
 	border: 0;
-	vertical-align: top;
+}
+
+#conversations #current #messageEditor .inputFileTrigger {
+	display: inline-block;
+	text-align: center;
+	height: calc(45px - 2*2px);
+	width: calc(45px - 2*2px);
+	padding: 0;
+	margin: 0;
+	border: solid var(--BORDER_COLOR) 2px;
 }
 
 #conversations #current #messageEditor #sepcialChars {
