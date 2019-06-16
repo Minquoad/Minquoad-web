@@ -5,6 +5,7 @@ import java.util.List;
 import com.minquoad.dao.interfaces.MessageDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
+import com.minquoad.entity.file.MessageFile;
 import com.minquoad.framework.dao.DaoException;
 
 public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageDao {
@@ -21,6 +22,7 @@ public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageD
 		this.addInstantEntityMember("instant", Message::getInstant, Message::setInstant);
 		this.addForeingKeyEntityMember("user", Message::getUser, Message::setUser, getDaoFactory().getUserDao());
 		this.addForeingKeyEntityMember("conversation", Message::getConversation, Message::setConversation, getDaoFactory().getConversationDao());
+		this.addForeingKeyEntityMember("messageFile", Message::getMessageFile, Message::setMessageFile, getDaoFactory().getMessageFileDao());
 	}
 
 	@Override
@@ -36,5 +38,10 @@ public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageD
 	@Override
 	public boolean isPrimaryKeyRandomlyGenerated() {
 		return true;
+	}
+
+	@Override
+	public Message getMessageFileMessage(MessageFile messageFile) {
+		return this.getOneMatching("messageFile", messageFile);
 	}
 }

@@ -6,12 +6,14 @@ import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.Conversation;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormEntityField;
+import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.field.FormStringField;
 
 public class MessageAdditionForm extends Form {
 
 	public static final String CONVERSATION_ID_KEY = "conversationId";
 	public static final String TEXT_KEY = "text";
+	public static final String FILE_KEY = "file";
 
 	public MessageAdditionForm(HttpServletRequest request) {
 		super(request);
@@ -36,6 +38,10 @@ public class MessageAdditionForm extends Form {
 		FormStringField textField = new FormStringField(TEXT_KEY);
 		textField.setEmptyPermitted(false);
 		this.addField(textField);
+
+		FormFileField fileField = new FormFileField(FILE_KEY);
+		fileField.setNullPermitted(true);
+		this.addField(fileField);
 	}
 
 	public Conversation getConversation() {
@@ -47,6 +53,10 @@ public class MessageAdditionForm extends Form {
 	public String getText() {
 		FormStringField field = (FormStringField) this.getField(TEXT_KEY);
 		return field.getValue();
+	}
+
+	public FormFileField getFileField() {
+		return (FormFileField) this.getField(FILE_KEY);
 	}
 	
 }

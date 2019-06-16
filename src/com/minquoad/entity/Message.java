@@ -2,6 +2,8 @@ package com.minquoad.entity;
 
 import java.time.Instant;
 
+import com.minquoad.entity.file.MessageFile;
+
 public class Message {
 
 	private Long id;
@@ -10,6 +12,7 @@ public class Message {
 	private Instant instant;
 	private User user;
 	private Conversation conversation;
+	private MessageFile messageFile;
 
 	public Long getId() {
 		return id;
@@ -61,6 +64,14 @@ public class Message {
 
 	public boolean isEdited() {
 		return getEditedText() != null;
+	}
+
+	public MessageFile getMessageFile() {
+		return messageFile;
+	}
+
+	public void setMessageFile(MessageFile messageFile) {
+		this.messageFile = messageFile;
 	}
 
 }

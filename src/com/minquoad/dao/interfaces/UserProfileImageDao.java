@@ -5,6 +5,6 @@ import com.minquoad.entity.file.UserProfileImage;
 
 public interface UserProfileImageDao extends Dao<UserProfileImage> {
 
-	public UserProfileImage getUserUserProfileImageDao(User user);
+	public UserProfileImage getUserUserProfileImage(User user);
 
 }

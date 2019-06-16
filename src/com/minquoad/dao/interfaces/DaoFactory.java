@@ -12,5 +12,6 @@ public interface DaoFactory {
 	public UserProfileImageDao getUserProfileImageDao();
 	public RequestLogDao getRequestLogDao();
 	public ImprovementSuggestionDao getImprovementSuggestionDao();
+	public MessageFileDao getMessageFileDao();
 
 }

@@ -28,7 +28,7 @@ public class UserProfileImageDaoImpl extends ImprovedDaoImpl<UserProfileImage> i
 	}
 
 	@Override
-	public UserProfileImage getUserUserProfileImageDao(User user) {
+	public UserProfileImage getUserUserProfileImage(User user) {
 		return this.getOneMatching("user", user);
 	}
 

@@ -83,7 +83,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 				if (form.isValide()) {
 					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
 
-					UserProfileImage image = userProfileImageDao.getUserUserProfileImageDao(getUser(request));
+					UserProfileImage image = userProfileImageDao.getUserUserProfileImage(getUser(request));
 					if (image != null) {
 						image.getFile(getDeployment()).delete();
 						userProfileImageDao.delete(image);

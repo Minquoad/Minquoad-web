@@ -25,7 +25,7 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
-		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request));
+		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request), getDaoFactory(request));
 	}
 
 	@Override

@@ -135,7 +135,7 @@
 						</h2>
 
 						<c:set var="userProfileImage"
-							value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImageDao(requestScope.user) }"
+							value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImage(requestScope.user) }"
 							scope="page" />
 
 						<c:if test="${not empty userProfileImage}">

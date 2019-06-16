@@ -21,7 +21,7 @@
 				</p>
 
 				<c:set var="userProfileImage"
-					value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImageDao(requestScope.showedUser) }"
+					value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImage(requestScope.showedUser) }"
 					scope="page" />
 
 				<c:if test="${not empty userProfileImage}">

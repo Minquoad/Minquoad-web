@@ -15,6 +15,7 @@ public class DaoFactoryImpl implements DaoFactory {
 	private UserProfileImageDaoImpl userProfileImageDaoImpl;
 	private RequestLogDaoImpl requestLogDaoImpl;
 	private ImprovementSuggestionDaoImpl improvementSuggestionDaoImpl;
+	private MessageFileDaoImpl messageFileDaoImpl;
 
 	private Database database;
 
@@ -104,6 +105,14 @@ public class DaoFactoryImpl implements DaoFactory {
 			improvementSuggestionDaoImpl = new ImprovementSuggestionDaoImpl(this);
 		}
 		return improvementSuggestionDaoImpl;
+	}
+
+	@Override
+	public MessageFileDaoImpl getMessageFileDao() {
+		if (messageFileDaoImpl == null) {
+			messageFileDaoImpl = new MessageFileDaoImpl(this);
+		}
+		return messageFileDaoImpl;
 	}
 
 }
