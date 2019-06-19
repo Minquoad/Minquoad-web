@@ -56,9 +56,9 @@ public abstract class FormField {
 		}
 	}
 
-	protected abstract boolean isValueEmpty();
+	public abstract boolean isValueEmpty();
 
-	protected abstract boolean isValueNull();
+	public abstract boolean isValueNull();
 
 	public abstract void collectValue(HttpServletRequest request);
 

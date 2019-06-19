@@ -176,3 +176,13 @@
 	width: 23px;
 	height: 22px;
 }
+
+.messageImageContainer {
+    width: 100%;
+    text-align: center;
+}
+
+.messageImage {
+    max-width: 100%;
+    max-height: 700px;
+}

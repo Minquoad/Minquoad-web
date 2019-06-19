@@ -23,9 +23,14 @@ public class FileDownload extends ImprovedHttpServlet {
 	private static final int DEFAULT_BUFFER_SIZE = 10240;
 
 	@Override
+	public boolean isFullPage() {
+		return false;
+	}
+
+	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
-		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request), getDaoFactory(request));
+		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request), getDaoFactory(request), getUnitFactory(request));
 	}
 
 	@Override

@@ -1,7 +1,66 @@
-function detectInputFileButtonTrigger() {
-	$('.inputFileTrigger>*:not([type="file"])').on("click", function(e) {
-		$(this).closest(".inputFileTrigger").find("[type='file']").trigger('click');
+function submitForm(form, successHandle = null) {
+
+	if (form.attr('enctype') === "multipart/form-data") {
+
+		$.ajax({
+			url : form.attr('action'),
+			type : 'POST',
+			data : new FormData(form.get(0)),
+			processData: false,
+			contentType: false
+
+		}).done(function(data) {
+			if (successHandle !== null) {
+				successHandle();
+			}
+
+		}).fail(function(err) {
+			handleAjaxError(err);
+			
+		});
+
+	} else {
+		$.ajax({
+			url : form.attr('action'),
+			type : 'POST',
+			data : form.serialize()
+
+		}).done(function(data) {
+			if (successHandle !== null) {
+				successHandle();
+			}
+
+		}).fail(function(err) {
+			handleAjaxError(err);
+			
+		});
+	}
+}
+
+function detectInputFileButtonTrigger(container) {
+
+	let triggers = container.find('.inputFileTrigger>*:not([type="file"])');
+
+	triggers.on("click", function(e) {
+		let input = $(this).closest(".inputFileTrigger").find("[type='file']");
+		input.trigger('click');
 	});
+
+	let inputs = triggers.closest(".inputFileTrigger").find("[type='file']");
+	inputs.on("change", function(e) {
+		let input = $(this);
+		let triggerContainer = $(this).closest(".inputFileTrigger");
+
+		if (input.val()) {
+			triggerContainer.find(".visibleWhenFull").show();
+			triggerContainer.find(".visibleWhenEmpty").hide();
+		} else {
+			triggerContainer.find(".visibleWhenFull").hide();
+			triggerContainer.find(".visibleWhenEmpty").show();
+		}
+	});
+
+	inputs.trigger("change");
 }
 
 function improveTextField(textField) {

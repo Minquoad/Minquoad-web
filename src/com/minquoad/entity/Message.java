@@ -66,6 +66,10 @@ public class Message {
 		return getEditedText() != null;
 	}
 
+	public boolean hasMessageFile() {
+		return getMessageFile() != null;
+	}
+
 	public MessageFile getMessageFile() {
 		return messageFile;
 	}

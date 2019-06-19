@@ -24,12 +24,12 @@ public class FormBooleanField extends FormField {
 	}
 
 	@Override
-	protected boolean isValueEmpty() {
+	public boolean isValueEmpty() {
 		return !isChecked();
 	}
 
 	@Override
-	protected boolean isValueNull() {
+	public boolean isValueNull() {
 		return false;
 	}
 

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
 import com.minquoad.frontComponent.form.field.valueChecker.PartValueChecker;
+import com.minquoad.tool.ImageTool;
 import com.minquoad.tool.http.PartTool;
 
 public class FormFileField extends FormField {
@@ -94,8 +95,14 @@ public class FormFileField extends FormField {
 		this.value = value;
 	}
 
-	public boolean hasFile() {
-		return getValue() != null && PartTool.hasFile(getValue());
+	public boolean isImage() {
+		if (!ImageTool.getPossibleImageExtentions().contains(getOriginalExtention())) {
+			return false;
+		}
+		if (!ImageTool.isImage(getValue())) {
+			return false;
+		}
+		return true;
 	}
 
 	public void addAllowedExtention(String extention) {
@@ -107,12 +114,12 @@ public class FormFileField extends FormField {
 	}
 
 	@Override
-	protected boolean isValueEmpty() {
+	public boolean isValueEmpty() {
 		return !PartTool.hasFile(getValue());
 	}
 
 	@Override
-	protected boolean isValueNull() {
+	public boolean isValueNull() {
 		return getValue() == null;
 	}
 

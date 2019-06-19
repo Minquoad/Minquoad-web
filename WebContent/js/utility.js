@@ -91,15 +91,73 @@ function improveQuotesReadability(originalText) {
 
 	if (firstQuotePosition != -1 && secondQuotePosition != -1) {
 		let newText = "";
-		newText += originalText.substring(0, firstQuotePosition);
+		newText += improveQuotesReadability(originalText.substring(0, firstQuotePosition));
 		newText += "\"";
 		newText += '<span class="italic">';
-		newText += originalText.substring(firstQuotePosition + 1, secondQuotePosition);
+		newText += improveQuotesReadability(originalText.substring(firstQuotePosition + 1, secondQuotePosition));
 		newText += '</span>';
 		newText += "\"";
 		newText += improveQuotesReadability(originalText.substring(secondQuotePosition + 1));
 		return newText;
 	}
 
+	return imporveUrlReadability(originalText);
+}
+
+function imporveUrlReadability(originalText) {
+
+	let urlStartPosition = originalText.indexOf("http://");
+	
+	let urlEndPosition = -1;
+	if (urlStartPosition != -1 && urlStartPosition != originalText.length) {
+		let urlEndPosition = originalText.substring(urlStartPosition).indexOf(' ');
+		if (urlEndPosition != -1) {
+			urlEndPosition = urlStartPosition + urlEndPosition;
+		}
+	}
+	if (urlStartPosition != -1 && urlEndPosition != -1) {
+		
+		let url = originalText.substring(urlStartPosition, urlEndPosition);
+
+		let newText = "";
+		newText += imporveUrlReadability(originalText.substring(0, urlStartPosition));
+		newText += '<a href="';
+		newText += url;
+		newText += '">';
+		newText += url;
+		newText += '</a>';
+		newText += imporveUrlReadability(originalText.substring(urlEndPosition));
+		return newText;
+	}
+	
+	return imporveSecureUrlReadability(originalText);
+}
+
+function imporveSecureUrlReadability(originalText) {
+
+	let urlStartPosition = originalText.indexOf("https://");
+	
+	let urlEndPosition = -1;
+	if (urlStartPosition != -1 && urlStartPosition != originalText.length) {
+		let urlEndPosition = originalText.substring(urlStartPosition).indexOf(" ");
+		if (urlEndPosition != -1) {
+			urlEndPosition = urlStartPosition + urlEndPosition;
+		}
+	}
+	if (urlStartPosition != -1 && urlEndPosition != -1) {
+		
+		let url = originalText.substring(urlStartPosition, urlEndPosition);
+
+		let newText = "";
+		newText += originalText.substring(0, urlStartPosition);
+		newText += '<a href="';
+		newText += url;
+		newText += '">';
+		newText += url;
+		newText += '</a>';
+		newText += imporveUrlReadability(originalText.substring(urlEndPosition));
+		return newText;
+	}
+	
 	return originalText;
 }

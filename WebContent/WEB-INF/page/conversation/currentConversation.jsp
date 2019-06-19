@@ -83,8 +83,11 @@
 				</div>
 			</div>
 			<div class="inputFileTrigger">
-				<div class="centererContainer">
-					<div class="totallyCenteredContainer">📁</div>
+				<div class="centererContainer visibleWhenEmpty">
+					<div class="totallyCenteredContainer">📁0</div>
+				</div>
+				<div class="centererContainer visibleWhenFull">
+					<div class="totallyCenteredContainer">📁1</div>
 				</div>
 				<input type="file" name="file" />
 			</div>

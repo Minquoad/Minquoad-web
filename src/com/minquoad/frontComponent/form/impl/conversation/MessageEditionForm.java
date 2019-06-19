@@ -37,9 +37,8 @@ public class MessageEditionForm extends Form {
 			}
 		});
 		this.addField(messageField);
-		
+
 		FormStringField newTextField = new FormStringField(NEW_TEXT_KEY);
-		newTextField.setEmptyPermitted(false);
 		this.addField(newTextField);
 	}
 

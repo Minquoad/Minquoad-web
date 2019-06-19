@@ -9,21 +9,13 @@ function detectImprovementSuggestionAdditionForm() {
 			event.preventDefault();
 
 			if (textarea.val() !== "") {
-				if (confirm("Are you shure you want to sent the message \"" 
-						+ textarea.val()
-						+ "\" to the website designer?")) {
-					$.ajax({
-						url : form.attr('action'),
-						type : "POST",
-						data : form.serialize(),
-						success : function() {
-							alert("Thank you :)");
-							textarea.val("");
-						},
-						error : function(err) {
-							handleAjaxError(err);
-						}
+				if (confirm("Are you shure you want to sent the message \"" + textarea.val() + "\" to the website designer?")) {
+
+					submitForm(form, function() {
+						alert("Thank you :)");
 					});
+
+					textarea.val("");
 				}
 			}
 		}

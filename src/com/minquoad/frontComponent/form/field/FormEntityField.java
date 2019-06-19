@@ -55,12 +55,12 @@ public class FormEntityField<Entity> extends FormField {
 	}
 
 	@Override
-	protected boolean isValueEmpty() {
+	public boolean isValueEmpty() {
 		return getStringValue().isEmpty();
 	}
 
 	@Override
-	protected boolean isValueNull() {
+	public boolean isValueNull() {
 		return getStringValue() == null;
 	}
 
@@ -92,7 +92,7 @@ public class FormEntityField<Entity> extends FormField {
 	}
 
 	protected void setStringValue(String stringValue) {
-		this.stringValue = stringValue.trim();
+		this.stringValue = stringValue;
 	}
 
 	protected Integer getValueAsInteger() {

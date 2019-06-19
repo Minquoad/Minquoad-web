@@ -78,8 +78,11 @@ public class Form {
 
 	public void submit() {
 		setSubmitted(true);
-		for (FormField field : getFiledsInOrder()) {
+		List<FormField> filedsInOrder = getFiledsInOrder();
+		for (FormField field : filedsInOrder) {
 			field.collectValue(request);
+		}
+		for (FormField field : filedsInOrder) {
 			field.computeValueProblems();
 		}
 	}

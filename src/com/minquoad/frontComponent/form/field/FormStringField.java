@@ -89,12 +89,12 @@ public class FormStringField extends FormField {
 	}
 
 	@Override
-	protected boolean isValueEmpty() {
+	public boolean isValueEmpty() {
 		return getValue().isEmpty();
 	}
 
 	@Override
-	protected boolean isValueNull() {
+	public boolean isValueNull() {
 		return getValue() == null;
 	}
 

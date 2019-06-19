@@ -20,6 +20,7 @@ public class ProtectedFileDaoImpl extends ImprovedDaoImpl<ProtectedFile> impleme
 	@Override
 	protected void initSubClassDaos() {
 		this.addSubClassDao(getDaoFactory().getUserProfileImageDao());
+		this.addSubClassDao(getDaoFactory().getMessageFileDao());
 	}
 
 	@Override

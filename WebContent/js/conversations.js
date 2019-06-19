@@ -28,12 +28,13 @@ function detectConversationResumes() {
 }
 
 function detectCurrentConversation() {
+
+	let current = $("#conversations #current");
+
 	formatDates();
 	borderTiles();
 	detectDynamicMenuTriggers();
-	detectInputFileButtonTrigger();
-
-	let current = $("#conversations #current");
+	detectInputFileButtonTrigger(current);
 
 	detectMessageEditionButtons(current);
 
@@ -47,23 +48,16 @@ function detectCurrentConversation() {
 
 	let form = current.find('#messageEditorForm');
 	let textarea = form.find('textarea');
+	let fileField = form.find('input[type="file"]');
 	let emojis = form.find('#sepcialChars .dynamicMenuItem span');
 	let button = form.find('[type="button"]');
 
 	let postMessage = function() {
-		if (textarea.val().trim() != "") {
-
-			let formData = form.serialize();
+		if (textarea.val().trim() != "" || fileField.val()) {
+			submitForm(form);
 			textarea.val("");
-			
-			$.ajax({
-				url : form.attr('action'),
-				type : "POST",
-				data : formData,
-				error : function(err) {
-					handleAjaxError(err);
-				}
-			});
+			fileField.val("");
+			fileField.trigger("change");
 		}
 	};
 
@@ -136,20 +130,8 @@ function detectMessageEditionButtons(container) {
 				let cancelButton = messageEditionForm.find('[type="button"][value="✖"]');
 
 				let postMessage = function() {
-					if (textarea.val().trim() != "") {
-
-						let data = messageEditionForm.serialize();
-						displayLoading(messageTextDiv);
-
-						$.ajax({
-							url : messageEditionForm.attr('action'),
-							type : "POST",
-							data : data,
-							error : function(err) {
-								handleAjaxError(err);
-							}
-						});
-					}
+					submitForm(messageEditionForm);
+					displayLoading(messageTextDiv);
 				};
 
 				cancelButton.on('click', function(e) {
@@ -219,6 +201,25 @@ $(document).ready(function() {
 				messageDiv += '<div class="messageText">';
 				messageDiv += improveReadability(toHtmlEquivalent(message.text));
 				messageDiv += '</div>';
+
+				let messageFile = message.messageFile;
+				if (message.messageFile != null) {
+					if (messageFile.image) {
+						messageDiv += '<div class="messageImageContainer">';
+						messageDiv += '<img src="';
+						messageDiv += messageImageDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += '" class="messageImage" />';
+						messageDiv += '<div>';
+					} else {
+						messageDiv += '<a class="messageFileLink" href="';
+						messageDiv += messageFileDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += '">';
+						messageDiv += "📁";
+						messageDiv += toHtmlEquivalent(messageFile.originalName);
+						messageDiv += '</a>';
+					}
+				}
+
 				messageDiv += '</div>';
 
 				let messages = current.find("#messages");

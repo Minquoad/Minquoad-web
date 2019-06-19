@@ -9,7 +9,7 @@ public class ImageDownload extends FileDownload {
 
 	@Override
 	public String getContentDisposition(ProtectedFile protectedFile) {
-		return "inline";
+		return "inline; filename=\"" + protectedFile.getOriginalName() + "\"";
 	}
 
 }

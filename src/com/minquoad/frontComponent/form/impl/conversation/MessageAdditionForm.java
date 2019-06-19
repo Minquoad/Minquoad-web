@@ -36,12 +36,20 @@ public class MessageAdditionForm extends Form {
 		this.addField(conversationField);
 
 		FormStringField textField = new FormStringField(TEXT_KEY);
-		textField.setEmptyPermitted(false);
 		this.addField(textField);
 
-		FormFileField fileField = new FormFileField(FILE_KEY);
-		fileField.setNullPermitted(true);
+		FormFileField fileField = new FormFileField(FILE_KEY) {
+			@Override
+			public void computeValueProblems() {
+				if (!textField.isValueNull() && textField.isValueEmpty()) {
+					this.setEmptyPermitted(false);
+				}
+				super.computeValueProblems();
+			}
+		};
 		this.addField(fileField);
+
+
 	}
 
 	public Conversation getConversation() {

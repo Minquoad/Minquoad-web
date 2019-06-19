@@ -90,7 +90,7 @@ public class AccountManagement extends ImprovedHttpServlet {
 					}
 
 					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.USER_PICTURE_KEY);
-					if (field.hasFile()) {
+					if (!field.isValueEmpty()) {
 
 						image = new UserProfileImage();
 						image.setOriginalName(field.getOriginalFileName());

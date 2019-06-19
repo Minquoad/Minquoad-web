@@ -14,7 +14,7 @@ $(document).ready(function() {
 
 	// detectConversationTriggers();
 
-	detectInputFileButtonTrigger();
+	detectInputFileButtonTrigger($("body"));
 
 	detectMovableDivs();
 

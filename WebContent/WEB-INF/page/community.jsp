@@ -16,7 +16,7 @@
 			<div class="totallyCenteredContainer tileContainer">
 
 				<c:forEach items="${ requestScope.users }" var="showedUser">
-					<c:if test="${showedUser != requestScope.user}">
+					<c:if test="${ showedUser != requestScope.user }">
 
 						<div class="borderedTile">
 
@@ -24,13 +24,13 @@
 								<c:out value="${ showedUser.nickname }" />
 								<div class="dynamicMenu">
 									<c:url value="/Profile" var="profileUrl">
-										<c:param name="userId" value="${showedUser.id}" />
+										<c:param name="userId" value="${ showedUser.id }" />
 									</c:url>
-									<a class="dynamicMenuItem" href="${profileUrl}"> Profile </a>
+									<a class="dynamicMenuItem" href="${ profileUrl }"> Profile </a>
 									<c:url value="/Conversations" var="conversationsUrl">
-										<c:param name="userId" value="${showedUser.id}" />
+										<c:param name="userId" value="${ showedUser.id }" />
 									</c:url>
-									<a class="dynamicMenuItem" href="${conversationsUrl}"> Conversation </a>
+									<a class="dynamicMenuItem" href="${ conversationsUrl }"> Conversation </a>
 								</div>
 							</div>
 

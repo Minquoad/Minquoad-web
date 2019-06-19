@@ -12,6 +12,8 @@
 	let messageEditionUrl = "<c:url value="/MessageEdition" />";
 	let updateButtonTitle = "<fmt:message key="updateButtonTitle" bundle="${ conversationsBundle }" />";
 	let cancelButtonTitle = "<fmt:message key="cancelButtonTitle" bundle="${ conversationsBundle }" />";
+	let messageFileDownloadUrl = "<c:url value="/FileDownload" />";
+	let messageImageDownloadUrl = "<c:url value="/ImageDownload" />";
 </script>
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
 </head>

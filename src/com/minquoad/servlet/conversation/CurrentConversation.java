@@ -47,8 +47,11 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		if (messages.size() != 0) {
 			ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
 			ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
-			conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
-			conversationAccessDao.persist(conversationAccess);
+			Message lastMessage = messages.get(messages.size() - 1);
+			if (lastMessage != conversationAccess.getLastSeenMessage()) {
+				conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
+				conversationAccessDao.persist(conversationAccess);
+			}
 		}
 
 		request.setAttribute("messages", messages);

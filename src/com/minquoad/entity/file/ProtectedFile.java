@@ -5,6 +5,7 @@ import java.io.File;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
 import com.minquoad.service.Deployment;
+import com.minquoad.unit.UnitFactory;
 
 public class ProtectedFile {
 
@@ -50,7 +51,7 @@ public class ProtectedFile {
 		return getOriginalName().substring(lastIndexOfDot+1);
 	}
 
-	public boolean isDownloadableForUser(User user, DaoFactory daoFactory) {
+	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
 		return true;
 	}
 

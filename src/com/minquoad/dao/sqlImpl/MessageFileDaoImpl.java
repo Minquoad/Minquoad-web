@@ -12,6 +12,7 @@ public class MessageFileDaoImpl extends ImprovedDaoImpl<MessageFile> implements 
 
 	@Override
 	protected void initEntityMembers() {
+		this.addBooleanEntityMember("image", MessageFile::isImage, MessageFile::setImage);
 	}
 
 	@Override

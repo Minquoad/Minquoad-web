@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
+import com.minquoad.entity.file.MessageFile;
+import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
-import com.minquoad.frontComponent.json.MessageAdditionJson;
+import com.minquoad.frontComponent.json.MessageJson;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.http.PartTool;
 
 @WebServlet("/MessageAddition")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -40,14 +43,28 @@ public class MessageAddition extends ImprovedHttpServlet {
 		form.submit();
 
 		if (form.isValide()) {
+
+			MessageFile messageFile = null;
+			
+			FormFileField fileField = form.getFileField();
+
+			if (!fileField.isValueEmpty()) {
+				messageFile = new MessageFile();
+				messageFile.setOriginalName(fileField.getOriginalFileName());
+				messageFile.setImage(fileField.isImage());
+				PartTool.saveInProtectedFile(fileField.getValue(), messageFile, getStorageManager());
+				getDaoFactory(request).getMessageFileDao().persist(messageFile);
+			}
+
 			Message message = new Message();
 			message.setText(form.getText());
 			message.setUser(getUser(request));
 			message.setConversation(form.getConversation());
 			message.setInstant(Instant.now());
+			message.setMessageFile(messageFile);
 			getDaoFactory(request).getMessageDao().persist(message);
 
-			String text = new MessageAdditionJson(message).toJson();
+			String text = new MessageJson(message, "MessageAddition").toJson();
 			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(form.getConversation());
 
 			sendTextToClients(

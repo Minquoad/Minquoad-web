@@ -39,6 +39,9 @@ public class ImprovementSuggestionAddition extends ImprovedHttpServlet {
 			suggestion.setUser(getUser(request));
 
 			getDaoFactory(request).getImprovementSuggestionDao().persist(suggestion);
+
+		} else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 	}
 
