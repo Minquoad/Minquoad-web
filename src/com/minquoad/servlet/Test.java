@@ -34,10 +34,19 @@ public class Test extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 
 		// System.out.println("requestURL = " + request.getRequestURL().toString());
+		// http://localhost:8080/Minquoad-web/Test
+
 		// System.out.println("queryString = " + request.getQueryString());
+		// null of name=value
+
 		// System.out.println("requestURI = " + request.getRequestURI());
+		// /Minquoad-web/Test
+
 		// System.out.println("servletPath = " + request.getServletPath());
+		// /Test
+
 		// System.out.println("contextPath = " + request.getContextPath());
+		// /Minquoad-web
 
 		ThingDao thingDao = getDaoFactory(request).getThingDao();
 

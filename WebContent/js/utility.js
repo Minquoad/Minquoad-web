@@ -161,3 +161,29 @@ function imporveSecureUrlReadability(originalText) {
 	
 	return originalText;
 }
+
+function getCurrentUrlParameter(name) {
+	let url = new URL(window.location);
+	return url.searchParams.get(name);
+}
+
+function removeAllCurrentUrlParameters() {
+	let location = window.location.toString();
+	
+	let argumentsStartKeyCharPos = location.indexOf("?");
+
+	if (argumentsStartKeyCharPos != -1) {
+		window.history.replaceState(null, null, location.substring(0, argumentsStartKeyCharPos));
+	}
+}
+
+function setParamToCurrentUrl(name, value) {
+	let url = new URL(window.location);
+	url.searchParams.set(name, value);
+	window.history.replaceState(null, null, url.toString());
+}
+
+
+
+
+

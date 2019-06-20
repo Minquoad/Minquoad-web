@@ -1,3 +1,108 @@
+$(document).ready(function() {
+
+	detectConversationResumes();
+
+	let conversationId = getCurrentUrlParameter("conversationId");
+	if (conversationId) {
+		$("#conversations #list .borderedTile").each(function() {
+			let conversationResume = $(this);
+			if (conversationResume.attr("data-conversationId") == conversationId) {
+				conversationResume.trigger("click");
+			}
+		});
+	} else {
+		$("#conversations #list .borderedTile:first-child").trigger("click");
+	}
+
+	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
+
+		if (event.enventKey == "MessageAddition") {
+			let message = event.data;
+			let current = $("#current");
+
+			if (current.attr("data-conversationid") == message.conversation) {
+
+				let messageDiv = "";
+				messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
+				messageDiv += message.id;
+				messageDiv += '" data-messageUserId="';
+				messageDiv += message.user.id;
+				messageDiv += '">';
+				messageDiv += '<div class="messageMetaData">';
+				messageDiv += '<div class="name">';
+				messageDiv += '<span style="color: ';
+				messageDiv += message.user.defaultColor;
+				messageDiv += '">';
+				messageDiv += toHtmlEquivalent(message.user.nickname);
+				messageDiv += '</span> :';
+				messageDiv += '</div>';
+				messageDiv += '<div>';
+
+				if (userId == message.user.id) {
+					messageDiv += '<span class="messageEditionButton">🖉</span>';
+				}
+
+				messageDiv += ' ';
+				messageDiv += '<span class="dateToFormat" data-format="1">';
+				messageDiv += message.instant;
+				messageDiv += '</span></div>';
+				messageDiv += '</div>';
+				messageDiv += '<div class="messageText">';
+				messageDiv += improveReadability(toHtmlEquivalent(message.text));
+				messageDiv += '</div>';
+
+				let messageFile = message.messageFile;
+				if (message.messageFile != null) {
+					if (messageFile.image) {
+						messageDiv += '<div class="messageImageContainer">';
+						messageDiv += '<img src="';
+						messageDiv += messageImageDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += '" class="messageImage" />';
+						messageDiv += '<div>';
+					} else {
+						messageDiv += '<a class="messageFileLink" href="';
+						messageDiv += messageFileDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += '">';
+						messageDiv += "📁";
+						messageDiv += toHtmlEquivalent(messageFile.originalName);
+						messageDiv += '</a>';
+					}
+				}
+
+				messageDiv += '</div>';
+
+				let messages = current.find("#messages");
+				messages.append(messageDiv);
+
+				formatDates();
+				borderTiles();
+
+				messagesDiv = document.getElementById("messages");
+				messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+				detectMessageEditionButtons(messages.children().last());
+			}
+
+		} else if (event.enventKey == "MessageEdition") {
+			let message = event.data;
+			let current = $("#current");
+
+			if (current.attr("data-conversationid") == message.conversation) {
+				let tile = current.find("[data-messageId=" + message.id + "]");
+
+				tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
+				tile.find(".messageText").html(improveReadability(toHtmlEquivalent(message.editedText)));
+
+				let name = tile.find(".name");
+				if (name.text().indexOf("🖉") == -1) {
+					name.append("🖉");
+				}
+			}
+		}
+	});
+
+});
+
 function detectConversationResumes() {
 
 	let currentContainer = $("#conversations #currentContainer");
@@ -11,13 +116,19 @@ function detectConversationResumes() {
 		displayLoading(currentContainer);
 		conversationResumeTile.find(".resume").addClass("selectedConversation");
 
+		let conversationId = conversationResumeTile.attr("data-conversationId");
+
+		removeAllCurrentUrlParameters();
+		setParamToCurrentUrl("conversationId", conversationId);
+
 		$.ajax({
 			type : "GET",
-			url : conversationResumeTile.attr("data-currentConversationUrl"),
+			url : currentConversationUrl + "?conversationId=" + conversationId,
 			dataType : "html",
 			success : function(data) {
 				currentContainer.empty();
 				currentContainer.append(data);
+
 				detectCurrentConversation();
 			},
 			error : function(err) {
@@ -159,100 +270,3 @@ function detectMessageEditionButtons(container) {
 		});
 	});
 }
-
-$(document).ready(function() {
-
-	detectConversationResumes();
-	$("#conversations #list .borderedTile .selectedConversation").trigger("click");
-
-	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
-
-		if (event.enventKey == "MessageAddition") {
-			let message = event.data;
-			let current = $("#current");
-
-			if (current.attr("data-conversationid") == message.conversation) {
-
-				let messageDiv = "";
-				messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
-				messageDiv += message.id;
-				messageDiv += '" data-messageUserId="';
-				messageDiv += message.user.id;
-				messageDiv += '">';
-				messageDiv += '<div class="messageMetaData">';
-				messageDiv += '<div class="name">';
-				messageDiv += '<span style="color: ';
-				messageDiv += message.user.defaultColor;
-				messageDiv += '">';
-				messageDiv += toHtmlEquivalent(message.user.nickname);
-				messageDiv += '</span> :';
-				messageDiv += '</div>';
-				messageDiv += '<div>';
-
-				if (userId == message.user.id) {
-					messageDiv += '<span class="messageEditionButton">🖉</span>';
-				}
-
-				messageDiv += ' ';
-				messageDiv += '<span class="dateToFormat" data-format="1">';
-				messageDiv += message.instant;
-				messageDiv += '</span></div>';
-				messageDiv += '</div>';
-				messageDiv += '<div class="messageText">';
-				messageDiv += improveReadability(toHtmlEquivalent(message.text));
-				messageDiv += '</div>';
-
-				let messageFile = message.messageFile;
-				if (message.messageFile != null) {
-					if (messageFile.image) {
-						messageDiv += '<div class="messageImageContainer">';
-						messageDiv += '<img src="';
-						messageDiv += messageImageDownloadUrl + "?id=" + messageFile.id;
-						messageDiv += '" class="messageImage" />';
-						messageDiv += '<div>';
-					} else {
-						messageDiv += '<a class="messageFileLink" href="';
-						messageDiv += messageFileDownloadUrl + "?id=" + messageFile.id;
-						messageDiv += '">';
-						messageDiv += "📁";
-						messageDiv += toHtmlEquivalent(messageFile.originalName);
-						messageDiv += '</a>';
-					}
-				}
-
-				messageDiv += '</div>';
-
-				let messages = current.find("#messages");
-				messages.append(messageDiv);
-
-				formatDates();
-				borderTiles();
-				messagesDiv = document.getElementById("messages");
-				messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-				detectMessageEditionButtons(messages.children().last());
-			}
-		}
-	});
-
-	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
-		
-		if (event.enventKey == "MessageEdition") {
-			let message = event.data;
-			let current = $("#current");
-
-			if (current.attr("data-conversationid") == message.conversation) {
-				let tile = current.find("[data-messageId=" + message.id + "]");
-
-				tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
-				tile.find(".messageText").html(improveReadability(toHtmlEquivalent(message.editedText)));
-
-				let name = tile.find(".name");
-				if (name.text().indexOf("🖉") == -1) {
-					name.append("🖉");
-				}
-			}
-		}
-	});
-
-});

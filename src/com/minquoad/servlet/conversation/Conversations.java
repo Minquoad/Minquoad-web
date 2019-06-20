@@ -23,6 +23,9 @@ public class Conversations extends ImprovedHttpServlet {
 
 	public static final String VIEW_PATH = "/WEB-INF/page/conversation/conversations.jsp";
 
+	public static final String CONVERSATION_ID_KEY = "conversationId";
+	public static final String USER_ID_KEY = "userId";
+
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		return getUser(request) != null;
@@ -36,38 +39,29 @@ public class Conversations extends ImprovedHttpServlet {
 
 		List<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
 
-		Conversation selectedConversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
-
-		if (selectedConversation == null) {
-			User user = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
-			if (user != null && user != getUser(request)) {
-				for (Conversation conversation : conversations) {
-					if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
-
-						List<User> conversationUsers = userDao.getConversationUsers(conversation);
-						for (User conversationUser : conversationUsers) {
-							if (conversationUser == user) {
-								selectedConversation = conversation;
-							}
+		User targetUser = getEntityFromIdParameter(request, USER_ID_KEY, DaoFactory::getUserDao);
+		if (targetUser != null && targetUser != getUser(request)) {
+			for (Conversation conversation : conversations) {
+				if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
+					List<User> conversationUsers = userDao.getConversationUsers(conversation);
+					for (User conversationUser : conversationUsers) {
+						if (conversationUser == targetUser) {
+							response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_ID_KEY + "=" + conversation.getId());
+							return;
 						}
 					}
 				}
-				if (selectedConversation == null) {
-					Conversation newConversation = new Conversation();
-					newConversation.setTitle("");
-					newConversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
-					conversationDao.insert(newConversation);
-					ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
-					conversationUnit.giveAccessToConversation(user, newConversation);
-					conversationUnit.giveAccessToConversation(getUser(request), newConversation);
-					conversations.add(newConversation);
-					selectedConversation = newConversation;
-				}
 			}
-		}
 
-		if (selectedConversation == null) {
-			selectedConversation = conversations.get(0);
+			Conversation conversation = new Conversation();
+			conversation.setTitle("");
+			conversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
+			conversationDao.insert(conversation);
+			ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
+			conversationUnit.giveAccessToConversation(targetUser, conversation);
+			conversationUnit.giveAccessToConversation(getUser(request), conversation);
+			response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_ID_KEY + "=" + conversation.getId());
+			return;
 		}
 
 		List<ConversationResume> conversationResumes = new LinkedList<ConversationResume>();
@@ -80,7 +74,6 @@ public class Conversations extends ImprovedHttpServlet {
 		}
 
 		request.setAttribute("conversationResumes", conversationResumes);
-		request.setAttribute("selectedConversation", selectedConversation);
 
 		forwardToView(request, response, VIEW_PATH);
 	}

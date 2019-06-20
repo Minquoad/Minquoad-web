@@ -1,3 +1,21 @@
+$(document).ready(function() {
+	detectNavDivs();
+
+	let currentSubPage = getCurrentUrlParameter("currentSubPage");
+
+	if (currentSubPage) {
+		$("#administration #nav div").each(function() {
+			let navDiv = $(this);
+			if (navDiv.attr("data-administrationSubPageName") == currentSubPage) {
+				navDiv.trigger("click");
+			}
+		});
+	} else {
+		$("#administration #nav div:first-child").trigger("click");
+	}
+	
+});
+
 function detectNavDivs() {
 
 	let currentSubPage = $("#administration #currentSubPage");
@@ -11,6 +29,9 @@ function detectNavDivs() {
 		displayLoading(currentSubPage);
 		navDiv.addClass("selectedSubPage");
 
+		removeAllCurrentUrlParameters();
+		setParamToCurrentUrl("currentSubPage", navDiv.attr("data-administrationSubPageName"));
+
 		$.ajax({
 			type : "GET",
 			url : navDiv.attr("data-administrationSubPageUrl"),
@@ -18,6 +39,7 @@ function detectNavDivs() {
 			success : function(data) {
 				currentSubPage.empty();
 				currentSubPage.append(data);
+
 				formatDates();
 				borderTiles();
 				detectDynamicMenuTriggers();
@@ -28,22 +50,3 @@ function detectNavDivs() {
 		});
 	});
 }
-
-$(document).ready(function() {
-	detectNavDivs();
-	
-	var currentSubPage = new URL(window.location).searchParams.get("currentSubPage");
-	
-	if (currentSubPage) {
-		let navDivs = $("#administration #nav div");
-		$("#administration #nav div").each(function() {
-			let navDiv = $(this);
-			if (navDiv.attr("data-administrationSubPageName") == currentSubPage) {
-				navDiv.trigger("click");
-			}
-		});
-	} else {
-		$("#administration #nav div:first-child").trigger("click");
-	}
-	
-});
