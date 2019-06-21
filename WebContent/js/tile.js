@@ -1,8 +1,6 @@
-function borderTiles() {
+function borderTiles(container) {
 
-	let borderedTiles = $(".borderedTile");
-
-	borderedTiles.each(function() {
+	container.find(".borderedTile").each(function() {
 		let borderedTile = $(this);
 
 		if (!borderedTile.children().first().hasClass("topTileBorderAdder")) {

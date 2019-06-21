@@ -17,10 +17,6 @@
 	cursor: pointer;
 }
 
-#conversations #list .selectedConversation {
-	background-color: rgb(28, 28, 28);
-}
-
 #conversations #list .conversationTitle {
 	height: 18px;
 }
@@ -28,6 +24,10 @@
 #conversations #list .participants {
 	color: grey;
 	font-size: 12px;
+}
+
+#conversations #list .selectedSubPage .resume {
+	background-color: rgb(28, 28, 28);
 }
 
 #conversations #currentContainer {

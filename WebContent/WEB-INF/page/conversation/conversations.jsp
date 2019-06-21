@@ -12,9 +12,6 @@
 	let messageEditionUrl = "<c:url value="/MessageEdition" />";
 	let updateButtonTitle = "<fmt:message key="updateButtonTitle" bundle="${ conversationsBundle }" />";
 	let cancelButtonTitle = "<fmt:message key="cancelButtonTitle" bundle="${ conversationsBundle }" />";
-	let messageFileDownloadUrl = "<c:url value="/FileDownload" />";
-	let messageImageDownloadUrl = "<c:url value="/ImageDownload" />";
-	let currentConversationUrl = "<c:url value="/CurrentConversation" />";
 </script>
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
 </head>
@@ -33,8 +30,12 @@
 					<c:forEach items="${ requestScope.conversationResumes }"
 						var="conversationResume">
 
+						<c:url value="/CurrentConversation" var="currentConversationUrl">
+							<c:param name="conversationId" value="${ conversationResume.conversation.id }" />
+						</c:url>
 						<div class="borderedTile"
-							data-conversationId="${ conversationResume.conversation.id }">
+							data-subPageUrl="${ currentConversationUrl }"
+							data-subPageKey="${ conversationResume.conversation.id }">
 							<div class="fullSize resume">
 								<div class="conversationTitle">
 

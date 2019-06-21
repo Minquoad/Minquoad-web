@@ -21,6 +21,8 @@ public class CurrentConversation extends ImprovedHttpServlet {
 
 	public static final String VIEW_PATH = "/WEB-INF/page/conversation/currentConversation.jsp";
 
+	public static final String CONVERSATION_ID_KEY = "conversationId";
+
 	@Override
 	public boolean isFullPage() {
 		return false;
@@ -29,7 +31,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
-		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		return getUser(request) != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
@@ -38,7 +40,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		Conversation conversation = getEntityFromIdParameter(request, "conversationId", DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		request.setAttribute("conversation", conversation);
 

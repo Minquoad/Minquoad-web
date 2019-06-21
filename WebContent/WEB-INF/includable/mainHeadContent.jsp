@@ -34,19 +34,20 @@
 	let typingAssistanceActivated = ${ empty requestScope.user ? true : requestScope.user.typingAssistanceActivated };
 	let userId = ${ empty requestScope.user ? "null" : requestScope.user.id };
 	let loadingImgUrl = '<c:url value="/img/loading.gif" />';
+	let fileDownloadUrl = "<c:url value="/FileDownload" />";
+	let imageDownloadUrl = "<c:url value="/ImageDownload" />";
 </script>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
 <script type="text/javascript" src="<c:url value="/js/ext/jquery.dynatable.js" />"></script>
 
-<script type="text/javascript" src="<c:url value="/js/utility.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/websocketsHandle.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/utility.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/dynamicMenu.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/tile.js" />"></script>
-<script type="text/javascript" src="<c:url value="/js/improvementSuggestionAddition.js" />"></script>
-<script type="text/javascript" src="<c:url value="/js/dateFormatter.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/ergonomics.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/form.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/movableDiv.js" />"></script>
-<script type="text/javascript" src="<c:url value="/js/conversationDiv.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/improvementSuggestionAddition.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/main.js" />"></script>
+<script type="text/javascript" src="<c:url value="/js/subPageMenu.js" />"></script>

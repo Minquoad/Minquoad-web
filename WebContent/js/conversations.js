@@ -1,18 +1,12 @@
 $(document).ready(function() {
 
-	detectConversationResumes();
-
-	let conversationId = getCurrentUrlParameter("conversationId");
-	if (conversationId) {
-		$("#conversations #list .borderedTile").each(function() {
-			let conversationResume = $(this);
-			if (conversationResume.attr("data-conversationId") == conversationId) {
-				conversationResume.trigger("click");
-			}
-		});
-	} else {
-		$("#conversations #list .borderedTile:first-child").trigger("click");
-	}
+	createSubPageMenu(
+			"conversationSubPageKey",
+			$("#conversations #list .borderedTile"),
+			$("#conversations #currentContainer"),
+			true,
+			detectCurrentConversation
+		);
 
 	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
 
@@ -56,12 +50,12 @@ $(document).ready(function() {
 					if (messageFile.image) {
 						messageDiv += '<div class="messageImageContainer">';
 						messageDiv += '<img src="';
-						messageDiv += messageImageDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += imageDownloadUrl + "?id=" + messageFile.id;
 						messageDiv += '" class="messageImage" />';
 						messageDiv += '<div>';
 					} else {
 						messageDiv += '<a class="messageFileLink" href="';
-						messageDiv += messageFileDownloadUrl + "?id=" + messageFile.id;
+						messageDiv += fileDownloadUrl + "?id=" + messageFile.id;
 						messageDiv += '">';
 						messageDiv += "📁";
 						messageDiv += toHtmlEquivalent(messageFile.originalName);
@@ -74,8 +68,7 @@ $(document).ready(function() {
 				let messages = current.find("#messages");
 				messages.append(messageDiv);
 
-				formatDates();
-				borderTiles();
+				executeMainActions(current.find("#messages .borderedTile ").last());
 
 				messagesDiv = document.getElementById("messages");
 				messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -100,52 +93,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-
 });
-
-function detectConversationResumes() {
-
-	let currentContainer = $("#conversations #currentContainer");
-	let conversationResumeTiles = $("#conversations #list .borderedTile");
-
-	conversationResumeTiles.on("click", function(e) {
-
-		let conversationResumeTile = $(this);
-
-		conversationResumeTiles.find(".resume").removeClass("selectedConversation");
-		displayLoading(currentContainer);
-		conversationResumeTile.find(".resume").addClass("selectedConversation");
-
-		let conversationId = conversationResumeTile.attr("data-conversationId");
-
-		removeAllCurrentUrlParameters();
-		setParamToCurrentUrl("conversationId", conversationId);
-
-		$.ajax({
-			type : "GET",
-			url : currentConversationUrl + "?conversationId=" + conversationId,
-			dataType : "html",
-			success : function(data) {
-				currentContainer.empty();
-				currentContainer.append(data);
-
-				detectCurrentConversation();
-			},
-			error : function(err) {
-				handleAjaxError(err);
-			}
-		});
-	});
-}
 
 function detectCurrentConversation() {
 
 	let current = $("#conversations #current");
-
-	formatDates();
-	borderTiles();
-	detectDynamicMenuTriggers();
-	detectInputFileButtonTrigger(current);
 
 	detectMessageEditionButtons(current);
 
@@ -194,7 +146,6 @@ function detectCurrentConversation() {
 			}
 		}
 	});
-
 }
 
 function detectMessageEditionButtons(container) {

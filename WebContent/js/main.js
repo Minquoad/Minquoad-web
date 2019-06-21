@@ -1,23 +1,22 @@
 $(document).ready(function() {
 
-	$('.table').dynatable({
+	executeMainActions($("body"));
+
+	detectImprovementSuggestionAdditionForm();
+
+});
+
+function executeMainActions(container) {
+
+	formatDates(container);
+	detectDynamicMenuTriggers();
+	borderTiles(container);
+	detectInputFileButtonTrigger(container);
+
+	container.find(".table").dynatable({
 		features : {
 			pushState : false
 		}
 	});
 
-	formatDates();
-
-	borderTiles();
-
-	detectDynamicMenuTriggers();
-
-	// detectConversationTriggers();
-
-	detectInputFileButtonTrigger($("body"));
-
-	detectMovableDivs();
-
-	detectImprovementSuggestionAdditionForm();
-
-});
+}
