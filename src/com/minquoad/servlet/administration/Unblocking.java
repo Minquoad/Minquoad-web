@@ -30,7 +30,7 @@ public class Unblocking extends ImprovedHttpServlet {
 
 		getDaoFactory(request).getUserDao().persist(target);
 
-		response.sendRedirect(request.getContextPath() + "/Administration?currentSubPage=UsersManagement");
+		response.sendRedirect(request.getContextPath() + "/Administration?" + Administration.ADMINISTRATION_SUB_PAGE_KEY_NAME + "=UsersManagement");
 	}
 
 }

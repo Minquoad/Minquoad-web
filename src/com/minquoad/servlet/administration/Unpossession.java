@@ -25,7 +25,7 @@ public class Unpossession extends ImprovedHttpServlet {
 		request.getSession().removeAttribute(CONTROLLING_ADMIN_ID_KEY);
 		request.removeAttribute(CONTROLLING_ADMIN_KEY);
 
-		response.sendRedirect(request.getContextPath() + "/Administration?currentSubPage=UsersManagement");
+		response.sendRedirect(request.getContextPath() + "/Administration?" + Administration.ADMINISTRATION_SUB_PAGE_KEY_NAME + "=UsersManagement");
 	}
 
 }

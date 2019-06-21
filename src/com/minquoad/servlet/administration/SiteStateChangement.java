@@ -24,7 +24,7 @@ public class SiteStateChangement extends ImprovedHttpServlet {
 
 		getDeployment().setOpen("true".equals(request.getParameter(OPEN_KEY)));
 
-		response.sendRedirect(request.getContextPath() + "/Administration?currentSubPage=SiteManagement");
+		response.sendRedirect(request.getContextPath() + "/Administration?" + Administration.ADMINISTRATION_SUB_PAGE_KEY_NAME + "=SiteManagement");
 	}
 	
 }

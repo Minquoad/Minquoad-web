@@ -15,6 +15,8 @@ public class Administration extends ImprovedHttpServlet {
 
 	public static final String VIEW_PATH = "/WEB-INF/page/administration/administration.jsp";
 
+	public static final String ADMINISTRATION_SUB_PAGE_KEY_NAME = "administrationSubPageKey";
+	
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
