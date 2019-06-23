@@ -27,136 +27,172 @@ function formatDates(container) {
 
 }
 
-function improveReadability(originalText) {
+function improveReadability(originalHtml) {
+	let newHtml = improveReadabilityWithParameter(
+			originalHtml,
+			"\"",
+			"\"",
+			"italic",
+			false
+			);
 
-	if (!readabilityImprovementActivated) {
-		return originalText;
-	}
+	newHtml = improveReadabilityWithParameter(
+			newHtml,
+			"(",
+			")",
+			"parenthesis",
+			true
+			);
 
-	let parenthesisOpeningPosition = originalText.indexOf("(");
+	newHtml = imporveUrlReadability(newHtml);
 
-	if (parenthesisOpeningPosition != -1) {
-		let parenthesisClosingPosition = -1;
+	return newHtml;
+}
 
-		let nesting = 0;
-		for (let i = parenthesisOpeningPosition + 1; i < originalText.length && parenthesisClosingPosition == -1; i++) {
-			let char = originalText.charAt(i);
-			if (char == ")") {
-				if (nesting == 0) {
-					parenthesisClosingPosition = i;
-				} else {
-					nesting--;
-				}
-			}
-			if (char == "(") {
+function improveReadabilityWithParameter(originalHtml, openingChar, closingChar, spanClass, separatorCharsIncluded) {
+
+	let openingCharPosition = -1;
+
+	let nesting = 0;
+	for (let i = 0; i < originalHtml.length && openingCharPosition == -1; i++) {
+		let char = originalHtml.charAt(i);
+		if (nesting == 0 && char == openingChar) {
+			openingCharPosition = i;
+		} else {
+			if (char == "<") {
 				nesting++;
 			}
+			if (char == ">") {
+				nesting--;
+			}
+		}
+	}
+
+	if (openingCharPosition != -1) {
+
+		let closingCharPosition = -1;
+
+		nesting = 0;
+		for (let i = openingCharPosition + 1; i < originalHtml.length && closingCharPosition == -1; i++) {
+			let char = originalHtml.charAt(i);
+			if (nesting == 0 && char == closingChar) {
+				closingCharPosition = i;
+			} else {
+				if (char == "(" || char == "<") {
+					nesting++;
+				}
+				if (char == ")" || char == ">") {
+					nesting--;
+					if (nesting < 0) {
+						
+						let newHtml = "";
+						newHtml += originalHtml.substring(0, i + 1);
+						newHtml += improveReadabilityWithParameter(
+								originalHtml.substring(i + 1),
+								openingChar,
+								closingChar,
+								spanClass,
+								separatorCharsIncluded
+								);
+						return newHtml;
+					}
+				}
+				
+			}
 		}
 
-		if (parenthesisClosingPosition != -1) {
-			let newText = "";
-			newText += improveReadability(originalText.substring(0, parenthesisOpeningPosition));
-			newText += '<span class="parenthesis">';
-			newText += "(";
-			newText += improveReadability(originalText.substring(parenthesisOpeningPosition + 1, parenthesisClosingPosition));
-			newText += ")";
-			newText += '</span>';
-			newText += improveReadability(originalText.substring(parenthesisClosingPosition + 1));
-			return newText;
+		if (closingCharPosition != -1) {
+			let newHtml = "";
+			newHtml += originalHtml.substring(0, openingCharPosition);
+			if (!separatorCharsIncluded) {
+				newHtml += openingChar;
+			}
+			newHtml += '<span class="' + spanClass + '">';
+			if (separatorCharsIncluded) {
+				newHtml += openingChar;
+			}
+			newHtml += improveReadabilityWithParameter(
+					originalHtml.substring(openingCharPosition + 1, closingCharPosition),
+					openingChar,
+					closingChar,
+					spanClass,
+					separatorCharsIncluded
+					);
+			if (separatorCharsIncluded) {
+				newHtml += closingChar;
+			}
+			newHtml += '</span>';
+			if (!separatorCharsIncluded) {
+				newHtml += closingChar;
+			}
+			newHtml += improveReadabilityWithParameter(
+					originalHtml.substring(closingCharPosition + 1),
+					openingChar,
+					closingChar,
+					spanClass,
+					separatorCharsIncluded
+					);
+			return newHtml;
 
 		} else {
-			let newText = "";
-			newText += improveReadability(originalText.substring(0, parenthesisOpeningPosition));
-			newText += "(";
-			newText += improveReadability(originalText.substring(parenthesisOpeningPosition + 1));
-			return newText;
+			let newHtml = "";
+			newHtml += originalHtml.substring(0, openingCharPosition + 1);
+			newHtml += improveReadabilityWithParameter(
+					originalHtml.substring(openingCharPosition + 1),
+					openingChar,
+					closingChar,
+					spanClass,
+					separatorCharsIncluded
+					);
+			return newHtml;
 		}
 
+		
+		
 	} else {
-		return improveQuotesReadability(originalText);
+		return originalHtml;
 	}
 }
 
-function improveQuotesReadability(originalText) {
-
-	let firstQuotePosition = originalText.indexOf("\"");
-	let secondQuotePosition = -1;
-	if (firstQuotePosition != -1 && firstQuotePosition + 1 != originalText.length) {
-		let secondQuoteRelativePosition = originalText.substring(firstQuotePosition + 1).indexOf("\"");
-		if (secondQuoteRelativePosition != -1) {
-			secondQuotePosition = firstQuotePosition + 1 + secondQuoteRelativePosition;
-		}
-	}
-
-	if (firstQuotePosition != -1 && secondQuotePosition != -1) {
-		let newText = "";
-		newText += improveQuotesReadability(originalText.substring(0, firstQuotePosition));
-		newText += "\"";
-		newText += '<span class="italic">';
-		newText += improveQuotesReadability(originalText.substring(firstQuotePosition + 1, secondQuotePosition));
-		newText += '</span>';
-		newText += "\"";
-		newText += improveQuotesReadability(originalText.substring(secondQuotePosition + 1));
-		return newText;
-	}
-
-	return imporveUrlReadability(originalText);
+function imporveUrlReadability(originalHtml) {
+	return imporveUrlWithProtocolReadability(
+			imporveUrlWithProtocolReadability(
+					originalHtml,
+					"http"
+					),
+				"https"
+			);
 }
 
-function imporveUrlReadability(originalText) {
+function imporveUrlWithProtocolReadability(originalHtml, protocol) {
 
-	let urlStartPosition = originalText.indexOf("http://");
-	
-	let urlEndPosition = -1;
-	if (urlStartPosition != -1 && urlStartPosition != originalText.length) {
-		let urlEndPosition = originalText.substring(urlStartPosition).indexOf(' ');
-		if (urlEndPosition != -1) {
-			urlEndPosition = urlStartPosition + urlEndPosition;
+	let urlStartPosition = originalHtml.indexOf(protocol + "://");
+
+	if (urlStartPosition == -1) {
+		return originalHtml;
+	}
+
+	let urlEndPosition = urlStartPosition;
+	let founded = false;
+	while (urlEndPosition < originalHtml.length && founded == false) {
+		let char = originalHtml.charAt(urlEndPosition);
+		if (char == " " || char == "\n") {
+			founded = true;
+		} else {
+			urlEndPosition++;
 		}
 	}
-	if (urlStartPosition != -1 && urlEndPosition != -1) {
-		
-		let url = originalText.substring(urlStartPosition, urlEndPosition);
 
-		let newText = "";
-		newText += imporveUrlReadability(originalText.substring(0, urlStartPosition));
-		newText += '<a href="';
-		newText += url;
-		newText += '">';
-		newText += url;
-		newText += '</a>';
-		newText += imporveUrlReadability(originalText.substring(urlEndPosition));
-		return newText;
-	}
-	
-	return imporveSecureUrlReadability(originalText);
-}
+	let url = originalHtml.substring(urlStartPosition, urlEndPosition);
 
-function imporveSecureUrlReadability(originalText) {
+	let newHtml = "";
+	newHtml += originalHtml.substring(0, urlStartPosition);
+	newHtml += '<a href="';
+	newHtml += url;
+	newHtml += '">';
+	newHtml += url;
+	newHtml += '</a>';
+	newHtml += imporveUrlReadability(originalHtml.substring(urlEndPosition));
+	return newHtml;
 
-	let urlStartPosition = originalText.indexOf("https://");
-	
-	let urlEndPosition = -1;
-	if (urlStartPosition != -1 && urlStartPosition != originalText.length) {
-		let urlEndPosition = originalText.substring(urlStartPosition).indexOf(" ");
-		if (urlEndPosition != -1) {
-			urlEndPosition = urlStartPosition + urlEndPosition;
-		}
-	}
-	if (urlStartPosition != -1 && urlEndPosition != -1) {
-		
-		let url = originalText.substring(urlStartPosition, urlEndPosition);
-
-		let newText = "";
-		newText += originalText.substring(0, urlStartPosition);
-		newText += '<a href="';
-		newText += url;
-		newText += '">';
-		newText += url;
-		newText += '</a>';
-		newText += imporveUrlReadability(originalText.substring(urlEndPosition));
-		return newText;
-	}
-	
-	return originalText;
 }
