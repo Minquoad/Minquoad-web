@@ -132,7 +132,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					if ((user == null || !user.isAdmin())
 							&& !request.getServletPath().equals("/BlockedSite")
 							&& !request.getServletPath().equals("/InLoging")
-							&& !request.getServletPath().equals("/OutLoging")) {
+							&& !request.getServletPath().equals("/OutLoging")
+							&& !request.getServletPath().equals("/LanguageChangement")) {
 
 						if (isFullPage()) {
 							response.sendRedirect(request.getContextPath() + "/BlockedSite");

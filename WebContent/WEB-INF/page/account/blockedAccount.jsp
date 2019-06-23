@@ -12,7 +12,16 @@
 	<div id="mainContainer">
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer padded centeredText redText">
-				<fmt:message key="AccountBlocked" bundle="${ blockedAccountBundle }" />
+				<div>⛔</div>
+				<div class="padded">
+					<fmt:message key="AccountBlocked" bundle="${ blockedAccountBundle }" />
+				</div>
+				<div>
+					<fmt:message key="YourAccountWillBeUnlockedOnThe"
+						bundle="${ blockedAccountBundle }" />
+					<span class="dateToFormat" data-format="1"><c:out
+							value="${ requestScope.user.unblockInstant }" /></span>
+				</div>
 			</div>
 		</div>
 	</div>

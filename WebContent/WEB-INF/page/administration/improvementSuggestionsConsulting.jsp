@@ -19,9 +19,13 @@
 								<td>
 									<c:out value="${ improvementSuggestion.user.nickname }" />
 								</td>
-								<td class="interpretLineBreak"><c:out value="${ improvementSuggestion.text }" /></td>
+								<td class="interpretLineBreak">
+									<c:out value="${ improvementSuggestion.text }" />
+								</td>
 								<td>
-									<c:out value="${ improvementSuggestion.instant }" />
+									<span class="dateToFormat" data-format="1"> <c:out
+											value="${ improvementSuggestion.instant }" />
+									</span>
 								</td>
 							</tr>
 						</c:forEach>

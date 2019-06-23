@@ -32,11 +32,15 @@
 								<td>
 									<c:out value="${ loopUser.nickname }" />
 								</td>
-								<td class="dateToFormat" data-format="1">
-									<c:out value="${ loopUser.registrationInstant }" />
+								<td>
+									<span class="dateToFormat" data-format="1"> <c:out
+											value="${ loopUser.registrationInstant }" />
+									</span>
 								</td>
-								<td class="dateToFormat" data-format="1">
-									<c:out value="${ loopUser.lastActivityInstant }" />
+								<td>
+									<span class="dateToFormat" data-format="1"> <c:out
+											value="${ loopUser.lastActivityInstant }" />
+									</span>
 								</td>
 								<td>
 									<c:if test="${ requestScope.user.canAdminister(loopUser) }">
