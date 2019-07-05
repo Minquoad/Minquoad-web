@@ -102,13 +102,8 @@ public class UserParametersAlterationForm extends Form {
 		return field.getValue();
 	}
 
-	public String getdefaultColor() {
-		FormStringField field = (FormStringField) this.getField(DEFAULT_COLOR_KEY);
-		return field.getValue();
-	}
-
 	public Integer getDefaultColor() {
-		FormStringField field = (FormStringField) this.getField(DEFAULT_COLOR_KEY);
+		FormColorField field = (FormColorField) this.getField(DEFAULT_COLOR_KEY);
 		return field.getValueAsInteger();
 	}
 

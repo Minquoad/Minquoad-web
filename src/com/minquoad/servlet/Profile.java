@@ -14,6 +14,8 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @WebServlet("/Profile")
 public class Profile extends ImprovedHttpServlet {
 
+	public static final String TARGET_USER_ID_KEY = "targetUserId";
+
 	public static final String VIEW_PATH = "/WEB-INF/page/profile.jsp";
 
 	@Override
@@ -25,7 +27,7 @@ public class Profile extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		User user = getEntityFromIdParameter(request, "userId", DaoFactory::getUserDao);
+		User user = getEntityFromIdParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
 
 		if (user != null) {
 			request.setAttribute("showedUser", user);

@@ -4,6 +4,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+<link rel="stylesheet" type="text/css" href="<c:url value="/css/profile.css" />" />
 <fmt:setBundle basename="resources.Profile" var="profileBundle" />
 </head>
 <body>
@@ -16,24 +17,30 @@
 		<div class="scrollableContainer centererContainer">
 			<div class="totallyCenteredContainer">
 
-				<p>
-					<c:out value="${ requestScope.showedUser.nickname }" />
-				</p>
+				<div id="mainTitle">
+					<div class="inlineBlock">
+						<c:set var="userProfileImage"
+							value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImage(requestScope.showedUser) }"
+							scope="page" />
 
-				<c:set var="userProfileImage"
-					value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImage(requestScope.showedUser) }"
-					scope="page" />
+						<div class="userProfileImageContainer">
+							<c:if test="${not empty userProfileImage}">
+								<c:url value="/ImageDownload" var="imageDownloadUrl">
+									<c:param name="id" value="${ userProfileImage.id }" />
+								</c:url>
+								<img src="${imageDownloadUrl}" class="userProfileImage">
+							</c:if>
+						</div>
 
-				<c:if test="${not empty userProfileImage}">
-
-					<c:url value="/ImageDownload" var="imageDownloadUrl">
-						<c:param name="id" value="${ userProfileImage.id }" />
-					</c:url>
-					<div class="userProfileImageContainer">
-						<img src="${imageDownloadUrl}" class="userProfileImage">
 					</div>
 
-				</c:if>
+					<div id="nickname" class="inlineBlock name"
+						style="color: ${ showedUser.getDefaultColorAsHtmlValue() };">
+						<c:out value="${ requestScope.showedUser.nickname }" />
+					</div>
+				</div>
+
+
 
 			</div>
 		</div>

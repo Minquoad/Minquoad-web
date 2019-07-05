@@ -6,7 +6,7 @@ function toHtmlEquivalent(original) {
 
 function displayLoading(element) {
 	let html = "";
-	html += '<div class="centererContainer fullSize loadingDiv">';
+	html += '<div style="cursor: wait;" class="centererContainer fullSize loadingDiv">';
 	html += '<div class="totallyCenteredContainer">';
 	html += '<img height="64" width="64" src="' + loadingImgUrl + '" />';
 	html += '</div>';

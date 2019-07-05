@@ -1,0 +1,8 @@
+#mainTitle>div {
+	vertical-align: middle;
+}
+
+#mainTitle #nickname {
+	font-size: 20px;
+	padding-left: 10px;
+}

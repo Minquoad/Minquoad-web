@@ -33,20 +33,20 @@ public abstract class ImageTool {
 
 	public static boolean isImage(InputStream input) {
 		try {
-	        ImageIO.read(input).toString();
-	        return true;
-	    } catch (Exception e) {
-	        return false;
-	    }
+			ImageIO.read(input).toString();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public static boolean isImage(File file) {
 		try {
-	        ImageIO.read(file).toString();
-	        return true;
-	    } catch (Exception e) {
-	        return false;
-	    }
+			ImageIO.read(file).toString();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	public enum Extention {

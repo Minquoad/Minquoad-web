@@ -19,7 +19,6 @@ function formatDates(container) {
 			}
 
 			dateToFormat.text(date.toLocaleDateString(language, options));
-
 		}
 
 		dateToFormat.removeClass("dateToFormat");
@@ -28,21 +27,28 @@ function formatDates(container) {
 }
 
 function improveReadability(originalHtml) {
-	let newHtml = improveReadabilityWithParameter(
-			originalHtml,
-			"\"",
-			"\"",
-			"italic",
-			false
-			);
 
-	newHtml = improveReadabilityWithParameter(
-			newHtml,
-			"(",
-			")",
-			"parenthesis",
-			true
-			);
+	let newHtml = originalHtml;
+	
+	if (readabilityImprovementActivated) {
+	
+		newHtml = improveReadabilityWithParameter(
+				newHtml,
+				"\"",
+				"\"",
+				"italic",
+				false
+				);
+	
+		newHtml = improveReadabilityWithParameter(
+				newHtml,
+				"(",
+				")",
+				"parenthesis",
+				true
+				);
+
+	}
 
 	newHtml = imporveUrlReadability(newHtml);
 

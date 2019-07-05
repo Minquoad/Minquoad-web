@@ -16,6 +16,7 @@ public class DaoFactoryImpl implements DaoFactory {
 	private RequestLogDaoImpl requestLogDaoImpl;
 	private ImprovementSuggestionDaoImpl improvementSuggestionDaoImpl;
 	private MessageFileDaoImpl messageFileDaoImpl;
+	private ConsiderationDaoImpl considerationDaoImpl;
 
 	private Database database;
 
@@ -113,6 +114,14 @@ public class DaoFactoryImpl implements DaoFactory {
 			messageFileDaoImpl = new MessageFileDaoImpl(this);
 		}
 		return messageFileDaoImpl;
+	}
+
+	@Override
+	public ConsiderationDaoImpl getConsiderationDao() {
+		if (considerationDaoImpl == null) {
+			considerationDaoImpl = new ConsiderationDaoImpl(this);
+		}
+		return considerationDaoImpl;
 	}
 
 }

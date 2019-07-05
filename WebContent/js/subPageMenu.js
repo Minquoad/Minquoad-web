@@ -10,31 +10,34 @@ function createSubPageMenu(
 
 		let trigger = $(this);
 
-		triggers.removeClass("selectedSubPage");
-		displayLoading(container);
-		trigger.addClass("selectedSubPage");
+		let selectedSubPageClass = "selectedSubPage";
 
-		let subPageKey = trigger.attr("data-subPageKey");
-		setParamToCurrentUrl(argumentName, subPageKey);
-
-		$.ajax({
-			type : "GET",
-			url : trigger.attr("data-subPageUrl"),
-			dataType : "html",
-			success : function(data) {
-				container.empty();
-				container.append(data);
-
-				executeMainActions(container);
-				if (listener != null) {
-					listener();
+		if (!trigger.hasClass(selectedSubPageClass)) {
+			triggers.removeClass(selectedSubPageClass);
+			displayLoading(container);
+			trigger.addClass(selectedSubPageClass);
+			
+			let subPageKey = trigger.attr("data-subPageKey");
+			setParamToCurrentUrl(argumentName, subPageKey);
+	
+			$.ajax({
+				type : "GET",
+				url : trigger.attr("data-subPageUrl"),
+				dataType : "html",
+				success : function(data) {
+					container.empty();
+					container.append(data);
+	
+					executeMainActions(container);
+					if (listener != null) {
+						listener();
+					}
+				},
+				error : function(err) {
+					handleAjaxError(err);
 				}
-			},
-			error : function(err) {
-				handleAjaxError(err);
-			}
-		});
-		
+			});
+		}
 	});
 
 

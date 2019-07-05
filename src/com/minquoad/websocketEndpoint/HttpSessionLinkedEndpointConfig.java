@@ -7,9 +7,9 @@ import javax.websocket.server.ServerEndpointConfig;
 
 public class HttpSessionLinkedEndpointConfig extends ServerEndpointConfig.Configurator {
 
-    @Override
-    public void modifyHandshake(ServerEndpointConfig config, HandshakeRequest request, HandshakeResponse response) {
-        config.getUserProperties().put(HttpSession.class.getName(), request.getHttpSession());
-    }
+	@Override
+	public void modifyHandshake(ServerEndpointConfig config, HandshakeRequest request, HandshakeResponse response) {
+		config.getUserProperties().put(HttpSession.class.getName(), request.getHttpSession());
+	}
 
 }

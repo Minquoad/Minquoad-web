@@ -8,7 +8,7 @@ public class Consideration {
 	private Long id;
 	private User consideringUser;
 	private User consideredUser;
-	private String statuString;
+	private Integer status = STATUS_FIEND;
 	private Integer perceptionColor;
 
 	public Long getId() {
@@ -29,17 +29,17 @@ public class Consideration {
 	public void setConsideredUser(User consideredUser) {
 		this.consideredUser = consideredUser;
 	}
-	public String getStatuString() {
-		return statuString;
-	}
-	public void setStatuString(String statuString) {
-		this.statuString = statuString;
-	}
 	public Integer getPerceptionColor() {
 		return perceptionColor;
 	}
 	public void setPerceptionColor(Integer perceptionColor) {
 		this.perceptionColor = perceptionColor;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 }

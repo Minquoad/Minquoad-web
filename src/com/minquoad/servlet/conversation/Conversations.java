@@ -23,8 +23,8 @@ public class Conversations extends ImprovedHttpServlet {
 
 	public static final String VIEW_PATH = "/WEB-INF/page/conversation/conversations.jsp";
 
-	public static final String CONVERSATION_ID_KEY = "conversationId";
-	public static final String USER_ID_KEY = "userId";
+	public static final String CONVERSATION_SUB_PAGE_KEY = "conversationSubPageKey";
+	public static final String TARGET_USER_ID_KEY = "targetUserId";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -39,14 +39,14 @@ public class Conversations extends ImprovedHttpServlet {
 
 		List<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
 
-		User targetUser = getEntityFromIdParameter(request, USER_ID_KEY, DaoFactory::getUserDao);
+		User targetUser = getEntityFromIdParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
 		if (targetUser != null && targetUser != getUser(request)) {
 			for (Conversation conversation : conversations) {
 				if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
 					List<User> conversationUsers = userDao.getConversationUsers(conversation);
 					for (User conversationUser : conversationUsers) {
 						if (conversationUser == targetUser) {
-							response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_ID_KEY + "=" + conversation.getId());
+							response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_SUB_PAGE_KEY + "=" + conversation.getId());
 							return;
 						}
 					}
@@ -60,7 +60,7 @@ public class Conversations extends ImprovedHttpServlet {
 			ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
 			conversationUnit.giveAccessToConversation(targetUser, conversation);
 			conversationUnit.giveAccessToConversation(getUser(request), conversation);
-			response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_ID_KEY + "=" + conversation.getId());
+			response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_SUB_PAGE_KEY + "=" + conversation.getId());
 			return;
 		}
 

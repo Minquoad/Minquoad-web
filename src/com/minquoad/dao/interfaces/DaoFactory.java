@@ -13,5 +13,6 @@ public interface DaoFactory {
 	public RequestLogDao getRequestLogDao();
 	public ImprovementSuggestionDao getImprovementSuggestionDao();
 	public MessageFileDao getMessageFileDao();
+	public ConsiderationDao getConsiderationDao();
 
 }

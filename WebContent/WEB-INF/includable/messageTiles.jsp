@@ -14,8 +14,14 @@
 	</c:if>>
 		<div class="messageMetaData">
 			<div class="name">
-				<span style="color: ${ message.user.getDefaultColorAsHtmlValue() };"><c:out
-						value="${ message.user.nickname }" /></span> :
+				<c:url value="/Profile" var="profileUrl">
+					<c:param name="targetUserId" value="${ message.user.id }" />
+				</c:url>
+				<a href="${ profileUrl }">
+					<span style="color: ${ message.user.getDefaultColorAsHtmlValue() };">
+						<c:out value="${ message.user.nickname }" />
+					</span> :
+				</a>
 				<c:if test="${ message.edited }">
 					🖉
 				</c:if>
@@ -51,7 +57,8 @@
 					<c:param name="id" value="${ message.messageFile.id }" />
 				</c:url>
 				<a class="messageFileLink" href="${ messageFileUrl }">
-					📁<c:out value="${ message.messageFile.originalName }" />
+					📁
+					<c:out value="${ message.messageFile.originalName }" />
 				</a>
 			</c:if>
 		</c:if>

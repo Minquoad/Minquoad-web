@@ -24,11 +24,15 @@ $(document).ready(function() {
 				messageDiv += '">';
 				messageDiv += '<div class="messageMetaData">';
 				messageDiv += '<div class="name">';
+				messageDiv += '<a href="';
+				messageDiv += profileUrl + "?targetUserId=" + message.user.id;
+				messageDiv += '">';
 				messageDiv += '<span style="color: ';
 				messageDiv += message.user.defaultColor;
-				messageDiv += '">';
+				messageDiv += '"> ';
 				messageDiv += toHtmlEquivalent(message.user.nickname);
-				messageDiv += '</span> :';
+				messageDiv += '</span> : ';
+				messageDiv += '</a>';
 				messageDiv += '</div>';
 				messageDiv += '<div>';
 
@@ -36,10 +40,10 @@ $(document).ready(function() {
 					messageDiv += '<span class="messageEditionButton">🖉</span>';
 				}
 
-				messageDiv += ' ';
-				messageDiv += '<span class="dateToFormat" data-format="1">';
+				messageDiv += ' <span class="dateToFormat" data-format="1">';
 				messageDiv += message.instant;
-				messageDiv += '</span></div>';
+				messageDiv += '</span> ';
+				messageDiv += '</div>';
 				messageDiv += '</div>';
 				messageDiv += '<div class="messageText">';
 				messageDiv += improveReadability(toHtmlEquivalent(message.text));
@@ -68,12 +72,14 @@ $(document).ready(function() {
 				let messages = current.find("#messages");
 				messages.append(messageDiv);
 
-				executeMainActions(current.find("#messages .borderedTile ").last());
+				let lastMessage = messages.children().last();
+
+				executeMainActions(lastMessage);
 
 				messagesDiv = document.getElementById("messages");
 				messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-				detectMessageEditionButtons(messages.children().last());
+				detectMessageEditionButtons(lastMessage);
 			}
 
 		} else if (event.enventKey == "MessageEdition") {

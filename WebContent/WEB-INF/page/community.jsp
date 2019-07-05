@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,16 +22,20 @@
 						<div class="borderedTile">
 
 							<div class="dynamicMenuTrigger padded">
-								<c:out value="${ showedUser.nickname }" />
+								<span class="name"
+									style="color: ${ showedUser.getDefaultColorAsHtmlValue() };">
+									<c:out value="${ showedUser.nickname }" />
+								</span>
 								<div class="dynamicMenu">
 									<c:url value="/Profile" var="profileUrl">
-										<c:param name="userId" value="${ showedUser.id }" />
+										<c:param name="targetUserId" value="${ showedUser.id }" />
 									</c:url>
 									<a class="dynamicMenuItem" href="${ profileUrl }"> Profile </a>
 									<c:url value="/Conversations" var="conversationsUrl">
-										<c:param name="userId" value="${ showedUser.id }" />
+										<c:param name="targetUserId" value="${ showedUser.id }" />
 									</c:url>
-									<a class="dynamicMenuItem" href="${ conversationsUrl }"> Conversation </a>
+									<a class="dynamicMenuItem" href="${ conversationsUrl }">
+										Conversation </a>
 								</div>
 							</div>
 
