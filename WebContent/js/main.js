@@ -15,6 +15,7 @@ function executeMainActions(container) {
 	});
 
 	formatDates(container);
+	detectReadabilityToImprove(container);
 	detectDynamicMenuTriggers();
 	borderTiles(container);
 	detectForms(container);

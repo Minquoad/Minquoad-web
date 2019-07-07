@@ -39,8 +39,8 @@ $(document).ready(function() {
 				messageDiv += '</span> ';
 				messageDiv += '</div>';
 				messageDiv += '</div>';
-				messageDiv += '<div class="messageText"><span class="keepLineBreak">';
-				messageDiv += improveReadability(toHtmlEquivalent(message.text));
+				messageDiv += '<div class="messageText"><span class="keepLineBreak readabilityToImprove">';
+				messageDiv += toHtmlEquivalent(message.text);
 				messageDiv += '</span></div>';
 
 				let messageFile = message.messageFile;
@@ -84,7 +84,9 @@ $(document).ready(function() {
 				let tile = current.find("[data-messageId=" + message.id + "]");
 
 				tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
-				tile.find(".messageText").html("<span class='keepLineBreak'>" + improveReadability(toHtmlEquivalent(message.editedText)) + "</span>");
+				tile.find(".messageText").html("<span class='keepLineBreak readabilityToImprove'>" + toHtmlEquivalent(message.editedText) + "</span>");
+
+				executeMainActions(tile);
 
 				let name = tile.find(".name");
 				if (name.text().indexOf("🖉") == -1) {
@@ -100,11 +102,6 @@ function detectCurrentConversation() {
 	let current = $("#conversations #current");
 
 	detectMessageEditionButtons(current);
-
-	current.find(".messageText span").each(function() {
-		let messageText = $(this);
-		messageText.html(improveReadability(messageText.html()));
-	});
 
 	let messagesDiv = document.getElementById("messages");
 	messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -174,7 +171,7 @@ function detectMessageEditionButtons(container) {
 				editionDiv += tile.attr("data-messageId");
 				editionDiv += '"/>';
 				editionDiv += '<textarea name="newText" class="improvedTextField">';
-				editionDiv += messageTextDiv.find("span").text();
+				editionDiv += messageTextDiv.children("span").text();
 				editionDiv += '</textarea>';
 
 				editionDiv += '</form>';

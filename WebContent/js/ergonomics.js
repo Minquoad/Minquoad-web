@@ -26,7 +26,21 @@ function formatDates(container) {
 
 }
 
-function improveReadability(originalHtml) {
+function detectReadabilityToImprove(container) {
+	if (container.hasClass("readabilityToImprove")) {
+		container.html(improveReadabilityOnHtml(container.html()));
+		container.removeClass("readabilityToImprove");
+		container.addClass("readabilityImproved");
+	} else {
+		container.find(".readabilityToImprove").each(function() {
+			$(this).html(improveReadabilityOnHtml($(this).html()));
+			$(this).removeClass("readabilityToImprove");
+			$(this).addClass("readabilityImproved");
+		});
+	}
+}
+
+function improveReadabilityOnHtml(originalHtml) {
 
 	let newHtml = originalHtml;
 	
