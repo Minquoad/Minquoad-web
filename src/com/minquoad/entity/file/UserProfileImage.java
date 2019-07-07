@@ -13,6 +13,11 @@ public class UserProfileImage extends ProtectedFile {
 		return user != null;
 	}
 
+	@Override
+	public String getContentDispositionFileName(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
+		return getIdBaseName();
+	}
+
 	public User getUser() {
 		return user;
 	}

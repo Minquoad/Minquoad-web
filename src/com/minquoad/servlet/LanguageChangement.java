@@ -31,12 +31,7 @@ public class LanguageChangement extends ImprovedHttpServlet {
 			setLocale(request, new Locale(language, getLocale(request).getCountry()));
 		}
 
-		String referer = request.getHeader(REFERER_HEADER_KEY);
-		if (referer == null) {
-			response.sendRedirect(request.getContextPath() + "/");
-		} else {
-			response.sendRedirect(referer);
-		}
+		sendRedirectToReferer(request, response);
 	}
 
 }

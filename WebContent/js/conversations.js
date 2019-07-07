@@ -1,12 +1,6 @@
 $(document).ready(function() {
 
-	createSubPageMenu(
-			"conversationSubPageKey",
-			$("#conversations #list .borderedTile"),
-			$("#conversations #currentContainer"),
-			true,
-			detectCurrentConversation
-		);
+	createSubPageMenu("conversationSubPageKey", $("#conversations #list .borderedTile"), $("#conversations #currentContainer"), true, detectCurrentConversation);
 
 	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
 
@@ -45,9 +39,9 @@ $(document).ready(function() {
 				messageDiv += '</span> ';
 				messageDiv += '</div>';
 				messageDiv += '</div>';
-				messageDiv += '<div class="messageText">';
+				messageDiv += '<div class="messageText"><span class="keepLineBreak">';
 				messageDiv += improveReadability(toHtmlEquivalent(message.text));
-				messageDiv += '</div>';
+				messageDiv += '</span></div>';
 
 				let messageFile = message.messageFile;
 				if (message.messageFile != null) {
@@ -90,7 +84,7 @@ $(document).ready(function() {
 				let tile = current.find("[data-messageId=" + message.id + "]");
 
 				tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
-				tile.find(".messageText").html(improveReadability(toHtmlEquivalent(message.editedText)));
+				tile.find(".messageText").html("<span class='keepLineBreak'>" + improveReadability(toHtmlEquivalent(message.editedText)) + "</span>");
 
 				let name = tile.find(".name");
 				if (name.text().indexOf("🖉") == -1) {
@@ -107,9 +101,9 @@ function detectCurrentConversation() {
 
 	detectMessageEditionButtons(current);
 
-	current.find(".messageText").each(function() {
+	current.find(".messageText span").each(function() {
 		let messageText = $(this);
-		messageText.html(improveReadability(messageText.html().trim()));
+		messageText.html(improveReadability(messageText.html()));
 	});
 
 	let messagesDiv = document.getElementById("messages");
@@ -139,8 +133,6 @@ function detectCurrentConversation() {
 		textarea.val(textarea.val() + $(this).text());
 		textarea.focus();
 	});
-
-	improveTextField(textarea);
 
 	textarea.keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -181,8 +173,8 @@ function detectMessageEditionButtons(container) {
 				editionDiv += '<input type="hidden" name="messageId" value="';
 				editionDiv += tile.attr("data-messageId");
 				editionDiv += '"/>';
-				editionDiv += '<textarea name="newText">';
-				editionDiv += messageTextDiv.text();
+				editionDiv += '<textarea name="newText" class="improvedTextField">';
+				editionDiv += messageTextDiv.find("span").text();
 				editionDiv += '</textarea>';
 
 				editionDiv += '</form>';
@@ -190,10 +182,10 @@ function detectMessageEditionButtons(container) {
 				let oldHtml = messageTextDiv.html();
 				messageTextDiv.empty();
 				messageTextDiv.append(editionDiv);
+				executeMainActions(messageTextDiv);
 
 				let messageEditionForm = messageTextDiv.find('.messageEditionForm');
 				let textarea = messageEditionForm.find('textarea');
-				improveTextField(textarea);
 				let sendButton = messageEditionForm.find('[type="button"][value="⭆"]');
 				let cancelButton = messageEditionForm.find('[type="button"][value="✖"]');
 

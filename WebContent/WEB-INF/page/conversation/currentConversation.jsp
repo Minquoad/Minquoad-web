@@ -28,7 +28,7 @@
 			<input type="hidden" name="conversationId"
 				value="${ requestScope.conversation.id }">
 			<input type="button" value="⟰" />
-			<textarea name="text"
+			<textarea class="improvedTextField" name="text"
 				placeholder="<fmt:message key="TypeYourMessageHere" bundle="${ conversationsBundle }" />"></textarea>
 			<div id="sepcialChars">
 				<div class="centererContainer dynamicMenuTrigger">

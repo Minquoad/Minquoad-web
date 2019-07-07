@@ -74,7 +74,7 @@ public class FormFileField extends FormField {
 	public String getOriginalExtention() {
 		int lastIndexOfDot = getOriginalFileName().lastIndexOf('.');
 		if (lastIndexOfDot == -1) {
-			return "";
+			return null;
 		}
 		return getOriginalFileName().substring(lastIndexOfDot + 1);
 	}

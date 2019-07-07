@@ -17,6 +17,6 @@ function executeMainActions(container) {
 	formatDates(container);
 	detectDynamicMenuTriggers();
 	borderTiles(container);
-	detectInputFileButtonTrigger(container);
+	detectForms(container);
 
 }

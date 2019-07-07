@@ -37,10 +37,10 @@
 		</div>
 		<div class="messageText">
 			<c:if test="${ not message.edited }">
-				<c:out value="${ message.text }" />
+				<span class="keepLineBreak"><c:out value="${ message.text }" /></span>
 			</c:if>
 			<c:if test="${ message.edited }">
-				<c:out value="${ message.editedText }" />
+				<span class="keepLineBreak"><c:out value="${ message.editedText }" /></span>
 			</c:if>
 		</div>
 		<c:if test="${ message.hasMessageFile() }">

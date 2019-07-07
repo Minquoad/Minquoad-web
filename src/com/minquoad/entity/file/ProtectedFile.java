@@ -46,13 +46,9 @@ public class ProtectedFile {
 	public String getOriginalExtention() {
 		int lastIndexOfDot = getOriginalName().lastIndexOf('.');
 		if (lastIndexOfDot == -1) {
-			return "";
+			return null;
 		}
 		return getOriginalName().substring(lastIndexOfDot+1);
-	}
-
-	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
-		return true;
 	}
 
 	public File getFile(Deployment deployment) {
@@ -60,6 +56,24 @@ public class ProtectedFile {
 			file = new File(deployment.getStoragePath() + getRelativePath());
 		}
 		return file;
+	}
+
+	public String getIdBaseName() {
+		String idString = Long.toString(this.getId());
+		String extention = this.getOriginalExtention();
+		if (extention == null) {
+			return idString;
+		} else {
+			return idString + "." + extention;
+		}
+	}
+	
+	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
+		return true;
+	}
+
+	public String getContentDispositionFileName(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
+		return this.getOriginalName();
 	}
 
 }

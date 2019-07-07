@@ -15,6 +15,8 @@ public class SiteManagement extends ImprovedHttpServlet {
 
 	public static final String VIEW_PATH = "/WEB-INF/page/administration/siteManagement.jsp";
 
+	public static final String OPEN_KEY = "open";
+
 	@Override
 	public boolean isFullPage() {
 		return false;
@@ -28,6 +30,14 @@ public class SiteManagement extends ImprovedHttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		forwardToView(request, response, VIEW_PATH);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		getDeployment().setOpen("true".equals(request.getParameter(OPEN_KEY)));
+
 		forwardToView(request, response, VIEW_PATH);
 	}
 

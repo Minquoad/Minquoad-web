@@ -11,7 +11,8 @@ public class FormImageField extends FormFileField {
 			this.addAllowedExtention(extention);
 		}
 		this.addValueChecker((form, field, value) -> {
-			if (ImageTool.isImage(value)) {
+			// if the process reaches this code, then the extension are already good
+			if (field.isImage()) {
 				return null;
 			}
 			return getText("UnreadableImage");

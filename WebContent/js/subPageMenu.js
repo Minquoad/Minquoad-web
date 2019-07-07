@@ -25,13 +25,7 @@ function createSubPageMenu(
 				url : trigger.attr("data-subPageUrl"),
 				dataType : "html",
 				success : function(data) {
-					container.empty();
-					container.append(data);
-	
-					executeMainActions(container);
-					if (listener != null) {
-						listener();
-					}
+					fillSubPage(container, data, listener);
 				},
 				error : function(err) {
 					handleAjaxError(err);
@@ -56,5 +50,27 @@ function createSubPageMenu(
 		if (autoload) {
 			triggers.first().trigger("click");
 		}
+	}
+}
+
+function fillSubPage(container, content, listener) {
+	container.empty();
+	container.append(content);
+
+	executeMainActions(container);
+
+	container.find('form').each(function() {
+		let form = $(this);
+		let submitInput = form.find("input[type='submit']");
+		submitInput.on("click", function(e) {
+			e.preventDefault();
+			submitForm(form, function(data) {
+				fillSubPage(container, data, listener);
+			});
+		});
+	});
+
+	if (listener != null) {
+		listener();
 	}
 }

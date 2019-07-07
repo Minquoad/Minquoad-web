@@ -135,3 +135,7 @@
 .inputFileTrigger input[type="file"] {
 	display: none;
 }
+
+.keepLineBreak {
+	white-space: pre-line;
+}

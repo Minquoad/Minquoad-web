@@ -11,7 +11,7 @@ function submitForm(form, successHandle = null) {
 
 		}).done(function(data) {
 			if (successHandle !== null) {
-				successHandle();
+				successHandle(data);
 			}
 
 		}).fail(function(err) {
@@ -27,7 +27,7 @@ function submitForm(form, successHandle = null) {
 
 		}).done(function(data) {
 			if (successHandle !== null) {
-				successHandle();
+				successHandle(data);
 			}
 
 		}).fail(function(err) {
@@ -37,30 +37,52 @@ function submitForm(form, successHandle = null) {
 	}
 }
 
-function detectInputFileButtonTrigger(container) {
+function detectForms(container) {
+	detectFileInputTriggers(container);
+	improveTextFields(container);
+}
 
-	let triggers = container.find('.inputFileTrigger>*:not([type="file"])');
+function detectFileInputTriggers(container) {
+	if (container.hasClass("improvedTextField")) {
+		detectFileInputTrigger(container);
+	}
+
+	container.find(".inputFileTrigger").each(function() {
+		detectFileInputTrigger($(this));
+	});
+}
+
+function detectFileInputTrigger(container) {
+
+	let triggers = container.find(".visibleWhenFull, .visibleWhenEmpty");
+
+	let input = container.find("[type='file']");
 
 	triggers.on("click", function(e) {
-		let input = $(this).closest(".inputFileTrigger").find("[type='file']");
 		input.trigger('click');
 	});
 
-	let inputs = triggers.closest(".inputFileTrigger").find("[type='file']");
-	inputs.on("change", function(e) {
-		let input = $(this);
-		let triggerContainer = $(this).closest(".inputFileTrigger");
-
+	input.on("change", function(e) {
 		if (input.val()) {
-			triggerContainer.find(".visibleWhenFull").show();
-			triggerContainer.find(".visibleWhenEmpty").hide();
+			container.find(".visibleWhenFull").show();
+			container.find(".visibleWhenEmpty").hide();
 		} else {
-			triggerContainer.find(".visibleWhenFull").hide();
-			triggerContainer.find(".visibleWhenEmpty").show();
+			container.find(".visibleWhenFull").hide();
+			container.find(".visibleWhenEmpty").show();
 		}
 	});
 
-	inputs.trigger("change");
+	input.trigger("change");
+}
+
+function improveTextFields(container) {
+	if (container.hasClass("improvedTextField")) {
+		improveTextField(container);
+	}
+
+	container.find(".improvedTextField").each(function() {
+		improveTextField($(this));
+	});
 }
 
 function improveTextField(textField) {

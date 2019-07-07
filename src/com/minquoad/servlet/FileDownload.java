@@ -41,7 +41,7 @@ public class FileDownload extends ImprovedHttpServlet {
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getDeployment()).length()));
-		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
+		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class FileDownload extends ImprovedHttpServlet {
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(file.length()));
-		response.setHeader("Content-Disposition", getContentDisposition(protectedFile));
+		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
 		response.setDateHeader("Last-Modified", getLastModified(request));
 
 		BufferedInputStream inputStream = null;
@@ -79,8 +79,13 @@ public class FileDownload extends ImprovedHttpServlet {
 		}
 	}
 
-	public String getContentDisposition(ProtectedFile protectedFile) {
-		return "attachment; filename=\"" + protectedFile.getOriginalName() + "\"";
+	public String getContentDisposition(HttpServletRequest request, ProtectedFile protectedFile) {
+		return "attachment; filename=\""
+				+ protectedFile.getContentDispositionFileName(
+						getUser(request),
+						getDaoFactory(request),
+						getUnitFactory(request))
+				+ "\"";
 	}
 
 	protected String getMimeType(ProtectedFile protectedFile) {
@@ -97,7 +102,8 @@ public class FileDownload extends ImprovedHttpServlet {
 	@Override
 	protected long getLastModified(HttpServletRequest request) {
 		// for safety reason a fake constant old lastModified value is used
-		// considering ProtectedFile.relativePath is immutable, no browser cache issue should append
+		// considering ProtectedFile.relativePath is immutable, no browser cache issue
+		// should append
 		return 1000000000000l;
 	}
 

@@ -29,8 +29,7 @@ public class MessageEdition extends ImprovedHttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		initForms(request);
-		MessageEditionForm form = (MessageEditionForm) request.getAttribute("form");
+		MessageEditionForm form = new MessageEditionForm(request);
 		form.submit();
 
 		if (form.isValide()) {
@@ -51,10 +50,6 @@ public class MessageEdition extends ImprovedHttpServlet {
 		} else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
-	}
-
-	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new MessageEditionForm(request));
 	}
 
 }

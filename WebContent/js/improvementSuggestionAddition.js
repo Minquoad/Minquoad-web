@@ -11,7 +11,7 @@ function detectImprovementSuggestionAdditionForm() {
 			if (textarea.val() !== "") {
 				if (confirm("Are you shure you want to sent the message \"" + textarea.val() + "\" to the website designer?")) {
 
-					submitForm(form, function() {
+					submitForm(form, function(data) {
 						alert("Thank you :)");
 					});
 

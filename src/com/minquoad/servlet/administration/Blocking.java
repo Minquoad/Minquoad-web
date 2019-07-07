@@ -21,8 +21,7 @@ public class Blocking extends ImprovedHttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		initForms(request);
-		BlockingForm form = (BlockingForm) request.getAttribute("form");
+		BlockingForm form = new BlockingForm(request);
 		form.submit();
 
 		if (form.isValide()) {
@@ -33,10 +32,6 @@ public class Blocking extends ImprovedHttpServlet {
 		}
 
 		response.sendRedirect(request.getContextPath() + "/Administration?" + Administration.ADMINISTRATION_SUB_PAGE_KEY_NAME + "=UsersManagement");
-	}
-
-	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new BlockingForm(request));
 	}
 
 }

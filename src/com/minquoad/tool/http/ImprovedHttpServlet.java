@@ -64,7 +64,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			Database database = ServicesManager.getService(request, Database.class);
 			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
-
 			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
 
 			HttpSession session = request.getSession();
@@ -334,5 +333,14 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			}
 		}
 	}
-	
+
+	public static void sendRedirectToReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String referer = request.getHeader(REFERER_HEADER_KEY);
+		if (referer == null) {
+			response.sendRedirect(request.getContextPath() + "/");
+		} else {
+			response.sendRedirect(referer);
+		}
+	}
+
 }

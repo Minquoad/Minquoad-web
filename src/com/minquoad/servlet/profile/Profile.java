@@ -1,4 +1,4 @@
-package com.minquoad.servlet;
+package com.minquoad.servlet.profile;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class Profile extends ImprovedHttpServlet {
 
 	public static final String TARGET_USER_ID_KEY = "targetUserId";
 
-	public static final String VIEW_PATH = "/WEB-INF/page/profile.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/profile/profile.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {

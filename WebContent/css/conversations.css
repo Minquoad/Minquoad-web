@@ -143,10 +143,6 @@
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
 }
 
-#conversations #messages .messageText {
-	white-space: pre-line;
-}
-
 #conversations #messages .messageText form div {
 	vertical-align: top;
 	display: inline-block;
