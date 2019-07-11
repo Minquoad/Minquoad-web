@@ -19,5 +19,4 @@ function executeMainActions(container) {
 	detectDynamicMenuTriggers();
 	borderTiles(container);
 	detectForms(container);
-
 }

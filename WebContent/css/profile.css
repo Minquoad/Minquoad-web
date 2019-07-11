@@ -2,7 +2,13 @@
 	vertical-align: middle;
 }
 
-#mainTitle #nickname {
+#mainTitle .nickname {
 	font-size: 20px;
 	padding-left: 10px;
+}
+
+#editionLink {
+	display: block;
+	margin: 10px 0 10px 0;
+	text-align: center;
 }

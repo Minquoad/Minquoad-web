@@ -1,3 +1,6 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
 <fmt:setBundle basename="resources.Conversations" var="conversationsBundle" />
 
 <div id="current" data-conversationId="${ requestScope.conversation.id }">

@@ -36,7 +36,7 @@ public class InLoging extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);
-		InLogingForm form = (InLogingForm) request.getAttribute("form");
+		InLogingForm form = (InLogingForm) request.getAttribute(FORM_KEY);
 		form.submit();
 
 		if (form.isValide()) {
@@ -70,7 +70,7 @@ public class InLoging extends ImprovedHttpServlet {
 	}
 
 	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new InLogingForm(request));
+		request.setAttribute(FORM_KEY, new InLogingForm(request));
 	}
 
 }

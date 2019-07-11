@@ -1,3 +1,5 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,11 +84,14 @@
 						<ul>
 							<c:forEach items="${ requestScope.things }" var="thing"
 								varStatus="status">
-								<li><c:out value="${ thing.id }" /> : <c:out
-										value="${ thing.description }" /> <c:if
-										test="${not empty thing.owner}"> (<c:out
+								<li>
+									<c:out value="${ thing.id }" />
+									:
+									<c:out value="${ thing.description }" />
+									<c:if test="${not empty thing.owner}"> (<c:out
 											value="${ thing.owner.nickname }" />)
-								</c:if></li>
+								</c:if>
+								</li>
 							</c:forEach>
 						</ul>
 					</div>

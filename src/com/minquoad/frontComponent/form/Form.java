@@ -64,6 +64,10 @@ public class Form {
 		getFiledsInOrder().add(field);
 	}
 
+	public boolean hasField(String name) {
+		return fileds.get(name) != null;
+	}
+	
 	public FormField getField(String name) {
 		return fileds.get(name);
 	}

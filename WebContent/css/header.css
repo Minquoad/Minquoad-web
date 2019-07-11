@@ -27,7 +27,7 @@
 
 #pageTitleHeader {
 	text-align: left;
-	width: 220px;
+	width: 225px;
 	font-size: 21px;
 }
 
@@ -39,7 +39,7 @@
 #rightHeader {
 	text-align: right;
 	font-size: 0;
-	width: calc(100% - 206px - 220px);
+	width: calc(100% - 206px - 225px);
 }
 
 #header .headerItem {

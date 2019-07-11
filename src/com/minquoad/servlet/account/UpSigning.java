@@ -33,7 +33,7 @@ public class UpSigning extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		initForms(request);
-		UpSigningForm form = (UpSigningForm) request.getAttribute("form");
+		UpSigningForm form = (UpSigningForm) request.getAttribute(FORM_KEY);
 		form.submit();
 
 		if (form.isValide()) {
@@ -52,7 +52,7 @@ public class UpSigning extends ImprovedHttpServlet {
 	}
 
 	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new UpSigningForm(request));
+		request.setAttribute(FORM_KEY, new UpSigningForm(request));
 	}
 
 }

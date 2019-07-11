@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
-<link rel="stylesheet" type="text/css" href="<c:url value="/css/profile.css" />" />
-<fmt:setBundle basename="resources.Profile" var="profileBundle" />
+	<jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
+	<link rel="stylesheet" type="text/css" href="<c:url value="/css/profile.css" />" />
+	<fmt:setBundle basename="resources.Profile" var="profileBundle" />
 </head>
 <body>
 	<fmt:message key="Profile" bundle="${ profileBundle }" var="profileLabel" />
@@ -24,11 +24,11 @@
 							scope="page" />
 
 						<div class="userProfileImageContainer">
-							<c:if test="${not empty userProfileImage}">
+							<c:if test="${not empty userProfileImage }">
 								<c:url value="/ImageDownload" var="imageDownloadUrl">
 									<c:param name="id" value="${ userProfileImage.id }" />
 								</c:url>
-								<img src="${imageDownloadUrl}" class="userProfileImage">
+								<img src="${ imageDownloadUrl }" class="userProfileImage">
 							</c:if>
 						</div>
 
@@ -40,6 +40,11 @@
 					</div>
 				</div>
 
+				<c:if test="${ requestScope.showedUser eq requestScope.user}">
+					<a id="editionLink" href="<c:url value="/ProfileEdition" />">
+						<fmt:message key="ProfileEdition" bundle="${ profileBundle }" />
+					</a>
+				</c:if>
 
 
 			</div>

@@ -8,6 +8,7 @@ public class FormBooleanField extends FormField {
 
 	public FormBooleanField(String name) {
 		super(name);
+		setChecked(false);
 	}
 
 	public boolean isChecked() {

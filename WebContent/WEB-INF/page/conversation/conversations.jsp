@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,7 +20,8 @@
 	<fmt:message key="Conversation" bundle="${ conversationsBundle }"
 		var="conversationsLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle" value="${ conversationsLabel }" />
+		<jsp:param name="pageTitle"
+			value="${ conversationsLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">
@@ -32,10 +33,10 @@
 						var="conversationResume">
 
 						<c:url value="/CurrentConversation" var="currentConversationUrl">
-							<c:param name="conversationId" value="${ conversationResume.conversation.id }" />
+							<c:param name="conversationId"
+								value="${ conversationResume.conversation.id }" />
 						</c:url>
-						<div class="borderedTile"
-							data-subPageUrl="${ currentConversationUrl }"
+						<div class="borderedTile" data-subPageUrl="${ currentConversationUrl }"
 							data-subPageKey="${ conversationResume.conversation.id }">
 							<div class="fullSize resume">
 								<div class="conversationTitle">

@@ -1,3 +1,6 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
 <%@page import="com.minquoad.entity.User"%>
 
 <!DOCTYPE html>
@@ -55,6 +58,19 @@
 								</jsp:include>
 							</p>
 							<p>
+								<label for="defaultColor">
+									<fmt:message key="DefaultAccountColor"
+										bundle="${ accountManagementBundle }" />
+									:
+								</label>
+								<input type="color" name="defaultColor" id="defaultColor"
+									value="${ requestScope.user.defaultColorAsHtmlValue }" />
+								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+									<jsp:param name="formKey" value="userParametersAlteration" />
+									<jsp:param name="fieldName" value="defaultColor" />
+								</jsp:include>
+							</p>
+							<p>
 								<label for="language">
 									<fmt:message key="Language" bundle="${ accountManagementBundle }" />
 									:
@@ -72,19 +88,6 @@
 								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
 									<jsp:param name="formKey" value="userParametersAlteration" />
 									<jsp:param name="fieldName" value="language" />
-								</jsp:include>
-							</p>
-							<p>
-								<label for="defaultColor">
-									<fmt:message key="DefaultAccountColor"
-										bundle="${ accountManagementBundle }" />
-									:
-								</label>
-								<input type="color" name="defaultColor" id="defaultColor"
-									value="${ requestScope.user.defaultColorAsHtmlValue }" />
-								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-									<jsp:param name="formKey" value="userParametersAlteration" />
-									<jsp:param name="fieldName" value="defaultColor" />
 								</jsp:include>
 							</p>
 							<p>
@@ -122,58 +125,6 @@
 							<div>
 								<input type="submit"
 									value="<fmt:message key="Save" bundle="${ accountManagementBundle }" />" />
-							</div>
-						</form>
-					</div>
-				</div>
-
-				<div class="borderedTile">
-					<div class="padded">
-						<h2>
-							<fmt:message key="SendANewProfilePicture"
-								bundle="${ accountManagementBundle }" />
-						</h2>
-
-						<c:set var="userProfileImage"
-							value="${ requestScope.daoFactory.userProfileImageDao.getUserUserProfileImage(requestScope.user) }"
-							scope="page" />
-
-						<c:if test="${not empty userProfileImage}">
-
-							<p>
-								<fmt:message key="ActualProfilePicture"
-									bundle="${ accountManagementBundle }" />
-								:
-							</p>
-
-							<c:url value="/ImageDownload" var="imageDownloadUrl">
-								<c:param name="id" value="${userProfileImage.id}" />
-							</c:url>
-							<div class="userProfileImageContainer">
-								<img src="${imageDownloadUrl}" class="userProfileImage">
-							</div>
-
-						</c:if>
-
-						<form method="post" action="<c:url value="/AccountManagement" />"
-							accept-charset="UTF-8" enctype="multipart/form-data">
-
-							<input type="hidden" name="formId" value="userPictureAlteration" />
-
-							<p>
-								<input type="file" name="userPicture" />
-								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-									<jsp:param name="formKey" value="userPictureAlterationForm" />
-									<jsp:param name="fieldName" value="userPicture" />
-								</jsp:include>
-							</p>
-							<p>
-								<fmt:message key="removeProfilePictureInstruction"
-									bundle="${ accountManagementBundle }" />
-							</p>
-							<div>
-								<input type="submit"
-									value="<fmt:message key="Submit" bundle="${ accountManagementBundle }" />" />
 							</div>
 						</form>
 					</div>

@@ -1,3 +1,6 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
 <fmt:setBundle basename="resources.Header" var="headerBundle" />
 
 <div id="header">
@@ -25,8 +28,8 @@
 		<div class="centererContainer">
 			<div class="vertivallyCenteredContainer fullWidth">
 				<div class="headerItem dynamicMenuTrigger">
-					▼
 					<fmt:message key="Activities" bundle="${ headerBundle }" />
+					▼
 					<div class="dynamicMenu">
 						<a class="dynamicMenuItem" href="<c:url value="/Test" />">
 							<fmt:message key="Test" bundle="${ headerBundle }" />
@@ -43,8 +46,8 @@
 						<fmt:message key="Community" bundle="${ headerBundle }" />
 					</a>
 					<div class="headerItem dynamicMenuTrigger">
-						▼
 						<c:out value="${ requestScope.user.nickname }" />
+						▼
 						<div class="dynamicMenu">
 							<c:url value="/Profile" var="profileUrl">
 								<c:param name="targetUserId" value="${ requestScope.user.id }" />

@@ -1,15 +1,20 @@
 package com.minquoad.servlet.profile;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.frontComponent.form.Form;
+import com.minquoad.dao.interfaces.UserProfileImageDao;
+import com.minquoad.entity.User;
+import com.minquoad.entity.file.UserProfileImage;
+import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.impl.profile.ProfileEditionForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.http.PartTool;
 
 @WebServlet("/ProfileEdition")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -18,7 +23,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 )
 public class ProfileEdition extends ImprovedHttpServlet {
 
-	public static final String VIEW_PATH = "/WEB-INF/page/account/accountManagement.jsp";
+	public static final String VIEW_PATH = "/WEB-INF/page/profile/profileEdition.jsp";
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
@@ -36,25 +41,41 @@ public class ProfileEdition extends ImprovedHttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		initForms(request);
 
+		ProfileEditionForm form = (ProfileEditionForm) request.getAttribute(FORM_KEY);
+		form.submit();
+
+		if (form.isValide()) {
+
+			User user = getUser(request);
+			user.setNickname(form.getnickname());
+			user.setDefaultColor(form.getDefaultColor());
+			getDaoFactory(request).getUserDao().persist(user);
+
+			UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
+
+			UserProfileImage currentImage = userProfileImageDao.getUserUserProfileImage(user);
+			FormFileField field = form.getPictureField();
+			if (currentImage != null && (form.isPictureResetRequested() || !field.isValueEmpty())) {
+				currentImage.getFile(getDeployment()).delete();
+				userProfileImageDao.delete(currentImage);
+			}
+
+			if (!field.isValueEmpty()) {
+				UserProfileImage image = new UserProfileImage();
+				image.setOriginalName(field.getOriginalFileName());
+				image.setUser(getUser(request));
+
+				PartTool.saveInProtectedFile(field.getValue(), image, getStorageManager());
+
+				userProfileImageDao.persist(image);
+			}
+		}
+
 		forwardToView(request, response, VIEW_PATH);
 	}
 
 	private void initForms(HttpServletRequest request) {
-		request.setAttribute("form", new ProfileEditionForm(request));
+		request.setAttribute(FORM_KEY, new ProfileEditionForm(request));
 	}
 
-	public static <FormClass extends Form> FormClass getForm(HttpServletRequest request, FormConstructor<FormClass> formConstructor) {
-		@SuppressWarnings("unchecked")
-		FormClass form = (FormClass) request.getAttribute("form");
-		if (form == null) {
-			form = formConstructor.instantiate(request);
-			request.setAttribute("form", form);
-		}
-		return form;
-	}
-
-	public interface FormConstructor<FormClass extends Form> {
-		public FormClass instantiate(HttpServletRequest request);
-	}
-	
 }

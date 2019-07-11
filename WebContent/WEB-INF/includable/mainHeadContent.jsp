@@ -1,17 +1,9 @@
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
 <meta charset="UTF-8">
 
 <title>Minquoad</title>
-
-<style>
-	:root {
-		<c:if test="${ empty requestScope.user }">
-
-		</c:if>
-		<c:if test="${ not empty requestScope.user }">
-
-		</c:if>
-	}
-</style>
 
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/ext/jquery.dynatable.css" />" />
 

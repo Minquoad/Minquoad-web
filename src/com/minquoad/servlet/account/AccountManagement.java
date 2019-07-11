@@ -9,15 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
-import com.minquoad.entity.file.UserProfileImage;
-import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.impl.account.UserParametersAlterationForm;
 import com.minquoad.frontComponent.form.impl.account.UserPasswordAlterationForm;
-import com.minquoad.frontComponent.form.impl.account.UserPictureAlterationForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.tool.http.PartTool;
 
 @WebServlet("/AccountManagement")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -27,7 +22,6 @@ import com.minquoad.tool.http.PartTool;
 public class AccountManagement extends ImprovedHttpServlet {
 
 	private static final String USER_PASSWORD_ALTERATION = "userPasswordAlteration";
-	private static final String USER_PICTURE_ALTERATION = "userPictureAlteration";
 	private static final String USER_PARAMETERS_ALTERATION = "userParametersAlteration";
 
 	public static final String VIEW_PATH = "/WEB-INF/page/account/accountManagement.jsp";
@@ -75,37 +69,6 @@ public class AccountManagement extends ImprovedHttpServlet {
 				}
 			}
 
-			if (formId.equals(USER_PICTURE_ALTERATION)) {
-
-				UserPictureAlterationForm form = (UserPictureAlterationForm) request.getAttribute(USER_PICTURE_ALTERATION);
-				form.submit();
-
-				if (form.isValide()) {
-					UserProfileImageDao userProfileImageDao = getDaoFactory(request).getUserProfileImageDao();
-
-					UserProfileImage image = userProfileImageDao.getUserUserProfileImage(getUser(request));
-					if (image != null) {
-						image.getFile(getDeployment()).delete();
-						userProfileImageDao.delete(image);
-					}
-
-					FormFileField field = (FormFileField) form.getField(UserPictureAlterationForm.USER_PICTURE_KEY);
-					if (!field.isValueEmpty()) {
-
-						image = new UserProfileImage();
-						image.setOriginalName(field.getOriginalFileName());
-						image.setUser(getUser(request));
-
-						PartTool.saveInProtectedFile(field.getValue(), image, getStorageManager());
-
-						userProfileImageDao.persist(image);
-					}
-
-				} else {
-					request.setAttribute("userPictureAlterationForm", form);
-				}
-			}
-
 			if (formId.equals(USER_PASSWORD_ALTERATION)) {
 
 				UserPasswordAlterationForm form = (UserPasswordAlterationForm) request.getAttribute(USER_PASSWORD_ALTERATION);
@@ -116,8 +79,6 @@ public class AccountManagement extends ImprovedHttpServlet {
 					user.setPassword(form.getNewPassword(), getDeployment());
 					getDaoFactory(request).getUserDao().persist(user);
 
-				} else {
-					request.setAttribute("userPasswordAlterationForm", form);
 				}
 			}
 
@@ -127,7 +88,6 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 	private void initForms(HttpServletRequest request) {
 		request.setAttribute(USER_PARAMETERS_ALTERATION, new UserParametersAlterationForm(request));
-		request.setAttribute(USER_PICTURE_ALTERATION, new UserPictureAlterationForm(request));
 		request.setAttribute(USER_PASSWORD_ALTERATION, new UserPasswordAlterationForm(request));
 	}
 

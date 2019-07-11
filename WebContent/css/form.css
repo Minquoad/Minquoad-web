@@ -2,7 +2,7 @@
 	color: red;
 }
 
-form input, form textarea {
+form input, form textarea, form select {
 	background-color: var(--BACKGROUND_COLOR);
 	color: var(--FOREGROUND_COLOR);
 	border: solid 1px var(--BORDER_COLOR);

@@ -39,6 +39,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	protected final static String USER_KEY = "user";
 	protected final static String CONTROLLING_ADMIN_KEY = "controllingAdmin";
 
+	protected final static String FORM_KEY = "form";
+
 	// session keys
 	public final static String LOCALE_KEY = "locale";
 	public final static String USER_ID_KEY = "userId";
