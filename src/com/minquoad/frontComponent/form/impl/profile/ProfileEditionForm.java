@@ -3,7 +3,6 @@ package com.minquoad.frontComponent.form.impl.profile;
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
-import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormBooleanField;
 import com.minquoad.frontComponent.form.field.FormColorField;
@@ -61,11 +60,9 @@ public class ProfileEditionForm extends Form {
 		FormFileField fileField = new FormImageField(PICTURE_KEY);
 		this.addField(fileField);
 
-		UserProfileImage image = getDaoFactory().getUserProfileImageDao().getUserUserProfileImage(getUser());
-		if (image != null) {
-			FormBooleanField checkboxField = new FormBooleanField(PICTURE_RESET_KEY);
-			this.addField(checkboxField);
-		}
+		FormBooleanField checkboxField = new FormBooleanField(PICTURE_RESET_KEY);
+		this.addField(checkboxField);
+
 	}
 
 	public String getnickname() {

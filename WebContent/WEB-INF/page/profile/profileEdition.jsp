@@ -72,20 +72,22 @@
 							</jsp:include>
 						</p>
 
-						<p>
-							<label for="pictureReset">
-								<fmt:message key="pictureReset" bundle="${ profileEditionBundle }" />
-								:
-							</label>
-							<input type="checkbox" name="pictureReset"
-								<c:if test="${ requestScope.form.fields.pictureReset.checked }">
+						<c:if test="${not empty userProfileImage }">
+							<p>
+								<label for="pictureReset">
+									<fmt:message key="pictureReset" bundle="${ profileEditionBundle }" />
+									:
+								</label>
+								<input type="checkbox" name="pictureReset"
+									<c:if test="${ requestScope.form.fields.pictureReset.checked }">
 										checked
 									</c:if> />
-							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
-								<jsp:param name="formKey" value="form" />
-								<jsp:param name="fieldName" value="pictureReset" />
-							</jsp:include>
-						</p>
+								<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
+									<jsp:param name="formKey" value="form" />
+									<jsp:param name="fieldName" value="pictureReset" />
+								</jsp:include>
+							</p>
+						</c:if>
 
 						<p>
 							<label for="defaultColor">
