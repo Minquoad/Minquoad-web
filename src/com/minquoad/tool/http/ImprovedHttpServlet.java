@@ -308,14 +308,6 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher(viewPath).forward(request, response);
-	}
-
-	public void includeView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher(viewPath).include(request, response);
-	}
-
 	public static void sendTextToClients(HttpServletRequest request, String text, ImprovedEndpointFilter filter) {
 		sendTextToClients(ServicesManager.getService(request, SessionManager.class), text, filter);
 	}
@@ -334,6 +326,14 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			} catch (Exception e) {
 			}
 		}
+	}
+
+	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		this.getServletContext().getRequestDispatcher(viewPath).forward(request, response);
+	}
+
+	public void includeView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {
+		this.getServletContext().getRequestDispatcher(viewPath).include(request, response);
 	}
 
 	public static void sendRedirectToReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {

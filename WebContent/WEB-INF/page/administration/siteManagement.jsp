@@ -32,6 +32,10 @@
 							</c:if>
 						</form>
 					</li>
+					<li>
+						<fmt:message key="WebsocketSessionNumber" bundle="${ administrationBundle }" />
+						: ${ applicationScope['com.minquoad.service.SessionManager'].improvedEndpointsNumber }
+					</li>
 				</ul>
 			</div>
 		</div>

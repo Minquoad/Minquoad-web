@@ -25,4 +25,8 @@ public class SessionManager {
 		return improvedEndpoints;
 	}
 
+	public int getImprovedEndpointsNumber() {
+		return improvedEndpoints.size();
+	}
+
 }
