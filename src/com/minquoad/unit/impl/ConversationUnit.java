@@ -7,6 +7,7 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
+import com.minquoad.tool.VersatilTool;
 import com.minquoad.unit.Unit;
 import com.minquoad.unit.UnitFactory;
 
@@ -47,22 +48,9 @@ public class ConversationUnit extends Unit {
 	public List<Message> getConversationMessagesInOrder(Conversation conversation) {
 		List<Message> messages = getDaoFactory().getMessageDao().getConversationMessages(conversation);
 
-		int i = 0;
-		while (i + 1 < messages.size()) {
-			Message latest = messages.get(i);
-			Message earlyest = messages.get(i + 1);
-			if (latest.getInstant().isAfter(earlyest.getInstant())) {
-				messages.set(i + 1, latest);
-				messages.set(i, earlyest);
-				if (i != 0) {
-					i--;
-				} else {
-					i++;
-				}
-			} else {
-				i++;
-			}
-		}
+		messages.sort((latest, earlyest) -> {
+			return VersatilTool.toBoundedInt(latest.getInstant().toEpochMilli() - earlyest.getInstant().toEpochMilli());
+		});
 
 		return messages;
 	}

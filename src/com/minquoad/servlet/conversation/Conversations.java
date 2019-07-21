@@ -1,7 +1,7 @@
 package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,8 +13,10 @@ import com.minquoad.dao.interfaces.ConversationDao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.Conversation;
+import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.ConversationResume;
+import com.minquoad.tool.VersatilTool;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.unit.impl.ConversationUnit;
 
@@ -64,7 +66,7 @@ public class Conversations extends ImprovedHttpServlet {
 			return;
 		}
 
-		List<ConversationResume> conversationResumes = new LinkedList<ConversationResume>();
+		List<ConversationResume> conversationResumes = new ArrayList<ConversationResume>();
 
 		for (Conversation conversation : conversations) {
 			ConversationResume conversationResume = new ConversationResume();
@@ -72,6 +74,16 @@ public class Conversations extends ImprovedHttpServlet {
 			conversationResume.setParticipants(userDao.getConversationUsers(conversation));
 			conversationResumes.add(conversationResume);
 		}
+
+		conversationResumes.sort((latest, earlyest) -> {
+			Message latestMessage = latest.getConversation().getLastMessage();
+			Message earlyestMessage = earlyest.getConversation().getLastMessage();
+			if (latestMessage == null || earlyestMessage == null) {
+				return 0;
+			}
+			return VersatilTool.toBoundedInt(earlyestMessage.getInstant().toEpochMilli()
+					- latestMessage.getInstant().toEpochMilli());
+		});
 
 		request.setAttribute("conversationResumes", conversationResumes);
 

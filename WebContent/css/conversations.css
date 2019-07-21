@@ -21,6 +21,10 @@
 	height: 18px;
 }
 
+#conversations #list .newConversationResume {
+	color: grey;
+}
+
 #conversations #list .participants {
 	color: grey;
 	font-size: 12px;
@@ -41,11 +45,16 @@
 	width: 100%;
 }
 
-#conversations #current #title {
+#conversations #current #topBar {
 	height: 45px;
 	font-size: 16px;
 	background-color: rgb(28, 28, 28);
 	border-bottom: solid var(--BORDER_COLOR) 1px;
+}
+
+#conversations #current #topBar .title {
+	display: inline-block;
+	height: 100%;
 }
 
 #conversations #current #messages {

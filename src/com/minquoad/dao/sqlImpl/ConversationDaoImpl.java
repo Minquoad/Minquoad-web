@@ -20,6 +20,7 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 		this.addLongEntityMember("id", Conversation::getId, Conversation::setId, true);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
+		this.addForeingKeyEntityMember("lastMessage", Conversation::getLastMessage, Conversation::setLastMessage, getDaoFactory().getMessageDao());
 	}
 
 	@Override

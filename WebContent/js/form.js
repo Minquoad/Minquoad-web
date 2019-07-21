@@ -9,14 +9,13 @@ function submitForm(form, successHandle = null) {
 			processData: false,
 			contentType: false
 
-		}).done(function(data) {
+		}).done(function(data, textStatus, xhr) {
 			if (successHandle !== null) {
-				successHandle(data);
+				successHandle(data, textStatus, xhr);
 			}
 
-		}).fail(function(err) {
-			handleAjaxError(err);
-			
+		}).fail(function(jqXHR, textStatus, error) {
+			handleAjaxError(jqXHR, textStatus, error);
 		});
 
 	} else {
@@ -25,14 +24,14 @@ function submitForm(form, successHandle = null) {
 			type : 'POST',
 			data : form.serialize()
 
-		}).done(function(data) {
+		}).done(function(data, textStatus, xhr) {
+			console.log(textStatus);
 			if (successHandle !== null) {
-				successHandle(data);
+				successHandle(data, textStatus, xhr);
 			}
 
-		}).fail(function(err) {
-			handleAjaxError(err);
-			
+		}).fail(function(jqXHR, textStatus, error) {
+			handleAjaxError(jqXHR, textStatus, error);
 		});
 	}
 }

@@ -2,7 +2,7 @@ function createSubPageMenu(
 		argumentName,// the name of the argument to add to the url
 		triggers,// a set of element having a data-argumentName attribute
 		container,// the sub page container
-		autoload = true,// if true and nothing in the url the load the first
+		autoload = true,// if true and nothing in the url then load the first
 		listener = null// will be called after every container change
 	) {
 
@@ -24,11 +24,11 @@ function createSubPageMenu(
 				type : "GET",
 				url : trigger.attr("data-subPageUrl"),
 				dataType : "html",
-				success : function(data) {
-					fillSubPage(container, data, listener);
+				success : function(data, textStatus, xhr) {
+					fillSubPage(data, textStatus, xhr, container, listener);
 				},
-				error : function(err) {
-					handleAjaxError(err);
+				error : function(jqXHR, textStatus, error) {
+					handleAjaxError(jqXHR, textStatus, error);
 				}
 			});
 		}
@@ -53,9 +53,9 @@ function createSubPageMenu(
 	}
 }
 
-function fillSubPage(container, content, listener) {
+function fillSubPage(data, textStatus, xhr, container, listener) {
 	container.empty();
-	container.append(content);
+	container.append(data);
 
 	executeMainActions(container);
 
@@ -64,13 +64,13 @@ function fillSubPage(container, content, listener) {
 		let submitInput = form.find("input[type='submit']");
 		submitInput.on("click", function(e) {
 			e.preventDefault();
-			submitForm(form, function(data) {
-				fillSubPage(container, data, listener);
+			submitForm(form, function(responseData, textStatus, xhr) {
+				fillSubPage(responseData, textStatus, xhr, container, listener);
 			});
 		});
 	});
 
 	if (listener != null) {
-		listener();
+		listener(data, textStatus, xhr);
 	}
 }

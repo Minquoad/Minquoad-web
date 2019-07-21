@@ -33,7 +33,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
-		return getUser(request) != null && conversation != null
+		return user != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
 

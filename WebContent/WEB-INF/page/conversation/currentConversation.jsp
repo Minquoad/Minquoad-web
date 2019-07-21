@@ -4,19 +4,23 @@
 <fmt:setBundle basename="resources.Conversations" var="conversationsBundle" />
 
 <div id="current" data-conversationId="${ requestScope.conversation.id }">
-	<div id="title" class="centererContainer">
-		<div class="totallyCenteredContainer">
-			<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
-				<c:forEach items="${ requestScope.participants }" var="loopUser">
-					<c:if test="${ loopUser ne requestScope.user }">
-						<fmt:message key="MainConversationWith" bundle="${ conversationsBundle }" />
-						<c:out value="${ loopUser.nickname }" />
+	<div id="topBar">
+		<div class="title">
+			<div class="centererContainer">
+				<div class="totallyCenteredContainer">
+					<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
+						<c:forEach items="${ requestScope.participants }" var="loopUser">
+							<c:if test="${ loopUser ne requestScope.user }">
+								<fmt:message key="MainConversationWith" bundle="${ conversationsBundle }" />
+								<c:out value="${ loopUser.nickname }" />
+							</c:if>
+						</c:forEach>
 					</c:if>
-				</c:forEach>
-			</c:if>
-			<c:if test="${ not requestScope.conversation.isMainBetweenTwoUsers() }">
-				<c:out value="${ requestScope.conversation.title }" />
-			</c:if>
+					<c:if test="${ not requestScope.conversation.isMainBetweenTwoUsers() }">
+						<c:out value="${ requestScope.conversation.title }" />
+					</c:if>
+				</div>
+			</div>
 		</div>
 	</div>
 

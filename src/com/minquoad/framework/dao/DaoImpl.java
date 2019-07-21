@@ -480,7 +480,7 @@ public abstract class DaoImpl<Entity> {
 
 			ConnectionManager.close(resultSet, preparedStatement, connection);
 
-			List<Entity> entities = new LinkedList<Entity>();
+			List<Entity> entities = new ArrayList<Entity>();
 			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
 				if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
 					entities.add(instantiatedEntity);

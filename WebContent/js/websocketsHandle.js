@@ -18,13 +18,13 @@ function addRoledJsonWebsocketListener(role, listener) {
 
 		websocket.onerror = function(e) {
 			console.error(e);
-			if (confirm("An error occured. Refresh page?")) {
+			if (confirm("An error occured.\nRefresh page?")) {
 				window.location.replace("");
 			}
 		};
 
 		websocket.onclose = function() {
-			if (confirm("Connection with server lost. Refresh page?")) {
+			if (confirm("Connection with server lost.\nRefresh page?")) {
 				window.location.replace("");
 			}
 		};

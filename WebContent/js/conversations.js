@@ -1,6 +1,9 @@
 $(document).ready(function() {
 
-	createSubPageMenu("conversationSubPageKey", $("#conversations #list .borderedTile"), $("#conversations #currentContainer"), true, detectCurrentConversation);
+	createSubPageMenu("conversationSubPageKey", $("#conversations #list .borderedTile"), $("#conversations #currentContainer"), true, function(data, textStatus, xhr) {
+		detectCurrentConversation();
+		detectConversationCreation(data, textStatus, xhr);
+	});
 
 	addRoledJsonWebsocketListener("messageAddition", function(message) {
 
@@ -99,47 +102,55 @@ $(document).ready(function() {
 function detectCurrentConversation() {
 
 	let current = $("#conversations #current");
+	if (current.length) {
 
-	detectMessageEditionButtons(current);
+		detectMessageEditionButtons(current);
 
-	let messagesDiv = document.getElementById("messages");
-	messagesDiv.scrollTop = messagesDiv.scrollHeight;
+		let messagesDiv = document.getElementById("messages");
+		messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-	let form = current.find('#messageEditorForm');
-	let textarea = form.find('textarea');
-	let fileField = form.find('input[type="file"]');
-	let emojis = form.find('#sepcialChars .dynamicMenuItem span');
-	let button = form.find('[type="button"]');
+		let form = current.find('#messageEditorForm');
+		let textarea = form.find('textarea');
+		let fileField = form.find('input[type="file"]');
+		let emojis = form.find('#sepcialChars .dynamicMenuItem span');
+		let button = form.find('[type="button"]');
 
-	let postMessage = function() {
-		if (textarea.val().trim() != "" || fileField.val()) {
-			submitForm(form);
-			textarea.val("");
-			fileField.val("");
-			fileField.trigger("change");
-		}
-	};
-
-	button.on('click', function(e) {
-		e.preventDefault();
-		postMessage();
-	});
-
-	emojis.on('click', function(e) {
-		textarea.val(textarea.val() + $(this).text());
-		textarea.focus();
-	});
-
-	textarea.keypress(function(event) {
-		var keycode = (event.keyCode ? event.keyCode : event.which);
-		if (!event.shiftKey) {
-
-			if (keycode == '13') {
-				event.preventDefault();
-				postMessage();
+		let postMessage = function() {
+			if (textarea.val().trim() != "" || fileField.val()) {
+				submitForm(form);
+				textarea.val("");
+				fileField.val("");
+				fileField.trigger("change");
 			}
-		}
-	});
+		};
+
+		button.on('click', function(e) {
+			e.preventDefault();
+			postMessage();
+		});
+
+		emojis.on('click', function(e) {
+			textarea.val(textarea.val() + $(this).text());
+			textarea.focus();
+		});
+
+		textarea.keypress(function(event) {
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if (!event.shiftKey) {
+
+				if (keycode == '13') {
+					event.preventDefault();
+					postMessage();
+				}
+			}
+		});
+	}
+}
+
+function detectConversationCreation(data, textStatus, xhr) {
+	if (xhr.status == 201) {
+		displayLoading($("#conversations #currentContainer"));
+	}
 }
 
 function detectMessageEditionButtons(container) {

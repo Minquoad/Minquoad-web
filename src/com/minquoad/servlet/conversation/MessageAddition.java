@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.MessageFile;
@@ -41,6 +42,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 		form.submit();
 
 		if (form.isValide()) {
+			Conversation conversation = form.getConversation();
 
 			MessageFile messageFile = null;
 			
@@ -57,12 +59,15 @@ public class MessageAddition extends ImprovedHttpServlet {
 			Message message = new Message();
 			message.setText(form.getText());
 			message.setUser(getUser(request));
-			message.setConversation(form.getConversation());
+			message.setConversation(conversation);
 			message.setInstant(Instant.now());
 			message.setMessageFile(messageFile);
 			getDaoFactory(request).getMessageDao().persist(message);
 
-			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(form.getConversation());
+			conversation.setLastMessage(message);
+			getDaoFactory(request).getConversationDao().persist(conversation);
+			
+			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
 
 			sendJsonToClientsWithRole(
 					message.toJson(),

@@ -20,8 +20,7 @@
 	<fmt:message key="Conversation" bundle="${ conversationsBundle }"
 		var="conversationsLabel" />
 	<jsp:include page="/WEB-INF/includable/header.jsp">
-		<jsp:param name="pageTitle"
-			value="${ conversationsLabel }" />
+		<jsp:param name="pageTitle" value="${ conversationsLabel }" />
 	</jsp:include>
 
 	<div id="mainContainer">
@@ -70,6 +69,19 @@
 							</div>
 						</div>
 					</c:forEach>
+
+					<div class="borderedTile" data-subPageUrl="<c:url value="/ConversationCreation" />"
+						data-subPageKey="createConversation">
+						<div class="fullSize resume newConversationResume">
+							<div class="conversationTitle">
+								<fmt:message key="NewConversation" bundle="${ conversationsBundle }" />
+							</div>
+							<div class="participants">
+							</div>
+						</div>
+					</div>
+
+
 				</div>
 			</div>
 
