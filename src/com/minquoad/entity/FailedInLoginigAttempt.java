@@ -6,7 +6,7 @@ public class FailedInLoginigAttempt {
 
 	private Long id;
 	private String mailAddress;
-	private long attemptsCount;
+	private long attemptsNumber;
 	private Instant lastArremptInstant;
 
 	public Long getId() {
@@ -25,18 +25,18 @@ public class FailedInLoginigAttempt {
 		this.mailAddress = mailAddress;
 	}
 
-	public long getAttemptsCount() {
-		return attemptsCount;
+	public long getAttemptsNumber() {
+		return attemptsNumber;
 	}
 
-	public void incrementAttemptsCount() {
-		if (attemptsCount != Long.MAX_VALUE) {
-			attemptsCount++;
+	public void incrementAttemptsNumber() {
+		if (attemptsNumber != Long.MAX_VALUE) {
+			attemptsNumber++;
 		}
 	}
 
-	public void setAttemptsCount(long attemptsCount) {
-		this.attemptsCount = attemptsCount;
+	public void setAttemptsNumber(long attemptsNumber) {
+		this.attemptsNumber = attemptsNumber;
 	}
 
 	public Instant getLastArremptInstant() {

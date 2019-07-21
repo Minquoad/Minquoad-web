@@ -2,7 +2,7 @@ package com.minquoad.service;
 
 import java.io.File;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class Deployment {
 
@@ -25,20 +25,22 @@ public class Deployment {
 		if (!file.exists()) {
 			new RuntimeException("Configuration json not found at \"" + CONFIGURATION_JSON_PATH + "\".");
 		} else {
-			JSONObject configurationJson = StorageManager.fileToJsonObject(CONFIGURATION_JSON_PATH);
 
-			storagePath = configurationJson.getString("storagePath");
+			JsonNode configurationJson = StorageManager.fileToJsonNode(CONFIGURATION_JSON_PATH);
 
-			JSONObject databaseJson = configurationJson.getJSONObject("database");
+			storagePath = configurationJson.findValue("storagePath").asText();
 
-			databaseHost = databaseJson.getString("host");
-			databasePort = databaseJson.getString("port");
-			databaseName = databaseJson.getString("name");
-			databaseUser = databaseJson.getString("user");
-			databasePassword = databaseJson.getString("password");
-			userPasswordSalt = databaseJson.getString("userPasswordSalt");
+			JsonNode databaseJson = configurationJson.findValue("database");
+
+			databaseHost = databaseJson.findValue("host").asText();
+			databasePort = databaseJson.findValue("port").asText();
+			databaseName = databaseJson.findValue("name").asText();
+			databaseUser = databaseJson.findValue("user").asText();
+			databasePassword = databaseJson.findValue("password").asText();
+			userPasswordSalt = databaseJson.findValue("userPasswordSalt").asText();
 
 			setOpen(true);
+
 		}
 	}
 
@@ -81,5 +83,5 @@ public class Deployment {
 	public String getVersion() {
 		return VERSION;
 	}
-	
+
 }

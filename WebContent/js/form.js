@@ -113,14 +113,14 @@ function improveTextField(textField) {
 
 			} else if (keycode == '34') {
 
-				let quoteCount = 0;
+				let quoteNumber = 0;
 				let originalText = textField.val();
 				for (let i = 0; i < originalText.length; i++) {
 					if (originalText.charAt(i) == "\"") {
-						quoteCount++;
+						quoteNumber++;
 					}
 				}
-				if (quoteCount % 2 == 0) {
+				if (quoteNumber % 2 == 0) {
 					event.preventDefault();
 
 					let position = textField.prop('selectionStart');

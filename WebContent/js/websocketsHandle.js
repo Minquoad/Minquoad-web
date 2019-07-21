@@ -1,22 +1,18 @@
-let websockets = {};
-let websocketJsonListeners = {};
+let websocket = null;
+let groupedByRoleWsListeners = {};
 
 function addRoledJsonWebsocketListener(role, listener) {
 
-	if (!websockets.hasOwnProperty(role)) {
+	if (websocket == null) {
 
 		let baseUrl = window.location.href.substring(window.location.href.indexOf(window.location.hostname));
 		baseUrl = baseUrl.substring(0, baseUrl.indexOf(currentContext) + currentContext.length);
 
-		let websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
+		websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
 
 		websocket.onopen = function(evt) {
-			websocket.send(role);
-		};
-
-		websocket.onclose = function() {
-			if (confirm("Connection with server lost. Refresh page?")) {
-				window.location.replace("");
+			for (let loopRole in groupedByRoleWsListeners) {
+				websocket.send(loopRole);
 			}
 		};
 
@@ -27,16 +23,28 @@ function addRoledJsonWebsocketListener(role, listener) {
 			}
 		};
 
-		websocket.onmessage = function(event) {
-			let parsedEvent = JSON.parse(event.data);
-			for (let listener of websocketJsonListeners[role]) {
-				listener(parsedEvent);
+		websocket.onclose = function() {
+			if (confirm("Connection with server lost. Refresh page?")) {
+				window.location.replace("");
 			}
 		};
 
-		websockets[role] = websocket;
-		websocketJsonListeners[role] = [];
+		websocket.onmessage = function(event) {
+			let parsedEvent = JSON.parse(event.data);
+			for (let listener of groupedByRoleWsListeners[parsedEvent.role]) {
+				listener(parsedEvent.data);
+			}
+		};
+
 	}
 
-	websocketJsonListeners[role].push(listener);
+	if (!groupedByRoleWsListeners.hasOwnProperty(role)) {
+		groupedByRoleWsListeners[role] = [];
+		if (websocket.readyState) {
+			websocket.send(role);
+		}
+	}
+
+	groupedByRoleWsListeners[role].push(listener);
+	
 }

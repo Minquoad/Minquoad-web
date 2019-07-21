@@ -1,5 +1,8 @@
 package com.minquoad.websocketEndpoint;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
@@ -19,7 +22,7 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @ServerEndpoint(value = "/ImprovedEndpoint", configurator = HttpSessionLinkedEndpointConfig.class)
 public class ImprovedEndpoint extends Endpoint {
 
-	private String role;
+	private List<String> roles;
 	private Session websocketSession;
 	private HttpSession httpSession;
 
@@ -28,11 +31,12 @@ public class ImprovedEndpoint extends Endpoint {
 
 		httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		websocketSession = session;
+		roles = new ArrayList<String>();
 
 		session.addMessageHandler(new MessageHandler.Whole<String>() {
 			@Override
 			public void onMessage(String message) {
-				setRole(message);
+				addRole(message);
 			}
 		});
 
@@ -88,16 +92,16 @@ public class ImprovedEndpoint extends Endpoint {
 		getRemote().sendText(text);
 	}
 
-	public String getRole() {
-		return role;
+	public boolean hasRole(String role) {
+		return this.roles.contains(role);
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void addRole(String role) {
+		this.roles.add(role);
 	}
 
 	public interface ImprovedEndpointFilter {
-		public boolean accept(ImprovedEndpoint endpoint);
+		public boolean accepts(ImprovedEndpoint endpoint);
 	}
 
 }

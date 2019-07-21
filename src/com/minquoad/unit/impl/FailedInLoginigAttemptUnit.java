@@ -23,14 +23,14 @@ public class FailedInLoginigAttemptUnit extends Unit {
 			FailedInLoginigAttempt failedInLoginigAttempt = failedInLoginigAttemptDao.getOneMatching("mailAddress", mailAddress);
 
 			if (failedInLoginigAttempt != null) {
-				failedInLoginigAttempt.incrementAttemptsCount();
+				failedInLoginigAttempt.incrementAttemptsNumber();
 				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
 				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 
 			} else {
 				failedInLoginigAttempt = new FailedInLoginigAttempt();
 				failedInLoginigAttempt.setMailAddress(mailAddress);
-				failedInLoginigAttempt.incrementAttemptsCount();
+				failedInLoginigAttempt.incrementAttemptsNumber();
 				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
 				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 			}
@@ -43,16 +43,16 @@ public class FailedInLoginigAttemptUnit extends Unit {
 			return null;
 		} else {
 			Instant lastAttemptInstant = failedInLoginigAttempt.getLastArremptInstant();
-			long attemptsCount = failedInLoginigAttempt.getAttemptsCount();
+			long attemptsNumber = failedInLoginigAttempt.getAttemptsNumber();
 			
 			Duration duration = null;
 			
-			if (attemptsCount >= 5l) {
-				if (attemptsCount < 8l) {
+			if (attemptsNumber >= 5l) {
+				if (attemptsNumber < 8l) {
 					Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60);
 					duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
 				} else {
-					if (attemptsCount < 10l) {
+					if (attemptsNumber < 10l) {
 						Instant unblockInstant = Instant.ofEpochMilli(lastAttemptInstant.toEpochMilli() + 1000 * 60 * 10);
 						duration = Duration.ofMillis(unblockInstant.toEpochMilli() - Instant.now().toEpochMilli());
 					} else {

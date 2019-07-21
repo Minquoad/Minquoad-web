@@ -14,7 +14,7 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedDaoImpl<FailedInLogin
 	public void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", FailedInLoginigAttempt::getId, FailedInLoginigAttempt::setId, true);
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
-		this.addLongEntityMember("attemptsCount", FailedInLoginigAttempt::getAttemptsCount, FailedInLoginigAttempt::setAttemptsCount);
+		this.addLongEntityMember("attemptsNumber", FailedInLoginigAttempt::getAttemptsNumber, FailedInLoginigAttempt::setAttemptsNumber);
 		this.addInstantEntityMember("lastArremptInstant", FailedInLoginigAttempt::getLastArremptInstant, FailedInLoginigAttempt::setLastArremptInstant);
 	}
 

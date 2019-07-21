@@ -3,10 +3,12 @@ package com.minquoad.service;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class StorageManager {
 
@@ -48,12 +50,17 @@ public class StorageManager {
 		return false;
 	}
 
-	public static JSONObject fileToJsonObject(String path) {
+	public static JsonNode fileToJsonNode(String path) {
 		return fileToJsonObject(new File(path));
 	}
 
-	public static JSONObject fileToJsonObject(File file) {
-		return new JSONObject(StorageManager.fileToString(file));
+	public static JsonNode fileToJsonObject(File file) {
+		try {
+			return new ObjectMapper().readTree(StorageManager.fileToString(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static String fileToString(String path) {

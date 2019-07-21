@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.DaoGetter;
@@ -308,22 +311,30 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	public static void sendTextToClients(HttpServletRequest request, String text, ImprovedEndpointFilter filter) {
-		sendTextToClients(ServicesManager.getService(request, SessionManager.class), text, filter);
+	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, ImprovedEndpointFilter filter) {
+		sendJsonToClientsWithRole(ServicesManager.getService(request, SessionManager.class), json, role, filter);
 	}
 
-	public void sendTextToClients(String text, ImprovedEndpointFilter filter) {
-		sendTextToClients(getSessionManager(), text, filter);
+	public void sendJsonToClientsWithRole(JsonNode json, String role, ImprovedEndpointFilter filter) {
+		sendJsonToClientsWithRole(getSessionManager(), json, role, filter);
 	}
 
-	public static void sendTextToClients(SessionManager sessionManager, String text, ImprovedEndpointFilter filter) {
+	public static void sendJsonToClientsWithRole(SessionManager sessionManager, JsonNode json, String role, ImprovedEndpointFilter filter) {
+
+		ObjectNode eventJsonObject = JsonNodeFactory.instance.objectNode();
+		eventJsonObject.put("role", role);
+		eventJsonObject.set("data", json);
+		String text = eventJsonObject.toString();
+
 		List<ImprovedEndpoint> endpoints = sessionManager.getImprovedEndpoints();
 		for (ImprovedEndpoint endpoint : endpoints) {
-			try {
-				if (filter.accept(endpoint)) {
-					endpoint.sendText(text);
+			if (endpoint.hasRole(role)) {
+				try {
+					if (filter == null || filter.accepts(endpoint)) {
+						endpoint.sendText(text);
+					}
+				} catch (Exception e) {
 				}
-			} catch (Exception e) {
 			}
 		}
 	}

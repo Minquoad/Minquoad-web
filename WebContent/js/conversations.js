@@ -2,96 +2,95 @@ $(document).ready(function() {
 
 	createSubPageMenu("conversationSubPageKey", $("#conversations #list .borderedTile"), $("#conversations #currentContainer"), true, detectCurrentConversation);
 
-	addRoledJsonWebsocketListener("conversationUpdating", function(event) {
+	addRoledJsonWebsocketListener("messageAddition", function(message) {
 
-		if (event.enventKey == "MessageAddition") {
-			let message = event.data;
-			let current = $("#current");
+		let current = $("#current");
 
-			if (current.attr("data-conversationid") == message.conversation) {
+		if (current.attr("data-conversationid") == message.conversation) {
 
-				let messageDiv = "";
-				messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
-				messageDiv += message.id;
-				messageDiv += '" data-messageUserId="';
-				messageDiv += message.user.id;
-				messageDiv += '">';
-				messageDiv += '<div class="messageMetaData">';
-				messageDiv += '<div class="name">';
-				messageDiv += '<a href="';
-				messageDiv += profileUrl + "?targetUserId=" + message.user.id;
-				messageDiv += '">';
-				messageDiv += '<span style="color: ';
-				messageDiv += message.user.defaultColor;
-				messageDiv += '"> ';
-				messageDiv += toHtmlEquivalent(message.user.nickname);
-				messageDiv += '</span> : ';
-				messageDiv += '</a>';
-				messageDiv += '</div>';
-				messageDiv += '<div>';
+			let messageDiv = "";
+			messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
+			messageDiv += message.id;
+			messageDiv += '" data-messageUserId="';
+			messageDiv += message.user.id;
+			messageDiv += '">';
+			messageDiv += '<div class="messageMetaData">';
+			messageDiv += '<div class="name">';
+			messageDiv += '<a href="';
+			messageDiv += profileUrl + "?targetUserId=" + message.user.id;
+			messageDiv += '">';
+			messageDiv += '<span style="color: ';
+			messageDiv += message.user.defaultColor;
+			messageDiv += '"> ';
+			messageDiv += toHtmlEquivalent(message.user.nickname);
+			messageDiv += '</span> : ';
+			messageDiv += '</a>';
+			messageDiv += '</div>';
+			messageDiv += '<div>';
 
-				if (userId == message.user.id) {
-					messageDiv += '<span class="messageEditionButton">🖉</span>';
-				}
-
-				messageDiv += ' <span class="dateToFormat" data-format="1">';
-				messageDiv += message.instant;
-				messageDiv += '</span> ';
-				messageDiv += '</div>';
-				messageDiv += '</div>';
-				messageDiv += '<div class="messageText"><span class="keepLineBreak readabilityToImprove">';
-				messageDiv += toHtmlEquivalent(message.text);
-				messageDiv += '</span></div>';
-
-				let messageFile = message.messageFile;
-				if (message.messageFile != null) {
-					if (messageFile.image) {
-						messageDiv += '<div class="messageImageContainer">';
-						messageDiv += '<img src="';
-						messageDiv += imageDownloadUrl + "?id=" + messageFile.id;
-						messageDiv += '" class="messageImage" />';
-						messageDiv += '<div>';
-					} else {
-						messageDiv += '<a class="messageFileLink" href="';
-						messageDiv += fileDownloadUrl + "?id=" + messageFile.id;
-						messageDiv += '">';
-						messageDiv += "📁";
-						messageDiv += toHtmlEquivalent(messageFile.originalName);
-						messageDiv += '</a>';
-					}
-				}
-
-				messageDiv += '</div>';
-
-				let messages = current.find("#messages");
-				messages.append(messageDiv);
-
-				let lastMessage = messages.children().last();
-
-				executeMainActions(lastMessage);
-
-				messagesDiv = document.getElementById("messages");
-				messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-				detectMessageEditionButtons(lastMessage);
+			if (userId == message.user.id) {
+				messageDiv += '<span class="messageEditionButton">🖉</span>';
 			}
 
-		} else if (event.enventKey == "MessageEdition") {
-			let message = event.data;
-			let current = $("#current");
+			messageDiv += ' <span class="dateToFormat" data-format="1">';
+			messageDiv += message.instant;
+			messageDiv += '</span> ';
+			messageDiv += '</div>';
+			messageDiv += '</div>';
+			messageDiv += '<div class="messageText"><span class="keepLineBreak readabilityToImprove">';
+			messageDiv += toHtmlEquivalent(message.text);
+			messageDiv += '</span></div>';
 
-			if (current.attr("data-conversationid") == message.conversation) {
-				let tile = current.find("[data-messageId=" + message.id + "]");
-
-				tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
-				tile.find(".messageText").html("<span class='keepLineBreak readabilityToImprove'>" + toHtmlEquivalent(message.editedText) + "</span>");
-
-				executeMainActions(tile);
-
-				let name = tile.find(".name");
-				if (name.text().indexOf("🖉") == -1) {
-					name.append("🖉");
+			let messageFile = message.messageFile;
+			if (message.messageFile != null) {
+				if (messageFile.image) {
+					messageDiv += '<div class="messageImageContainer">';
+					messageDiv += '<img src="';
+					messageDiv += imageDownloadUrl + "?id=" + messageFile.id;
+					messageDiv += '" class="messageImage" />';
+					messageDiv += '<div>';
+				} else {
+					messageDiv += '<a class="messageFileLink" href="';
+					messageDiv += fileDownloadUrl + "?id=" + messageFile.id;
+					messageDiv += '">';
+					messageDiv += "📁";
+					messageDiv += toHtmlEquivalent(messageFile.originalName);
+					messageDiv += '</a>';
 				}
+			}
+
+			messageDiv += '</div>';
+
+			let messages = current.find("#messages");
+			messages.append(messageDiv);
+
+			let lastMessage = messages.children().last();
+
+			executeMainActions(lastMessage);
+
+			messagesDiv = document.getElementById("messages");
+			messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+			detectMessageEditionButtons(lastMessage);
+		}
+
+	});
+
+	addRoledJsonWebsocketListener("messageEdition", function(message) {
+
+		let current = $("#current");
+
+		if (current.attr("data-conversationid") == message.conversation) {
+			let tile = current.find("[data-messageId=" + message.id + "]");
+
+			tile.attr("title", originalMessageLabel + toHtmlEquivalent(message.text));
+			tile.find(".messageText").html("<span class='keepLineBreak readabilityToImprove'>" + toHtmlEquivalent(message.editedText) + "</span>");
+
+			executeMainActions(tile);
+
+			let name = tile.find(".name");
+			if (name.text().indexOf("🖉") == -1) {
+				name.append("🖉");
 			}
 		}
 	});

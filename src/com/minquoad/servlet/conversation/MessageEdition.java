@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.impl.conversation.MessageEditionForm;
-import com.minquoad.frontComponent.json.MessageJson;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/MessageEdition")
@@ -37,14 +36,13 @@ public class MessageEdition extends ImprovedHttpServlet {
 			message.setEditedText(form.getNewText());
 			getDaoFactory(request).getMessageDao().persist(message);
 
-			String text = new MessageJson(message, "MessageEdition").toJson();
 			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(message.getConversation());
 
-			sendTextToClients(
-					text,
+			sendJsonToClientsWithRole(
+					message.toJson(),
+					"messageEdition",
 					(endpoint) -> {
-						return "conversationUpdating".equals(endpoint.getRole())
-								&& conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
+						return conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
 					});
 
 		} else {

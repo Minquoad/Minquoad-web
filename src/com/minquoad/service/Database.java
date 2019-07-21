@@ -17,7 +17,7 @@ public class Database {
 
 	public static final int CONNECTIONS_PER_PARTITION_MIN = 1;
 	public static final int CONNECTIONS_PER_PARTITION_MAX = 64;
-	public static final int PARTITION_COUNT = 2;
+	public static final int PARTITION_NUMBER = 2;
 
 	private final ServletContext servletContext;
 
@@ -38,7 +38,7 @@ public class Database {
 
 			config.setMinConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MIN);
 			config.setMaxConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MAX);
-			config.setPartitionCount(PARTITION_COUNT);
+			config.setPartitionCount(PARTITION_NUMBER);
 
 			connectionPool = new BoneCP(config);
 

@@ -2,6 +2,9 @@ package com.minquoad.entity;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.minquoad.entity.file.MessageFile;
 
 public class Message {
@@ -78,4 +81,35 @@ public class Message {
 		this.messageFile = messageFile;
 	}
 
+	public JsonNode toJson() {
+
+		User user = this.getUser();
+		MessageFile file = this.getMessageFile();
+
+		ObjectNode messageJsonObject = JsonNodeFactory.instance.objectNode();
+		messageJsonObject.put("id", Long.toString(this.getId()));
+		messageJsonObject.put("text", this.getText());
+		messageJsonObject.put("editedText", this.getEditedText());
+		messageJsonObject.put("instant", this.getInstant().toString());
+		messageJsonObject.put("conversation", Long.toString(this.getConversation().getId()));
+
+		ObjectNode userJsonObject = JsonNodeFactory.instance.objectNode();
+		userJsonObject.put("id", Long.toString(user.getId()));
+		userJsonObject.put("nickname", user.getNickname());
+		userJsonObject.put("defaultColor", user.getDefaultColorAsHtmlValue());
+
+		ObjectNode fileJsonObject = null;
+		if (file != null) {
+			fileJsonObject = JsonNodeFactory.instance.objectNode();
+			fileJsonObject.put("id", Long.toString(file.getId()));
+			fileJsonObject.put("image", file.isImage());
+			fileJsonObject.put("originalName", file.getOriginalName());
+		}
+
+		messageJsonObject.set("user", userJsonObject);
+		messageJsonObject.set("messageFile", fileJsonObject);
+
+		return messageJsonObject;
+	}
+	
 }

@@ -15,7 +15,6 @@ import com.minquoad.entity.User;
 import com.minquoad.entity.file.MessageFile;
 import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
-import com.minquoad.frontComponent.json.MessageJson;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.tool.http.PartTool;
 
@@ -63,14 +62,13 @@ public class MessageAddition extends ImprovedHttpServlet {
 			message.setMessageFile(messageFile);
 			getDaoFactory(request).getMessageDao().persist(message);
 
-			String text = new MessageJson(message, "MessageAddition").toJson();
 			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(form.getConversation());
 
-			sendTextToClients(
-					text,
+			sendJsonToClientsWithRole(
+					message.toJson(),
+					"messageAddition",
 					(endpoint) -> {
-						return "conversationUpdating".equals(endpoint.getRole())
-								&& conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
+						return conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
 					});
 
 		} else {
