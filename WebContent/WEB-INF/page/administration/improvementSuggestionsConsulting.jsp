@@ -1,7 +1,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<div class="scrollableContainer centererContainer">
+<div class="scrollableContainer blockFlex fullSize">
 	<div class="totallyCenteredContainer tileContainer">
 
 		<div class="borderedTile">
@@ -22,7 +22,7 @@
 								<td>
 									<c:out value="${ improvementSuggestion.user.nickname }" />
 								</td>
-								<td class="interpretLineBreak">
+								<td class="keepLineBreak">
 									<c:out value="${ improvementSuggestion.text }" />
 								</td>
 								<td>

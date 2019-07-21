@@ -12,19 +12,17 @@
 		<jsp:param name="pageTitle" value="" />
 	</jsp:include>
 
-	<div id="mainContainer">
-		<div class="scrollableContainer centererContainer">
-			<div class="totallyCenteredContainer padded centeredText redText">
-				<div>⛔</div>
-				<div class="padded">
-					<fmt:message key="AccountBlocked" bundle="${ blockedAccountBundle }" />
-				</div>
-				<div>
-					<fmt:message key="YourAccountWillBeUnlockedOnThe"
-						bundle="${ blockedAccountBundle }" />
-					<span class="dateToFormat" data-format="1"><c:out
-							value="${ requestScope.user.unblockInstant }" /></span>
-				</div>
+	<div id="mainContainer" class="scrollableContainer blockFlex">
+		<div class="totallyCenteredContainer padded centeredText redText">
+			<div>⛔</div>
+			<div class="padded">
+				<fmt:message key="AccountBlocked" bundle="${ blockedAccountBundle }" />
+			</div>
+			<div>
+				<fmt:message key="YourAccountWillBeUnlockedOnThe"
+					bundle="${ blockedAccountBundle }" />
+				<span class="dateToFormat" data-format="1"><c:out
+						value="${ requestScope.user.unblockInstant }" /></span>
 			</div>
 		</div>
 	</div>

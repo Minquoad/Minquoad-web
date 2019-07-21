@@ -23,71 +23,69 @@
 		<jsp:param name="pageTitle" value="${ conversationsLabel }" />
 	</jsp:include>
 
-	<div id="mainContainer">
-		<div id="conversations" class="fullSize inlineBlockContainer">
+	<div id="mainContainer" class="conversations inlineBlockContainer">
 
-			<div id="list">
-				<div class="fullSize tileContainer">
-					<c:forEach items="${ requestScope.conversationResumes }"
-						var="conversationResume">
+		<div id="list" class="inlineBlock tileContainer scrollableContainer">
+			<c:forEach items="${ requestScope.conversationResumes }"
+				var="conversationResume">
 
-						<c:url value="/CurrentConversation" var="currentConversationUrl">
-							<c:param name="conversationId"
-								value="${ conversationResume.conversation.id }" />
-						</c:url>
-						<div class="borderedTile" data-subPageUrl="${ currentConversationUrl }"
-							data-subPageKey="${ conversationResume.conversation.id }">
-							<div class="fullSize resume">
-								<div class="conversationTitle">
+				<c:url value="/CurrentConversation" var="currentConversationUrl">
+					<c:param name="conversationId"
+						value="${ conversationResume.conversation.id }" />
+				</c:url>
+				<div class="borderedTile" data-subPageUrl="${ currentConversationUrl }"
+					data-subPageKey="${ conversationResume.conversation.id }">
+					<div class="fullSize resume">
+					
+						<div class="conversationTitle">
 
-									<c:if
-										test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
-										<c:out value="${ conversationResume.conversation.title }" />
+							<c:if
+								test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
+								<c:out value="${ conversationResume.conversation.title }" />
+							</c:if>
+							<c:if test="${ conversationResume.conversation.isMainBetweenTwoUsers() }">
+								<c:forEach items="${ conversationResume.participants }"
+									var="participant">
+									<c:if test="${participant ne requestScope.user}">
+										<c:out value="${ participant.nickname }" />
 									</c:if>
-									<c:if
-										test="${ conversationResume.conversation.isMainBetweenTwoUsers() }">
-										<c:forEach items="${ conversationResume.participants }"
-											var="participant">
-											<c:if test="${participant ne requestScope.user}">
-												<c:out value="${ participant.nickname }" />
-											</c:if>
-										</c:forEach>
-									</c:if>
-								</div>
-
-								<div class="participants">
-									<c:if
-										test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
-										<c:forEach items="${ conversationResume.participants }"
-											var="participant">
-											<c:if test="${participant ne requestScope.user}">
-												<c:out value="${ participant.nickname }" />
-											</c:if>
-										</c:forEach>
-									</c:if>
-								</div>
-							</div>
+								</c:forEach>
+							</c:if>
 						</div>
-					</c:forEach>
 
-					<div class="borderedTile" data-subPageUrl="<c:url value="/ConversationCreation" />"
-						data-subPageKey="createConversation">
-						<div class="fullSize resume newConversationResume">
-							<div class="conversationTitle">
-								<fmt:message key="NewConversation" bundle="${ conversationsBundle }" />
-							</div>
-							<div class="participants">
-							</div>
+						<div class="participants">
+							<c:if
+								test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
+								<c:forEach items="${ conversationResume.participants }"
+									var="participant">
+									<c:if test="${participant ne requestScope.user}">
+										<c:out value="${ participant.nickname }" />
+									</c:if>
+								</c:forEach>
+							</c:if>
 						</div>
+						
 					</div>
+				</div>
+				
+			</c:forEach>
 
-
+			<div class="borderedTile"
+				data-subPageUrl="<c:url value="/ConversationCreation" />"
+				data-subPageKey="createConversation">
+				<div class="fullSize resume">
+					<div class="conversationTitle newConversationResume">
+						+ <fmt:message key="NewConversation" bundle="${ conversationsBundle }" />
+					</div>
+					<div class="participants"></div>
 				</div>
 			</div>
 
-			<div id="currentContainer"></div>
 
 		</div>
+
+		<div id="currentContainer"></div>
+
 	</div>
 
 	<jsp:include page="/WEB-INF/includable/footer.jsp" />

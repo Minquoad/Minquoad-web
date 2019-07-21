@@ -11,15 +11,13 @@
 		<jsp:param name="pageTitle" value="" />
 	</jsp:include>
 
-	<div id="mainContainer">
-		<div class="scrollableContainer centererContainer">
-			<div class="totallyCenteredContainer padded centeredText darkorangeText">
-				<fmt:message key="BlockedSiteLine0" bundle="${ blockedSiteBundle }" />
-				<br />
-				🛠
-				<br />
-				<fmt:message key="BlockedSiteLine1" bundle="${ blockedSiteBundle }" />
-			</div>
+	<div id="mainContainer" class="scrollableContainer blockFlex">
+		<div class="totallyCenteredContainer centeredText darkorangeText">
+			<fmt:message key="BlockedSiteLine0" bundle="${ blockedSiteBundle }" />
+			<br />
+			🛠
+			<br />
+			<fmt:message key="BlockedSiteLine1" bundle="${ blockedSiteBundle }" />
 		</div>
 	</div>
 

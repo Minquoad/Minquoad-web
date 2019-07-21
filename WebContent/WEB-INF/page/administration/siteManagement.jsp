@@ -6,7 +6,7 @@
 <c:set var="deployment"
 	value="${ applicationScope['com.minquoad.service.Deployment'] }" scope="page" />
 
-<div class="scrollableContainer centererContainer">
+<div class="scrollableContainer blockFlex fullSize">
 	<div class="totallyCenteredContainer tileContainer">
 		<div class="borderedTile">
 			<div class="padded">

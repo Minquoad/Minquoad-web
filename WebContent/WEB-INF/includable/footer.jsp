@@ -3,14 +3,16 @@
 
 <fmt:setBundle basename="resources.Footer" var="footerBundle" />
 
-<div id="footer">
+<div id="footer" class="inlineBlockContainer">
 
-	<div id="leftFooter">
+	<div id="leftFooter" class="inlineFlex">
 
 		<c:if test="${not empty requestScope.user}">
 
 			<form id="improvementSuggestionAdditionForm" accept-charset="UTF-8"
-				action="<c:url value="/ImprovementSuggestionAddition" />" class="fullSize">
+				action="<c:url value="/ImprovementSuggestionAddition" />"
+				class="inlineBlock">
+
 				<textarea name="text"
 					placeholder="<fmt:message key="improvementSuggestionAdditionFormPlaceholder" bundle="${ footerBundle }" />"></textarea>
 			</form>
@@ -19,20 +21,22 @@
 
 	</div>
 
-	<div id="rightFooter">
+	<div id="rightFooter" class="inlineFlex">
+		<div class="vertivallyCenteredContainer fullWidth inlineBlock">
 
-		<c:if test="${not empty requestScope.user && requestScope.user.admin}">
-			<a href="<c:url value="/Administration" />">
-				<fmt:message key="Administration" bundle="${ footerBundle }" />
-			</a>
-		</c:if>
+			<c:if test="${not empty requestScope.user && requestScope.user.admin}">
+				<a href="<c:url value="/Administration" />">
+					<fmt:message key="Administration" bundle="${ footerBundle }" />
+				</a>
+			</c:if>
 
-		<c:if test="${not empty requestScope.controllingAdmin}">
-			<a href="<c:url value="/Unpossession" />">
-				<fmt:message key="Unpossess" bundle="${ footerBundle }" />
-			</a>
-		</c:if>
+			<c:if test="${not empty requestScope.controllingAdmin}">
+				<a href="<c:url value="/Unpossession" />">
+					<fmt:message key="Unpossess" bundle="${ footerBundle }" />
+				</a>
+			</c:if>
 
+		</div>
 	</div>
 
 </div>

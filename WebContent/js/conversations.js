@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	createSubPageMenu("conversationSubPageKey", $("#conversations #list .borderedTile"), $("#conversations #currentContainer"), true, function(data, textStatus, xhr) {
+	createSubPageMenu("conversationSubPageKey", $(".conversations #list .borderedTile"), $(".conversations #currentContainer"), true, function(data, textStatus, xhr) {
 		detectCurrentConversation();
 		detectConversationCreation(data, textStatus, xhr);
 	});
@@ -101,7 +101,7 @@ $(document).ready(function() {
 
 function detectCurrentConversation() {
 
-	let current = $("#conversations #current");
+	let current = $(".conversations #current");
 	if (current.length) {
 
 		detectMessageEditionButtons(current);
@@ -149,7 +149,7 @@ function detectCurrentConversation() {
 
 function detectConversationCreation(data, textStatus, xhr) {
 	if (xhr.status == 201) {
-		displayLoading($("#conversations #currentContainer"));
+		displayLoading($(".conversations #currentContainer"));
 	}
 }
 

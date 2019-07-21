@@ -11,18 +11,15 @@
 		<jsp:param name="pageTitle" value="" />
 	</jsp:include>
 
-	<div id="mainContainer">
-		<div class="scrollableContainer">
+	<div id="mainContainer" class="scrollableContainer">
+		<h1 class="centeredText">
+			<fmt:message key="HelloWorld" bundle="${ homeBundle }" />
+		</h1>
 
-			<h1 class="centeredText">
-				<fmt:message key="HelloWorld" bundle="${ homeBundle }" />
-			</h1>
-
-			<img>
-			<div class="tileContainer">
-				<div class="borderedTile">
-					<img class="padded" src="<c:url value="/img/so_good.png" />" />
-				</div>
+		<img>
+		<div class="tileContainer">
+			<div class="borderedTile">
+				<img class="padded" src="<c:url value="/img/so_good.png" />" />
 			</div>
 		</div>
 	</div>

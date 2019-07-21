@@ -17,27 +17,24 @@
 		<jsp:param name="pageTitle" value="${ administrationLabel }" />
 	</jsp:include>
 
-	<div id="mainContainer">
+	<div id="mainContainer" class="administration inlineBlockContainer">
 
-		<div id="administration" class="fullSize inlineBlockContainer">
-			<div id="nav">
-				<div data-subPageUrl="<c:url value="/UsersManagement" />"
-					data-subPageKey="UsersManagement">
-					<fmt:message key="UsersManagement" bundle="${ administrationBundle }" />
-				</div>
-				<div data-subPageUrl="<c:url value="/SiteManagement" />"
-					data-subPageKey="SiteManagement">
-					<fmt:message key="SiteManagement" bundle="${ administrationBundle }" />
-				</div>
-				<div
-					data-subPageUrl="<c:url value="/ImprovementSuggestionsConsulting" />"
-					data-subPageKey="ImprovementSuggestionsConsulting">
-					<fmt:message key="ImprovementSuggestions" bundle="${ administrationBundle }" />
-				</div>
+		<div id="nav">
+			<div data-subPageUrl="<c:url value="/UsersManagement" />"
+				data-subPageKey="UsersManagement">
+				<fmt:message key="UsersManagement" bundle="${ administrationBundle }" />
 			</div>
-
-			<div id="currentSubPage"></div>
+			<div data-subPageUrl="<c:url value="/SiteManagement" />"
+				data-subPageKey="SiteManagement">
+				<fmt:message key="SiteManagement" bundle="${ administrationBundle }" />
+			</div>
+			<div data-subPageUrl="<c:url value="/ImprovementSuggestionsConsulting" />"
+				data-subPageKey="ImprovementSuggestionsConsulting">
+				<fmt:message key="ImprovementSuggestions" bundle="${ administrationBundle }" />
+			</div>
 		</div>
+
+		<div id="currentSubPage"></div>
 
 	</div>
 

@@ -3,7 +3,7 @@
 
 <fmt:setBundle basename="resources.Administration" var="administrationBundle" />
 
-<div class="scrollableContainer centererContainer">
+<div class="scrollableContainer blockFlex fullSize">
 	<div class="totallyCenteredContainer tileContainer">
 
 		<div class="borderedTile">

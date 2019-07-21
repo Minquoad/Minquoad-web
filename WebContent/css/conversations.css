@@ -1,110 +1,91 @@
-#conversations #list {
-	display: inline-block;
+.conversations #list {
 	height: 100%;
 	width: 220px;
 	border-right: solid var(--BORDER_COLOR) 1px;
 }
 
-#conversations #list .tileContainer {
-	overflow-x: hidden;
-	overflow-y: auto;
-}
-
-#conversations #list .borderedTile {
+.conversations #list .borderedTile {
 	text-align: center;
 	height: 45px;
 	width: 100%;
 	cursor: pointer;
 }
 
-#conversations #list .conversationTitle {
+.conversations #list .selectedSubPage .resume {
+	background-color: rgb(28, 28, 28);
+}
+
+.conversations #list .resume .conversationTitle {
 	height: 18px;
 }
 
-#conversations #list .newConversationResume {
+.conversations #list .resume .newConversationResume {
 	color: grey;
 }
 
-#conversations #list .participants {
+.conversations #list .resume .participants {
 	color: grey;
 	font-size: 12px;
 }
 
-#conversations #list .selectedSubPage .resume {
-	background-color: rgb(28, 28, 28);
-}
-
-#conversations #currentContainer {
+.conversations #currentContainer {
 	display: inline-block;
 	height: 100%;
 	width: calc(100% - 220px - 1px);
 }
 
-#conversations #current {
-	height: 100%;
-	width: 100%;
-}
-
-#conversations #current #topBar {
+.conversations #current #topBar {
 	height: 45px;
 	font-size: 16px;
 	background-color: rgb(28, 28, 28);
 	border-bottom: solid var(--BORDER_COLOR) 1px;
 }
 
-#conversations #current #topBar .title {
-	display: inline-block;
-	height: 100%;
+.conversations #current #topBar .title {
+	width: 50%;
+	font-size: 18px;
 }
 
-#conversations #current #messages {
+.conversations #current #topBar .titleSide {
+	width: 25%;
+}
+
+.conversations #current #messages {
 	height: calc(100% - 90px - 2px);
 	border-bottom: solid var(--BANNER_BACKGROUND_COLOR) 1px;
-	overflow-x: hidden;
-	overflow-y: scroll;
-	word-break: break-word;
 }
 
-#conversations #current #messages .messageMetaData {
+.conversations #current #messages .messageMetaData {
 	font-size: 0;
 }
 
-#conversations #current #messages .messageMetaData a {
+.conversations #current #messages .messageMetaData a {
 	text-decoration: inherit;
 }
 
-#conversations #current #messages .messageMetaData div {
+.conversations #current #messages .messageMetaData div {
 	display: inline-block;
 	width: 50%;
 	color: grey;
 	font-size: 12px;
 }
 
-#conversations #current #messages .messageMetaData div:not(:first-child) {
+.conversations #current #messages .messageMetaData div:not(:first-child) {
 	text-align: right;
 }
 
-#conversations #current .messageEditionButton {
+.conversations #current .messageEditionButton {
 	border: solid 1px var(--BORDER_COLOR);
 	padding: 0 2px 0 2px;
 	cursor: pointer;
 	display: inline-block;
 }
 
-#conversations #current #messageEditor {
+.conversations #current #messageEditor {
 	height: 45px;
 }
 
-#conversations #current #messageEditor #messageEditorForm {
-	font-size: 0;
-}
-
-#conversations #current #messageEditor #messageEditorForm>* {
-	font-size: var(--MAIN_FONT_SIZE);
-	vertical-align: top;
-}
-
-#conversations #current #messageEditor textarea {
+.conversations #current #messageEditor textarea {
 	height: calc(45px - 2*3px);
 	width: calc(100% - 82px - 45px - 2*3px - 45px);
 	padding: 3px;
@@ -112,9 +93,7 @@
 	border: 0;
 }
 
-#conversations #current #messageEditor .inputFileTrigger {
-	display: inline-block;
-	text-align: center;
+.conversations #current #messageEditor .inputFileTrigger {
 	height: calc(45px - 2*2px);
 	width: calc(45px - 2*2px);
 	padding: 0;
@@ -122,8 +101,7 @@
 	border: solid var(--BORDER_COLOR) 2px;
 }
 
-#conversations #current #messageEditor #sepcialChars {
-	display: inline-block;
+.conversations #current #messageEditor #sepcialChars {
 	height: 45px;
 	width: 82px;
 	padding: 0;
@@ -131,19 +109,19 @@
 	border: 0;
 }
 
-#conversations #current #messageEditor #sepcialChars .dynamicMenu {
+.conversations #current #messageEditor #sepcialChars .dynamicMenu {
 	right: 0;
 	left: auto;
 	bottom: 100%;
 	top: auto;
 }
 
-#conversations #current #messageEditor #sepcialChars .dynamicMenuItem {
+.conversations #current #messageEditor #sepcialChars .dynamicMenuItem {
 	border-bottom: solid var(--BORDER_COLOR) 1px;
 	border-top: 0;
 }
 
-#conversations #current #messageEditor [type="button"] {
+.conversations #current #messageEditor [type="button"] {
 	vertical-align: top;
 	height: calc(45px);/* why not - 4px for the borders ? */
 	width: calc(45px);/* why not - 4px for the borders ? */
@@ -152,15 +130,14 @@
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
 }
 
-#conversations #messages .messageText form div {
+.conversations #messages .messageText form div {
 	vertical-align: top;
 	display: inline-block;
 	height: 45px;
 	width: 23px;
 }
 
-#conversations #messages .messageText form textarea {
-	display: inline-block;
+.conversations #messages .messageText form textarea {
 	height: calc(45px - 2*3px);
 	width: calc(100% - 23px - 2*3px);
 	padding: 3px;
@@ -169,19 +146,19 @@
 	vertical-align: top;
 }
 
-#conversations #messages .messageText form [type="button"] {
+.conversations #messages .messageText form [type="button"] {
 	vertical-align: top;
 	padding: 0;
 	margin: 0;
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
 }
 
-#conversations #messages .messageText form [type="button"][value="⭆"] {
+.conversations #messages .messageText form [type="button"][value="⭆"] {
 	width: 23px;
 	height: 23px;
 }
 
-#conversations #messages .messageText form [type="button"][value="✖"] {
+.conversations #messages .messageText form [type="button"][value="✖"] {
 	width: 23px;
 	height: 22px;
 }

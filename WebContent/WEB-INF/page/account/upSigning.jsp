@@ -15,8 +15,7 @@
 		<jsp:param name="pageTitle" value="${ upSigningLabel }" />
 	</jsp:include>
 
-	<div id="mainContainer">
-		<div class="scrollableContainer centererContainer">
+	<div id="mainContainer" class="scrollableContainer blockFlex">
 			<div class="totallyCenteredContainer tileContainer">
 				<div class="borderedTile">
 					<form class="padded" method="post" action="<c:url value="/UpSigning" />"
@@ -101,7 +100,6 @@
 					</form>
 				</div>
 			</div>
-		</div>
 	</div>
 
 	<jsp:include page="/WEB-INF/includable/footer.jsp" />

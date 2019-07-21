@@ -1,13 +1,26 @@
+.inlineBlockContainer {
+	font-size: 0;
+}
+
+.inlineBlockContainer>* {
+	font-size: var(--MAIN_FONT_SIZE);
+	vertical-align: top;
+}
+
 .scrollableContainer {
-	height: 100%;
-	width: 100%;
 	overflow: auto;
 }
 
-.centererContainer {
+.inlineFlex {
+	display: inline-flex;
+}
+
+.blockFlex {
 	display: flex;
-	height: 100%;
-	width: 100%;
+}
+
+.inlineBlock {
+	display: inline-block;
 }
 
 .totallyCenteredContainer {
@@ -57,10 +70,6 @@
 	text-align: right;
 }
 
-.inlineBlock {
-	display: inline-block;
-}
-
 .justified {
 	text-align: justify;
 }
@@ -85,21 +94,8 @@
 	text-decoration: unset;
 }
 
-.inlineBlockContainer {
-	font-size: 0;
-}
-
-.inlineBlockContainer>* {
-	font-size: var(--MAIN_FONT_SIZE);
-	vertical-align: top;
-}
-
 .invisible {
 	display: none;
-}
-
-.italic {
-	font-style: italic;
 }
 
 .italic {
@@ -122,10 +118,6 @@
 .loadingDiv .totallyCenteredContainer {
 	height: 64px;
 	width: 64px;
-}
-
-.interpretLineBreak {
-	white-space: pre-line;
 }
 
 .inputFileTrigger {

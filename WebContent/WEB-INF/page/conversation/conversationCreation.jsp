@@ -3,7 +3,7 @@
 
 <fmt:setBundle basename="resources.Conversations" var="conversationsBundle" />
 
-<div class="scrollableContainer centererContainer">
+<div class="scrollableContainer blockFlex fullSize">
 	<div class="totallyCenteredContainer tileContainer">
 		<div class="borderedTile">
 			<form class="padded" method="post" action="<c:url value="/ConversationCreation" />"
