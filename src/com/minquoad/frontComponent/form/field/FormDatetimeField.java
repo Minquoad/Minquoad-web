@@ -1,30 +1,27 @@
 package com.minquoad.frontComponent.form.field;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 
-public class FormDateField extends FormStringField {
+public class FormDatetimeField extends FormStringField {
 
 	public static final String TIMEZONE_OFFSET_KEY = "timezoneOffset";
 
-	private LocalDateToLocalDateTimeConverter converter;
 	private Instant instant;
 
-	public FormDateField(String name) {
+	public FormDatetimeField(String name) {
 		super(name);
-		setConverter(LocalDate::atStartOfDay);
 	}
 
 	@Override
 	public String getFormatProblem(String value) {
 		try {
-			LocalDate.parse(value);
+			LocalDateTime.parse(value);
 			return null;
 		} catch (DateTimeParseException e) {
-			return getText("DatetimeWrongFormat");
+			return getText("DateWrongFormat");
 		}
 	}
 
@@ -40,21 +37,9 @@ public class FormDateField extends FormStringField {
 				zoneOffset = ZoneOffset.UTC;
 			}
 
-			instant = getConverter().toLocalDateTime(LocalDate.parse(getValue())).toInstant(zoneOffset);
+			instant = LocalDateTime.parse(getValue()).toInstant(zoneOffset);
 		}
 		return instant;
 	}
 
-	public LocalDateToLocalDateTimeConverter getConverter() {
-		return converter;
-	}
-
-	public void setConverter(LocalDateToLocalDateTimeConverter converter) {
-		this.converter = converter;
-	}
-
-	public interface LocalDateToLocalDateTimeConverter {
-		public LocalDateTime toLocalDateTime(LocalDate date);
-	}
-	
 }

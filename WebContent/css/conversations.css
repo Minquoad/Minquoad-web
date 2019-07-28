@@ -16,7 +16,8 @@
 }
 
 .conversations #list .resume .conversationTitle {
-	height: 18px;
+	height: 23px;
+	overflow-wrap: break-word;
 }
 
 .conversations #list .resume .newConversationResume {
@@ -36,7 +37,6 @@
 
 .conversations #current #topBar {
 	height: 45px;
-	font-size: 16px;
 	background-color: rgb(28, 28, 28);
 	border-bottom: solid var(--BORDER_COLOR) 1px;
 }
@@ -48,6 +48,11 @@
 
 .conversations #current #topBar .titleSide {
 	width: 25%;
+}
+
+.conversations #current #topBar .titleSide .participants {
+	color: grey;
+	font-size: var(--MAIN_FONT_SIZE);
 }
 
 .conversations #current #messages {

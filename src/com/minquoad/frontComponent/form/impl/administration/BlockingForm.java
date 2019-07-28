@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
-import com.minquoad.frontComponent.form.field.FormDateField;
+import com.minquoad.frontComponent.form.field.FormDatetimeField;
 import com.minquoad.frontComponent.form.field.FormEntityField;
 
 public class BlockingForm extends Form {
@@ -35,9 +35,9 @@ public class BlockingForm extends Form {
 		});
 		this.addField(targetField);
 
-		FormDateField dateField = new FormDateField(DATE_KEY);
-		dateField.setEmptyPermitted(false);
-		this.addField(dateField);
+		FormDatetimeField datetimeField = new FormDatetimeField(DATE_KEY);
+		datetimeField.setEmptyPermitted(false);
+		this.addField(datetimeField);
 	}
 
 	public User getTarget() {
@@ -47,7 +47,7 @@ public class BlockingForm extends Form {
 	}
 
 	public Instant getUnblockDate() {
-		FormDateField field = (FormDateField) this.getField(DATE_KEY);
+		FormDatetimeField field = (FormDatetimeField) this.getField(DATE_KEY);
 		return field.getInstant();
 	}
 	

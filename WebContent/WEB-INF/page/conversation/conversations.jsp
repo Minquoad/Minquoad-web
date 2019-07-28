@@ -37,7 +37,7 @@
 					data-subPageKey="${ conversationResume.conversation.id }">
 					<div class="fullSize resume">
 					
-						<div class="conversationTitle">
+						<div class="conversationTitle scrollableContainer">
 
 							<c:if
 								test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">

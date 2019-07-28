@@ -6,11 +6,23 @@
 <div id="current" class="fullSize"
 	data-conversationId="${ requestScope.conversation.id }">
 	<div id="topBar" class="inlineBlockContainer">
-	
+
 		<div class="inlineFlex fullHeigth titleSide">
+			<div class="totallyCenteredContainer participants">
+				<c:forEach items="${ requestScope.participants }" var="loopUser">
+					<c:if test="${ loopUser ne requestScope.user }">
+						<c:url value="/Profile" var="profileUrl">
+							<c:param name="targetUserId" value="${ loopUser.id }" />
+						</c:url>
+						<a href="${ profileUrl }" class="undecorated">
+							<c:out value="${ loopUser.nickname }" />
+						</a>
+					</c:if>
+				</c:forEach>
+			</div>
 		</div>
-	
-		<div class="title inlineFlex fullHeigth">
+
+		<div class="title inlineFlex fullHeigth scrollableContainer">
 			<div class="totallyCenteredContainer">
 				<c:if test="${ requestScope.conversation.isMainBetweenTwoUsers() }">
 					<c:forEach items="${ requestScope.participants }" var="loopUser">
@@ -25,10 +37,21 @@
 				</c:if>
 			</div>
 		</div>
-		
+
 		<div class="inlineFlex fullHeigth titleSide">
+			<c:if test="${ requestScope.conversationAccess.administrator }">
+				
+				<c:url value="/CurrentConversation" var="currentConversationUrl">
+					<c:param name="conversationId"
+						value="${ requestScope.conversation.id }" />
+				</c:url>
+				<form method="POST" action="${ currentConversationUrl }">
+					<input type="submit" value="test">
+				</form>
+				
+			</c:if>
 		</div>
-	
+
 	</div>
 
 	<div id="messages" class="tileContainer scrollableContainer">

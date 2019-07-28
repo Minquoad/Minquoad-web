@@ -12,16 +12,17 @@
 	</jsp:include>
 
 	<div id="mainContainer" class="scrollableContainer">
+
 		<h1 class="centeredText">
 			<fmt:message key="HelloWorld" bundle="${ homeBundle }" />
 		</h1>
 
-		<img>
 		<div class="tileContainer">
 			<div class="borderedTile">
 				<img class="padded" src="<c:url value="/img/so_good.png" />" />
 			</div>
 		</div>
+
 	</div>
 
 	<jsp:include page="/WEB-INF/includable/footer.jsp" />

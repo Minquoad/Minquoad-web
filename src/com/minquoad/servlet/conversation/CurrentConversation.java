@@ -33,6 +33,9 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
+		//optimization: all ConversationAcces are loaded in one requests
+		getDaoFactory(request).getUserDao().getConversationUsers(conversation);
+		
 		return user != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
@@ -45,10 +48,11 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		request.setAttribute("conversation", conversation);
 
 		List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
-
+		
+		ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
+		ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
+		
 		if (messages.size() != 0) {
-			ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
-			ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
 			Message lastMessage = messages.get(messages.size() - 1);
 			if (lastMessage != conversationAccess.getLastSeenMessage()) {
 				conversationAccess.setLastSeenMessage(messages.get(messages.size() - 1));
@@ -56,15 +60,19 @@ public class CurrentConversation extends ImprovedHttpServlet {
 			}
 		}
 
-		request.setAttribute("messages", messages);
+		List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
 
-		if (conversation.isMainBetweenTwoUsers()) {
-			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
-			request.setAttribute("participants", conversationUsers);
-		}
+		request.setAttribute("messages", messages);
+		request.setAttribute("participants", conversationUsers);
+		request.setAttribute("conversationAccess",  conversationAccess);
 
 		forwardToView(request, response, VIEW_PATH);
 
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
 	}
 
 }

@@ -27,7 +27,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${ requestScope.users }" var="loopUser">
+						<c:forEach items="${ requestScope.daoFactory.userDao.all }" var="loopUser">
 							<tr>
 								<td>
 									<c:out value="${ loopUser.id }" />
@@ -81,22 +81,25 @@
 													</div>
 												</c:if>
 												<form method="post" class="dynamicMenuItem"
-													action="<c:url value="/Blocking" />" accept-charset="UTF-8">
+													action="<c:url value="/UsersManagement" />" accept-charset="UTF-8">
 													<label for="unblockDate">
 														<fmt:message key="SetUnblockingDate"
 															bundle="${ administrationBundle }" />
 														:
 													</label>
 													<input type="hidden" name="targetId" value="${ loopUser.id }" />
-													<input type="date" name="date" />
+													<input type="datetime-local" name="date" />
+													<input type="hidden" name="timezoneOffset" value="" />
 													<input type="submit" value="⛔ Block" />
 												</form>
 											</div>
 										</div>
 									</c:if>
 								</td>
-								<td class="dateToFormat" data-format="1">
-									<c:out value="${ loopUser.unblockInstant }" />
+								<td>
+									<span class="dateToFormat" data-format="1">
+										<c:out value="${ loopUser.unblockInstant }" />
+									</span>
 								</td>
 							</tr>
 						</c:forEach>

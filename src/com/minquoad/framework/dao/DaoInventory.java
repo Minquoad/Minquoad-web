@@ -4,12 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.minquoad.framework.dao.entityMember.EntityMember;
 
 public class DaoInventory<PrimaryKey, Entity> {
 
-	HashMap<PrimaryKey, Entity> map;
+	Map<PrimaryKey, Entity> map;
 
 	private EntityMember<? super Entity, PrimaryKey> pkEntityMember;
 
@@ -59,11 +60,11 @@ public class DaoInventory<PrimaryKey, Entity> {
 		return getMap().values();
 	}
 
-	public HashMap<PrimaryKey, Entity> getMap() {
+	public Map<PrimaryKey, Entity> getMap() {
 		return map;
 	}
 
-	public void setMap(HashMap<PrimaryKey, Entity> map) {
+	public void setMap(Map<PrimaryKey, Entity> map) {
 		this.map = map;
 	}
 

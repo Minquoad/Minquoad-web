@@ -11,3 +11,7 @@ form input, form textarea, form select {
 form input[type="button"], form input[type="submit"] {
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
 }
+
+span.select2.select2-container {
+	
+}

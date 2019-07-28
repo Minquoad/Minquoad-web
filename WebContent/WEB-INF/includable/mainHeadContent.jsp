@@ -5,6 +5,8 @@
 
 <title>Minquoad</title>
 
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css"/>
+
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/ext/jquery.dynatable.css" />" />
 
 <link rel="stylesheet" type="text/css" href="<c:url value="/css/variable.css" />" />
@@ -31,6 +33,8 @@
 </script>
 
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
+
 <script type="text/javascript" src="<c:url value="/js/ext/jquery.dynatable.js" />"></script>
 
 <script type="text/javascript" src="<c:url value="/js/websocketsHandle.js" />"></script>
