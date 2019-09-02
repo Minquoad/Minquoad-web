@@ -9,7 +9,7 @@ import com.minquoad.frontComponent.form.field.FormColorField;
 import com.minquoad.frontComponent.form.field.FormFileField;
 import com.minquoad.frontComponent.form.field.FormImageField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.unit.impl.UserUnit;
+import com.minquoad.unit.UserUnit;
 
 public class ProfileEditionForm extends Form {
 

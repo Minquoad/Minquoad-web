@@ -14,19 +14,19 @@ public class SessionManager {
 	}
 
 	public void add(ImprovedEndpoint improvedEndpoint) {
-		improvedEndpoints.add(improvedEndpoint);
+		getImprovedEndpoints().add(improvedEndpoint);
 	}
 
 	public void remove(ImprovedEndpoint improvedEndpoint) {
-		improvedEndpoints.remove(improvedEndpoint);
+		getImprovedEndpoints().remove(improvedEndpoint);
+	}
+
+	public int getImprovedEndpointsNumber() {
+		return getImprovedEndpoints().size();
 	}
 
 	public List<ImprovedEndpoint> getImprovedEndpoints() {
 		return improvedEndpoints;
-	}
-
-	public int getImprovedEndpointsNumber() {
-		return improvedEndpoints.size();
 	}
 
 }

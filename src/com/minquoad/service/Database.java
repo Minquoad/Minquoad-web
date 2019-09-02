@@ -25,7 +25,7 @@ public class Database {
 
 	public Database(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
+		Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -44,8 +44,7 @@ public class Database {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger logger = (Logger) servletContext.getAttribute(Logger.class.getName());
-			logger.logError(e);
+			ServicesManager.getService(servletContext, Logger.class).logError(e);
 		}
 	}
 
@@ -54,7 +53,7 @@ public class Database {
 	}
 
 	public String getDatabaseUrl() {
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
+		Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 		return DATABASE_PROTOCOL_NAME
 				+ ":" + DATABASE_SUBPROTOCOL_NAME
 				+ "://" + deployment.getDatabaseHost()

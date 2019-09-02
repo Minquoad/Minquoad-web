@@ -12,7 +12,7 @@ import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.impl.account.InLogingForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.unit.impl.FailedInLoginigAttemptUnit;
+import com.minquoad.unit.FailedInLoginigAttemptUnit;
 
 @WebServlet("/InLoging")
 public class InLoging extends ImprovedHttpServlet {

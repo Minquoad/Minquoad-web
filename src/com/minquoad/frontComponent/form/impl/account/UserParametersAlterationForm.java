@@ -10,7 +10,7 @@ import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormListField;
 import com.minquoad.frontComponent.form.field.FormStringField;
 import com.minquoad.tool.InternationalizationTool;
-import com.minquoad.unit.impl.UserUnit;
+import com.minquoad.unit.UserUnit;
 
 public class UserParametersAlterationForm extends Form {
 

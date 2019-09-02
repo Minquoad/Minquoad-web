@@ -18,7 +18,7 @@ import com.minquoad.entity.User;
 import com.minquoad.frontComponent.ConversationResume;
 import com.minquoad.tool.VersatilTool;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.unit.impl.ConversationUnit;
+import com.minquoad.unit.ConversationUnit;
 
 @WebServlet("/Conversations")
 public class Conversations extends ImprovedHttpServlet {
@@ -41,7 +41,7 @@ public class Conversations extends ImprovedHttpServlet {
 
 		List<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
 
-		User targetUser = getEntityFromIdParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
+		User targetUser = getEntityFromPkParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
 		if (targetUser != null && targetUser != getUser(request)) {
 			for (Conversation conversation : conversations) {
 				if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {

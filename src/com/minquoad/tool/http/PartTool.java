@@ -39,7 +39,7 @@ public abstract class PartTool {
 		for (int i = 0; i < 2; i++) {
 			randomDirPath += random.nextInt(10) + "/";
 		}
-		storageManager.initStorageFolderIfNotExists(randomDirPath);
+		StorageManager.initFolderIfNotExists(storageManager.getFile(randomDirPath));
 		while (newFile == null || newFile.exists()) {
 			String randomFileName = Integer.toString(Math.abs(random.nextInt(1000000000)));
 			while (randomFileName.length() < 9) {
@@ -47,7 +47,7 @@ public abstract class PartTool {
 			}
 			randomPath = randomDirPath + randomFileName;
 
-			newFile = new File(storageManager.getStoragePath(randomPath));
+			newFile = storageManager.getFile(randomPath);
 		}
 
 		saveInFile(part, newFile);

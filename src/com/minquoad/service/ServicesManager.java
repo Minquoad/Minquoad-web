@@ -16,11 +16,10 @@ public class ServicesManager implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent contextEvent) {
+		ServletContext servletContext = contextEvent.getServletContext();
 
 		Locale.setDefault(new Locale("en", "US"));
 		ResourceBundle.clearCache();
-
-		ServletContext servletContext = contextEvent.getServletContext();
 
 		addService(servletContext, new Deployment());
 		addService(servletContext, new StorageManager(servletContext));
@@ -30,7 +29,7 @@ public class ServicesManager implements ServletContextListener {
 		addService(servletContext, new CronManager(servletContext));
 
 		//getService(servletContext, CronManager.class).start();
-		getService(servletContext, Logger.class).logInfo("Servlet context initialized. Running version : " + Deployment.VERSION);
+		getService(servletContext, Logger.class).logInfo("Servlet context initialized. Running version : " + getService(servletContext, Deployment.class).getVersion());
 	}
 
 	@Override
@@ -43,7 +42,11 @@ public class ServicesManager implements ServletContextListener {
 	}
 
 	public static void addService(ServletContext servletContext, Object service) {
-		servletContext.setAttribute(service.getClass().getName(), service);
+		String name = service.getClass().getName();
+		if (servletContext.getAttribute(name) != null) {
+			throw new RuntimeException("A service is supposed to be a singleton.");
+		}
+		servletContext.setAttribute(name, service);
 	}
 
 	public static <ServiceClass> ServiceClass getService(HttpServletRequest request, Class<ServiceClass> serviceClass) {

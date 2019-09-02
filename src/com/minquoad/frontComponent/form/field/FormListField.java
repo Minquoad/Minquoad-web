@@ -1,12 +1,13 @@
 package com.minquoad.frontComponent.form.field;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FormListField extends FormStringField {
 
 	private List<String> acceptedValues;
-	
+
 	public FormListField(String name) {
 		super(name);
 		acceptedValues = new ArrayList<String>();
@@ -14,7 +15,7 @@ public class FormListField extends FormStringField {
 
 	@Override
 	public String getFormatProblem(String value) {
-		for (String acceptedValue :acceptedValues) {
+		for (String acceptedValue : acceptedValues) {
 			if (acceptedValue.equals(value)) {
 				return null;
 			}
@@ -24,6 +25,10 @@ public class FormListField extends FormStringField {
 
 	public void addPossibleValue(String value) {
 		acceptedValues.add(value);
+	}
+
+	public void addPossibleValues(Collection<String> values) {
+		acceptedValues.addAll(values);
 	}
 
 }

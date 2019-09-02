@@ -18,13 +18,13 @@ public class Unblocking extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		User target = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
+		User target = getEntityFromPkParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 		return getUser(request) != null && target != null && getUser(request).canAdminister(target);
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		User target = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
+		User target = getEntityFromPkParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 
 		target.setUnblockInstant(null);
 

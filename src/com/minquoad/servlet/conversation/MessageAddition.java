@@ -2,6 +2,7 @@ package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -68,12 +69,17 @@ public class MessageAddition extends ImprovedHttpServlet {
 			getDaoFactory(request).getConversationDao().persist(conversation);
 			
 			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
+			
+			List<Long> conversationUsersIds = new ArrayList<Long>();
+			for (User conversationUser : conversationUsers) {
+				conversationUsersIds.add(conversationUser.getId());
+			}
 
 			sendJsonToClientsWithRole(
 					message.toJson(),
 					"messageAddition",
 					(endpoint) -> {
-						return conversationUsers.contains(endpoint.getUser(getDaoFactory(request)));
+						return conversationUsersIds.contains(endpoint.getUserId());
 					});
 
 		} else {

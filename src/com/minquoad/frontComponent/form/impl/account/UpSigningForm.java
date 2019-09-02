@@ -6,7 +6,7 @@ import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.frontComponent.form.field.FormEmailField;
 import com.minquoad.frontComponent.form.field.FormStringField;
-import com.minquoad.unit.impl.UserUnit;
+import com.minquoad.unit.UserUnit;
 
 public class UpSigningForm extends Form {
 

@@ -19,7 +19,7 @@ public abstract class ImprovedDaoImpl<EntitySubclass> extends DaoImpl<EntitySubc
 
 	@Override
 	public Connection getConnection() throws SQLException {
-		return getDaoFactory().getDatabase().getConnection();
+		return getDaoFactory().getConnection();
 	}
 
 	@Override

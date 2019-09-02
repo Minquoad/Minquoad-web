@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.service.ServicesManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/Community")
@@ -24,6 +25,9 @@ public class Community extends ImprovedHttpServlet {
 		request.setAttribute("users", getDaoFactory(request).getUserDao().getAll());
 		
 		forwardToView(request, response, VIEW_PATH);
+		
+		
+		ServicesManager.getService(request, String.class);
 	}
 
 }

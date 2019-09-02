@@ -1,12 +1,10 @@
-package com.minquoad.unit.impl;
+package com.minquoad.unit;
 
 import java.time.Duration;
 import java.time.Instant;
 
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
-import com.minquoad.unit.Unit;
-import com.minquoad.unit.UnitFactory;
 
 public class FailedInLoginigAttemptUnit extends Unit {
 

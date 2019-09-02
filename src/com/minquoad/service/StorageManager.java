@@ -22,27 +22,20 @@ public class StorageManager {
 
 	public StorageManager(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
 
-		initFolderIfNotExists(deployment.getStoragePath());
-		initStorageFolderIfNotExists(INTERNAL_PATH);
-		initStorageFolderIfNotExists(TMP_PATH);
-		initStorageFolderIfNotExists(LOG_PATH);
-		initStorageFolderIfNotExists(UPLOADED_PATH);
-		initStorageFolderIfNotExists(COMMUNITY_PATH);
+		initFolderIfNotExists(getFile(""));
+		initFolderIfNotExists(getFile(INTERNAL_PATH));
+		initFolderIfNotExists(getFile(TMP_PATH));
+		initFolderIfNotExists(getFile(LOG_PATH));
+		initFolderIfNotExists(getFile(UPLOADED_PATH));
+		initFolderIfNotExists(getFile(COMMUNITY_PATH));
 	}
 
-	public String getStoragePath(String relativePath) {
-		Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
-		return deployment.getStoragePath() + relativePath;
+	public File getFile(String relativePath) {
+		return new File(ServicesManager.getService(servletContext, Deployment.class).getStoragePath() + relativePath);
 	}
 
-	public boolean initStorageFolderIfNotExists(String filePath) {
-		return initFolderIfNotExists(getStoragePath(filePath));
-	}
-
-	public static boolean initFolderIfNotExists(String filePath) {
-		File file = new File(filePath);
+	public static boolean initFolderIfNotExists(File file) {
 		if (!file.exists()) {
 			file.mkdirs();
 			return true;
@@ -50,24 +43,11 @@ public class StorageManager {
 		return false;
 	}
 
-	public static JsonNode fileToJsonNode(String path) {
-		return fileToJsonObject(new File(path));
+	public static JsonNode fileToJsonNode(File file) throws IOException {
+		return new ObjectMapper().readTree(StorageManager.fileToString(file));
 	}
 
-	public static JsonNode fileToJsonObject(File file) {
-		try {
-			return new ObjectMapper().readTree(StorageManager.fileToString(file));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static String fileToString(String path) {
-		return fileToString(new File(path));
-	}
-
-	public static String fileToString(File file) {
+	public static String fileToString(File file) throws IOException {
 		BufferedReader reader = null;
 		try {
 
@@ -86,16 +66,12 @@ public class StorageManager {
 
 			return stringBuilder.toString();
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
 			try {
 				reader.close();
 			} catch (Exception e) {
 			}
 		}
-
-		return null;
 	}
 
 }

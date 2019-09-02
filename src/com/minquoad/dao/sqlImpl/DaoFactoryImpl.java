@@ -1,9 +1,14 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.service.Database;
 
 public class DaoFactoryImpl implements DaoFactory {
+
+	private Database database;
 
 	private ThingDaoImpl thingDaoImpl;
 	private UserDaoImpl userDaoImpl;
@@ -18,14 +23,16 @@ public class DaoFactoryImpl implements DaoFactory {
 	private MessageFileDaoImpl messageFileDaoImpl;
 	private ConsiderationDaoImpl considerationDaoImpl;
 
-	private Database database;
-
 	public DaoFactoryImpl(Database database) {
 		this.database = database;
 	}
 
-	public Database getDatabase() {
+	private Database getDatabase() {
 		return database;
+	}
+
+	public Connection getConnection() throws SQLException {
+		return this.getDatabase().getConnection();
 	}
 
 	@Override

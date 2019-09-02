@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class Deployment {
 
-	public static final String VERSION = "0.2.0";
-
 	public static final String CONFIGURATION_JSON_PATH = System.getProperty("user.home") + "/minquoad-web-configuration.json";
 
 	private String storagePath;
@@ -21,12 +19,8 @@ public class Deployment {
 	private boolean open;
 
 	public Deployment() {
-		File file = new File(CONFIGURATION_JSON_PATH);
-		if (!file.exists()) {
-			new RuntimeException("Configuration json not found at \"" + CONFIGURATION_JSON_PATH + "\".");
-		} else {
-
-			JsonNode configurationJson = StorageManager.fileToJsonNode(CONFIGURATION_JSON_PATH);
+		try {
+			JsonNode configurationJson = StorageManager.fileToJsonNode(new File(CONFIGURATION_JSON_PATH));
 
 			storagePath = configurationJson.findValue("storagePath").asText();
 
@@ -41,6 +35,8 @@ public class Deployment {
 
 			setOpen(true);
 
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -81,7 +77,7 @@ public class Deployment {
 	}
 
 	public String getVersion() {
-		return VERSION;
+		return "0.2.0";
 	}
 
 }

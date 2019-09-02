@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.entity.Conversation;
 import com.minquoad.frontComponent.form.impl.conversation.ConversationCreationForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.unit.impl.ConversationUnit;
+import com.minquoad.unit.ConversationUnit;
 
 @WebServlet("/ConversationCreation")
 public class ConversationCreation extends ImprovedHttpServlet {

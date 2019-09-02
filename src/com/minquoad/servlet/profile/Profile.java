@@ -27,7 +27,7 @@ public class Profile extends ImprovedHttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		User user = getEntityFromIdParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
+		User user = getEntityFromPkParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
 
 		if (user != null) {
 			request.setAttribute("showedUser", user);

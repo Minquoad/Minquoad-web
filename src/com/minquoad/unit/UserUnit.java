@@ -1,4 +1,4 @@
-package com.minquoad.unit.impl;
+package com.minquoad.unit;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,8 +9,6 @@ import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
 import com.minquoad.tool.InternationalizationTool;
-import com.minquoad.unit.Unit;
-import com.minquoad.unit.UnitFactory;
 
 public class UserUnit extends Unit {
 

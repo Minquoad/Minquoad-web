@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 
 import com.minquoad.service.Logger;
+import com.minquoad.service.ServicesManager;
 import com.minquoad.service.StorageManager;
 
 public class CronManager {
@@ -60,9 +61,11 @@ public class CronManager {
 	}
 
 	private void runMinutlyCrons(Instant instant) {
-		Logger logger = (Logger) servletContext.getAttribute(Logger.class.getName());
+		Logger logger = ServicesManager.getService(servletContext, Logger.class);
 
-		logger.logInFile(Logger.getDateTime() + " : " + "CronManager.runMinutlyCrons() called", StorageManager.LOG_PATH + "cron.log");
+		logger.logInFile(
+				Instant.now() + " : " + "CronManager.runMinutlyCrons() called",
+				ServicesManager.getService(servletContext, StorageManager.class).getFile(StorageManager.LOG_PATH + "cron.log"));
 
 		for (Cron minutelyCron : minutelyCrons) {
 			try {

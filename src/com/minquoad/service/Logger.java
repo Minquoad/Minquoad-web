@@ -6,8 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
 
 import javax.servlet.ServletContext;
 
@@ -24,22 +23,25 @@ public class Logger {
 	}
 
 	public void logError(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "error.log");
+		standartLogInFile(string, "error.log");
 	}
 
 	public void logWarning(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "warning.log");
+		standartLogInFile(string, "warning.log");
 	}
 
 	public void logInfo(String string) {
-		logInFile(getDateTime() + " : " + string, StorageManager.LOG_PATH + "info.log");
+		standartLogInFile(string, "info.log");
 	}
 
-	public void logInFile(String string, String filePath) {
-		try {
-			Deployment deployment = (Deployment) servletContext.getAttribute(Deployment.class.getName());
+	private void standartLogInFile(String string, String filePath) {
+		logInFile(
+				Instant.now() + " : " + string,
+				ServicesManager.getService(servletContext, StorageManager.class).getFile(StorageManager.LOG_PATH + filePath));
+	}
 
-			File file = new File(deployment.getStoragePath() + filePath);
+	public void logInFile(String string, File file) {
+		try {
 			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 				file.createNewFile();
@@ -54,11 +56,6 @@ public class Logger {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static String getDateTime() {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return formatter.format(new Date());
 	}
 
 	public static String getStackTraceAsString(Throwable throwable) {

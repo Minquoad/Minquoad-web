@@ -4,7 +4,7 @@ import java.io.File;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
-import com.minquoad.service.Deployment;
+import com.minquoad.service.StorageManager;
 import com.minquoad.unit.UnitFactory;
 
 public class ProtectedFile {
@@ -51,9 +51,9 @@ public class ProtectedFile {
 		return getOriginalName().substring(lastIndexOfDot+1);
 	}
 
-	public File getFile(Deployment deployment) {
+	public File getFile(StorageManager storageManager) {
 		if (file == null) {
-			file = new File(deployment.getStoragePath() + getRelativePath());
+			file = storageManager.getFile(getRelativePath());
 		}
 		return file;
 	}

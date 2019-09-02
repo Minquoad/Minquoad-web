@@ -15,7 +15,9 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
+import com.minquoad.service.Database;
 import com.minquoad.service.Logger;
+import com.minquoad.service.ServicesManager;
 import com.minquoad.service.SessionManager;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 
@@ -28,44 +30,34 @@ public class ImprovedEndpoint extends Endpoint {
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
+		roles = new ArrayList<String>();
 
 		httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		websocketSession = session;
-		roles = new ArrayList<String>();
 
-		session.addMessageHandler(new MessageHandler.Whole<String>() {
-			@Override
-			public void onMessage(String message) {
-				addRole(message);
-			}
-		});
+		DaoFactory daoFactory = getService(Database.class).getNewDaoFactory();
+		if (!getUser(daoFactory).isBlocked()) {
 
-		SessionManager sessionManager = (SessionManager) getContext().getAttribute(SessionManager.class.getName());
-		sessionManager.add(this);
+			session.addMessageHandler(new MessageHandler.Whole<String>() {
+				@Override
+				public void onMessage(String message) {
+					addRole(message);
+				}
+			});
 
+			getService(SessionManager.class).add(this);
+		}
 	}
 
 	@Override
 	public void onClose(Session session, CloseReason reason) {
-		SessionManager sessionManager = (SessionManager) getContext().getAttribute(SessionManager.class.getName());
-		sessionManager.remove(this);
+		getService(SessionManager.class).remove(this);
 	}
 
 	@Override
 	public void onError(Session session, Throwable throwable) {
-		try {
-			ServletContext context = getContext();
-
-			Logger logger = (Logger) context.getAttribute(Logger.class.getName());
-			logger.logError(throwable);
-
-			context = getContext();
-			SessionManager sessionManager = (SessionManager) context.getAttribute(SessionManager.class.getName());
-			sessionManager.remove(this);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		getService(Logger.class).logError(throwable);
+		getService(SessionManager.class).remove(this);
 	}
 
 	public Session getWebsocketSession() {
@@ -85,7 +77,11 @@ public class ImprovedEndpoint extends Endpoint {
 	}
 
 	public User getUser(DaoFactory daoFactory) {
-		return daoFactory.getUserDao().getByPk((Long) httpSession.getAttribute(ImprovedHttpServlet.USER_ID_KEY));
+		return daoFactory.getUserDao().getByPk(getUserId());
+	}
+
+	public Long getUserId() {
+		return (Long) httpSession.getAttribute(ImprovedHttpServlet.USER_ID_KEY);
 	}
 
 	public void sendText(String text) {
@@ -102,6 +98,10 @@ public class ImprovedEndpoint extends Endpoint {
 
 	public interface ImprovedEndpointFilter {
 		public boolean accepts(ImprovedEndpoint endpoint);
+	}
+
+	public <ServiceClass> ServiceClass getService(Class<ServiceClass> serviceClass) {
+		return ServicesManager.getService(getContext(), serviceClass);
 	}
 
 }

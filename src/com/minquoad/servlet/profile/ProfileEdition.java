@@ -56,7 +56,7 @@ public class ProfileEdition extends ImprovedHttpServlet {
 			UserProfileImage currentImage = userProfileImageDao.getUserUserProfileImage(user);
 			FormFileField field = form.getPictureField();
 			if (currentImage != null && (form.isPictureResetRequested() || !field.isValueEmpty())) {
-				currentImage.getFile(getDeployment()).delete();
+				currentImage.getFile(getStorageManager()).delete();
 				userProfileImageDao.delete(currentImage);
 			}
 

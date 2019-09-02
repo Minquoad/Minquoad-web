@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.service.Deployment;
+import com.minquoad.service.ServicesManager;
 import com.minquoad.service.StorageManager;
 
 public abstract class Unit {
@@ -27,11 +28,11 @@ public abstract class Unit {
 	}
 
 	public Deployment getDeployment() {
-		return (Deployment) unitFactory.getServletContext().getAttribute(Deployment.class.getName());
+		return ServicesManager.getService(getServletContext(), Deployment.class);
 	}
 
 	public StorageManager getStorageManager() {
-		return (StorageManager) getServletContext().getAttribute(StorageManager.class.getName());
+		return ServicesManager.getService(getServletContext(), StorageManager.class);
 	}
 
 }

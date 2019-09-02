@@ -1,4 +1,4 @@
-package com.minquoad.unit.impl;
+package com.minquoad.unit;
 
 import java.util.List;
 
@@ -8,8 +8,6 @@ import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.tool.VersatilTool;
-import com.minquoad.unit.Unit;
-import com.minquoad.unit.UnitFactory;
 
 public class ConversationUnit extends Unit {
 

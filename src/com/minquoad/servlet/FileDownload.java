@@ -29,27 +29,27 @@ public class FileDownload extends ImprovedHttpServlet {
 
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromPkParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 		return protectedFile != null && protectedFile.isDownloadableForUser(getUser(request), getDaoFactory(request), getUnitFactory(request));
 	}
 
 	@Override
 	protected void doHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromPkParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
-		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getDeployment()).length()));
+		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getStorageManager()).length()));
 		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		ProtectedFile protectedFile = getEntityFromIdParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
+		ProtectedFile protectedFile = getEntityFromPkParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
-		File file = protectedFile.getFile(getDeployment());
+		File file = protectedFile.getFile(getStorageManager());
 
 		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);

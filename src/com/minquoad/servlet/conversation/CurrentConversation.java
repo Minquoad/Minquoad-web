@@ -31,7 +31,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
-		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromPkParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		//optimization: all ConversationAcces are loaded in one requests
 		getDaoFactory(request).getUserDao().getConversationUsers(conversation);
@@ -43,7 +43,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		Conversation conversation = getEntityFromIdParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
+		Conversation conversation = getEntityFromPkParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		request.setAttribute("conversation", conversation);
 

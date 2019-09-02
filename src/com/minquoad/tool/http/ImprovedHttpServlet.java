@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -73,21 +74,24 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			HttpSession session = request.getSession();
 
-			User user = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(USER_ID_KEY));
-
+			User user = null;
 			User controllingAdmin = null;
 
-			if (user != null) {
+			Long userId = (Long) session.getAttribute(USER_ID_KEY);
+
+			if (userId != null) {
+				user = getDaoFactory(request).getUserDao().getByPk(userId);
 				requestLog.setUser(user);
 				setUser(request, user);
 
-				controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY));
+				Long controllingAdminId = (Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY);
 
-				if (controllingAdmin == null) {
+				if (controllingAdminId == null) {
 					user.setLastActivityInstant(Instant.now());
 					getDaoFactory(request).getUserDao().persist(user);
 
 				} else {
+					controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY));
 					requestLog.setControllingAdmin(controllingAdmin);
 					setControllingAdmin(request, controllingAdmin);
 
@@ -108,7 +112,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 					definingLocalUser = controllingAdmin;
 				}
 
-				if (locale == null || definingLocalUser.getLanguage() != locale.getLanguage()) {
+				if (locale == null || !definingLocalUser.getLanguage().equals(locale.getLanguage())) {
 					locale = new Locale(definingLocalUser.getLanguage(), request.getLocale().getCountry());
 					setLocale(session, locale);
 				}
@@ -227,16 +231,16 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return (UnitFactory) request.getAttribute(UNIT_FACTORY_KEY);
 	}
 
-	public StorageManager getStorageManager() {
-		return getService(StorageManager.class);
-	}
-
 	public Deployment getDeployment() {
 		return getService(Deployment.class);
 	}
 
-	public SessionManager getSessionManager() {
-		return getService(SessionManager.class);
+	public Logger getLogger() {
+		return getService(Logger.class);
+	}
+
+	public StorageManager getStorageManager() {
+		return getService(StorageManager.class);
 	}
 
 	public <ServiceClass> ServiceClass getService(Class<ServiceClass> serviceClass) {
@@ -287,12 +291,12 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		session.setAttribute(LOCALE_KEY, locale);
 	}
 
-	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {
-		return getEntityFromIdParameter(request, idRequestParameterName, daoGetter.getDao(getDaoFactory(request)));
+	public static <EntitySubclass> EntitySubclass getEntityFromPkParameter(HttpServletRequest request, String pkRequestParameterName, DaoGetter<EntitySubclass> daoGetter) {
+		return getEntityFromPkParameter(request, pkRequestParameterName, daoGetter.getDao(getDaoFactory(request)));
 	}
 
-	public static <EntitySubclass> EntitySubclass getEntityFromIdParameter(HttpServletRequest request, String idRequestParameterName, Dao<EntitySubclass> dao) {
-		String idString = request.getParameter(idRequestParameterName);
+	public static <EntitySubclass> EntitySubclass getEntityFromPkParameter(HttpServletRequest request, String pkRequestParameterName, Dao<EntitySubclass> dao) {
+		String idString = request.getParameter(pkRequestParameterName);
 		if (idString == null) {
 			return null;
 		}
@@ -312,21 +316,21 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 	}
 
 	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(ServicesManager.getService(request, SessionManager.class), json, role, filter);
+		sendJsonToClientsWithRole(request.getServletContext(), json, role, filter);
 	}
 
 	public void sendJsonToClientsWithRole(JsonNode json, String role, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(getSessionManager(), json, role, filter);
+		sendJsonToClientsWithRole(getServletContext(), json, role, filter);
 	}
 
-	public static void sendJsonToClientsWithRole(SessionManager sessionManager, JsonNode json, String role, ImprovedEndpointFilter filter) {
+	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, String role, ImprovedEndpointFilter filter) {
 
 		ObjectNode eventJsonObject = JsonNodeFactory.instance.objectNode();
 		eventJsonObject.put("role", role);
 		eventJsonObject.set("data", json);
 		String text = eventJsonObject.toString();
 
-		List<ImprovedEndpoint> endpoints = sessionManager.getImprovedEndpoints();
+		List<ImprovedEndpoint> endpoints = ServicesManager.getService(context, SessionManager.class).getImprovedEndpoints();
 		for (ImprovedEndpoint endpoint : endpoints) {
 			if (endpoint.hasRole(role)) {
 				try {
@@ -334,6 +338,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 						endpoint.sendText(text);
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
+					ServicesManager.getService(context, Logger.class).logError(e);
 				}
 			}
 		}

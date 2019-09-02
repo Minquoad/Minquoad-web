@@ -19,7 +19,7 @@ public class Possession extends ImprovedHttpServlet {
 	@Override
 	public boolean isAccessible(HttpServletRequest request) {
 		User user = getUser(request);
-		User userToControl = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
+		User userToControl = getEntityFromPkParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 
 		return user != null && userToControl != null && user.canAdminister(userToControl);
 	}
@@ -31,7 +31,7 @@ public class Possession extends ImprovedHttpServlet {
 		if (getControllingAdmin(request) == null) {
 			setSessionControllingAdmin(request, getUser(request));
 		}
-		User userToControl = getEntityFromIdParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
+		User userToControl = getEntityFromPkParameter(request, TARGET_ID_KEY, DaoFactory::getUserDao);
 		setSessionUser(request, userToControl);
 
 		response.sendRedirect(request.getContextPath() + "/");
