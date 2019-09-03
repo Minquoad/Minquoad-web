@@ -12,7 +12,7 @@ public class RequestLogDaoImpl extends ImprovedDaoImpl<RequestLog> implements Re
 
 	@Override
 	protected void initEntityMembers() throws DaoException {
-		this.addLongEntityMember("id", RequestLog::getId, RequestLog::setId, true);
+		this.addLongEntityMember("id", RequestLog::getId, RequestLog::setId);
 		this.addInstantEntityMember("instant", RequestLog::getInstant, RequestLog::setInstant);
 		this.addStringEntityMember("url", RequestLog::getUrl, RequestLog::setUrl);
 		this.addForeingKeyEntityMember("user", RequestLog::getUser, RequestLog::setUser, getDaoFactory().getUserDao());

@@ -22,7 +22,7 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 
 	@Override
 	public void initEntityMembers() throws DaoException {
-		this.addLongEntityMember("id", User::getId, User::setId, true);
+		this.addLongEntityMember("id", User::getId, User::setId);
 		this.addStringEntityMember("mailAddress", User::getMailAddress, User::setMailAddress);
 		this.addStringEntityMember("nickname", User::getNickname, User::setNickname);
 		this.addStringEntityMember("hashedSaltedPassword", User::getHashedSaltedPassword, User::setHashedSaltedPassword);

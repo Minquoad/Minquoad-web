@@ -11,7 +11,7 @@ public class ImprovementSuggestionDaoImpl extends ImprovedDaoImpl<ImprovementSug
 
 	@Override
 	protected void initEntityMembers() {
-		this.addLongEntityMember("id", ImprovementSuggestion::getId, ImprovementSuggestion::setId, true);
+		this.addLongEntityMember("id", ImprovementSuggestion::getId, ImprovementSuggestion::setId);
 		this.addStringEntityMember("text", ImprovementSuggestion::getText, ImprovementSuggestion::setText);
 		this.addForeingKeyEntityMember("user", ImprovementSuggestion::getUser, ImprovementSuggestion::setUser, getDaoFactory().getUserDao());
 		this.addInstantEntityMember("instant", ImprovementSuggestion::getInstant, ImprovementSuggestion::setInstant);

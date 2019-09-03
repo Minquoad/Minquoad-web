@@ -8,15 +8,15 @@ import java.util.Map;
 
 import com.minquoad.framework.dao.entityMember.EntityMember;
 
-public class DaoInventory<PrimaryKey, Entity> {
+public class DaoInventory<Entity> {
 
-	Map<PrimaryKey, Entity> map;
+	Map<Object, Entity> map;
 
-	private EntityMember<? super Entity, PrimaryKey> pkEntityMember;
+	private EntityMember<? super Entity, ?> pkEntityMember;
 
-	public DaoInventory(EntityMember<? super Entity, PrimaryKey> pkEntityMember) {
+	public DaoInventory(EntityMember<? super Entity, ?> pkEntityMember) {
 
-		setMap(new HashMap<PrimaryKey, Entity>());
+		setMap(new HashMap<Object, Entity>());
 
 		setPkEntityMember(pkEntityMember);
 	}
@@ -26,7 +26,7 @@ public class DaoInventory<PrimaryKey, Entity> {
 	}
 
 	public void put(Entity entity) {
-		PrimaryKey primaryKey = getPkEntityMember().getValue(entity);
+		Object primaryKey = getPkEntityMember().getValue(entity);
 		if (primaryKey == null) {
 			throw new DaoException("Entity without initialised primary key cannot be put in a dao inventory.");
 		}
@@ -34,45 +34,45 @@ public class DaoInventory<PrimaryKey, Entity> {
 	}
 
 	public void checkPrimaryKeyUnchanged(Entity entity) {
-		Entity expectedEntity = this.getByPrimaryKey(pkEntityMember.getValue(entity));
+		Entity expectedEntity = this.getByPrimaryKey(getPkEntityMember().getValue(entity));
 		if (!entity.equals(expectedEntity)) {
 			throw new DaoException("Entity primary key value changes are not allowed.");
 		}
 	}
 
-	public Entity getByPrimaryKey(PrimaryKey primaryKey) {
+	public boolean isInside(Entity entity) {
+		return getMap().get(getPkEntityMember().getValue(entity)) != null;
+	}
+
+	public Entity getByPrimaryKey(Object primaryKey) {
 		return getMap().get(primaryKey);
 	}
 
-	public boolean isInside(Entity entity) {
-		return getMap().get(pkEntityMember.getValue(entity)) != null;
+	public Entity getByPrimaryKey(ResultSet resultSet) throws SQLException {
+		return getMap().get(getPkEntityMember().getValueOfResultSet(resultSet));
 	}
 
 	public Entity getByPrimaryKey(ResultSet resultSet, String pkColumnName) throws SQLException {
-		return getMap().get(pkEntityMember.getValueOfResultSet(resultSet, pkColumnName));
-	}
-
-	public Entity getByPrimaryKey(ResultSet resultSet) throws SQLException {
-		return getMap().get(pkEntityMember.getValueOfResultSet(resultSet));
+		return getMap().get(getPkEntityMember().getValueOfResultSet(resultSet, pkColumnName));
 	}
 
 	public Collection<Entity> values() {
 		return getMap().values();
 	}
 
-	public Map<PrimaryKey, Entity> getMap() {
+	public Map<Object, Entity> getMap() {
 		return map;
 	}
 
-	public void setMap(Map<PrimaryKey, Entity> map) {
+	public void setMap(Map<Object, Entity> map) {
 		this.map = map;
 	}
 
-	public EntityMember<? super Entity, PrimaryKey> getPkEntityMember() {
+	public EntityMember<? super Entity, ?> getPkEntityMember() {
 		return pkEntityMember;
 	}
 
-	public void setPkEntityMember(EntityMember<? super Entity, PrimaryKey> pkEntityMember) {
+	public void setPkEntityMember(EntityMember<? super Entity, ?> pkEntityMember) {
 		this.pkEntityMember = pkEntityMember;
 	}
 

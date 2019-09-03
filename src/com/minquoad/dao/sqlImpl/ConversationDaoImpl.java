@@ -17,7 +17,7 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 
 	@Override
 	public void initEntityMembers() throws DaoException {
-		this.addLongEntityMember("id", Conversation::getId, Conversation::setId, true);
+		this.addLongEntityMember("id", Conversation::getId, Conversation::setId);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
 		this.addForeingKeyEntityMember("lastMessage", Conversation::getLastMessage, Conversation::setLastMessage, getDaoFactory().getMessageDao());

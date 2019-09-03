@@ -11,7 +11,7 @@ public class ConsiderationDaoImpl extends ImprovedDaoImpl<Consideration> impleme
 
 	@Override
 	protected void initEntityMembers() {
-		this.addLongEntityMember("id", Consideration::getId, Consideration::setId, true);
+		this.addLongEntityMember("id", Consideration::getId, Consideration::setId);
 		this.addForeingKeyEntityMember("consideringUser", Consideration::getConsideringUser, Consideration::setConsideringUser, getDaoFactory().getUserDao());
 		this.addForeingKeyEntityMember("consideredUser", Consideration::getConsideredUser, Consideration::setConsideredUser, getDaoFactory().getUserDao());
 		this.addIntegerEntityMember("status", Consideration::getStatus, Consideration::setStatus);

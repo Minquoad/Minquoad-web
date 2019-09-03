@@ -5,11 +5,7 @@ import java.util.Map;
 
 public interface Dao<EntitySubclass> {
 
-	public EntitySubclass getByPk(Integer id);
-
-	public EntitySubclass getByPk(Long id);
-
-	public EntitySubclass getByPk(String id);
+	public <PrimaryKey> EntitySubclass getByPk(PrimaryKey id);
 
 	public void persist(EntitySubclass entity);
 
