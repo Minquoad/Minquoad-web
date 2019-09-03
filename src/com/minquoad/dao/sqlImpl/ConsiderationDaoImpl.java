@@ -10,6 +10,11 @@ public class ConsiderationDaoImpl extends ImprovedDaoImpl<Consideration> impleme
 	}
 
 	@Override
+	protected Consideration instantiateBlank() {
+		return new Consideration();
+	}
+
+	@Override
 	protected void initEntityMembers() {
 		this.addLongEntityMember("id", Consideration::getId, Consideration::setId);
 		this.addForeingKeyEntityMember("consideringUser", Consideration::getConsideringUser, Consideration::setConsideringUser, getDaoFactory().getUserDao());
@@ -19,12 +24,7 @@ public class ConsiderationDaoImpl extends ImprovedDaoImpl<Consideration> impleme
 	}
 
 	@Override
-	public Consideration instantiateBlank() {
-		return new Consideration();
-	}
-
-	@Override
-	public boolean isPrimaryKeyRandomlyGenerated() {
+	protected boolean isPrimaryKeyRandomlyGenerated() {
 		return true;
 	}
 

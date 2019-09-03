@@ -11,16 +11,16 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedDaoImpl<FailedInLogin
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
+	protected FailedInLoginigAttempt instantiateBlank() {
+		return new FailedInLoginigAttempt();
+	}
+
+	@Override
+	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", FailedInLoginigAttempt::getId, FailedInLoginigAttempt::setId);
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
 		this.addLongEntityMember("attemptsNumber", FailedInLoginigAttempt::getAttemptsNumber, FailedInLoginigAttempt::setAttemptsNumber);
 		this.addInstantEntityMember("lastArremptInstant", FailedInLoginigAttempt::getLastArremptInstant, FailedInLoginigAttempt::setLastArremptInstant);
-	}
-
-	@Override
-	public FailedInLoginigAttempt instantiateBlank() {
-		return new FailedInLoginigAttempt();
 	}
 
 }

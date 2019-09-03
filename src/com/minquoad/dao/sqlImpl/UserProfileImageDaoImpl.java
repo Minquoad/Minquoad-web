@@ -13,18 +13,18 @@ public class UserProfileImageDaoImpl extends ImprovedDaoImpl<UserProfileImage> i
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
-		this.addForeingKeyEntityMember("user", UserProfileImage::getUser, UserProfileImage::setUser, getDaoFactory().getUserDao());
-	}
-
-	@Override
-	public UserProfileImage instantiateBlank() {
+	protected UserProfileImage instantiateBlank() {
 		return new UserProfileImage();
 	}
 
 	@Override
-	public DaoImpl<? super UserProfileImage> getSuperClassDao() {
+	protected DaoImpl<? super UserProfileImage> getSuperClassDao() {
 		return getDaoFactory().getProtectedFileDao();
+	}
+
+	@Override
+	protected void initEntityMembers() throws DaoException {
+		this.addForeingKeyEntityMember("user", UserProfileImage::getUser, UserProfileImage::setUser, getDaoFactory().getUserDao());
 	}
 
 	@Override

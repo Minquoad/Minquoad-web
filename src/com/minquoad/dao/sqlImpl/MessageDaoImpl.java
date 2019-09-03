@@ -15,7 +15,12 @@ public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageD
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
+	protected Message instantiateBlank() {
+		return new Message();
+	}
+
+	@Override
+	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", Message::getId, Message::setId);
 		this.addStringEntityMember("text", Message::getText, Message::setText);
 		this.addStringEntityMember("editedText", Message::getEditedText, Message::setEditedText);
@@ -26,18 +31,13 @@ public class MessageDaoImpl extends ImprovedDaoImpl<Message> implements MessageD
 	}
 
 	@Override
-	public Message instantiateBlank() {
-		return new Message();
+	protected boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
 	}
 
 	@Override
 	public List<Message> getConversationMessages(Conversation conversation) {
 		return this.getAllMatching("conversation", conversation);
-	}
-
-	@Override
-	public boolean isPrimaryKeyRandomlyGenerated() {
-		return true;
 	}
 
 	@Override

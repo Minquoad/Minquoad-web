@@ -16,12 +16,12 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 	}
 
 	@Override
-	public User instantiateBlank() {
+	protected User instantiateBlank() {
 		return new User();
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
+	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", User::getId, User::setId);
 		this.addStringEntityMember("mailAddress", User::getMailAddress, User::setMailAddress);
 		this.addStringEntityMember("nickname", User::getNickname, User::setNickname);
@@ -37,6 +37,11 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 	}
 
 	@Override
+	protected boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
+	}
+	
+	@Override
 	public List<User> getConversationUsers(Conversation conversation) {
 		List<User> users = new ArrayList<User>();
 		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("conversation", conversation);
@@ -46,9 +51,4 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 		return users;
 	}
 
-	@Override
-	public boolean isPrimaryKeyRandomlyGenerated() {
-		return true;
-	}
-	
 }

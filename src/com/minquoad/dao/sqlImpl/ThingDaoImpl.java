@@ -14,12 +14,12 @@ public class ThingDaoImpl extends ImprovedDaoImpl<Thing> implements ThingDao {
 	}
 
 	@Override
-	public Thing instantiateBlank() {
+	protected Thing instantiateBlank() {
 		return new Thing();
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
+	protected void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", Thing::getId, Thing::setId);
 		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
 		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());

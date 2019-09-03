@@ -16,7 +16,12 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 	}
 
 	@Override
-	public void initEntityMembers() throws DaoException {
+	protected Conversation instantiateBlank() {
+		return new Conversation();
+	}
+
+	@Override
+	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", Conversation::getId, Conversation::setId);
 		this.addStringEntityMember("title", Conversation::getTitle, Conversation::setTitle);
 		this.addIntegerEntityMember("type", Conversation::getType, Conversation::setType);
@@ -24,10 +29,10 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 	}
 
 	@Override
-	public Conversation instantiateBlank() {
-		return new Conversation();
+	protected boolean isPrimaryKeyRandomlyGenerated() {
+		return true;
 	}
-
+	
 	@Override
 	public List<Conversation> getUserConversations(User user) {
 		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("user", user);
@@ -38,8 +43,4 @@ public class ConversationDaoImpl extends ImprovedDaoImpl<Conversation> implement
 		return conversations;
 	}
 
-	@Override
-	public boolean isPrimaryKeyRandomlyGenerated() {
-		return true;
-	}
 }

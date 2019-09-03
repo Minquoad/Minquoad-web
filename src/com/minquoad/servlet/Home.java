@@ -29,14 +29,6 @@ public class Home extends ImprovedHttpServlet {
 
 		forwardToView(request, response, VIEW_PATH);
 		
-		
-		UserDao userDao = getDaoFactory(request).getUserDao();
-		MessageDao messageDao = getDaoFactory(request).getMessageDao();
-		
-		User u = userDao.getByPk(5611120057846513921l);
-		Message m = messageDao.getByPk(1686885004079862984l);
-		
-		
 	}
 
 }

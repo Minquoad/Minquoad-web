@@ -11,18 +11,18 @@ public class MessageFileDaoImpl extends ImprovedDaoImpl<MessageFile> implements 
 	}
 
 	@Override
-	protected void initEntityMembers() {
-		this.addBooleanEntityMember("image", MessageFile::isImage, MessageFile::setImage);
-	}
-
-	@Override
-	public MessageFile instantiateBlank() {
+	protected MessageFile instantiateBlank() {
 		return new MessageFile();
 	}
 
 	@Override
-	public DaoImpl<? super MessageFile> getSuperClassDao() {
+	protected DaoImpl<? super MessageFile> getSuperClassDao() {
 		return getDaoFactory().getProtectedFileDao();
+	}
+
+	@Override
+	protected void initEntityMembers() {
+		this.addBooleanEntityMember("image", MessageFile::isImage, MessageFile::setImage);
 	}
 
 }
