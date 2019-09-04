@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
+import javax.sql.DataSource;
 
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
 import com.minquoad.tool.Pool;
@@ -16,13 +15,11 @@ public class Database {
 	public static final String DATABASE_PROTOCOL_NAME = "jdbc";
 	public static final String DATABASE_SUBPROTOCOL_NAME = "postgresql";
 
-	public static final int CONNECTIONS_PER_PARTITION_MIN = 1;
-	public static final int CONNECTIONS_PER_PARTITION_MAX = 64;
-	public static final int PARTITION_NUMBER = 2;
+	public static final Class<org.postgresql.Driver> DATASOURCE_DRIVER_CLASS = org.postgresql.Driver.class;
 
 	private final ServletContext servletContext;
 
-	private BoneCP connectionPool;
+	private DataSource dataSource;
 
 	private Pool<DaoFactory> daoFactoryPool;
 
@@ -38,21 +35,21 @@ public class Database {
 
 	private void initConnectionPool() {
 		try {
-			Class.forName("org.postgresql.Driver");
 
 			Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 
-			BoneCPConfig config = new BoneCPConfig();
+			org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
 
-			config.setJdbcUrl(getDatabaseUrl());
-			config.setUsername(deployment.getDatabaseUser());
-			config.setPassword(deployment.getDatabasePassword());
+			dataSource.setDriverClassName(DATASOURCE_DRIVER_CLASS.getName());
+			dataSource.setUrl(getDatabaseUrl());
+			dataSource.setUsername(deployment.getDatabaseUser());
+			dataSource.setPassword(deployment.getDatabasePassword());
+			dataSource.setInitialSize(1);
+			dataSource.setMinIdle(1);
+			dataSource.setMaxIdle(10);
+			dataSource.setMaxActive(64);
 
-			config.setMinConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MIN);
-			config.setMaxConnectionsPerPartition(CONNECTIONS_PER_PARTITION_MAX);
-			config.setPartitionCount(PARTITION_NUMBER);
-
-			connectionPool = new BoneCP(config);
+			this.dataSource = dataSource;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,7 +58,7 @@ public class Database {
 	}
 
 	public Connection getConnection() throws SQLException {
-		return connectionPool.getConnection();
+		return dataSource.getConnection();
 	}
 
 	public String getDatabaseUrl() {
