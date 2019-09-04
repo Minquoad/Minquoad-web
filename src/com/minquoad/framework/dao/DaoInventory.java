@@ -10,7 +10,7 @@ import com.minquoad.framework.dao.entityMember.EntityMember;
 
 public class DaoInventory<Entity> {
 
-	Map<Object, Entity> map;
+	private Map<Object, Entity> map;
 
 	private EntityMember<? super Entity, ?> pkEntityMember;
 
@@ -74,6 +74,10 @@ public class DaoInventory<Entity> {
 
 	public void setPkEntityMember(EntityMember<? super Entity, ?> pkEntityMember) {
 		this.pkEntityMember = pkEntityMember;
+	}
+
+	public void clear() {
+		map.clear();
 	}
 
 }

@@ -20,13 +20,13 @@
 	<div id="mainContainer" class="administration inlineBlockContainer">
 
 		<div id="nav">
-			<div data-subPageUrl="<c:url value="/UsersManagement" />"
-				data-subPageKey="UsersManagement">
-				<fmt:message key="UsersManagement" bundle="${ administrationBundle }" />
-			</div>
 			<div data-subPageUrl="<c:url value="/SiteManagement" />"
 				data-subPageKey="SiteManagement">
 				<fmt:message key="SiteManagement" bundle="${ administrationBundle }" />
+			</div>
+			<div data-subPageUrl="<c:url value="/UsersManagement" />"
+				data-subPageKey="UsersManagement">
+				<fmt:message key="UsersManagement" bundle="${ administrationBundle }" />
 			</div>
 			<div data-subPageUrl="<c:url value="/ImprovementSuggestionsConsulting" />"
 				data-subPageKey="ImprovementSuggestionsConsulting">

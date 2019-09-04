@@ -25,6 +25,34 @@ public class DaoFactoryImpl implements DaoFactory {
 
 	public DaoFactoryImpl(Database database) {
 		this.database = database;
+
+		thingDaoImpl = new ThingDaoImpl(this);
+		userDaoImpl = new UserDaoImpl(this);
+		messageDaoImpl = new MessageDaoImpl(this);
+		conversationAccessDaoImpl = new ConversationAccessDaoImpl(this);
+		conversationDaoImpl = new ConversationDaoImpl(this);
+		failedInLoginigAttemptDaoImpl = new FailedInLoginigAttemptDaoImpl(this);
+		protectedFileDaoImpl = new ProtectedFileDaoImpl(this);
+		userProfileImageDaoImpl = new UserProfileImageDaoImpl(this);
+		requestLogDaoImpl = new RequestLogDaoImpl(this);
+		improvementSuggestionDaoImpl = new ImprovementSuggestionDaoImpl(this);
+		messageFileDaoImpl = new MessageFileDaoImpl(this);
+		considerationDaoImpl = new ConsiderationDaoImpl(this);
+	}
+
+	public void clear() {
+		thingDaoImpl.clear();
+		userDaoImpl.clear();
+		messageDaoImpl.clear();
+		conversationAccessDaoImpl.clear();
+		conversationDaoImpl.clear();
+		failedInLoginigAttemptDaoImpl.clear();
+		protectedFileDaoImpl.clear();
+		userProfileImageDaoImpl.clear();
+		requestLogDaoImpl.clear();
+		improvementSuggestionDaoImpl.clear();
+		messageFileDaoImpl.clear();
+		considerationDaoImpl.clear();
 	}
 
 	private Database getDatabase() {
@@ -37,97 +65,61 @@ public class DaoFactoryImpl implements DaoFactory {
 
 	@Override
 	public ThingDaoImpl getThingDao() {
-		if (thingDaoImpl == null) {
-			thingDaoImpl = new ThingDaoImpl(this);
-		}
 		return thingDaoImpl;
 	}
 
 	@Override
 	public UserDaoImpl getUserDao() {
-		if (userDaoImpl == null) {
-			userDaoImpl = new UserDaoImpl(this);
-		}
 		return userDaoImpl;
 	}
 
 	@Override
 	public MessageDaoImpl getMessageDao() {
-		if (messageDaoImpl == null) {
-			messageDaoImpl = new MessageDaoImpl(this);
-		}
 		return messageDaoImpl;
 	}
 
 	@Override
 	public ConversationAccessDaoImpl getConversationAccessDao() {
-		if (conversationAccessDaoImpl == null) {
-			conversationAccessDaoImpl = new ConversationAccessDaoImpl(this);
-		}
 		return conversationAccessDaoImpl;
 	}
 
 	@Override
 	public ConversationDaoImpl getConversationDao() {
-		if (conversationDaoImpl == null) {
-			conversationDaoImpl = new ConversationDaoImpl(this);
-		}
 		return conversationDaoImpl;
 	}
 
 	@Override
 	public FailedInLoginigAttemptDaoImpl getFailedInLoginigAttemptDao() {
-		if (failedInLoginigAttemptDaoImpl == null) {
-			failedInLoginigAttemptDaoImpl = new FailedInLoginigAttemptDaoImpl(this);
-		}
 		return failedInLoginigAttemptDaoImpl;
 	}
 
 	@Override
 	public ProtectedFileDaoImpl getProtectedFileDao() {
-		if (protectedFileDaoImpl == null) {
-			protectedFileDaoImpl = new ProtectedFileDaoImpl(this);
-		}
 		return protectedFileDaoImpl;
 	}
 
 	@Override
 	public UserProfileImageDaoImpl getUserProfileImageDao() {
-		if (userProfileImageDaoImpl == null) {
-			userProfileImageDaoImpl = new UserProfileImageDaoImpl(this);
-		}
 		return userProfileImageDaoImpl;
 	}
 
 	@Override
 	public RequestLogDaoImpl getRequestLogDao() {
-		if (requestLogDaoImpl == null) {
-			requestLogDaoImpl = new RequestLogDaoImpl(this);
-		}
 		return requestLogDaoImpl;
 	}
 
 	@Override
 	public ImprovementSuggestionDaoImpl getImprovementSuggestionDao() {
-		if (improvementSuggestionDaoImpl == null) {
-			improvementSuggestionDaoImpl = new ImprovementSuggestionDaoImpl(this);
-		}
 		return improvementSuggestionDaoImpl;
 	}
 
 	@Override
 	public MessageFileDaoImpl getMessageFileDao() {
-		if (messageFileDaoImpl == null) {
-			messageFileDaoImpl = new MessageFileDaoImpl(this);
-		}
 		return messageFileDaoImpl;
 	}
 
 	@Override
 	public ConsiderationDaoImpl getConsiderationDao() {
-		if (considerationDaoImpl == null) {
-			considerationDaoImpl = new ConsiderationDaoImpl(this);
-		}
 		return considerationDaoImpl;
 	}
 

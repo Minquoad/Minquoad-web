@@ -1,12 +1,20 @@
 package com.minquoad.service;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import javax.servlet.ServletContext;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class Deployment {
 
 	public static final String CONFIGURATION_JSON_PATH = System.getProperty("user.home") + "/minquoad-web-configuration.json";
+
+	private final ServletContext servletContext;
+
+	private boolean open;
 
 	private String storagePath;
 	private String databaseHost;
@@ -16,9 +24,16 @@ public class Deployment {
 	private String databasePassword;
 	private String userPasswordSalt;
 
-	private boolean open;
+	public Deployment(ServletContext servletContext) {
+		this.servletContext = servletContext;
 
-	public Deployment() {
+		Locale.setDefault(new Locale("en", "US"));
+		ResourceBundle.clearCache();
+
+		extractConfiguration();
+	}
+
+	private void extractConfiguration() {
 		try {
 			JsonNode configurationJson = StorageManager.fileToJsonNode(new File(CONFIGURATION_JSON_PATH));
 
@@ -38,6 +53,20 @@ public class Deployment {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void clear() {
+		extractConfiguration();
+		ResourceBundle.clearCache();
+		ServicesManager.getService(servletContext, Database.class).clear();
+	}
+	
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+
+	public boolean isOpen() {
+		return open;
 	}
 
 	public String getStoragePath() {
@@ -66,14 +95,6 @@ public class Deployment {
 
 	public String getUserPasswordSalt() {
 		return userPasswordSalt;
-	}
-
-	public boolean isOpen() {
-		return open;
-	}
-
-	public void setOpen(boolean open) {
-		this.open = open;
 	}
 
 	public String getVersion() {

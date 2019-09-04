@@ -24,29 +24,37 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 @ServerEndpoint(value = "/ImprovedEndpoint", configurator = HttpSessionLinkedEndpointConfig.class)
 public class ImprovedEndpoint extends Endpoint {
 
+	private boolean available;
+	
 	private List<String> roles;
 	private Session websocketSession;
 	private HttpSession httpSession;
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
+		available = true;
 		roles = new ArrayList<String>();
 
 		httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		websocketSession = session;
 
-		DaoFactory daoFactory = getService(Database.class).getNewDaoFactory();
-		if (!getUser(daoFactory).isBlocked()) {
+		Database database = getService(Database.class);
+		DaoFactory daoFactory = database.pickOneDaoFactory();
+		if (getUser(daoFactory).isBlocked()) {
+			available = false;
+		}
+		database.giveBack(daoFactory);
 
-			session.addMessageHandler(new MessageHandler.Whole<String>() {
-				@Override
-				public void onMessage(String message) {
+		session.addMessageHandler(new MessageHandler.Whole<String>() {
+			@Override
+			public void onMessage(String message) {
+				if (available) {
 					addRole(message);
 				}
-			});
+			}
+		});
 
-			getService(SessionManager.class).add(this);
-		}
+		getService(SessionManager.class).add(this);
 	}
 
 	@Override

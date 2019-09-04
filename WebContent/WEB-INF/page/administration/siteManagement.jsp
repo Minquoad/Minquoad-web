@@ -12,12 +12,24 @@
 			<div class="padded">
 				<ul>
 					<li>
-						<fmt:message key="Version" bundle="${ administrationBundle }" />
-						: ${ deployment.version }
+						<form method="POST" action="<c:url value="SiteManagement" />"
+							accept-charset="UTF-8">
+
+							<input type="hidden" name="formId" value="siteClearManagement" />
+
+							<fmt:message key="Version" bundle="${ administrationBundle }" />
+							: ${ deployment.version }
+
+							<input type="submit"
+								value="♺ <fmt:message key="Clear" bundle="${ administrationBundle }" />" />
+						</form>
 					</li>
 					<li>
 						<form method="POST" action="<c:url value="SiteManagement" />"
 							accept-charset="UTF-8">
+
+							<input type="hidden" name="formId" value="siteStateManagement" />
+
 							<c:if test="${ deployment.open }">
 								🔓 <fmt:message key="openSite" bundle="${ administrationBundle }" />
 								<input type="hidden" name="open" value="false" />
@@ -33,7 +45,8 @@
 						</form>
 					</li>
 					<li>
-						<fmt:message key="WebsocketSessionNumber" bundle="${ administrationBundle }" />
+						<fmt:message key="WebsocketSessionNumber"
+							bundle="${ administrationBundle }" />
 						: ${ applicationScope['com.minquoad.service.SessionManager'].improvedEndpointsNumber }
 					</li>
 				</ul>

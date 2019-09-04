@@ -56,6 +56,10 @@ public abstract class DaoImpl<Entity> {
 		return false;
 	}
 
+	public void clear() {
+		getInventory().clear();
+	}
+
 	public <PrimaryKey> Entity getByPk(PrimaryKey pk) {
 		@SuppressWarnings("unchecked")
 		EntityMember<? super Entity, PrimaryKey> primaryKeyEntityMember = (EntityMember<? super Entity, PrimaryKey>) this.getPrimaryKeyEntityMember();
@@ -638,7 +642,7 @@ public abstract class DaoImpl<Entity> {
 		return getInventory().getByPrimaryKey(superDao.getPrimaryKeyEntityMember().getValue(superEntity));
 	}
 
-	private void initIfneeded() {
+	public void initIfneeded() {
 		if (!initialised) {
 			initialised = true;
 
@@ -654,10 +658,10 @@ public abstract class DaoImpl<Entity> {
 			setEntityMembers(new ArrayList<EntityMember<Entity, ?>>());
 			this.initEntityMembers();
 
-			setInventory(new DaoInventory<Entity>(getPrimaryKeyEntityMember()));
-
 			setSubClassDaos(new ArrayList<DaoImpl<? extends Entity>>());
 			initSubClassDaos();
+			
+			setInventory(new DaoInventory<Entity>(getPrimaryKeyEntityMember()));
 		}
 	}
 

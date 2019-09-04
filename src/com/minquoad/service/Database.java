@@ -9,6 +9,7 @@ import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
+import com.minquoad.tool.Pool;
 
 public class Database {
 
@@ -23,12 +24,23 @@ public class Database {
 
 	private BoneCP connectionPool;
 
+	private Pool<DaoFactory> daoFactoryPool;
+
 	public Database(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 
+		initConnectionPool();
+
+		daoFactoryPool = new Pool<DaoFactory>(
+				() -> new DaoFactoryImpl(this),
+				(daoFactory) -> ((DaoFactoryImpl) daoFactory).clear());
+	}
+
+	private void initConnectionPool() {
 		try {
 			Class.forName("org.postgresql.Driver");
+
+			Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 
 			BoneCPConfig config = new BoneCPConfig();
 
@@ -64,8 +76,17 @@ public class Database {
 	public void close() {
 	}
 
-	public DaoFactory getNewDaoFactory() {
-		return new DaoFactoryImpl(this);
+	public DaoFactory pickOneDaoFactory() {
+		return daoFactoryPool.pickOne();
+	}
+
+	public void giveBack(DaoFactory reusableInstance) {
+		daoFactoryPool.giveBack(reusableInstance);
+	}
+
+	public void clear() {
+		initConnectionPool();
+		daoFactoryPool.clear();
 	}
 
 }

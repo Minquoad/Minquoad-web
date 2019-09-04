@@ -1,8 +1,5 @@
 package com.minquoad.service;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -18,10 +15,7 @@ public class ServicesManager implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent contextEvent) {
 		ServletContext servletContext = contextEvent.getServletContext();
 
-		Locale.setDefault(new Locale("en", "US"));
-		ResourceBundle.clearCache();
-
-		addService(servletContext, new Deployment());
+		addService(servletContext, new Deployment(servletContext));
 		addService(servletContext, new StorageManager(servletContext));
 		addService(servletContext, new Logger(servletContext));
 		addService(servletContext, new Database(servletContext));

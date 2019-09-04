@@ -56,6 +56,9 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 		Instant serviceStartingInstant = Instant.now();
 
+		Database database = getService(Database.class);
+		DaoFactory daoFactory = database.pickOneDaoFactory();
+
 		RequestLog requestLog = new RequestLog();
 
 		try {
@@ -68,9 +71,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 			requestLog.setUrl(getCurrentUrlWithArguments(request));
 
-			Database database = ServicesManager.getService(request, Database.class);
-			request.setAttribute(DAO_FACTORY_KEY, database.getNewDaoFactory());
-			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), getDaoFactory(request)));
+			request.setAttribute(DAO_FACTORY_KEY, daoFactory);
+			request.setAttribute(UNIT_FACTORY_KEY, new UnitFactory(request.getServletContext(), daoFactory));
 
 			HttpSession session = request.getSession();
 
@@ -80,7 +82,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			Long userId = (Long) session.getAttribute(USER_ID_KEY);
 
 			if (userId != null) {
-				user = getDaoFactory(request).getUserDao().getByPk(userId);
+				user = daoFactory.getUserDao().getByPk(userId);
 				requestLog.setUser(user);
 				setUser(request, user);
 
@@ -88,15 +90,15 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 
 				if (controllingAdminId == null) {
 					user.setLastActivityInstant(Instant.now());
-					getDaoFactory(request).getUserDao().persist(user);
+					daoFactory.getUserDao().persist(user);
 
 				} else {
-					controllingAdmin = getDaoFactory(request).getUserDao().getByPk((Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY));
+					controllingAdmin = daoFactory.getUserDao().getByPk((Long) session.getAttribute(CONTROLLING_ADMIN_ID_KEY));
 					requestLog.setControllingAdmin(controllingAdmin);
 					setControllingAdmin(request, controllingAdmin);
 
 					controllingAdmin.setLastActivityInstant(Instant.now());
-					getDaoFactory(request).getUserDao().persist(controllingAdmin);
+					daoFactory.getUserDao().persist(controllingAdmin);
 				}
 			}
 
@@ -201,7 +203,9 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		} finally {
 			if (isLoggingAllRequests() || requestLog.getError() != null) {
 				requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
-				getDaoFactory(request).getRequestLogDao().persist(requestLog);
+				daoFactory.getRequestLogDao().persist(requestLog);
+				
+				database.giveBack(daoFactory);
 			}
 		}
 	}
