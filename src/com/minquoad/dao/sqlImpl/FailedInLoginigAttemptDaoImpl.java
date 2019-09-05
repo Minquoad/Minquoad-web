@@ -4,7 +4,7 @@ import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.framework.dao.DaoException;
 
-public class FailedInLoginigAttemptDaoImpl extends ImprovedDaoImpl<FailedInLoginigAttempt> implements FailedInLoginigAttemptDao {
+public class FailedInLoginigAttemptDaoImpl extends DaoImpl<FailedInLoginigAttempt> implements FailedInLoginigAttemptDao {
 
 	public FailedInLoginigAttemptDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -13,6 +13,14 @@ public class FailedInLoginigAttemptDaoImpl extends ImprovedDaoImpl<FailedInLogin
 	@Override
 	protected FailedInLoginigAttempt instantiateBlank() {
 		return new FailedInLoginigAttempt();
+	}
+
+	@Override
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
 	}
 
 	@Override

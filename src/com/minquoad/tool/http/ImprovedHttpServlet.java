@@ -204,7 +204,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			if (isLoggingAllRequests() || requestLog.getError() != null) {
 				requestLog.setServiceDuration((int) (Instant.now().toEpochMilli() - serviceStartingInstant.toEpochMilli()));
 				daoFactory.getRequestLogDao().persist(requestLog);
-				
+
 				database.giveBack(daoFactory);
 			}
 		}

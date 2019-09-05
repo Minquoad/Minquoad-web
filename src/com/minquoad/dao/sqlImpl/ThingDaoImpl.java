@@ -7,7 +7,7 @@ import com.minquoad.entity.Thing;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class ThingDaoImpl extends ImprovedDaoImpl<Thing> implements ThingDao {
+public class ThingDaoImpl extends DaoImpl<Thing> implements ThingDao {
 
 	public ThingDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -19,10 +19,18 @@ public class ThingDaoImpl extends ImprovedDaoImpl<Thing> implements ThingDao {
 	}
 
 	@Override
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
+	}
+
+	@Override
 	protected void initEntityMembers() throws DaoException {
 		this.addIntegerEntityMember("id", Thing::getId, Thing::setId);
 		this.addStringEntityMember("description", Thing::getDescription, Thing::setDescription);
-		this.addForeingKeyEntityMember("owner", Thing::getOwner, Thing::setOwner, getDaoFactory().getUserDao());
+		this.addForeingKeyEntityMember("owner", User.class, Thing::getOwner, Thing::setOwner);
 	}
 
 	@Override

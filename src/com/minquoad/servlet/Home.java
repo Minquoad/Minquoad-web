@@ -24,24 +24,6 @@ public class Home extends ImprovedHttpServlet {
 			throws ServletException, IOException {
 
 		forwardToView(request, response, VIEW_PATH);
-		/*
-		Database db = getService(Database.class);
-
-		DaoFactory daoFactory = getDaoFactory(request);
-
-		daoFactory.getThingDao().getByPk(null);
-		daoFactory.getUserDao().getByPk(null);
-		daoFactory.getMessageDao().getByPk(null);
-		daoFactory.getConversationAccessDao().getByPk(null);
-		daoFactory.getConversationDao().getByPk(null);
-		daoFactory.getFailedInLoginigAttemptDao().getByPk(null);
-		daoFactory.getProtectedFileDao().getByPk(null);
-		daoFactory.getUserProfileImageDao().getByPk(null);
-		daoFactory.getRequestLogDao().getByPk(20526l);
-		daoFactory.getImprovementSuggestionDao().getByPk(null);
-		daoFactory.getMessageFileDao().getByPk(null);
-		daoFactory.getConsiderationDao().getByPk(null);
-		*/
 	}
 
 }

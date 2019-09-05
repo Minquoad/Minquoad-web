@@ -2,9 +2,9 @@ package com.minquoad.dao.sqlImpl;
 
 import com.minquoad.dao.interfaces.MessageFileDao;
 import com.minquoad.entity.file.MessageFile;
-import com.minquoad.framework.dao.DaoImpl;
+import com.minquoad.entity.file.ProtectedFile;
 
-public class MessageFileDaoImpl extends ImprovedDaoImpl<MessageFile> implements MessageFileDao {
+public class MessageFileDaoImpl extends DaoImpl<MessageFile> implements MessageFileDao {
 
 	public MessageFileDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -16,8 +16,12 @@ public class MessageFileDaoImpl extends ImprovedDaoImpl<MessageFile> implements 
 	}
 
 	@Override
-	protected DaoImpl<? super MessageFile> getSuperClassDao() {
-		return getDaoFactory().getProtectedFileDao();
+	protected void initSuperClass() {
+		setSuperClass(ProtectedFile.class);
+	}
+
+	@Override
+	protected void initSubClasses() {
 	}
 
 	@Override

@@ -2,9 +2,10 @@ package com.minquoad.dao.sqlImpl;
 
 import com.minquoad.dao.interfaces.RequestLogDao;
 import com.minquoad.entity.RequestLog;
+import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class RequestLogDaoImpl extends ImprovedDaoImpl<RequestLog> implements RequestLogDao {
+public class RequestLogDaoImpl extends DaoImpl<RequestLog> implements RequestLogDao {
 
 	public RequestLogDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -16,12 +17,20 @@ public class RequestLogDaoImpl extends ImprovedDaoImpl<RequestLog> implements Re
 	}
 
 	@Override
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
+	}
+
+	@Override
 	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", RequestLog::getId, RequestLog::setId);
 		this.addInstantEntityMember("instant", RequestLog::getInstant, RequestLog::setInstant);
 		this.addStringEntityMember("url", RequestLog::getUrl, RequestLog::setUrl);
-		this.addForeingKeyEntityMember("user", RequestLog::getUser, RequestLog::setUser, getDaoFactory().getUserDao());
-		this.addForeingKeyEntityMember("controllingAdmin", RequestLog::getControllingAdmin, RequestLog::setControllingAdmin, getDaoFactory().getUserDao());
+		this.addForeingKeyEntityMember("user", User.class, RequestLog::getUser, RequestLog::setUser);
+		this.addForeingKeyEntityMember("controllingAdmin", User.class, RequestLog::getControllingAdmin, RequestLog::setControllingAdmin);
 		this.addStringEntityMember("ipAddress", RequestLog::getIpAddress, RequestLog::setIpAddress);
 		this.addStringEntityMember("error", RequestLog::getError, RequestLog::setError);
 		this.addIntegerEntityMember("serviceDuration", RequestLog::getServiceDuration, RequestLog::setServiceDuration);

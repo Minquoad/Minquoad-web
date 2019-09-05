@@ -1,5 +1,3 @@
-déplacer les parents de IMPL dans framework
-optimiser dao
 fini gestion des participants à une conversation
 rechercher parmis les conversations
 notifications

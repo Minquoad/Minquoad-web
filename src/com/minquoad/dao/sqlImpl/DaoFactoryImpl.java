@@ -1,126 +1,112 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
+import com.minquoad.dao.interfaces.ConsiderationDao;
+import com.minquoad.dao.interfaces.ConversationAccessDao;
+import com.minquoad.dao.interfaces.ConversationDao;
 import com.minquoad.dao.interfaces.DaoFactory;
+import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
+import com.minquoad.dao.interfaces.ImprovementSuggestionDao;
+import com.minquoad.dao.interfaces.MessageDao;
+import com.minquoad.dao.interfaces.MessageFileDao;
+import com.minquoad.dao.interfaces.ProtectedFileDao;
+import com.minquoad.dao.interfaces.RequestLogDao;
+import com.minquoad.dao.interfaces.ThingDao;
+import com.minquoad.dao.interfaces.UserDao;
+import com.minquoad.dao.interfaces.UserProfileImageDao;
+import com.minquoad.entity.Consideration;
+import com.minquoad.entity.Conversation;
+import com.minquoad.entity.ConversationAccess;
+import com.minquoad.entity.FailedInLoginigAttempt;
+import com.minquoad.entity.ImprovementSuggestion;
+import com.minquoad.entity.Message;
+import com.minquoad.entity.RequestLog;
+import com.minquoad.entity.Thing;
+import com.minquoad.entity.User;
+import com.minquoad.entity.file.MessageFile;
+import com.minquoad.entity.file.ProtectedFile;
+import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.service.Database;
 
-public class DaoFactoryImpl implements DaoFactory {
-
-	private Database database;
-
-	private ThingDaoImpl thingDaoImpl;
-	private UserDaoImpl userDaoImpl;
-	private MessageDaoImpl messageDaoImpl;
-	private ConversationAccessDaoImpl conversationAccessDaoImpl;
-	private ConversationDaoImpl conversationDaoImpl;
-	private FailedInLoginigAttemptDaoImpl failedInLoginigAttemptDaoImpl;
-	private ProtectedFileDaoImpl protectedFileDaoImpl;
-	private UserProfileImageDaoImpl userProfileImageDaoImpl;
-	private RequestLogDaoImpl requestLogDaoImpl;
-	private ImprovementSuggestionDaoImpl improvementSuggestionDaoImpl;
-	private MessageFileDaoImpl messageFileDaoImpl;
-	private ConsiderationDaoImpl considerationDaoImpl;
+public class DaoFactoryImpl extends com.minquoad.framework.dao.DaoFactoryImpl implements DaoFactory {
 
 	public DaoFactoryImpl(Database database) {
-		this.database = database;
-
-		thingDaoImpl = new ThingDaoImpl(this);
-		userDaoImpl = new UserDaoImpl(this);
-		messageDaoImpl = new MessageDaoImpl(this);
-		conversationAccessDaoImpl = new ConversationAccessDaoImpl(this);
-		conversationDaoImpl = new ConversationDaoImpl(this);
-		failedInLoginigAttemptDaoImpl = new FailedInLoginigAttemptDaoImpl(this);
-		protectedFileDaoImpl = new ProtectedFileDaoImpl(this);
-		userProfileImageDaoImpl = new UserProfileImageDaoImpl(this);
-		requestLogDaoImpl = new RequestLogDaoImpl(this);
-		improvementSuggestionDaoImpl = new ImprovementSuggestionDaoImpl(this);
-		messageFileDaoImpl = new MessageFileDaoImpl(this);
-		considerationDaoImpl = new ConsiderationDaoImpl(this);
-	}
-
-	public void clear() {
-		thingDaoImpl.clear();
-		userDaoImpl.clear();
-		messageDaoImpl.clear();
-		conversationAccessDaoImpl.clear();
-		conversationDaoImpl.clear();
-		failedInLoginigAttemptDaoImpl.clear();
-		protectedFileDaoImpl.clear();
-		userProfileImageDaoImpl.clear();
-		requestLogDaoImpl.clear();
-		improvementSuggestionDaoImpl.clear();
-		messageFileDaoImpl.clear();
-		considerationDaoImpl.clear();
-	}
-
-	private Database getDatabase() {
-		return database;
-	}
-
-	public Connection getConnection() throws SQLException {
-		return this.getDatabase().getConnection();
+		super(() -> database.getConnection());
 	}
 
 	@Override
-	public ThingDaoImpl getThingDao() {
-		return thingDaoImpl;
+	protected void initDaos() {
+		addDao(Thing.class, new ThingDaoImpl(this));
+		addDao(User.class, new UserDaoImpl(this));
+		addDao(Message.class, new MessageDaoImpl(this));
+		addDao(ConversationAccess.class, new ConversationAccessDaoImpl(this));
+		addDao(Conversation.class, new ConversationDaoImpl(this));
+		addDao(FailedInLoginigAttempt.class, new FailedInLoginigAttemptDaoImpl(this));
+		addDao(ProtectedFile.class, new ProtectedFileDaoImpl(this));
+		addDao(UserProfileImage.class, new UserProfileImageDaoImpl(this));
+		addDao(RequestLog.class, new RequestLogDaoImpl(this));
+		addDao(ImprovementSuggestion.class, new ImprovementSuggestionDaoImpl(this));
+		addDao(MessageFile.class, new MessageFileDaoImpl(this));
+		addDao(Consideration.class, new ConsiderationDaoImpl(this));
 	}
 
 	@Override
-	public UserDaoImpl getUserDao() {
-		return userDaoImpl;
+	public ThingDao getThingDao() {
+		return (ThingDao) getDao(Thing.class);
 	}
 
 	@Override
-	public MessageDaoImpl getMessageDao() {
-		return messageDaoImpl;
+	public UserDao getUserDao() {
+		return (UserDao) getDao(User.class);
 	}
 
 	@Override
-	public ConversationAccessDaoImpl getConversationAccessDao() {
-		return conversationAccessDaoImpl;
+	public MessageDao getMessageDao() {
+		return (MessageDao) getDao(Message.class);
 	}
 
 	@Override
-	public ConversationDaoImpl getConversationDao() {
-		return conversationDaoImpl;
+	public ConversationAccessDao getConversationAccessDao() {
+		return (ConversationAccessDao) getDao(ConversationAccess.class);
 	}
 
 	@Override
-	public FailedInLoginigAttemptDaoImpl getFailedInLoginigAttemptDao() {
-		return failedInLoginigAttemptDaoImpl;
+	public ConversationDao getConversationDao() {
+		return (ConversationDao) getDao(Conversation.class);
 	}
 
 	@Override
-	public ProtectedFileDaoImpl getProtectedFileDao() {
-		return protectedFileDaoImpl;
+	public FailedInLoginigAttemptDao getFailedInLoginigAttemptDao() {
+		return (FailedInLoginigAttemptDao) getDao(FailedInLoginigAttempt.class);
 	}
 
 	@Override
-	public UserProfileImageDaoImpl getUserProfileImageDao() {
-		return userProfileImageDaoImpl;
+	public ProtectedFileDao getProtectedFileDao() {
+		return (ProtectedFileDao) getDao(ProtectedFile.class);
 	}
 
 	@Override
-	public RequestLogDaoImpl getRequestLogDao() {
-		return requestLogDaoImpl;
+	public UserProfileImageDao getUserProfileImageDao() {
+		return (UserProfileImageDao) getDao(UserProfileImage.class);
 	}
 
 	@Override
-	public ImprovementSuggestionDaoImpl getImprovementSuggestionDao() {
-		return improvementSuggestionDaoImpl;
+	public RequestLogDao getRequestLogDao() {
+		return (RequestLogDao) getDao(RequestLog.class);
 	}
 
 	@Override
-	public MessageFileDaoImpl getMessageFileDao() {
-		return messageFileDaoImpl;
+	public ImprovementSuggestionDao getImprovementSuggestionDao() {
+		return (ImprovementSuggestionDao) getDao(ImprovementSuggestion.class);
 	}
 
 	@Override
-	public ConsiderationDaoImpl getConsiderationDao() {
-		return considerationDaoImpl;
+	public MessageFileDao getMessageFileDao() {
+		return (MessageFileDao) getDao(MessageFile.class);
+	}
+
+	@Override
+	public ConsiderationDao getConsiderationDao() {
+		return (ConsiderationDao) getDao(Consideration.class);
 	}
 
 }

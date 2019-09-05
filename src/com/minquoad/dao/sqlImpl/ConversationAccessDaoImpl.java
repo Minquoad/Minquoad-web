@@ -6,10 +6,11 @@ import java.util.Map;
 import com.minquoad.dao.interfaces.ConversationAccessDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
+import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class ConversationAccessDaoImpl extends ImprovedDaoImpl<ConversationAccess> implements ConversationAccessDao {
+public class ConversationAccessDaoImpl extends DaoImpl<ConversationAccess> implements ConversationAccessDao {
 
 	public ConversationAccessDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -21,12 +22,20 @@ public class ConversationAccessDaoImpl extends ImprovedDaoImpl<ConversationAcces
 	}
 
 	@Override
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
+	}
+
+	@Override
 	protected void initEntityMembers() throws DaoException {
 		this.addLongEntityMember("id", ConversationAccess::getId, ConversationAccess::setId);
 		this.addBooleanEntityMember("administrator", ConversationAccess::isAdministrator, ConversationAccess::setAdministrator);
-		this.addForeingKeyEntityMember("user", ConversationAccess::getUser, ConversationAccess::setUser, getDaoFactory().getUserDao());
-		this.addForeingKeyEntityMember("conversation", ConversationAccess::getConversation, ConversationAccess::setConversation, getDaoFactory().getConversationDao());
-		this.addForeingKeyEntityMember("lastSeenMessage", ConversationAccess::getLastSeenMessage, ConversationAccess::setLastSeenMessage, getDaoFactory().getMessageDao());
+		this.addForeingKeyEntityMember("user", User.class, ConversationAccess::getUser, ConversationAccess::setUser);
+		this.addForeingKeyEntityMember("conversation", Conversation.class, ConversationAccess::getConversation, ConversationAccess::setConversation);
+		this.addForeingKeyEntityMember("lastSeenMessage", Message.class, ConversationAccess::getLastSeenMessage, ConversationAccess::setLastSeenMessage);
 	}
 
 	@Override

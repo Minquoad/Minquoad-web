@@ -1,63 +1,100 @@
 package com.minquoad.tool;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Pool<ReusableInstance> {
+public class Pool<ReusableObject> {
 
-	private Map<ReusableInstance, Boolean> store;
+	private int maxSize;
 
-	private Instanciator<ReusableInstance> instanciator;
-	private Cleaner<ReusableInstance> cleaner;
+	private List<ReusableObject> availables;
+	private List<ReusableObject> unavailables;
+	
+	private Constructor<ReusableObject> constructor;
+	private Cleaner<ReusableObject> cleaner;
+	private Destructor<ReusableObject> destructor;
 
-	public Pool(Instanciator<ReusableInstance> instanciator) {
-
-		store = new HashMap<ReusableInstance, Boolean>();
-		this.instanciator = instanciator;
+	public Pool() {
+		maxSize = 256;
+		availables = new LinkedList<ReusableObject>();
+		unavailables = new LinkedList<ReusableObject>();
 	}
 
-	public Pool(Instanciator<ReusableInstance> instanciator, Cleaner<ReusableInstance> cleaner) {
-		this(instanciator);
+	public ReusableObject pickOne() {
+		if (!availables.isEmpty()) {
+			ReusableObject pickedObject = availables.remove(0);
+			unavailables.add(pickedObject);
+			return pickedObject;
+		}
+
+		if (getSize() == maxSize) {
+			unavailables.remove(0);
+		}
+
+		ReusableObject newObject = constructor.construct();
+		unavailables.add(newObject);
+		return newObject;
+	}
+
+	public void giveBack(ReusableObject reusableObject) {
+		if (unavailables.remove(reusableObject)) {
+			if (cleaner != null) {
+				cleaner.clean(reusableObject);
+			}
+			availables.add(reusableObject);
+
+		} else {
+			if (destructor != null) {
+				destructor.destruct(reusableObject);
+			}
+		}
+	}
+
+	public void discard(ReusableObject reusableObject) {
+		unavailables.remove(reusableObject);
+		if (destructor != null) {
+			destructor.destruct(reusableObject);
+		}
+	}
+
+	public void clear() {
+		availables.clear();
+		unavailables.clear();
+	}
+
+	public int getSize() {
+		return availables.size() + unavailables.size();
+	}
+
+	public void setMaxSize(int maxSize) {
+		if (maxSize < 1) {
+			throw new RuntimeException("Max size must be at least 1.");
+		}
+		this.maxSize = maxSize;
+	}
+
+	public void setConstructor(Constructor<ReusableObject> constructor) {
+		this.constructor = constructor;
+	}
+
+	public void setCleaner(Cleaner<ReusableObject> cleaner) {
 		this.cleaner = cleaner;
 	}
 
-	public ReusableInstance pickOne() {
-		for (Entry<ReusableInstance, Boolean> entry : store.entrySet()) {
-			if (entry.getValue()) {
-				entry.setValue(false);
-				return entry.getKey();
-			}
-		}
-
-		ReusableInstance newInstance = instanciator.getNew();
-		store.put(newInstance, false);
-		return newInstance;
+	public void setDestructor(Destructor<ReusableObject> destructor) {
+		this.destructor = destructor;
 	}
 
-	public void giveBack(ReusableInstance reusableInstance) {
-		if (store.containsKey(reusableInstance)) {
-			if (cleaner != null) {
-				cleaner.clean(reusableInstance);
-			}
-			store.put(reusableInstance, true);
-		}
+	public interface Constructor<ReusableObject> {
+		public ReusableObject construct();
 	}
 
-	public void discard(ReusableInstance reusableInstance) {
-		store.remove(reusableInstance);
-	}
-	
-	public void clear() {
-		store.clear();
-	}
-	
-	public interface Instanciator<ReusableInstance> {
-		public ReusableInstance getNew();
+	public interface Cleaner<ReusableObject> {
+		public void clean(ReusableObject reusableInstance);
 	}
 
-	public interface Cleaner<ReusableInstance> {
-		public void clean(ReusableInstance reusableInstance);
+	public interface Destructor<ReusableObject> {
+		public void destruct(ReusableObject reusableInstance);
 	}
 
 }

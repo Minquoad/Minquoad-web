@@ -49,6 +49,21 @@
 							bundle="${ administrationBundle }" />
 						: ${ applicationScope['com.minquoad.service.SessionManager'].improvedEndpointsNumber }
 					</li>
+
+					<c:set var="database"
+						value="${ applicationScope['com.minquoad.service.Database'] }"
+						scope="page" />
+
+					<li>
+						<fmt:message key="DatabaseConnectionPoolSize"
+							bundle="${ administrationBundle }" />
+						: ${ database.databaseConnectionPoolSize }
+					</li>
+					<li>
+						<fmt:message key="DaoFactoryPoolSize"
+							bundle="${ administrationBundle }" />
+						: ${ database.daoFactoryPoolSize }
+					</li>
 				</ul>
 			</div>
 		</div>

@@ -22,32 +22,63 @@ import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 
 public abstract class DaoImpl<Entity> {
 
+	private DaoFactoryImpl daoFactory;
+	
 	private boolean initialised;
 	
 	private List<EntityMember<Entity, ?>> entityMembers;
 
-	private List<DaoImpl<? extends Entity>> subClassDaos;
+	private DaoImpl<? super Entity> superClassDao;
 
+	private List<DaoImpl<? extends Entity>> subClassDaos;
+	
 	private EntityMember<? super Entity, ?> primaryKeyEntityMember;
 
 	private DaoInventory<Entity> inventory;
 
 	private List<StatementListener> statementListeners;
 
-	protected abstract void initEntityMembers();
-
-	protected abstract Connection getConnection() throws SQLException;
+	protected abstract String getTableName();
 
 	protected abstract Entity instantiateBlank();
 
-	protected abstract String getTableName();
-
-	protected void initSubClassDaos() {
-	};
-
-	protected DaoImpl<? super Entity> getSuperClassDao() {
-		return null;
+	public DaoImpl(DaoFactoryImpl daoFactory) {
+		this.daoFactory = daoFactory;
 	}
+
+	protected abstract void initSuperClass();
+
+	protected void setSuperClass(Class<? super Entity> superClass) {
+		setSuperClassDao(getDaoFactory().getDao(superClass));
+	}
+
+	private void setSuperClassDao(DaoImpl<? super Entity> superClassDao) {
+		this.superClassDao = superClassDao;
+	}
+
+	private boolean hasSuperClassDao() {
+		return getSuperClassDao() != null;
+	}
+
+	private DaoImpl<? super Entity> getSuperClassDao() {
+		return superClassDao;
+	}
+
+	protected abstract void initSubClasses();
+
+	protected <SubClass extends Entity> void addSubClass(Class<SubClass> subClass) {
+		getSubClassDaos().add(getDaoFactory().getDao(subClass));
+	}
+
+	private List<DaoImpl<? extends Entity>> getSubClassDaos() {
+		return subClassDaos;
+	}
+
+	private void setSubClassDaos(List<DaoImpl<? extends Entity>> subClassDaos) {
+		this.subClassDaos = subClassDaos;
+	}
+
+	protected abstract void initEntityMembers();
 
 	protected boolean isPrimaryKeyRandomlyGenerated() {
 		if (hasSuperClassDao()) {
@@ -60,9 +91,13 @@ public abstract class DaoImpl<Entity> {
 		getInventory().clear();
 	}
 
-	public <PrimaryKey> Entity getByPk(PrimaryKey pk) {
+	protected Connection getConnection() throws SQLException {
+		return getDaoFactory().getConnection();
+	}
+
+	public Entity getByPk(Object pk) {
 		@SuppressWarnings("unchecked")
-		EntityMember<? super Entity, PrimaryKey> primaryKeyEntityMember = (EntityMember<? super Entity, PrimaryKey>) this.getPrimaryKeyEntityMember();
+		EntityMember<? super Entity, Object> primaryKeyEntityMember = (EntityMember<? super Entity, Object>) this.getPrimaryKeyEntityMember();
 		return getByPk(pk, primaryKeyEntityMember, true);
 	}
 
@@ -646,8 +681,12 @@ public abstract class DaoImpl<Entity> {
 		if (!initialised) {
 			initialised = true;
 
+			initSuperClass();
 			if (hasSuperClassDao()) {
+
 				DaoImpl<? super Entity> superClassDao = getSuperClassDao();
+				superClassDao.initIfneeded();
+
 				setPrimaryKeyEntityMember(superClassDao.getPrimaryKeyEntityMember());
 
 				if (superClassDao.isPrimaryKeyRandomlyGenerated() != this.isPrimaryKeyRandomlyGenerated()) {
@@ -656,12 +695,12 @@ public abstract class DaoImpl<Entity> {
 			}
 
 			setEntityMembers(new ArrayList<EntityMember<Entity, ?>>());
-			this.initEntityMembers();
+			initEntityMembers();
+
+			setInventory(new DaoInventory<Entity>(getPrimaryKeyEntityMember()));
 
 			setSubClassDaos(new ArrayList<DaoImpl<? extends Entity>>());
-			initSubClassDaos();
-			
-			setInventory(new DaoInventory<Entity>(getPrimaryKeyEntityMember()));
+			initSubClasses();
 		}
 	}
 
@@ -696,12 +735,15 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	private List<EntityMember<Entity, ?>> getEntityMembers() {
-		initIfneeded();
 		return entityMembers;
 	}
 
 	private void setEntityMembers(List<EntityMember<Entity, ?>> entityMembers) {
 		this.entityMembers = entityMembers;
+	}
+
+	protected DaoFactoryImpl getDaoFactory() {
+		return daoFactory;
 	}
 
 	private void putInInventories(Entity entity) {
@@ -723,7 +765,6 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	private DaoInventory<Entity> getInventory() {
-		initIfneeded();
 		return inventory;
 	}
 
@@ -732,29 +773,11 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	private EntityMember<? super Entity, ?> getPrimaryKeyEntityMember() {
-		initIfneeded();
 		return primaryKeyEntityMember;
 	}
 
 	private void setPrimaryKeyEntityMember(EntityMember<? super Entity, ?> primaryKeyEntityMember) {
 		this.primaryKeyEntityMember = primaryKeyEntityMember;
-	}
-
-	public void addSubClassDao(DaoImpl<? extends Entity> dao) {
-		getSubClassDaos().add(dao);
-	}
-
-	private List<DaoImpl<? extends Entity>> getSubClassDaos() {
-		initIfneeded();
-		return subClassDaos;
-	}
-
-	private void setSubClassDaos(List<DaoImpl<? extends Entity>> subClassDaos) {
-		this.subClassDaos = subClassDaos;
-	}
-
-	private boolean hasSuperClassDao() {
-		return getSuperClassDao() != null;
 	}
 
 	private void triggerStatementListener(String statement) {
@@ -1057,24 +1080,24 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	/**
-	 * postgreSQL equivalent type : integer
-	 * 
 	 * @param name
+	 * @param referencedEntitySubclass
 	 * @param valueGetter
 	 * @param valueSetter
-	 * @param referencedEntityDaoImpl
 	 */
 	public <ReferencedEntitySubclass> void addForeingKeyEntityMember(String name,
+			Class<ReferencedEntitySubclass> referencedEntitySubclass,
 			EntityMemberGetter<Entity, ReferencedEntitySubclass> valueGetter,
-			EntityMemberSetter<Entity, ReferencedEntitySubclass> valueSetter,
-			DaoImpl<ReferencedEntitySubclass> referencedEntityDaoImpl) {
+			EntityMemberSetter<Entity, ReferencedEntitySubclass> valueSetter) {
+
+		DaoImpl<ReferencedEntitySubclass> referencedEntityDao = getDaoFactory().getDao(referencedEntitySubclass);
 
 		this.addEntityMember(new EntityMember<Entity, ReferencedEntitySubclass>(
 				name,
 				valueGetter,
 				valueSetter,
-				(resultSet, thisName) -> referencedEntityDaoImpl.getByPk(resultSet, thisName),
-				(preparedStatement, parameterIndex, value) -> referencedEntityDaoImpl.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, parameterIndex, value)));
+				(resultSet, thisName) -> referencedEntityDao.getByPk(resultSet, thisName),
+				(preparedStatement, parameterIndex, value) -> referencedEntityDao.getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, parameterIndex, value)));
 	}
 
 	public void addEntityMember(EntityMember<Entity, ?> entityMember) {

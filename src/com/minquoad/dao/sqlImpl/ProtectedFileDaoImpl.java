@@ -1,10 +1,12 @@
 package com.minquoad.dao.sqlImpl;
 
 import com.minquoad.dao.interfaces.ProtectedFileDao;
+import com.minquoad.entity.file.MessageFile;
 import com.minquoad.entity.file.ProtectedFile;
+import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.framework.dao.DaoException;
 
-public class ProtectedFileDaoImpl extends ImprovedDaoImpl<ProtectedFile> implements ProtectedFileDao {
+public class ProtectedFileDaoImpl extends DaoImpl<ProtectedFile> implements ProtectedFileDao {
 
 	public ProtectedFileDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -16,9 +18,13 @@ public class ProtectedFileDaoImpl extends ImprovedDaoImpl<ProtectedFile> impleme
 	}
 
 	@Override
-	protected void initSubClassDaos() {
-		this.addSubClassDao(getDaoFactory().getUserProfileImageDao());
-		this.addSubClassDao(getDaoFactory().getMessageFileDao());
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
+		addSubClass(UserProfileImage.class);
+		addSubClass(MessageFile.class);
 	}
 
 	@Override

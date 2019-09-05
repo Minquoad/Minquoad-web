@@ -9,7 +9,7 @@ import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.User;
 import com.minquoad.framework.dao.DaoException;
 
-public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
+public class UserDaoImpl extends DaoImpl<User> implements UserDao {
 
 	public UserDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -18,6 +18,14 @@ public class UserDaoImpl extends ImprovedDaoImpl<User> implements UserDao {
 	@Override
 	protected User instantiateBlank() {
 		return new User();
+	}
+
+	@Override
+	protected void initSuperClass() {
+	}
+
+	@Override
+	protected void initSubClasses() {
 	}
 
 	@Override

@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
-import javax.sql.DataSource;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.postgresql.Driver;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
@@ -15,8 +17,6 @@ public class Database {
 	public static final String DATABASE_PROTOCOL_NAME = "jdbc";
 	public static final String DATABASE_SUBPROTOCOL_NAME = "postgresql";
 
-	public static final Class<org.postgresql.Driver> DATASOURCE_DRIVER_CLASS = org.postgresql.Driver.class;
-
 	private final ServletContext servletContext;
 
 	private DataSource dataSource;
@@ -26,35 +26,34 @@ public class Database {
 	public Database(ServletContext servletContext) {
 		this.servletContext = servletContext;
 
-		initConnectionPool();
-
-		daoFactoryPool = new Pool<DaoFactory>(
-				() -> new DaoFactoryImpl(this),
-				(daoFactory) -> ((DaoFactoryImpl) daoFactory).clear());
+		dataSource = createDataSource();
+		daoFactoryPool = createDaoFactoryPool();
 	}
 
-	private void initConnectionPool() {
-		try {
+	private DataSource createDataSource() {
+		Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
 
-			Deployment deployment = ServicesManager.getService(servletContext, Deployment.class);
+		DataSource dataSource = new DataSource();
 
-			org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
+		dataSource.setDriverClassName(Driver.class.getName());
+		dataSource.setUrl(getDatabaseUrl());
+		dataSource.setUsername(deployment.getDatabaseUser());
+		dataSource.setPassword(deployment.getDatabasePassword());
+		dataSource.setInitialSize(4);
+		dataSource.setMinIdle(4);
+		dataSource.setMaxIdle(4);
+		dataSource.setMaxActive(64);
 
-			dataSource.setDriverClassName(DATASOURCE_DRIVER_CLASS.getName());
-			dataSource.setUrl(getDatabaseUrl());
-			dataSource.setUsername(deployment.getDatabaseUser());
-			dataSource.setPassword(deployment.getDatabasePassword());
-			dataSource.setInitialSize(1);
-			dataSource.setMinIdle(1);
-			dataSource.setMaxIdle(10);
-			dataSource.setMaxActive(64);
+		return dataSource;
+	}
 
-			this.dataSource = dataSource;
+	private Pool<DaoFactory> createDaoFactoryPool() {
+		Pool<DaoFactory> daoFactoryPool = new Pool<DaoFactory>();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			ServicesManager.getService(servletContext, Logger.class).logError(e);
-		}
+		daoFactoryPool.setConstructor(() -> new DaoFactoryImpl(this));
+		daoFactoryPool.setCleaner((daoFactory) -> ((DaoFactoryImpl) daoFactory).clear());
+
+		return daoFactoryPool;
 	}
 
 	public Connection getConnection() throws SQLException {
@@ -71,19 +70,30 @@ public class Database {
 	}
 
 	public void close() {
+		dataSource.close();
 	}
 
 	public DaoFactory pickOneDaoFactory() {
 		return daoFactoryPool.pickOne();
 	}
 
-	public void giveBack(DaoFactory reusableInstance) {
-		daoFactoryPool.giveBack(reusableInstance);
+	public void giveBack(DaoFactory daoFactory) {
+		daoFactoryPool.giveBack(daoFactory);
 	}
 
 	public void clear() {
-		initConnectionPool();
+		dataSource.close();
+		dataSource = createDataSource();
+
 		daoFactoryPool.clear();
+	}
+
+	public int getDatabaseConnectionPoolSize() {
+		return dataSource.getSize();
+	}
+
+	public int getDaoFactoryPoolSize() {
+		return daoFactoryPool.getSize();
 	}
 
 }

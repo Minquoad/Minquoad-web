@@ -2,11 +2,11 @@ package com.minquoad.dao.sqlImpl;
 
 import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
+import com.minquoad.entity.file.ProtectedFile;
 import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.framework.dao.DaoException;
-import com.minquoad.framework.dao.DaoImpl;
 
-public class UserProfileImageDaoImpl extends ImprovedDaoImpl<UserProfileImage> implements UserProfileImageDao {
+public class UserProfileImageDaoImpl extends DaoImpl<UserProfileImage> implements UserProfileImageDao {
 
 	public UserProfileImageDaoImpl(DaoFactoryImpl daoFactory) {
 		super(daoFactory);
@@ -18,13 +18,17 @@ public class UserProfileImageDaoImpl extends ImprovedDaoImpl<UserProfileImage> i
 	}
 
 	@Override
-	protected DaoImpl<? super UserProfileImage> getSuperClassDao() {
-		return getDaoFactory().getProtectedFileDao();
+	protected void initSuperClass() {
+		setSuperClass(ProtectedFile.class);
+	}
+
+	@Override
+	protected void initSubClasses() {
 	}
 
 	@Override
 	protected void initEntityMembers() throws DaoException {
-		this.addForeingKeyEntityMember("user", UserProfileImage::getUser, UserProfileImage::setUser, getDaoFactory().getUserDao());
+		this.addForeingKeyEntityMember("user", User.class, UserProfileImage::getUser, UserProfileImage::setUser);
 	}
 
 	@Override

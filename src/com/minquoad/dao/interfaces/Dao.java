@@ -3,26 +3,26 @@ package com.minquoad.dao.interfaces;
 import java.util.List;
 import java.util.Map;
 
-public interface Dao<EntitySubclass> {
+public interface Dao<Entity> {
 
-	public <PrimaryKey> EntitySubclass getByPk(PrimaryKey id);
+	public Entity getByPk(Object id);
 
-	public void persist(EntitySubclass entity);
+	public void persist(Entity entity);
 
-	public void insert(EntitySubclass entity);
+	public void insert(Entity entity);
 
-	public void update(EntitySubclass entity);
+	public void update(Entity entity);
 
-	public void delete(EntitySubclass entity);
+	public void delete(Entity entity);
 
-	public List<EntitySubclass> getAll();
+	public List<Entity> getAll();
 
-	public List<EntitySubclass> getAllMatching(String memberName, Object value);
+	public List<Entity> getAllMatching(String memberName, Object value);
 
-	public List<EntitySubclass> getAllMatching(Map<String, Object> criteria);
+	public List<Entity> getAllMatching(Map<String, Object> criteria);
 
-	public EntitySubclass getOneMatching(String memberName, Object value);
+	public Entity getOneMatching(String memberName, Object value);
 
-	public EntitySubclass getOneMatching(Map<String, Object> criteria);
+	public Entity getOneMatching(Map<String, Object> criteria);
 
 }
