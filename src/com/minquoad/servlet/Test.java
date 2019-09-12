@@ -1,7 +1,7 @@
 package com.minquoad.servlet;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -52,7 +52,7 @@ public class Test extends ImprovedHttpServlet {
 
 		String descriptionMemberName = "description";
 
-		List<Thing> things;
+		Collection<Thing> things;
 
 		things = thingDao.getAllMatching(descriptionMemberName, "description \"\"");
 

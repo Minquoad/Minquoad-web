@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -23,20 +22,20 @@ import com.minquoad.framework.dao.entityMember.EntityMemberSetter;
 public abstract class DaoImpl<Entity> {
 
 	private DaoFactoryImpl daoFactory;
-	
+
 	private boolean initialised;
-	
-	private List<EntityMember<Entity, ?>> entityMembers;
+
+	private Collection<EntityMember<Entity, ?>> entityMembers;
 
 	private DaoImpl<? super Entity> superClassDao;
 
-	private List<DaoImpl<? extends Entity>> subClassDaos;
-	
+	private Collection<DaoImpl<? extends Entity>> subClassDaos;
+
 	private EntityMember<? super Entity, ?> primaryKeyEntityMember;
 
 	private DaoInventory<Entity> inventory;
 
-	private List<StatementListener> statementListeners;
+	private Collection<StatementListener> statementListeners;
 
 	protected abstract String getTableName();
 
@@ -70,11 +69,11 @@ public abstract class DaoImpl<Entity> {
 		getSubClassDaos().add(getDaoFactory().getDao(subClass));
 	}
 
-	private List<DaoImpl<? extends Entity>> getSubClassDaos() {
+	private Collection<DaoImpl<? extends Entity>> getSubClassDaos() {
 		return subClassDaos;
 	}
 
-	private void setSubClassDaos(List<DaoImpl<? extends Entity>> subClassDaos) {
+	private void setSubClassDaos(Collection<DaoImpl<? extends Entity>> subClassDaos) {
 		this.subClassDaos = subClassDaos;
 	}
 
@@ -152,10 +151,10 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public void persist(Entity entity) {
-		if (getPrimaryKeyEntityMember().getValue(entity) == null || !getInventory().isInside(entity)) {
-			this.insert(entity);
+		if (getPrimaryKeyEntityMember().getValue(entity) == null || !getInventory().contains(entity)) {
+			insert(entity);
 		} else {
-			this.update(entity);
+			update(entity);
 		}
 	}
 
@@ -374,17 +373,17 @@ public abstract class DaoImpl<Entity> {
 		}
 	}
 
-	public List<Entity> getAll() {
+	public Collection<Entity> getAll() {
 		return this.getAllMatching(new HashMap<String, Object>());
 	}
 
-	public List<Entity> getAllMatching(String memberName, Object value) {
+	public Collection<Entity> getAllMatching(String memberName, Object value) {
 		Map<String, Object> criteria = new HashMap<String, Object>();
 		criteria.put(memberName, value);
 		return getAllMatching(criteria);
 	}
 
-	public List<Entity> getAllMatching(Map<String, Object> criteria) {
+	public Collection<Entity> getAllMatching(Map<String, Object> criteria) {
 		String statement = "SELECT";
 		if (getSubClassDaos().isEmpty()) {
 			statement += " *";
@@ -460,7 +459,7 @@ public abstract class DaoImpl<Entity> {
 
 			ConnectionManager.close(resultSet, preparedStatement, connection);
 
-			List<Entity> entities = new ArrayList<Entity>();
+			Collection<Entity> entities = new ArrayList<Entity>();
 			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
 				if (isEntityMachingCriteria(instantiatedEntity, criteria)) {
 					entities.add(instantiatedEntity);
@@ -734,11 +733,11 @@ public abstract class DaoImpl<Entity> {
 		throw new DaoException(error);
 	}
 
-	private List<EntityMember<Entity, ?>> getEntityMembers() {
+	private Collection<EntityMember<Entity, ?>> getEntityMembers() {
 		return entityMembers;
 	}
 
-	private void setEntityMembers(List<EntityMember<Entity, ?>> entityMembers) {
+	private void setEntityMembers(Collection<EntityMember<Entity, ?>> entityMembers) {
 		this.entityMembers = entityMembers;
 	}
 

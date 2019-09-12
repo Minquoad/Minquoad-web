@@ -40,8 +40,8 @@ public class DaoInventory<Entity> {
 		}
 	}
 
-	public boolean isInside(Entity entity) {
-		return getMap().get(getPkEntityMember().getValue(entity)) != null;
+	public boolean contains(Entity entity) {
+		return getMap().containsKey(getPkEntityMember().getValue(entity));
 	}
 
 	public Entity getByPrimaryKey(Object primaryKey) {

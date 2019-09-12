@@ -1,7 +1,7 @@
 package com.minquoad.frontComponent.form.field;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +13,7 @@ public class FormEntityField<Entity> extends FormField {
 
 	private String stringValue;
 	private Entity value;
-	private List<EntityValueChecker<Entity>> valueCheckers;
+	private Collection<EntityValueChecker<Entity>> valueCheckers;
 	private Dao<Entity> dao;
 	private DaoGetter<Entity> daoGetter;
 

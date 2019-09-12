@@ -1,6 +1,6 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
@@ -34,7 +34,7 @@ public class ThingDaoImpl extends DaoImpl<Thing> implements ThingDao {
 	}
 
 	@Override
-	public List<Thing> getUserThings(User user) {
+	public Collection<Thing> getUserThings(User user) {
 		return this.getAllMatching("owner", user);
 	}
 

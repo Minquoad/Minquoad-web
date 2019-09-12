@@ -1,7 +1,7 @@
 package com.minquoad.websocketEndpoint;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -25,17 +25,19 @@ import com.minquoad.tool.http.ImprovedHttpServlet;
 public class ImprovedEndpoint extends Endpoint {
 
 	private boolean available;
+	private Collection<String> roles;
 	
-	private List<String> roles;
-	private Session websocketSession;
+	private ServletContext servletContext;
 	private HttpSession httpSession;
+	private Session websocketSession;
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
 		available = true;
-		roles = new ArrayList<String>();
+		roles = new HashSet<String>();	
 
 		httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		servletContext = httpSession.getServletContext();
 		websocketSession = session;
 
 		Database database = getService(Database.class);
@@ -48,7 +50,7 @@ public class ImprovedEndpoint extends Endpoint {
 		session.addMessageHandler(new MessageHandler.Whole<String>() {
 			@Override
 			public void onMessage(String message) {
-				if (available) {
+				if (isAvailable()) {
 					addRole(message);
 				}
 			}
@@ -64,8 +66,8 @@ public class ImprovedEndpoint extends Endpoint {
 
 	@Override
 	public void onError(Session session, Throwable throwable) {
-		getService(Logger.class).logError(throwable);
 		getService(SessionManager.class).remove(this);
+		getService(Logger.class).logError(throwable);
 	}
 
 	public Session getWebsocketSession() {
@@ -81,7 +83,7 @@ public class ImprovedEndpoint extends Endpoint {
 	}
 
 	public ServletContext getContext() {
-		return getHttpSession().getServletContext();
+		return servletContext;
 	}
 
 	public User getUser(DaoFactory daoFactory) {
@@ -97,7 +99,7 @@ public class ImprovedEndpoint extends Endpoint {
 	}
 
 	public boolean hasRole(String role) {
-		return this.roles.contains(role);
+		return roles.contains(role);
 	}
 
 	public void addRole(String role) {
@@ -110,6 +112,10 @@ public class ImprovedEndpoint extends Endpoint {
 
 	public <ServiceClass> ServiceClass getService(Class<ServiceClass> serviceClass) {
 		return ServicesManager.getService(getContext(), serviceClass);
+	}
+
+	public boolean isAvailable() {
+		return available;
 	}
 
 }

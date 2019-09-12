@@ -1,7 +1,7 @@
 package com.minquoad.frontComponent.form.field;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +17,7 @@ public abstract class FormField {
 	private boolean nullPermitted;
 	private boolean emptyPermitted;
 
-	private List<String> valueProblems;
+	private Collection<String> valueProblems;
 
 	public FormField(String name) {
 		this.name = name;
@@ -34,11 +34,11 @@ public abstract class FormField {
 		return getValueProblems().size() == 0;
 	}
 
-	protected void setValueProblems(List<String> valueProblems) {
+	protected void setValueProblems(Collection<String> valueProblems) {
 		this.valueProblems = valueProblems;
 	}
 
-	public List<String> getValueProblems() {
+	public Collection<String> getValueProblems() {
 		return valueProblems;
 	}
 

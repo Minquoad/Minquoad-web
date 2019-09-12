@@ -1,6 +1,6 @@
 package com.minquoad.dao.sqlImpl;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.minquoad.dao.interfaces.MessageDao;
 import com.minquoad.entity.Conversation;
@@ -45,7 +45,7 @@ public class MessageDaoImpl extends DaoImpl<Message> implements MessageDao {
 	}
 
 	@Override
-	public List<Message> getConversationMessages(Conversation conversation) {
+	public Collection<Message> getConversationMessages(Conversation conversation) {
 		return this.getAllMatching("conversation", conversation);
 	}
 

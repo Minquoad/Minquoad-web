@@ -1,7 +1,7 @@
 package com.minquoad.dao.sqlImpl;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.minquoad.dao.interfaces.ConversationDao;
 import com.minquoad.entity.Conversation;
@@ -43,9 +43,9 @@ public class ConversationDaoImpl extends DaoImpl<Conversation> implements Conver
 	}
 
 	@Override
-	public List<Conversation> getUserConversations(User user) {
-		List<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("user", user);
-		List<Conversation> conversations = new ArrayList<Conversation>();
+	public Collection<Conversation> getUserConversations(User user) {
+		Collection<ConversationAccess> conversationAccesses = getDaoFactory().getConversationAccessDao().getAllMatching("user", user);
+		Collection<Conversation> conversations = new ArrayList<Conversation>();
 		for (ConversationAccess conversationAccess : conversationAccesses) {
 			conversations.add(conversationAccess.getConversation());
 		}

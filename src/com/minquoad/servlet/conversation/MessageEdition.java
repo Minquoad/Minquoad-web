@@ -1,8 +1,7 @@
 package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,19 +36,13 @@ public class MessageEdition extends ImprovedHttpServlet {
 			message.setEditedText(form.getNewText());
 			getDaoFactory(request).getMessageDao().persist(message);
 
-			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(message.getConversation());
-
-			List<Long> conversationUsersIds = new ArrayList<Long>();
-			for (User conversationUser : conversationUsers) {
-				conversationUsersIds.add(conversationUser.getId());
-			}
+			Collection<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(message.getConversation());
 
 			sendJsonToClientsWithRole(
 					message.toJson(),
 					"messageEdition",
-					(endpoint) -> {
-						return conversationUsersIds.contains(endpoint.getUserId());
-					});
+					conversationUsers,
+					null);
 
 		} else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

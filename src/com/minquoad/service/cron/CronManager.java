@@ -8,7 +8,6 @@ import javax.servlet.ServletContext;
 
 import com.minquoad.service.Logger;
 import com.minquoad.service.ServicesManager;
-import com.minquoad.service.StorageManager;
 
 public class CronManager {
 
@@ -16,26 +15,26 @@ public class CronManager {
 
 	private long lastMinuteStart;
 
-	private List<Cron> minutelyCrons = new ArrayList<Cron>();
+	private List<Cron> minutelyCrons;
 
 	private final ServletContext servletContext;
 
 	public CronManager(ServletContext servletContext) {
 		this.servletContext = servletContext;
+		minutelyCrons = new ArrayList<Cron>();
+		
+		minutelyCrons.add(new TestCron());
 	}
 
 	public void start() {
 
 		stopRequested = false;
+		long epochMilli = Instant.now().toEpochMilli();
+		lastMinuteStart = epochMilli - (epochMilli % 60_000l);
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				lastMinuteStart = Instant.now().toEpochMilli();
-				CronManager.this.loop();
-			}
+		new Thread(() -> {
+			CronManager.this.loop();
 		}).start();
-
 	}
 
 	public void stop() {
@@ -56,23 +55,15 @@ public class CronManager {
 
 			lastMinuteStart += 1000 * 60;
 
-			runMinutlyCrons(Instant.ofEpochMilli(lastMinuteStart));
-		}
-	}
+			Instant instant = Instant.ofEpochMilli(lastMinuteStart);
 
-	private void runMinutlyCrons(Instant instant) {
-		Logger logger = ServicesManager.getService(servletContext, Logger.class);
-
-		logger.logInFile(
-				Instant.now() + " : " + "CronManager.runMinutlyCrons() called",
-				ServicesManager.getService(servletContext, StorageManager.class).getFile(StorageManager.LOG_PATH + "cron.log"));
-
-		for (Cron minutelyCron : minutelyCrons) {
-			try {
-				minutelyCron.listenTime(instant);
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.logError(e);
+			for (Cron minutelyCron : minutelyCrons) {
+				try {
+					minutelyCron.listenTime(instant);
+				} catch (Exception e) {
+					e.printStackTrace();
+					ServicesManager.getService(servletContext, Logger.class).logError(e);
+				}
 			}
 		}
 	}

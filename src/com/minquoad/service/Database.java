@@ -44,13 +44,20 @@ public class Database {
 		dataSource.setMaxIdle(4);
 		dataSource.setMaxActive(64);
 
+		try {
+			dataSource.getConnection();
+		} catch (Exception e) {
+			ServicesManager.getService(servletContext, Logger.class).logError(e);
+			throw new RuntimeException(e);
+		}
+		
 		return dataSource;
 	}
 
 	private Pool<DaoFactory> createDaoFactoryPool() {
 		Pool<DaoFactory> daoFactoryPool = new Pool<DaoFactory>();
 
-		daoFactoryPool.setConstructor(() -> new DaoFactoryImpl(this));
+		daoFactoryPool.setConstructor(() -> new DaoFactoryImpl(servletContext));
 		daoFactoryPool.setCleaner((daoFactory) -> ((DaoFactoryImpl) daoFactory).clear());
 
 		return daoFactoryPool;

@@ -2,7 +2,8 @@ package com.minquoad.tool.http;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -319,31 +320,45 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(request.getServletContext(), json, role, filter);
+	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
+		sendJsonToClientsWithRole(request.getServletContext(), json, role, users, filter);
 	}
 
-	public void sendJsonToClientsWithRole(JsonNode json, String role, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(getServletContext(), json, role, filter);
+	public void sendJsonToClientsWithRole(JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
+		sendJsonToClientsWithRole(getServletContext(), json, role, users, filter);
 	}
 
-	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, String role, ImprovedEndpointFilter filter) {
+	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
+
+		Collection<Long> usersIds = null;
+		if (users != null) {
+			usersIds = new HashSet<Long>();
+			for (User user : users) {
+				if (user == null) {
+					usersIds.add(null);
+				} else {
+					usersIds.add(user.getId());
+				}
+			}
+		}
 
 		ObjectNode eventJsonObject = JsonNodeFactory.instance.objectNode();
 		eventJsonObject.put("role", role);
 		eventJsonObject.set("data", json);
 		String text = eventJsonObject.toString();
 
-		List<ImprovedEndpoint> endpoints = ServicesManager.getService(context, SessionManager.class).getImprovedEndpoints();
+		Collection<ImprovedEndpoint> endpoints = ServicesManager.getService(context, SessionManager.class).getImprovedEndpoints();
 		for (ImprovedEndpoint endpoint : endpoints) {
 			if (endpoint.hasRole(role)) {
-				try {
-					if (filter == null || filter.accepts(endpoint)) {
-						endpoint.sendText(text);
+				if (usersIds == null || usersIds.contains(endpoint.getUserId())) {
+					try {
+						if (filter == null || filter.accepts(endpoint)) {
+							endpoint.sendText(text);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						ServicesManager.getService(context, Logger.class).logError(e);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					ServicesManager.getService(context, Logger.class).logError(e);
 				}
 			}
 		}

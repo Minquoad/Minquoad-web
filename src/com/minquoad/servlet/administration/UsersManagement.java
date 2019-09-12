@@ -1,8 +1,8 @@
 package com.minquoad.servlet.administration;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,13 +46,13 @@ public class UsersManagement extends ImprovedHttpServlet {
 			target.setUnblockInstant(form.getUnblockDate());
 			target.setAdminLevel(0);
 			getDaoFactory(request).getUserDao().persist(target);
-			
+
 			if (target.isBlocked()) {
 				SessionManager sessionManager = getService(SessionManager.class);
 
-				List<ImprovedEndpoint> improvedEndpoints = sessionManager.getImprovedEndpoints();
-				List<ImprovedEndpoint> toRemoveImprovedEndpoints = new LinkedList<ImprovedEndpoint>();
-				
+				Collection<ImprovedEndpoint> improvedEndpoints = sessionManager.getImprovedEndpoints();
+				Collection<ImprovedEndpoint> toRemoveImprovedEndpoints = new LinkedList<ImprovedEndpoint>();
+
 				for (ImprovedEndpoint improvedEndpoint : improvedEndpoints) {
 					if (improvedEndpoint.getUserId() == target.getId()) {
 						toRemoveImprovedEndpoints.add(improvedEndpoint);

@@ -2,6 +2,7 @@ package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -39,13 +40,13 @@ public class Conversations extends ImprovedHttpServlet {
 		UserDao userDao = getDaoFactory(request).getUserDao();
 		ConversationDao conversationDao = getDaoFactory(request).getConversationDao();
 
-		List<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
+		Collection<Conversation> conversations = conversationDao.getUserConversations(getUser(request));
 
 		User targetUser = getEntityFromPkParameter(request, TARGET_USER_ID_KEY, DaoFactory::getUserDao);
 		if (targetUser != null && targetUser != getUser(request)) {
 			for (Conversation conversation : conversations) {
 				if (conversation.getType() == Conversation.TYPE_MAIN_BETWEEN_TWO_USERS) {
-					List<User> conversationUsers = userDao.getConversationUsers(conversation);
+					Collection<User> conversationUsers = userDao.getConversationUsers(conversation);
 					for (User conversationUser : conversationUsers) {
 						if (conversationUser == targetUser) {
 							response.sendRedirect(request.getRequestURI() + "?" + CONVERSATION_SUB_PAGE_KEY + "=" + conversation.getId());

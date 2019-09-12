@@ -1,6 +1,7 @@
 package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -33,9 +34,6 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		User user = getUser(request);
 		Conversation conversation = getEntityFromPkParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
-		//optimization: all ConversationAcces are loaded in one requests
-		getDaoFactory(request).getUserDao().getConversationUsers(conversation);
-		
 		return user != null && conversation != null
 				&& getUnitFactory(request).getConversationUnit().hasUserConversationAccess(user, conversation);
 	}
@@ -48,7 +46,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		request.setAttribute("conversation", conversation);
 
 		List<Message> messages = getUnitFactory(request).getConversationUnit().getConversationMessagesInOrder(conversation);
-		
+
 		ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
 		ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
 		
@@ -60,7 +58,7 @@ public class CurrentConversation extends ImprovedHttpServlet {
 			}
 		}
 
-		List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
+		Collection<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
 
 		request.setAttribute("messages", messages);
 		request.setAttribute("participants", conversationUsers);
@@ -68,11 +66,6 @@ public class CurrentConversation extends ImprovedHttpServlet {
 
 		forwardToView(request, response, VIEW_PATH);
 
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 }

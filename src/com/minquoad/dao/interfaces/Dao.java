@@ -1,6 +1,6 @@
 package com.minquoad.dao.interfaces;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public interface Dao<Entity> {
@@ -15,11 +15,11 @@ public interface Dao<Entity> {
 
 	public void delete(Entity entity);
 
-	public List<Entity> getAll();
+	public Collection<Entity> getAll();
 
-	public List<Entity> getAllMatching(String memberName, Object value);
+	public Collection<Entity> getAllMatching(String memberName, Object value);
 
-	public List<Entity> getAllMatching(Map<String, Object> criteria);
+	public Collection<Entity> getAllMatching(Map<String, Object> criteria);
 
 	public Entity getOneMatching(String memberName, Object value);
 

@@ -2,11 +2,10 @@ package com.minquoad.frontComponent.form.field;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class FormListField extends FormStringField {
 
-	private List<String> acceptedValues;
+	private Collection<String> acceptedValues;
 
 	public FormListField(String name) {
 		super(name);

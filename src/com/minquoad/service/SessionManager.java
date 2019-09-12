@@ -1,13 +1,13 @@
 package com.minquoad.service;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.minquoad.websocketEndpoint.ImprovedEndpoint;
 
 public class SessionManager {
 
-	private List<ImprovedEndpoint> improvedEndpoints;
+	private Collection<ImprovedEndpoint> improvedEndpoints;
 
 	public SessionManager() {
 		improvedEndpoints = new LinkedList<ImprovedEndpoint>();
@@ -25,7 +25,7 @@ public class SessionManager {
 		return getImprovedEndpoints().size();
 	}
 
-	public List<ImprovedEndpoint> getImprovedEndpoints() {
+	public Collection<ImprovedEndpoint> getImprovedEndpoints() {
 		return improvedEndpoints;
 	}
 

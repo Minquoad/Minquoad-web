@@ -2,7 +2,8 @@ package com.minquoad.unit;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 
 import com.minquoad.dao.interfaces.UserDao;
@@ -41,8 +42,8 @@ public class UserUnit extends Unit {
 		return nickname.substring(0, 1).toUpperCase() + nickname.substring(1).toLowerCase();
 	}
 
-	public static List<String> getNicknameProblems(String nickname, Locale locale) {
-		List<String> problems = new ArrayList<String>();
+	public static Collection<String> getNicknameProblems(String nickname, Locale locale) {
+		Collection<String> problems = new ArrayList<String>();
 
 		if (nickname.length() < User.NICKNAME_MIN_LENGTH) {
 			problems.add(InternationalizationTool.getText(
@@ -61,7 +62,7 @@ public class UserUnit extends Unit {
 					User.NICKNAME_MAX_LENGTH));
 		}
 
-		List<Character> nicknameImpossibleChar = getNotNormalChars(nickname);
+		Collection<Character> nicknameImpossibleChar = getNotNormalChars(nickname);
 		if (nicknameImpossibleChar.size() != 0) {
 			String impossibleCharsText = "";
 			for (Character character : nicknameImpossibleChar) {
@@ -105,12 +106,12 @@ public class UserUnit extends Unit {
 		return problems;
 	}
 
-	public static List<Character> getNotNormalChars(String nickname) {
-		List<Character> impossibleChars = new ArrayList<Character>();
+	public static Collection<Character> getNotNormalChars(String nickname) {
+		Collection<Character> impossibleChars = new HashSet<Character>();
 
 		for (int i = 0; i < nickname.length(); i++) {
 			char currentChar = nickname.charAt(i);
-			if (!isCharNormal(currentChar) && !impossibleChars.contains(currentChar)) {
+			if (!isCharNormal(currentChar)) {
 				impossibleChars.add(currentChar);
 			}
 		}
@@ -139,10 +140,10 @@ public class UserUnit extends Unit {
 		return possibleChars;
 	}
 
-	public static List<String> getPasswordProblems(String password, Locale locale) {
-		List<String> problems = new ArrayList<String>();
+	public static Collection<String> getPasswordProblems(String password, Locale locale) {
+		Collection<String> problems = new ArrayList<String>();
 
-		List<Character> passwordNotNormalChars = getNotNormalChars(password);
+		Collection<Character> passwordNotNormalChars = getNotNormalChars(password);
 		if (passwordNotNormalChars.size() == 0) {
 			problems.add(InternationalizationTool.getText(
 					"NospecialChar",

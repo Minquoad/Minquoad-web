@@ -1,7 +1,7 @@
 package com.minquoad.frontComponent.form.field;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,7 +10,7 @@ import com.minquoad.frontComponent.form.field.valueChecker.StringValueChecker;
 public class FormStringField extends FormField {
 
 	private String value;
-	private List<StringValueChecker> valueCheckers;
+	private Collection<StringValueChecker> valueCheckers;
 	private boolean trimingValue;
 
 	public FormStringField(String name) {

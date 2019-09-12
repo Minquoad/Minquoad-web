@@ -1,5 +1,10 @@
 package com.minquoad.dao.sqlImpl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import javax.servlet.ServletContext;
+
 import com.minquoad.dao.interfaces.ConsiderationDao;
 import com.minquoad.dao.interfaces.ConversationAccessDao;
 import com.minquoad.dao.interfaces.ConversationDao;
@@ -26,11 +31,25 @@ import com.minquoad.entity.file.MessageFile;
 import com.minquoad.entity.file.ProtectedFile;
 import com.minquoad.entity.file.UserProfileImage;
 import com.minquoad.service.Database;
+import com.minquoad.service.ServicesManager;
 
 public class DaoFactoryImpl extends com.minquoad.framework.dao.DaoFactoryImpl implements DaoFactory {
 
-	public DaoFactoryImpl(Database database) {
-		super(() -> database.getConnection());
+	private final ServletContext servletContext;
+	private final Database database;
+
+	public DaoFactoryImpl(ServletContext servletContext) {
+		this.servletContext = servletContext;
+		database = ServicesManager.getService(servletContext, Database.class);
+	}
+
+	@Override
+	public Connection getConnection() throws SQLException {
+		return database.getConnection();
+	}
+
+	public ServletContext getServletContext() {
+		return servletContext;
 	}
 
 	@Override

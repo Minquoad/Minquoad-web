@@ -9,7 +9,7 @@ public class Pool<ReusableObject> {
 
 	private List<ReusableObject> availables;
 	private List<ReusableObject> unavailables;
-	
+
 	private Constructor<ReusableObject> constructor;
 	private Cleaner<ReusableObject> cleaner;
 	private Destructor<ReusableObject> destructor;
@@ -27,7 +27,7 @@ public class Pool<ReusableObject> {
 			return pickedObject;
 		}
 
-		if (getSize() == maxSize) {
+		while (getSize() >= maxSize) {
 			unavailables.remove(0);
 		}
 
@@ -44,13 +44,16 @@ public class Pool<ReusableObject> {
 			availables.add(reusableObject);
 
 		} else {
-			if (destructor != null) {
-				destructor.destruct(reusableObject);
+			if (!availables.contains(reusableObject)) {
+				if (destructor != null) {
+					destructor.destruct(reusableObject);
+				}
 			}
 		}
 	}
 
 	public void discard(ReusableObject reusableObject) {
+		availables.remove(reusableObject);
 		unavailables.remove(reusableObject);
 		if (destructor != null) {
 			destructor.destruct(reusableObject);
@@ -58,8 +61,14 @@ public class Pool<ReusableObject> {
 	}
 
 	public void clear() {
-		availables.clear();
 		unavailables.clear();
+
+		if (destructor != null) {
+			for (ReusableObject reusableObject : availables) {
+				destructor.destruct(reusableObject);
+			}
+		}
+		availables.clear();
 	}
 
 	public int getSize() {
@@ -69,6 +78,12 @@ public class Pool<ReusableObject> {
 	public void setMaxSize(int maxSize) {
 		if (maxSize < 1) {
 			throw new RuntimeException("Max size must be at least 1.");
+		}
+		while (getSize() > maxSize && !availables.isEmpty()) {
+			discard(availables.get(0));
+		}
+		while (getSize() > maxSize && !unavailables.isEmpty()) {
+			unavailables.remove(0);
 		}
 		this.maxSize = maxSize;
 	}

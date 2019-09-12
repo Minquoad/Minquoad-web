@@ -1,7 +1,5 @@
 package com.minquoad.dao.sqlImpl;
 
-import com.minquoad.framework.dao.DaoFactoryImpl;
-
 public abstract class DaoImpl<EntitySubclass> extends com.minquoad.framework.dao.DaoImpl<EntitySubclass> {
 
 	private String tableName;
@@ -10,7 +8,14 @@ public abstract class DaoImpl<EntitySubclass> extends com.minquoad.framework.dao
 		super(daoFactoryImpl);
 
 		this.tableName = this.instantiateBlank().getClass().getSimpleName();
-		//this.addStatementListener((statement) -> System.out.println(statement));
+/*
+		this.addStatementListener((statement) -> {
+			ServletContext servletContext = getDaoFactory().getServletContext();
+			Logger logger = ServicesManager.getService(servletContext, Logger.class);
+			StorageManager storageManager = ServicesManager.getService(servletContext, StorageManager.class);
+			logger.logInFile(statement, storageManager.getFile(StorageManager.LOG_PATH + "statements.sql"));
+		});
+*/
 	}
 
 	@Override
@@ -19,8 +24,8 @@ public abstract class DaoImpl<EntitySubclass> extends com.minquoad.framework.dao
 	}
 
 	@Override
-	public com.minquoad.dao.sqlImpl.DaoFactoryImpl getDaoFactory() {
-		return (com.minquoad.dao.sqlImpl.DaoFactoryImpl) super.getDaoFactory();
+	public DaoFactoryImpl getDaoFactory() {
+		return (DaoFactoryImpl) super.getDaoFactory();
 	}
 
 }

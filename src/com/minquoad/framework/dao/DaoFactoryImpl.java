@@ -10,11 +10,7 @@ public abstract class DaoFactoryImpl {
 
 	private Map<Class<?>, DaoImpl<?>> daos;
 
-	private ConnectionProvier connectionProvier;
-
-	public DaoFactoryImpl(ConnectionProvier connectionProvier) {
-		this.connectionProvier = connectionProvier;
-
+	public DaoFactoryImpl() {
 		daos = new HashMap<Class<?>, DaoImpl<?>>();
 
 		initDaos();
@@ -26,9 +22,7 @@ public abstract class DaoFactoryImpl {
 
 	protected abstract void initDaos();
 
-	public Connection getConnection() throws SQLException {
-		return connectionProvier.getConnection();
-	}
+	public abstract Connection getConnection() throws SQLException;
 
 	protected <Entity> void addDao(Class<Entity> entityClass, DaoImpl<Entity> daoImpl) {
 		daos.put(entityClass, daoImpl);

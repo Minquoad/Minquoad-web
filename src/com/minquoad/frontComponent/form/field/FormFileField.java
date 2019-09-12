@@ -2,7 +2,7 @@ package com.minquoad.frontComponent.form.field;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +15,8 @@ import com.minquoad.tool.http.PartTool;
 public class FormFileField extends FormField {
 
 	private Part value;
-	private List<String> allowedExtentions;
-	private List<PartValueChecker> valueCheckers;
+	private Collection<String> allowedExtentions;
+	private Collection<PartValueChecker> valueCheckers;
 
 	public FormFileField(String name) {
 		super(name);

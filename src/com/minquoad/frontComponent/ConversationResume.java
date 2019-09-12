@@ -1,6 +1,6 @@
 package com.minquoad.frontComponent;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.User;
@@ -9,7 +9,7 @@ public class ConversationResume {
 	
 	private Conversation conversation;
 
-	private List<User> participants;
+	private Collection<User> participants;
 
 	public Conversation getConversation() {
 		return conversation;
@@ -19,11 +19,11 @@ public class ConversationResume {
 		this.conversation = conversation;
 	}
 
-	public List<User> getParticipants() {
+	public Collection<User> getParticipants() {
 		return participants;
 	}
 
-	public void setParticipants(List<User> participants) {
+	public void setParticipants(Collection<User> participants) {
 		this.participants = participants;
 	}
 

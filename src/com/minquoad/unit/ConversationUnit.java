@@ -1,5 +1,7 @@
 package com.minquoad.unit;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.minquoad.dao.interfaces.ConversationDao;
@@ -44,13 +46,14 @@ public class ConversationUnit extends Unit {
 	}
 
 	public List<Message> getConversationMessagesInOrder(Conversation conversation) {
-		List<Message> messages = getDaoFactory().getMessageDao().getConversationMessages(conversation);
+		Collection<Message> messages = getDaoFactory().getMessageDao().getConversationMessages(conversation);
 
-		messages.sort((latest, earlyest) -> {
+		List<Message> list = new ArrayList<Message>(messages);
+		list.sort((latest, earlyest) -> {
 			return VersatilTool.toBoundedInt(latest.getInstant().toEpochMilli() - earlyest.getInstant().toEpochMilli());
 		});
 
-		return messages;
+		return list;
 	}
 
 }

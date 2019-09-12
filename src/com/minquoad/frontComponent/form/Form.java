@@ -1,6 +1,7 @@
 package com.minquoad.frontComponent.form;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,7 +49,7 @@ public class Form {
 		return fileds;
 	}
 
-	public List<String> getFieldValueProblems(String name) {
+	public Collection<String> getFieldValueProblems(String name) {
 		FormField field = fileds.get(name);
 		if (field == null) {
 			new Exception("Field with name  " + name + " not existing in the form.").printStackTrace();

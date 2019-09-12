@@ -2,8 +2,7 @@ package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -22,8 +21,8 @@ import com.minquoad.tool.http.PartTool;
 
 @WebServlet("/MessageAddition")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-maxFileSize = 1024 * 1024 * 10, // 10 MB
-maxRequestSize = 1024 * 1024 * 15 // 15 MB
+		maxFileSize = 1024 * 1024 * 10, // 10 MB
+		maxRequestSize = 1024 * 1024 * 15 // 15 MB
 )
 public class MessageAddition extends ImprovedHttpServlet {
 
@@ -46,7 +45,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 			Conversation conversation = form.getConversation();
 
 			MessageFile messageFile = null;
-			
+
 			FormFileField fileField = form.getFileField();
 
 			if (!fileField.isValueEmpty()) {
@@ -64,23 +63,17 @@ public class MessageAddition extends ImprovedHttpServlet {
 			message.setInstant(Instant.now());
 			message.setMessageFile(messageFile);
 			getDaoFactory(request).getMessageDao().persist(message);
-
+	
 			conversation.setLastMessage(message);
 			getDaoFactory(request).getConversationDao().persist(conversation);
-			
-			List<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
-			
-			List<Long> conversationUsersIds = new ArrayList<Long>();
-			for (User conversationUser : conversationUsers) {
-				conversationUsersIds.add(conversationUser.getId());
-			}
+
+			Collection<User> conversationUsers = getDaoFactory(request).getUserDao().getConversationUsers(conversation);
 
 			sendJsonToClientsWithRole(
 					message.toJson(),
 					"messageAddition",
-					(endpoint) -> {
-						return conversationUsersIds.contains(endpoint.getUserId());
-					});
+					conversationUsers,
+					null);
 
 		} else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
