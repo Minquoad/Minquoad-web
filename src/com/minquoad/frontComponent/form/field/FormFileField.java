@@ -76,7 +76,7 @@ public class FormFileField extends FormField {
 		if (lastIndexOfDot == -1) {
 			return null;
 		}
-		return getOriginalFileName().substring(lastIndexOfDot + 1);
+		return getOriginalFileName().substring(lastIndexOfDot + 1).toLowerCase();
 	}
 
 	@Override

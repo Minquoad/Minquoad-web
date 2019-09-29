@@ -13,7 +13,9 @@
 	let updateButtonTitle = "<fmt:message key="updateButtonTitle" bundle="${ conversationsBundle }" />";
 	let cancelButtonTitle = "<fmt:message key="cancelButtonTitle" bundle="${ conversationsBundle }" />";
 	let profileUrl = "<c:url value="/Profile" />";
+	let currentConversationUrl = "<c:url value="/CurrentConversation" />";
 </script>
+<script type="text/javascript" src="<c:url value="/js/currentConversation.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
 </head>
 <body>

@@ -1,13 +1,19 @@
 package com.minquoad.servlet.conversation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.minquoad.entity.Conversation;
+import com.minquoad.entity.User;
+import com.minquoad.frontComponent.ConversationResume;
 import com.minquoad.frontComponent.form.impl.conversation.ConversationCreationForm;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.unit.ConversationUnit;
@@ -44,10 +50,29 @@ public class ConversationCreation extends ImprovedHttpServlet {
 			Conversation conversation = new Conversation();
 			conversation.setTitle(form.getTitle());
 			conversation.setType(Conversation.TYPE_CREATED_BY_USER);
-			getDaoFactory(request).getConversationDao().insert(conversation);
+			getDaoFactory(request).getConversationDao().persist(conversation);
 			ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
 			conversationUnit.giveAccessToConversation(getUser(request), conversation, true);
+
+			Collection<User> conversationUsers = new ArrayList<User>(1);
+			conversationUsers.add(getUser(request));
+
+			ConversationResume conversationResume = new ConversationResume();
+			conversationResume.setConversation(conversation);
+			conversationResume.setParticipants(conversationUsers);
+
+			sendJsonToClientsWithRole(
+					conversationResume.toJson(),
+					"conversationAddition",
+					conversationUsers,
+					null);
+
+			ObjectNode json = JsonNodeFactory.instance.objectNode();
+			json.put("id", Long.toString(conversation.getId()));
+
+			respondJson(response, json);
 			response.setStatus(HttpServletResponse.SC_CREATED);
+
 		} else {
 			forwardToView(request, response, VIEW_PATH);
 		}

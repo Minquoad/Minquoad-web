@@ -5,16 +5,12 @@ html {
 body {
 	margin: 0;
 	height: 100%;
-
 	min-width: 920px;
 	min-height: 400px;
-
 	background: var(--BACKGROUND_COLOR);
 	color: var(--FOREGROUND_COLOR);
-
 	font-size: var(--MAIN_FONT_SIZE);
 	font-family: var(--MAIN_FONT_FAMILY);
-
 	text-rendering: optimizeLegibility;
 }
 
@@ -44,4 +40,18 @@ ul {
 
 textarea {
 	resize: none;
+}
+
+*::-webkit-scrollbar {
+	width: 7px;
+	height: 7px;
+	background-color: black;
+}
+
+*::-webkit-scrollbar-corner {
+	background-color: black;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: rgb(55, 55, 55);
 }

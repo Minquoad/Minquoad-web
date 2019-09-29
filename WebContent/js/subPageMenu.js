@@ -1,56 +1,85 @@
-function createSubPageMenu(
-		argumentName,// the name of the argument to add to the url
-		triggers,// a set of element having a data-argumentName attribute
-		container,// the sub page container
-		autoload = true,// if true and nothing in the url then load the first
-		listener = null// will be called after every container change
-	) {
+const selectedSubPageClass = "selectedSubPage";
 
-	triggers.on("click", function(e) {
+class SubPageMenu {
 
-		let trigger = $(this);
+	constructor(argumentName, container, autoload = true) {
+		this.argumentName = argumentName;
+		this.container = container;
+		this.autoload = autoload;
+		this.items = [];
+	}
 
-		let selectedSubPageClass = "selectedSubPage";
+	addItem(item) {
+		this.items.push(item);
 
-		if (!trigger.hasClass(selectedSubPageClass)) {
-			triggers.removeClass(selectedSubPageClass);
-			displayLoading(container);
-			trigger.addClass(selectedSubPageClass);
-			
-			let subPageKey = trigger.attr("data-subPageKey");
-			setParamToCurrentUrl(argumentName, subPageKey);
+		if (this.autoload && !getCurrentUrlParameter(this.argumentName)) {
+			this.autoload = false;
+			item.updateSubPage();
+		}
+	}
+
+	createAndAddItem(trigger, listener) {
+		this.addItem(new SubPageMenuItem(this, trigger, listener));
+	}
 	
+	unselectAll() {
+		for (let item of this.items) {
+			item.trigger.removeClass(selectedSubPageClass);
+		}
+		displayLoading(this.container);
+	}
+	
+	triggerFirst() {
+		if (this.items.lenght != 0) {
+			this.items[0].updateSubPage();
+		}
+	}
+}
+
+class SubPageMenuItem {
+	constructor(subPageMenu, trigger, listener) {
+		this.subPageMenu = subPageMenu;
+		this.trigger = trigger;
+		this.listener = listener;
+
+		let subPageMenuItem = this;
+
+		this.trigger.on("click", function() {
+			subPageMenuItem.updateSubPage();
+		});
+
+		if (this.trigger.attr("data-subPageKey") == getCurrentUrlParameter(this.subPageMenu.argumentName)) {
+			this.updateSubPage();
+		}
+	}
+
+	updateSubPage() {
+		if (!this.trigger.hasClass(selectedSubPageClass)) {
+			
+			this.subPageMenu.unselectAll();
+
+			this.trigger.addClass(selectedSubPageClass);
+			
+			let subPageKey = this.trigger.attr("data-subPageKey");
+
+			setParamToCurrentUrl(this.subPageMenu.argumentName, subPageKey);
+
+			let subPageMenuItem = this;
+
 			$.ajax({
 				type : "GET",
-				url : trigger.attr("data-subPageUrl"),
+				url : this.trigger.attr("data-subPageUrl"),
 				dataType : "html",
 				success : function(data, textStatus, xhr) {
-					fillSubPage(data, textStatus, xhr, container, listener);
+					fillSubPage(data, textStatus, xhr, subPageMenuItem.subPageMenu.container, subPageMenuItem.listener);
 				},
 				error : function(jqXHR, textStatus, error) {
 					handleAjaxError(jqXHR, textStatus, error);
 				}
 			});
 		}
-	});
-
-
-	let currentSubPageKey = getCurrentUrlParameter(argumentName);
-
-	if (currentSubPageKey) {
-		
-		triggers.each(function() {
-			let trigger = $(this);
-			if (trigger.attr("data-subPageKey") == currentSubPageKey) {
-				trigger.trigger("click");
-			}
-		});
-
-	} else {
-		if (autoload) {
-			triggers.first().trigger("click");
-		}
 	}
+	
 }
 
 function fillSubPage(data, textStatus, xhr, container, listener) {

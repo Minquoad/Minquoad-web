@@ -57,7 +57,7 @@
 
 .conversations #current #messages {
 	height: calc(100% - 90px - 2px);
-	border-bottom: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	border-bottom: solid var(--BORDER_COLOR) 1px;
 }
 
 .conversations #current #messages .messageMetaData {

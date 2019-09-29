@@ -2,7 +2,7 @@
 	display: inline-block;
 	height: 100%;
 	width: 220px;
-	border-right: solid var(--BANNER_BACKGROUND_COLOR) 1px;
+	border-right: solid var(--BORDER_COLOR) 1px;
 }
 
 .administration #nav>* {

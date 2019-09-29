@@ -38,10 +38,12 @@ public class FileDownload extends ImprovedHttpServlet {
 
 		ProtectedFile protectedFile = getEntityFromPkParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
+		response.reset();
 		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getStorageManager()).length()));
 		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
+		response.setDateHeader("Last-Modified", getLastModified(request));
 	}
 
 	@Override

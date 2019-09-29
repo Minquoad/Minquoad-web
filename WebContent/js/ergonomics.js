@@ -33,9 +33,7 @@ function detectReadabilityToImprove(container) {
 		container.addClass("readabilityImproved");
 	} else {
 		container.find(".readabilityToImprove").each(function() {
-			$(this).html(improveReadabilityOnHtml($(this).html()));
-			$(this).removeClass("readabilityToImprove");
-			$(this).addClass("readabilityImproved");
+			detectReadabilityToImprove($(this));
 		});
 	}
 }

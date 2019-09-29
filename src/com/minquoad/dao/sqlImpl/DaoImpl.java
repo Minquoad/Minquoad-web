@@ -9,7 +9,7 @@ public abstract class DaoImpl<EntitySubclass> extends com.minquoad.framework.dao
 
 		this.tableName = this.instantiateBlank().getClass().getSimpleName();
 /*
-		this.addStatementListener((statement) -> {
+		this.addStatementListener(statement -> {
 			ServletContext servletContext = getDaoFactory().getServletContext();
 			Logger logger = ServicesManager.getService(servletContext, Logger.class);
 			StorageManager storageManager = ServicesManager.getService(servletContext, StorageManager.class);

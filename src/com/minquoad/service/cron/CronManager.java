@@ -32,9 +32,7 @@ public class CronManager {
 		long epochMilli = Instant.now().toEpochMilli();
 		lastMinuteStart = epochMilli - (epochMilli % 60_000l);
 
-		new Thread(() -> {
-			CronManager.this.loop();
-		}).start();
+		new Thread(() -> CronManager.this.loop()).start();
 	}
 
 	public void stop() {

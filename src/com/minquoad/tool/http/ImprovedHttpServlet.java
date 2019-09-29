@@ -372,6 +372,11 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		this.getServletContext().getRequestDispatcher(viewPath).include(request, response);
 	}
 
+	protected void respondJson(HttpServletResponse response, JsonNode json) throws IOException {
+		response.setContentType("application/json");
+		response.getWriter().print(json.toString());
+	}
+
 	public static void sendRedirectToReferer(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String referer = request.getHeader(REFERER_HEADER_KEY);
 		if (referer == null) {

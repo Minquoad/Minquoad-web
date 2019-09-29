@@ -21,27 +21,25 @@ public abstract class ImageTool {
 		return possibleImageExtentions;
 	}
 
-	public static boolean isImage(Part value) {
+	public static boolean isImage(Part part) {
 		try {
-			return isImage(value.getInputStream());
+			return isImage(part.getInputStream());
 		} catch (IOException e) {
-			return false;
-		}
-	}
-
-	public static boolean isImage(InputStream input) {
-		try {
-			ImageIO.read(input).toString();
-			return true;
-		} catch (Exception e) {
 			return false;
 		}
 	}
 
 	public static boolean isImage(File file) {
 		try {
-			ImageIO.read(file).toString();
-			return true;
+			return ImageIO.read(file) != null;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static boolean isImage(InputStream stream) {
+		try {
+			return ImageIO.read(stream) != null;
 		} catch (Exception e) {
 			return false;
 		}

@@ -27,7 +27,7 @@ public class UserUnit extends Unit {
 		user.setRegistrationInstant(Instant.now());
 		user.setLastActivityInstant(Instant.now());
 		user.setLanguage(language);
-		userDao.insert(user);
+		userDao.persist(user);
 		user.setPassword(password, getDeployment());
 		userDao.persist(user);
 		getUnitFactory().getConversationUnit().initUserConversations(user);

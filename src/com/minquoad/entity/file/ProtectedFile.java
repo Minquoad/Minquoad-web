@@ -48,7 +48,7 @@ public class ProtectedFile {
 		if (lastIndexOfDot == -1) {
 			return null;
 		}
-		return getOriginalName().substring(lastIndexOfDot+1);
+		return getOriginalName().substring(lastIndexOfDot + 1).toLowerCase();
 	}
 
 	public File getFile(StorageManager storageManager) {
@@ -67,7 +67,7 @@ public class ProtectedFile {
 			return idString + "." + extention;
 		}
 	}
-	
+
 	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
 		return true;
 	}

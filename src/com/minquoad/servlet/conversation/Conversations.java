@@ -17,7 +17,6 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.ConversationResume;
-import com.minquoad.tool.VersatilTool;
 import com.minquoad.tool.http.ImprovedHttpServlet;
 import com.minquoad.unit.ConversationUnit;
 
@@ -59,7 +58,7 @@ public class Conversations extends ImprovedHttpServlet {
 			Conversation conversation = new Conversation();
 			conversation.setTitle("");
 			conversation.setType(Conversation.TYPE_MAIN_BETWEEN_TWO_USERS);
-			conversationDao.insert(conversation);
+			conversationDao.persist(conversation);
 			ConversationUnit conversationUnit = getUnitFactory(request).getConversationUnit();
 			conversationUnit.giveAccessToConversation(targetUser, conversation);
 			conversationUnit.giveAccessToConversation(getUser(request), conversation);
@@ -76,14 +75,19 @@ public class Conversations extends ImprovedHttpServlet {
 			conversationResumes.add(conversationResume);
 		}
 
-		conversationResumes.sort((latest, earlyest) -> {
-			Message latestMessage = latest.getConversation().getLastMessage();
-			Message earlyestMessage = earlyest.getConversation().getLastMessage();
-			if (latestMessage == null || earlyestMessage == null) {
+		conversationResumes.sort((compared, reference) -> {
+			Message comparedMessage = compared.getConversation().getLastMessage();
+			Message referenceMessage = reference.getConversation().getLastMessage();
+			if (comparedMessage == null || referenceMessage == null) {
+				if (comparedMessage != null) {
+					return 1;
+				}
+				if (referenceMessage != null) {
+					return -1;
+				}
 				return 0;
 			}
-			return VersatilTool.toBoundedInt(earlyestMessage.getInstant().toEpochMilli()
-					- latestMessage.getInstant().toEpochMilli());
+			return referenceMessage.getInstant().compareTo(comparedMessage.getInstant());
 		});
 
 		request.setAttribute("conversationResumes", conversationResumes);

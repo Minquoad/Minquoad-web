@@ -58,7 +58,7 @@ public class Database {
 		Pool<DaoFactory> daoFactoryPool = new Pool<DaoFactory>();
 
 		daoFactoryPool.setConstructor(() -> new DaoFactoryImpl(servletContext));
-		daoFactoryPool.setCleaner((daoFactory) -> ((DaoFactoryImpl) daoFactory).clear());
+		daoFactoryPool.setCleaner(daoFactory -> ((DaoFactoryImpl) daoFactory).clear());
 
 		return daoFactoryPool;
 	}

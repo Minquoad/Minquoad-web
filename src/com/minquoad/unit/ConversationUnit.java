@@ -9,7 +9,6 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
-import com.minquoad.tool.VersatilTool;
 
 public class ConversationUnit extends Unit {
 
@@ -24,7 +23,7 @@ public class ConversationUnit extends Unit {
 		Conversation selfConversation = new Conversation();
 		selfConversation.setTitle("Monologue");
 		selfConversation.setType(Conversation.TYPE_MONOLOGUE);
-		conversationDao.insert(selfConversation);
+		conversationDao.persist(selfConversation);
 
 		this.giveAccessToConversation(user, selfConversation);
 	}
@@ -42,16 +41,23 @@ public class ConversationUnit extends Unit {
 		conversationAccess.setConversation(conversation);
 		conversationAccess.setUser(user);
 		conversationAccess.setAdministrator(administrator);
-		getDaoFactory().getConversationAccessDao().insert(conversationAccess);
+		getDaoFactory().getConversationAccessDao().persist(conversationAccess);
 	}
 
 	public List<Message> getConversationMessagesInOrder(Conversation conversation) {
 		Collection<Message> messages = getDaoFactory().getMessageDao().getConversationMessages(conversation);
 
-		List<Message> list = new ArrayList<Message>(messages);
-		list.sort((latest, earlyest) -> {
-			return VersatilTool.toBoundedInt(latest.getInstant().toEpochMilli() - earlyest.getInstant().toEpochMilli());
-		});
+		List<Message> list = null;
+
+		// optimization: the Collection may already be a List
+		if (messages instanceof List) {
+			list = (List<Message>) messages;
+
+		} else {
+			list = new ArrayList<Message>(messages);
+		}
+
+		list.sort((compared, reference) -> compared.getInstant().compareTo(reference.getInstant()));
 
 		return list;
 	}

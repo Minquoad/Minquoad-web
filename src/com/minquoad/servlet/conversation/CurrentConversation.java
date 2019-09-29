@@ -65,7 +65,20 @@ public class CurrentConversation extends ImprovedHttpServlet {
 		request.setAttribute("conversationAccess",  conversationAccess);
 
 		forwardToView(request, response, VIEW_PATH);
-
 	}
 
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		Conversation conversation = getEntityFromPkParameter(request, CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
+
+		ConversationAccessDao conversationAccessDao = getDaoFactory(request).getConversationAccessDao();
+		
+		ConversationAccess conversationAccess = conversationAccessDao.getConversationAccess(getUser(request), conversation);
+		
+		conversationAccessDao.delete(conversationAccess);
+
+		response.sendRedirect(request.getContextPath() + "/Conversations");
+	}
+	
 }

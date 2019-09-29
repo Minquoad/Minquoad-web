@@ -5,6 +5,7 @@
 <head>
 <jsp:include page="/WEB-INF/includable/mainHeadContent.jsp" />
 <fmt:setBundle basename="resources.Test" var="testBundle" />
+<script type="text/javascript" src="<c:url value="/js/test.js" />"></script>
 </head>
 <body>
 	<fmt:message key="Test" bundle="${ testBundle }" var="testLabel" />

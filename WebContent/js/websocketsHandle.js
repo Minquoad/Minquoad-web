@@ -10,32 +10,10 @@ function addRoledJsonWebsocketListener(role, listener) {
 
 		websocket = new WebSocket("ws://" + baseUrl + "ImprovedEndpoint");
 
-		websocket.onopen = function(evt) {
-			for (let loopRole in groupedByRoleWsListeners) {
-				websocket.send(loopRole);
-			}
-		};
-
-		websocket.onerror = function(e) {
-			console.error(e);
-			if (confirm("An error occured.\nRefresh page?")) {
-				window.location.replace("");
-			}
-		};
-
-		websocket.onclose = function() {
-			if (confirm("Connection with server lost.\nRefresh page?")) {
-				window.location.replace("");
-			}
-		};
-
-		websocket.onmessage = function(event) {
-			let parsedEvent = JSON.parse(event.data);
-			for (let listener of groupedByRoleWsListeners[parsedEvent.role]) {
-				listener(parsedEvent.data);
-			}
-		};
-
+		websocket.onopen = onopen;
+		websocket.onerror = onerror;
+		websocket.onclose = onclose;
+		websocket.onmessage = onmessage;
 	}
 
 	if (!groupedByRoleWsListeners.hasOwnProperty(role)) {
@@ -46,5 +24,30 @@ function addRoledJsonWebsocketListener(role, listener) {
 	}
 
 	groupedByRoleWsListeners[role].push(listener);
-	
+}
+
+function onopen(evt) {
+	for (let role in groupedByRoleWsListeners) {
+		websocket.send(role);
+	}
+}
+
+function onerror(e) {
+	console.error(e);
+	if (confirm("An error occured.\nRefresh page?")) {
+		window.location.replace("");
+	}
+}
+
+function onclose(event) {
+	if (confirm("Connection with server lost.\nRefresh page?")) {
+		window.location.replace("");
+	}
+}
+
+function onmessage(event) {
+	let parsedEvent = JSON.parse(event.data);
+	for (let listener of groupedByRoleWsListeners[parsedEvent.role]) {
+		listener(parsedEvent.data);
+	}
 }
