@@ -63,9 +63,8 @@ public class ConversationCreation extends ImprovedHttpServlet {
 
 			sendJsonToClientsWithRole(
 					conversationResume.toJson(),
-					"conversationAddition",
 					conversationUsers,
-					null);
+					"conversationAddition");
 
 			ObjectNode json = JsonNodeFactory.instance.objectNode();
 			json.put("id", Long.toString(conversation.getId()));

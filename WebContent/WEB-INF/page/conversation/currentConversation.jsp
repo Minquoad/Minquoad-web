@@ -41,12 +41,12 @@
 		<div class="inlineFlex fullHeigth titleSide">
 			<c:if test="${ requestScope.conversationAccess.administrator }">
 				
-				<c:url value="/CurrentConversation" var="currentConversationUrl">
+				<c:url value="/ConversationLeaving" var="conversationLeavingUrl">
 					<c:param name="conversationId"
 						value="${ requestScope.conversation.id }" />
 				</c:url>
-				<form method="POST" action="${ currentConversationUrl }">
-					<input type="submit" value="test">
+				<form method="POST" action="${ conversationLeavingUrl }">
+					<input type="submit" value="leave">
 				</form>
 				
 			</c:if>

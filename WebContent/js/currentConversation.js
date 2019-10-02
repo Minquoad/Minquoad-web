@@ -6,64 +6,11 @@ $(document).ready(function() {
 
 		if (!!current && (current.attr("data-conversationId") == message.conversation)) {
 
-			let messageDiv = "";
-			messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
-			messageDiv += message.id;
-			messageDiv += '" data-messageUserId="';
-			messageDiv += message.user.id;
-			messageDiv += '">';
-			messageDiv += '<div class="messageMetaData">';
-			messageDiv += '<div class="name">';
-			messageDiv += '<a href="';
-			messageDiv += profileUrl + "?targetUserId=" + message.user.id;
-			messageDiv += '">';
-			messageDiv += '<span style="color: ';
-			messageDiv += message.user.defaultColor;
-			messageDiv += '"> ';
-			messageDiv += toHtmlEquivalent(message.user.nickname);
-			messageDiv += '</span> : ';
-			messageDiv += '</a>';
-			messageDiv += '</div>';
-			messageDiv += '<div>';
-
-			if (userId == message.user.id) {
-				messageDiv += '<span class="messageEditionButton">🖉</span>';
-			}
-
-			messageDiv += ' <span class="dateToFormat" data-format="1">';
-			messageDiv += message.instant;
-			messageDiv += '</span> ';
-			messageDiv += '</div>';
-			messageDiv += '</div>';
-			messageDiv += '<div class="messageText"><span class="keepLineBreak readabilityToImprove">';
-			messageDiv += toHtmlEquivalent(message.text);
-			messageDiv += '</span></div>';
-
-			let messageFile = message.messageFile;
-			if (message.messageFile != null) {
-				if (messageFile.image) {
-					messageDiv += '<div class="messageImageContainer">';
-					messageDiv += '<img src="';
-					messageDiv += imageDownloadUrl + "?id=" + messageFile.id;
-					messageDiv += '" class="messageImage" />';
-					messageDiv += '<div>';
-				} else {
-					messageDiv += '<a class="messageFileLink" href="';
-					messageDiv += fileDownloadUrl + "?id=" + messageFile.id;
-					messageDiv += '">';
-					messageDiv += "📁";
-					messageDiv += toHtmlEquivalent(messageFile.originalName);
-					messageDiv += '</a>';
-				}
-			}
-
-			messageDiv += '</div>';
-
+			let messageTile = generateMessageTile(message);
+			
 			let messages = current.find("#messages");
-			messages.append(messageDiv);
-
+			messages.append(messageTile);
 			let lastMessage = messages.children().last();
-
 			executeMainActions(lastMessage);
 
 			messagesDiv = document.getElementById("messages");
@@ -95,51 +42,57 @@ $(document).ready(function() {
 	});
 });
 
-function detectCurrentConversation() {
+function detectCurrentConversation(data, textStatus, xhr) {
 
-	let current = $(".conversations #current");
-	if (current.length) {
+	if (xhr.status == 204) {
+		window.location.replace("");
 
-		detectMessageEditionButtons(current);
+	} else {
 
-		let messagesDiv = document.getElementById("messages");
-		messagesDiv.scrollTop = messagesDiv.scrollHeight;
+		let current = $(".conversations #current");
+		if (current.length) {
 
-		let form = current.find('#messageEditorForm');
-		let textarea = form.find('textarea');
-		let fileField = form.find('input[type="file"]');
-		let emojis = form.find('#sepcialChars .dynamicMenuItem span');
-		let button = form.find('[type="button"]');
+			detectMessageEditionButtons(current);
 
-		let postMessage = function() {
-			if (textarea.val().trim() != "" || fileField.val()) {
-				submitForm(form);
-				textarea.val("");
-				fileField.val("");
-				fileField.trigger("change");
-			}
-		};
+			let messagesDiv = document.getElementById("messages");
+			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-		button.on('click', function(e) {
-			e.preventDefault();
-			postMessage();
-		});
+			let form = current.find('#messageEditorForm');
+			let textarea = form.find('textarea');
+			let fileField = form.find('input[type="file"]');
+			let emojis = form.find('#sepcialChars .dynamicMenuItem span');
+			let button = form.find('[type="button"]');
 
-		emojis.on('click', function(e) {
-			textarea.val(textarea.val() + $(this).text());
-			textarea.focus();
-		});
-
-		textarea.keypress(function(event) {
-			var keycode = (event.keyCode ? event.keyCode : event.which);
-			if (!event.shiftKey) {
-
-				if (keycode == '13') {
-					event.preventDefault();
-					postMessage();
+			let postMessage = function() {
+				if (textarea.val().trim() != "" || fileField.val()) {
+					submitForm(form);
+					textarea.val("");
+					fileField.val("");
+					fileField.trigger("change");
 				}
-			}
-		});
+			};
+
+			button.on('click', function(e) {
+				e.preventDefault();
+				postMessage();
+			});
+
+			emojis.on('click', function(e) {
+				textarea.val(textarea.val() + $(this).text());
+				textarea.focus();
+			});
+
+			textarea.keypress(function(event) {
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+				if (!event.shiftKey) {
+
+					if (keycode == '13') {
+						event.preventDefault();
+						postMessage();
+					}
+				}
+			});
+		}
 	}
 }
 
@@ -153,32 +106,11 @@ function detectMessageEditionButtons(container) {
 
 			if (messageTextDiv.find("form").length == 0) {
 
-				let editionDiv = "";
-				editionDiv += '<form class="fullSize messageEditionForm" method="post" action="';
-				editionDiv += messageEditionUrl;
-				editionDiv += '" accept-charset="UTF-8">';
-
-				editionDiv += '<div>';
-				editionDiv += '<input type="button" value="⭆" title="';
-				editionDiv += updateButtonTitle;
-				editionDiv += '" />';
-				editionDiv += '<input type="button" value="✖" title="';
-				editionDiv += cancelButtonTitle;
-				editionDiv += '" />';
-				editionDiv += '</div>';
-
-				editionDiv += '<input type="hidden" name="messageId" value="';
-				editionDiv += tile.attr("data-messageId");
-				editionDiv += '"/>';
-				editionDiv += '<textarea name="newText" class="improvedTextField">';
-				editionDiv += messageTextDiv.children("span").text();
-				editionDiv += '</textarea>';
-
-				editionDiv += '</form>';
+				let messageEditionFromHtml = generateMessageEditionFromHtml(tile.attr("data-messageId"), messageTextDiv.children("span").text());
 
 				let oldHtml = messageTextDiv.html();
 				messageTextDiv.empty();
-				messageTextDiv.append(editionDiv);
+				messageTextDiv.append(messageEditionFromHtml);
 				executeMainActions(messageTextDiv);
 
 				let messageEditionForm = messageTextDiv.find('.messageEditionForm');
@@ -215,4 +147,92 @@ function detectMessageEditionButtons(container) {
 			}
 		});
 	});
+}
+
+// HTML generators
+
+function generateMessageTile(message) {
+
+	let messageDiv = "";
+	messageDiv += '<div class="borderedTile fullWidth" data-messageId="';
+	messageDiv += message.id;
+	messageDiv += '" data-messageUserId="';
+	messageDiv += message.user.id;
+	messageDiv += '">';
+	messageDiv += '<div class="messageMetaData">';
+	messageDiv += '<div class="name">';
+	messageDiv += '<a href="';
+	messageDiv += profileUrl + "?targetUserId=" + message.user.id;
+	messageDiv += '">';
+	messageDiv += '<span style="color: ';
+	messageDiv += message.user.defaultColor;
+	messageDiv += '"> ';
+	messageDiv += toHtmlEquivalent(message.user.nickname);
+	messageDiv += '</span> : ';
+	messageDiv += '</a>';
+	messageDiv += '</div>';
+	messageDiv += '<div>';
+
+	if (userId == message.user.id) {
+		messageDiv += '<span class="messageEditionButton">🖉</span>';
+	}
+
+	messageDiv += ' <span class="dateToFormat" data-format="1">';
+	messageDiv += message.instant;
+	messageDiv += '</span> ';
+	messageDiv += '</div>';
+	messageDiv += '</div>';
+	messageDiv += '<div class="messageText"><span class="keepLineBreak readabilityToImprove">';
+	messageDiv += toHtmlEquivalent(message.text);
+	messageDiv += '</span></div>';
+
+	let messageFile = message.messageFile;
+	if (messageFile != null) {
+		if (messageFile.image) {
+			messageDiv += '<div class="messageImageContainer">';
+			messageDiv += '<img src="';
+			messageDiv += imageDownloadUrl + "?id=" + messageFile.id;
+			messageDiv += '" class="messageImage" />';
+			messageDiv += '<div>';
+		} else {
+			messageDiv += '<a class="messageFileLink" href="';
+			messageDiv += fileDownloadUrl + "?id=" + messageFile.id;
+			messageDiv += '">';
+			messageDiv += "📁";
+			messageDiv += toHtmlEquivalent(messageFile.originalName);
+			messageDiv += '</a>';
+		}
+	}
+
+	messageDiv += '</div>';
+
+	return messageDiv;
+}
+
+function generateMessageEditionFromHtml(messageId, textareaText) {
+
+	let editionDiv = "";
+	editionDiv += '<form class="fullSize messageEditionForm" method="post" action="';
+	editionDiv += messageEditionUrl;
+	editionDiv += '" accept-charset="UTF-8">';
+
+	editionDiv += '<div>';
+	editionDiv += '<input type="button" value="⭆" title="';
+	editionDiv += updateButtonTitle;
+	editionDiv += '" />';
+	editionDiv += '<input type="button" value="✖" title="';
+	editionDiv += cancelButtonTitle;
+	editionDiv += '" />';
+	editionDiv += '</div>';
+
+	editionDiv += '<input type="hidden" name="messageId" value="';
+	editionDiv += messageId;
+	editionDiv += '"/>';
+	editionDiv += '<textarea name="newText" class="improvedTextField">';
+	editionDiv += textareaText;
+	editionDiv += '</textarea>';
+
+	editionDiv += '</form>';
+
+	return editionDiv;
 }

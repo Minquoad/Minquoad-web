@@ -38,7 +38,7 @@
 				<div class="borderedTile" data-subPageUrl="${ currentConversationUrl }"
 					data-subPageKey="${ conversationResume.conversation.id }">
 					<div class="fullSize resume">
-					
+
 						<div class="conversationTitle scrollableContainer">
 
 							<c:if
@@ -55,7 +55,7 @@
 							</c:if>
 						</div>
 
-						<div class="participants">
+						<div class="participants scrollableContainer">
 							<c:if
 								test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
 								<c:forEach items="${ conversationResume.participants }"

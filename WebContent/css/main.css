@@ -55,3 +55,29 @@ textarea {
 *::-webkit-scrollbar-thumb {
 	background: rgb(55, 55, 55);
 }
+
+tr+tr td {
+	border-top: solid var(--BORDER_COLOR) 1px;
+}
+
+td+td {
+	border-left: solid var(--BORDER_COLOR) 1px;
+}
+
+.dynatable-per-page {
+	display: inline-block;
+	float: none;
+	width: 49%;
+	text-align: right;
+}
+
+.dynatable-search {
+	display: inline-block;
+	float: none;
+	margin: 0;
+	width: 49%;
+}
+
+.dynatable-active-page {
+	background-color: var(--HIGHLIGHTING_COLOR);
+}

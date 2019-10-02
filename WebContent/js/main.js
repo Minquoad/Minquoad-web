@@ -8,13 +8,14 @@ $(document).ready(function() {
 
 function executeMainActions(container) {
 
+	formatDates(container);
+
 	container.find(".table").dynatable({
 		features : {
 			pushState : false
 		}
 	});
 
-	formatDates(container);
 	detectReadabilityToImprove(container);
 	detectDynamicMenuTriggers();
 	borderTiles(container);

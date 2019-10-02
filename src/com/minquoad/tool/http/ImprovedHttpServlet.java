@@ -30,7 +30,6 @@ import com.minquoad.service.StorageManager;
 import com.minquoad.tool.InternationalizationTool;
 import com.minquoad.unit.UnitFactory;
 import com.minquoad.websocketEndpoint.ImprovedEndpoint;
-import com.minquoad.websocketEndpoint.ImprovedEndpoint.ImprovedEndpointFilter;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
@@ -320,15 +319,15 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(request.getServletContext(), json, role, users, filter);
+	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, Collection<User> users) {
+		sendJsonToClientsWithRole(request.getServletContext(), json, users, role);
 	}
 
-	public void sendJsonToClientsWithRole(JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
-		sendJsonToClientsWithRole(getServletContext(), json, role, users, filter);
+	public void sendJsonToClientsWithRole(JsonNode json, Collection<User> users, String role) {
+		sendJsonToClientsWithRole(getServletContext(), json, users, role);
 	}
 
-	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, String role, Collection<User> users, ImprovedEndpointFilter filter) {
+	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, Collection<User> users, String role) {
 
 		Collection<Long> usersIds = null;
 		if (users != null) {
@@ -352,9 +351,7 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 			if (endpoint.hasRole(role)) {
 				if (usersIds == null || usersIds.contains(endpoint.getUserId())) {
 					try {
-						if (filter == null || filter.accepts(endpoint)) {
-							endpoint.sendText(text);
-						}
+						endpoint.sendText(text);
 					} catch (Exception e) {
 						e.printStackTrace();
 						ServicesManager.getService(context, Logger.class).logError(e);

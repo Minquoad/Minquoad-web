@@ -22,8 +22,8 @@
 								<td>
 									<c:out value="${ improvementSuggestion.user.nickname }" />
 								</td>
-								<td class="keepLineBreak">
-									<c:out value="${ improvementSuggestion.text }" />
+								<td>
+									<span class="keepLineBreak readabilityToImprove"><c:out value="${ improvementSuggestion.text }" /></span>
 								</td>
 								<td>
 									<span class="dateToFormat" data-format="1"> <c:out

@@ -93,6 +93,7 @@ function fillSubPage(data, textStatus, xhr, container, listener) {
 		let submitInput = form.find("input[type='submit']");
 		submitInput.on("click", function(e) {
 			e.preventDefault();
+			displayLoading(container);
 			submitForm(form, function(responseData, textStatus, xhr) {
 				fillSubPage(responseData, textStatus, xhr, container, listener);
 			});

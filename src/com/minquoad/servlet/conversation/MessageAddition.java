@@ -71,12 +71,11 @@ public class MessageAddition extends ImprovedHttpServlet {
 
 			sendJsonToClientsWithRole(
 					message.toJson(),
-					"messageAddition",
 					conversationUsers,
-					null);
+					"messageAddition");
 
 		} else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
 	}
 

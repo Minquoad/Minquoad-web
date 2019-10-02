@@ -106,10 +106,6 @@ public class ImprovedEndpoint extends Endpoint {
 		this.roles.add(role);
 	}
 
-	public interface ImprovedEndpointFilter {
-		public boolean accepts(ImprovedEndpoint endpoint);
-	}
-
 	public <ServiceClass> ServiceClass getService(Class<ServiceClass> serviceClass) {
 		return ServicesManager.getService(getContext(), serviceClass);
 	}

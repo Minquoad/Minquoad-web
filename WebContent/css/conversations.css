@@ -6,7 +6,6 @@
 
 .conversations #list .borderedTile {
 	text-align: center;
-	height: 45px;
 	width: 100%;
 	cursor: pointer;
 }
@@ -27,6 +26,7 @@
 .conversations #list .resume .participants {
 	color: grey;
 	font-size: 12px;
+	height: 23px;
 }
 
 .conversations #currentContainer {

@@ -2,16 +2,12 @@
 	color: red;
 }
 
-form input, form textarea, form select {
+input, textarea, select {
 	background-color: var(--BACKGROUND_COLOR);
 	color: var(--FOREGROUND_COLOR);
 	border: solid 1px var(--BORDER_COLOR);
 }
 
-form input[type="button"], form input[type="submit"] {
+input[type="button"], input[type="submit"] {
 	border: solid 2px var(--HIGHLIGHTING_COLOR);
-}
-
-span.select2.select2-container {
-	
 }

@@ -40,12 +40,11 @@ public class MessageEdition extends ImprovedHttpServlet {
 
 			sendJsonToClientsWithRole(
 					message.toJson(),
-					"messageEdition",
 					conversationUsers,
-					null);
+					"messageEdition");
 
 		} else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
 	}
 
