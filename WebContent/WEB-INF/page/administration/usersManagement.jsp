@@ -89,7 +89,6 @@
 													</label>
 													<input type="hidden" name="targetId" value="${ loopUser.id }" />
 													<input type="datetime-local" name="date" />
-													<input type="hidden" name="timezoneOffset" value="" />
 													<input type="submit" value="⛔ Block" />
 												</form>
 											</div>

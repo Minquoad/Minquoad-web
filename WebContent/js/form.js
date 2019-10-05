@@ -48,7 +48,20 @@ function detectForms(container) {
 		updateSelect2($(this));
 	});
 
-	container.find("input[name='timezoneOffset']").val(new Date().getTimezoneOffset());
+	container.find("input[type='date'], input[type='datetime-local']").each(function() {
+		let dateInput = $(this);
+
+		let timezoneOffsetInputHtml = "<input type='hidden' name='" + dateInput.attr("name") + "-timezoneOffset' />";
+
+		dateInput.after(timezoneOffsetInputHtml);
+		let timezoneOffsetInput = dateInput.next()
+
+		dateInput.on("change", function() {
+			let date = new Date(dateInput.val());
+			timezoneOffsetInput.val(date.getTimezoneOffset());
+		});
+		
+	});
 }
 
 function detectFileInputTrigger(container) {

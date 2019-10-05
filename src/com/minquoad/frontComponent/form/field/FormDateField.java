@@ -6,12 +6,15 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class FormDateField extends FormStringField {
 
 	public static final String TIMEZONE_OFFSET_KEY = "timezoneOffset";
 
 	private LocalDateToLocalDateTimeConverter converter;
 	private Instant instant;
+	private ZoneOffset zoneOffset;
 
 	public FormDateField(String name) {
 		super(name);
@@ -26,18 +29,21 @@ public class FormDateField extends FormStringField {
 		});
 	}
 
+	@Override
+	public void collectValue(HttpServletRequest request) {
+		super.collectValue(request);
+
+		try {
+			String timezoneOffsetString = request.getParameter(getName() + "-" + TIMEZONE_OFFSET_KEY);
+			int minutes = Integer.parseInt(timezoneOffsetString);
+			zoneOffset = ZoneOffset.ofHours(-minutes / 60);
+		} catch (Exception e) {
+			zoneOffset = ZoneOffset.UTC;
+		}
+	}
+
 	public Instant getInstant() {
 		if (instant == null) {
-			ZoneOffset zoneOffset = null;
-
-			try {
-				String requestTimezoneOffset = this.getForm().getRequest().getParameter(TIMEZONE_OFFSET_KEY);
-				int minutes = Integer.parseInt(requestTimezoneOffset);
-				zoneOffset = ZoneOffset.ofHours(-minutes / 60);
-			} catch (Exception e) {
-				zoneOffset = ZoneOffset.UTC;
-			}
-
 			instant = getConverter().toLocalDateTime(LocalDate.parse(getValue())).toInstant(zoneOffset);
 		}
 		return instant;
