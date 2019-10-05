@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet({ "/Home", "/" })
 public class Home extends ImprovedHttpServlet {

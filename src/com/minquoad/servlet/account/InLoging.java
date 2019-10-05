@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.interfaces.FailedInLoginigAttemptDao;
 import com.minquoad.entity.FailedInLoginigAttempt;
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.impl.account.InLogingForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.account.InLogingForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 import com.minquoad.unit.FailedInLoginigAttemptUnit;
 
 @WebServlet("/InLoging")

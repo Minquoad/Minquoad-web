@@ -14,8 +14,8 @@ import com.minquoad.dao.interfaces.ProtectedFileDao;
 import com.minquoad.dao.interfaces.ThingDao;
 import com.minquoad.entity.Thing;
 import com.minquoad.entity.file.ProtectedFile;
-import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.tool.http.PartTool;
+import com.minquoad.framework.form.FormFileField;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/Test")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -140,11 +140,11 @@ public class Test extends ImprovedHttpServlet {
 				pf.getFile(getStorageManager()).delete();
 				protectedFileDao.delete(pf);
 			}
-			if (PartTool.hasFile(part)) {
+			if (FormFileField.hasFile(part)) {
 				pf = new ProtectedFile();
 				pf.setId(0l);
-				pf.setOriginalName(PartTool.getFileName(part));
-				PartTool.saveInProtectedFile(part, pf, getStorageManager());
+				pf.setOriginalName(FormFileField.getFileName(part));
+				pf.collectFromPart(part, getStorageManager());
 				protectedFileDao.persist(pf);
 			}
 		}

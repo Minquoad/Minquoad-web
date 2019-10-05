@@ -17,7 +17,7 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.frontComponent.ConversationResume;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 import com.minquoad.unit.ConversationUnit;
 
 @WebServlet("/Conversations")

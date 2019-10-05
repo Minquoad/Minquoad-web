@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.impl.account.UserParametersAlterationForm;
-import com.minquoad.frontComponent.form.impl.account.UserPasswordAlterationForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.account.UserParametersAlterationForm;
+import com.minquoad.frontComponent.form.account.UserPasswordAlterationForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/AccountManagement")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB

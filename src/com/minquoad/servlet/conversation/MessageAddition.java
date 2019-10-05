@@ -14,10 +14,9 @@ import com.minquoad.entity.Conversation;
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.MessageFile;
-import com.minquoad.frontComponent.form.field.FormFileField;
-import com.minquoad.frontComponent.form.impl.conversation.MessageAdditionForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.tool.http.PartTool;
+import com.minquoad.framework.form.FormFileField;
+import com.minquoad.frontComponent.form.conversation.MessageAdditionForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/MessageAddition")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -52,7 +51,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 				messageFile = new MessageFile();
 				messageFile.setOriginalName(fileField.getOriginalFileName());
 				messageFile.setImage(fileField.isImage());
-				PartTool.saveInProtectedFile(fileField.getValue(), messageFile, getStorageManager());
+				messageFile.collectFromPart(fileField.getValue(), getStorageManager());
 				getDaoFactory(request).getMessageFileDao().persist(messageFile);
 			}
 

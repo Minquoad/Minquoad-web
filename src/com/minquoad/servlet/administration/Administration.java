@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/Administration")
 public class Administration extends ImprovedHttpServlet {

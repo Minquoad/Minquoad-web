@@ -10,11 +10,7 @@ public abstract class InternationalizationTool {
 	public final static String[] supportedLanguageCodes = { "en", "fr" };
 
 	public static String getText(String key, String bundleBaseName, Locale locale, Object... args) {
-		return MessageFormat.format(getText(key, bundleBaseName, locale), args);
-	}
-
-	public static String getText(String key, String bundleBaseName, Locale locale) {
-		return ResourceBundle.getBundle(bundleBaseName, locale).getString(key);
+		return MessageFormat.format(ResourceBundle.getBundle(bundleBaseName, locale).getString(key), args);
 	}
 
 	public static Locale getClosestValidLocale(Enumeration<Locale> locales) {

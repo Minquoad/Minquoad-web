@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/Unblocking")
 public class Unblocking extends ImprovedHttpServlet {

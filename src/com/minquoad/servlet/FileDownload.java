@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.file.ProtectedFile;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/FileDownload")
 public class FileDownload extends ImprovedHttpServlet {

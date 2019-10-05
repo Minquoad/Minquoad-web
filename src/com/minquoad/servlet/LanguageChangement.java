@@ -8,8 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.minquoad.tool.ImprovedHttpServlet;
 import com.minquoad.tool.InternationalizationTool;
-import com.minquoad.tool.http.ImprovedHttpServlet;
 
 @WebServlet("/LanguageChangement")
 public class LanguageChangement extends ImprovedHttpServlet {

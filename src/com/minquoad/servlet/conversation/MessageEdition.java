@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.Message;
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.impl.conversation.MessageEditionForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.conversation.MessageEditionForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/MessageEdition")
 public class MessageEdition extends ImprovedHttpServlet {

@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.interfaces.UserProfileImageDao;
 import com.minquoad.entity.User;
 import com.minquoad.entity.file.UserProfileImage;
-import com.minquoad.frontComponent.form.field.FormFileField;
-import com.minquoad.frontComponent.form.impl.profile.ProfileEditionForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
-import com.minquoad.tool.http.PartTool;
+import com.minquoad.framework.form.FormFileField;
+import com.minquoad.frontComponent.form.profile.ProfileEditionForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/ProfileEdition")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
@@ -65,7 +64,7 @@ public class ProfileEdition extends ImprovedHttpServlet {
 				image.setOriginalName(field.getOriginalFileName());
 				image.setUser(getUser(request));
 
-				PartTool.saveInProtectedFile(field.getValue(), image, getStorageManager());
+				image.collectFromPart(field.getValue(), getStorageManager());
 
 				userProfileImageDao.persist(image);
 			}

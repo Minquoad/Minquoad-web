@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.minquoad.dao.interfaces.ConversationAccessDao;
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.ConversationAccess;
-import com.minquoad.frontComponent.form.impl.conversation.ConversationLeavingForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.conversation.ConversationLeavingForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/ConversationLeaving")
 public class ConversationLeaving extends ImprovedHttpServlet {

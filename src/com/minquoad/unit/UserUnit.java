@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.Form;
+import com.minquoad.framework.form.Form;
 import com.minquoad.tool.InternationalizationTool;
 
 public class UserUnit extends Unit {

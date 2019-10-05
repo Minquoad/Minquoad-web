@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.impl.administration.BlockingForm;
+import com.minquoad.frontComponent.form.administration.BlockingForm;
 import com.minquoad.service.SessionManager;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 import com.minquoad.websocketEndpoint.ImprovedEndpoint;
 
 @WebServlet("/UsersManagement")

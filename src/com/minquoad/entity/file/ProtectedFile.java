@@ -1,6 +1,13 @@
 package com.minquoad.entity.file;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Random;
+
+import javax.servlet.http.Part;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
@@ -76,4 +83,54 @@ public class ProtectedFile {
 		return this.getOriginalName();
 	}
 
+	public void collectFromPart(Part part, StorageManager storageManager) throws IOException {
+
+		String randomDirPath = StorageManager.COMMUNITY_PATH;
+		randomDirPath += getRandomIntString(3) + "/";
+		randomDirPath += getRandomIntString(3) + "/";
+		StorageManager.initFolderIfNotExists(storageManager.getFile(randomDirPath));
+
+		File file = null;
+		String randomPath = null;
+		while (file == null || file.exists()) {
+			randomPath = randomDirPath + getRandomIntString(9);
+			file = storageManager.getFile(randomPath);
+		}
+		this.setRelativePath(randomPath);
+
+		BufferedInputStream input = null;
+		BufferedOutputStream output = null;
+		try {
+
+			int bufferSize = 102400;
+			input = new BufferedInputStream(part.getInputStream(), bufferSize);
+			output = new BufferedOutputStream(new FileOutputStream(file), bufferSize);
+
+			byte[] buffer = new byte[bufferSize];
+			int length;
+			while ((length = input.read(buffer)) > 0) {
+				output.write(buffer, 0, length);
+			}
+
+		} finally {
+			try {
+				output.close();
+			} catch (Exception ignored) {
+			}
+			try {
+				input.close();
+			} catch (Exception ignored) {
+			}
+		}
+	}
+
+	public static String getRandomIntString(int digits) {
+		int max = (int) Math.pow(10, digits);
+		String string = Integer.toString(new Random().nextInt(max));
+		while (string.length() < digits) {
+			string = "0" + string;
+		}
+		return string;
+	}
+	
 }

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.ImprovementSuggestion;
-import com.minquoad.frontComponent.form.impl.ImprovementSuggestionAdditionForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.ImprovementSuggestionAdditionForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/ImprovementSuggestionAddition")
 public class ImprovementSuggestionAddition extends ImprovedHttpServlet {

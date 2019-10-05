@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
-import com.minquoad.frontComponent.form.impl.account.UpSigningForm;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.frontComponent.form.account.UpSigningForm;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/UpSigning")
 public class UpSigning extends ImprovedHttpServlet {

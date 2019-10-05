@@ -19,7 +19,7 @@ import com.minquoad.service.Database;
 import com.minquoad.service.Logger;
 import com.minquoad.service.ServicesManager;
 import com.minquoad.service.SessionManager;
-import com.minquoad.tool.http.ImprovedHttpServlet;
+import com.minquoad.tool.ImprovedHttpServlet;
 
 @ServerEndpoint(value = "/ImprovedEndpoint", configurator = HttpSessionLinkedEndpointConfig.class)
 public class ImprovedEndpoint extends Endpoint {
