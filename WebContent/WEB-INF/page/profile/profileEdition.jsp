@@ -78,7 +78,7 @@
 								:
 							</label>
 							<input type="checkbox" name="pictureReset"
-								<c:if test="${ requestScope.form.fields.pictureReset.checked }">
+								<c:if test="${ requestScope.form.fields.pictureReset.value }">
 										checked
 									</c:if> />
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">

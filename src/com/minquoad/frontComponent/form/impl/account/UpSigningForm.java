@@ -29,7 +29,7 @@ public class UpSigningForm extends Form {
 
 		field = new FormEmailField(MAIL_ADDRESS_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("mailAddress", value);
 			if (existingUser == null) {
 				return null;
@@ -49,7 +49,7 @@ public class UpSigningForm extends Form {
 			}
 		};
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("nickname", value);
 			if (existingUser == null) {
 				return null;
@@ -57,7 +57,7 @@ public class UpSigningForm extends Form {
 				return getText("NicknameAlreadytaken", value);
 			}
 		});
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(UserUnit.getNicknameProblems(value, getLocale()));
 			return null;
 		});
@@ -65,7 +65,7 @@ public class UpSigningForm extends Form {
 
 		field = new FormStringField(PASSWORD_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(UserUnit.getPasswordProblems(value, getLocale()));;
 			return null;
 		});
@@ -73,9 +73,9 @@ public class UpSigningForm extends Form {
 
 		field = new FormStringField(PASSWORD_CONFIRMATION_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
-			FormStringField field2 = (FormStringField) form.getField(PASSWORD_KEY);
-			String password = field2.getValue();
+		field.addNonBlockingChecker((form, thisField, value) -> {
+			FormStringField passwordField = (FormStringField) form.getField(PASSWORD_KEY);
+			String password = passwordField.getValue();
 			if (!value.equals(password)) {
 				return getText("PasswordConfirmationFail");
 			} else
@@ -85,7 +85,7 @@ public class UpSigningForm extends Form {
 
 		field = new FormStringField(UP_SIGNING_CODE_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			if (!UP_SIGNING_CODE.equals(value)) {
 				return getText("WrongUpSigningCode");
 			} else

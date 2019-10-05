@@ -1,44 +1,14 @@
 package com.minquoad.frontComponent.form.field;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 
-import com.minquoad.frontComponent.form.field.valueChecker.StringValueChecker;
+public class FormStringField extends FormField<String> {
 
-public class FormStringField extends FormField {
-
-	private String value;
-	private Collection<StringValueChecker> valueCheckers;
 	private boolean trimingValue;
 
 	public FormStringField(String name) {
 		super(name);
-		valueCheckers = new ArrayList<StringValueChecker>();
 		setTrimingValue(true);
-	}
-
-	@Override
-	public void computeValueProblems() {
-		super.computeValueProblems();
-		if (!isValueNull() && !isValueEmpty()) {
-			String formatProblem = getFormatProblem(getValue());
-			if (formatProblem != null) {
-				getValueProblems().add(formatProblem);
-			} else {
-				for (StringValueChecker valueChecker : valueCheckers) {
-					String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
-					if (valueProblem != null) {
-						getValueProblems().add(valueProblem);
-					}
-				}
-			}
-		}
-	}
-
-	public String getFormatProblem(String value) {
-		return null;
 	}
 
 	@Override
@@ -46,14 +16,7 @@ public class FormStringField extends FormField {
 		this.setValue(request.getParameter(getName()));
 	}
 
-	public void addValueChecker(StringValueChecker valueChecker) {
-		this.valueCheckers.add(valueChecker);
-	}
-
-	public String getValue() {
-		return value;
-	}
-
+	@Override
 	public void setValue(String value) {
 		if (value != null) {
 			value = value.replace("\r", "");
@@ -61,7 +24,7 @@ public class FormStringField extends FormField {
 				value = value.trim();
 			}
 		}
-		this.value = value;
+		super.setValue(value);
 	}
 
 	public Integer getValueAsInteger() {

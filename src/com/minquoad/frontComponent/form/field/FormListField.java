@@ -1,7 +1,7 @@
 package com.minquoad.frontComponent.form.field;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class FormListField extends FormStringField {
 
@@ -9,17 +9,13 @@ public class FormListField extends FormStringField {
 
 	public FormListField(String name) {
 		super(name);
-		acceptedValues = new ArrayList<String>();
-	}
-
-	@Override
-	public String getFormatProblem(String value) {
-		for (String acceptedValue : acceptedValues) {
-			if (acceptedValue.equals(value)) {
+		acceptedValues = new HashSet<String>();
+		this.addBlockingChecker((form, thisField, value) -> {
+			if (acceptedValues.contains(value)) {
 				return null;
 			}
-		}
-		return getText("ValueNotInAcceptedValues");
+			return form.getText("ValueNotInAcceptedValues");
+		});
 	}
 
 	public void addPossibleValue(String value) {

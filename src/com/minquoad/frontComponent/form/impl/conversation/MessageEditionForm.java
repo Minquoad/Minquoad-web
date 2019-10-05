@@ -22,14 +22,14 @@ public class MessageEditionForm extends Form {
 
 		FormEntityField<Message> messageField = new FormEntityField<Message>(MESSAGE_ID_KEY, DaoFactory::getMessageDao);
 		messageField.setEmptyPermitted(false);
-		messageField.addValueChecker((form, field, value) -> {
+		messageField.addNonBlockingChecker((form, field, value) -> {
 			if (getUnitFactory().getConversationUnit().hasUserConversationAccess(getUser(), value.getConversation())) {
 				return null;
 			} else {
 				return "conversation access problem";
 			}
 		});
-		messageField.addValueChecker((form, field, value) -> {
+		messageField.addNonBlockingChecker((form, field, value) -> {
 			if (value.getUser() == getUser()) {
 				return null;
 			} else {

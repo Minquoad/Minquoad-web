@@ -26,7 +26,7 @@ public class BlockingForm extends Form {
 				new FormEntityField<User>(TARGET_ID_KEY, DaoFactory::getUserDao);
 
 		targetField.setEmptyPermitted(false);
-		targetField.addValueChecker((form, thisField, value) -> {
+		targetField.addNonBlockingChecker((form, thisField, value) -> {
 			if (getUser().canAdminister(value)) {
 				return null;
 			} else {

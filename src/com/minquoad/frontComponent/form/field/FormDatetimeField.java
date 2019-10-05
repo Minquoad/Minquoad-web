@@ -13,16 +13,14 @@ public class FormDatetimeField extends FormStringField {
 
 	public FormDatetimeField(String name) {
 		super(name);
-	}
-
-	@Override
-	public String getFormatProblem(String value) {
-		try {
-			LocalDateTime.parse(value);
-			return null;
-		} catch (DateTimeParseException e) {
-			return getText("DateWrongFormat");
-		}
+		this.addBlockingChecker((form, thisField, value) -> {
+			try {
+				LocalDateTime.parse(value);
+				return null;
+			} catch (DateTimeParseException e) {
+				return form.getText("DatetimeWrongFormat");
+			}
+		});
 	}
 
 	public Instant getInstant() {

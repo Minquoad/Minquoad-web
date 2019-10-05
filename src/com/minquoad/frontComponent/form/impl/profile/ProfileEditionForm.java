@@ -37,7 +37,7 @@ public class ProfileEditionForm extends Form {
 			}
 		};
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("nickname", value);
 			if (existingUser == null || existingUser == getUser()) {
 				return null;
@@ -45,7 +45,7 @@ public class ProfileEditionForm extends Form {
 				return getText("NicknameAlreadytaken", value);
 			}
 		});
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(UserUnit.getNicknameProblems(value, getLocale()));
 			return null;
 		});
@@ -81,7 +81,7 @@ public class ProfileEditionForm extends Form {
 
 	public boolean isPictureResetRequested() {
 		FormBooleanField checkboxField = (FormBooleanField) this.getField(PICTURE_RESET_KEY);
-		return checkboxField.isChecked();
+		return checkboxField.getValue();
 	}
 
 }

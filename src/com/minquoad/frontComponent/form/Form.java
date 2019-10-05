@@ -1,9 +1,7 @@
 package com.minquoad.frontComponent.form;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -20,15 +18,13 @@ public class Form {
 
 	public static final String formResourceBundleName = "resources.Form";
 
-	private Map<String, FormField> fileds;
-	private List<FormField> filedsInOrder;
+	private LinkedHashMap<String, FormField<?>> fileds;
 	private HttpServletRequest request;
 	private boolean submitted;
 
 	public Form(HttpServletRequest request) {
-		fileds = new HashMap<String, FormField>();
-		filedsInOrder = new ArrayList<FormField>();
-		setRequest(request);
+		fileds = new LinkedHashMap<String, FormField<?>>();
+		this.request = request;
 		setSubmitted(false);
 		this.build();
 	}
@@ -36,8 +32,18 @@ public class Form {
 	protected void build() {
 	}
 
+	public void submit() {
+		setSubmitted(true);
+		for (FormField<?> field : getFields().values()) {
+			field.collectValue(getRequest());
+		}
+		for (FormField<?> field : getFields().values()) {
+			field.computeValueProblems();
+		}
+	}
+
 	public boolean isValide() {
-		for (FormField field : getFiledsInOrder()) {
+		for (FormField<?> field : getFields().values()) {
 			if (!field.isValid()) {
 				return false;
 			}
@@ -45,51 +51,37 @@ public class Form {
 		return true;
 	}
 
-	public Map<String, FormField> getFields() {
-		return fileds;
-	}
-
 	public Collection<String> getFieldValueProblems(String name) {
-		FormField field = fileds.get(name);
-		if (field == null) {
-			new Exception("Field with name  " + name + " not existing in the form.").printStackTrace();
-			return null;
-		} else {
-			return field.getValueProblems();
-		}
+		return getFields().get(name).getValueProblems();
 	}
 
-	public void addField(FormField field) {
+	public void addField(FormField<?> field) {
 		field.setForm(this);
-		fileds.put(field.getName(), field);
-		getFiledsInOrder().add(field);
+		getFields().put(field.getName(), field);
 	}
 
 	public boolean hasField(String name) {
-		return fileds.get(name) != null;
+		return getFields().get(name) != null;
 	}
 	
-	public FormField getField(String name) {
-		return fileds.get(name);
+	public FormField<?> getField(String name) {
+		return getFields().get(name);
+	}
+
+	public Map<String, FormField<?>> getFields() {
+		return fileds;
+	}
+
+	public boolean isSubmitted() {
+		return submitted;
+	}
+
+	private void setSubmitted(boolean submitted) {
+		this.submitted = submitted;
 	}
 
 	public HttpServletRequest getRequest() {
 		return request;
-	}
-
-	private void setRequest(HttpServletRequest request) {
-		this.request = request;
-	}
-
-	public void submit() {
-		setSubmitted(true);
-		List<FormField> filedsInOrder = getFiledsInOrder();
-		for (FormField field : filedsInOrder) {
-			field.collectValue(request);
-		}
-		for (FormField field : filedsInOrder) {
-			field.computeValueProblems();
-		}
 	}
 
 	public DaoFactory getDaoFactory() {
@@ -121,18 +113,6 @@ public class Form {
 
 	public Locale getLocale() {
 		return ImprovedHttpServlet.getLocale(getRequest());
-	}
-	
-	public boolean isSubmitted() {
-		return submitted;
-	}
-
-	private void setSubmitted(boolean submitted) {
-		this.submitted = submitted;
-	}
-
-	private List<FormField> getFiledsInOrder() {
-		return filedsInOrder;
 	}
 
 }

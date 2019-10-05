@@ -1,66 +1,41 @@
 package com.minquoad.frontComponent.form.field;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
-import com.minquoad.frontComponent.form.field.valueChecker.PartValueChecker;
 import com.minquoad.tool.ImageTool;
 import com.minquoad.tool.http.PartTool;
 
-public class FormFileField extends FormField {
+public class FormFileField extends FormField<Part> {
 
-	private Part value;
 	private Collection<String> allowedExtentions;
-	private Collection<PartValueChecker> valueCheckers;
 
 	public FormFileField(String name) {
 		super(name);
-		allowedExtentions = new ArrayList<String>();
-		valueCheckers = new ArrayList<PartValueChecker>();
-	}
-
-	@Override
-	public void computeValueProblems() {
-		super.computeValueProblems();
-		if (!isValueNull() && !isValueEmpty()) {
-
-			if (!allowedExtentions.isEmpty()) {
-				boolean isExtentionAuthorized = false;
-				String originalExtention = getOriginalExtention();
-				for (String allowedExtention : allowedExtentions) {
-					if (allowedExtention.equals(originalExtention)) {
-						isExtentionAuthorized = true;
-						break;
-					}
-				}
-				if (!isExtentionAuthorized) {
-					String problem = getText("UnauthorizedExtension") + " ";
-					boolean first = true;
-					for (String allowedExtention : allowedExtentions) {
-						if (!first) {
-							problem += ", ";
-						}
-						problem += "." + allowedExtention;
-						first = false;
-					}
-					getValueProblems().add(problem);
-				}
+		allowedExtentions = new HashSet<String>();
+		this.addBlockingChecker((form, thisField, value) -> {
+			if (allowedExtentions.isEmpty()) {
+				return null;
 			}
-
-			if (getValueProblems().isEmpty()) {
-				for (PartValueChecker valueChecker : valueCheckers) {
-					String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
-					if (valueProblem != null) {
-						getValueProblems().add(valueProblem);
-					}
-				}
+			if (allowedExtentions.contains(getOriginalExtention())) {
+				return null;
 			}
-		}
+			String problem = form.getText("UnauthorizedExtension") + " ";
+			boolean first = true;
+			for (String allowedExtention : allowedExtentions) {
+				if (!first) {
+					problem += ", ";
+				}
+				problem += "." + allowedExtention;
+				first = false;
+			}
+			return problem;
+		});
 	}
 
 	public String getOriginalFileName() {
@@ -87,19 +62,11 @@ public class FormFileField extends FormField {
 		}
 	}
 
-	public Part getValue() {
-		return value;
-	}
-
-	protected void setValue(Part value) {
-		this.value = value;
-	}
-
 	public boolean isImage() {
-		if (!ImageTool.getPossibleImageExtentions().contains(getOriginalExtention())) {
+		if (!this.getPossibleImageExtentions().contains(getOriginalExtention())) {
 			return false;
 		}
-		if (!ImageTool.isImage(getValue())) {
+		if (!this.isImage(getValue())) {
 			return false;
 		}
 		return true;
@@ -109,8 +76,8 @@ public class FormFileField extends FormField {
 		allowedExtentions.add(extention);
 	}
 
-	public void addValueChecker(PartValueChecker valueChecker) {
-		this.valueCheckers.add(valueChecker);
+	public void addAllowedExtention(Collection<String> extentions) {
+		allowedExtentions.addAll(extentions);
 	}
 
 	@Override
@@ -123,4 +90,12 @@ public class FormFileField extends FormField {
 		return getValue() == null;
 	}
 
+	public Collection<String> getPossibleImageExtentions() {
+		return ImageTool.getPossibleImageExtentions();
+	}
+
+	public boolean isImage(Part part) {
+		return ImageTool.isImage(part);
+	}
+	
 }

@@ -4,27 +4,21 @@ public class FormColorField extends FormStringField {
 
 	public FormColorField(String name) {
 		super(name);
+		this.addBlockingChecker((form, thisField, value) -> {
+			if (value.length() == "#123456".length() && value.charAt(0) == '#') {
+				try {
+					getValueAsInteger();
+					return null;
+				} catch (Exception e) {
+				}
+			}
+			return form.getText("ColorWrongFormat");
+		});
 	}
 
 	@Override
 	public Integer getValueAsInteger() {
-		try {
-			return Integer.parseInt(getValue().substring(1), 16);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	@Override
-	public String getFormatProblem(String value) {
-		if (value.length() == "#0f0f0f".length() && value.charAt(0) == '#') {
-			try {
-				Integer.parseInt(value.substring(1), 16);
-				return null;
-			} catch (Exception e) {
-			}
-		}
-		return getText("ColorWrongFormat");
+		return Integer.parseInt(getValue().substring(1), 16);
 	}
 
 }

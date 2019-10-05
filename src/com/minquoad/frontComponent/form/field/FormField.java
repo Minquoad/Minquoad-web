@@ -1,21 +1,27 @@
 package com.minquoad.frontComponent.form.field;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.minquoad.dao.interfaces.DaoFactory;
-import com.minquoad.entity.User;
 import com.minquoad.frontComponent.form.Form;
-import com.minquoad.unit.UnitFactory;
 
-public abstract class FormField {
+public abstract class FormField<Value> {
+
+	public interface Checker<Value> {
+		public String getValueProblem(Form form, FormField<Value> field, Value value);
+	}
 
 	private Form form;
 	private String name;
+	private Value value;
 	private boolean nullPermitted;
 	private boolean emptyPermitted;
+	private List<Checker<Value>> blockingCheckers;
+	private Collection<Checker<Value>> nonBlockingCheckers;
 
 	private Collection<String> valueProblems;
 
@@ -23,19 +29,13 @@ public abstract class FormField {
 		this.name = name;
 		setNullPermitted(false);
 		setEmptyPermitted(true);
+		blockingCheckers = new ArrayList<Checker<Value>>();
+		nonBlockingCheckers = new ArrayList<Checker<Value>>();
 		valueProblems = new LinkedList<String>();
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public boolean isValid() {
 		return getValueProblems().size() == 0;
-	}
-
-	protected void setValueProblems(Collection<String> valueProblems) {
-		this.valueProblems = valueProblems;
 	}
 
 	public Collection<String> getValueProblems() {
@@ -45,12 +45,26 @@ public abstract class FormField {
 	public void computeValueProblems() {
 		if (isValueNull()) {
 			if (!isNullPermitted()) {
-				valueProblems.add(getText("FieldIsMissing"));
+				getValueProblems().add(getForm().getText("FieldIsMissing"));
 			}
 		} else {
 			if (isValueEmpty()) {
 				if (!isEmptyPermitted()) {
-					valueProblems.add(getText("FieldIsEmpty"));
+					getValueProblems().add(getForm().getText("FieldIsEmpty"));
+				}
+			} else {
+				for (Checker<Value> checker : blockingCheckers) {
+					String valueProblem = checker.getValueProblem(getForm(), this, getValue());
+					if (valueProblem != null) {
+						getValueProblems().add(valueProblem);
+						return;
+					}
+				}
+				for (Checker<Value> checker : nonBlockingCheckers) {
+					String valueProblem = checker.getValueProblem(getForm(), this, getValue());
+					if (valueProblem != null) {
+						getValueProblems().add(valueProblem);
+					}
 				}
 			}
 		}
@@ -62,28 +76,28 @@ public abstract class FormField {
 
 	public abstract void collectValue(HttpServletRequest request);
 
+	public void addNonBlockingChecker(Checker<Value> checker) {
+		this.nonBlockingCheckers.add(checker);
+	}
+
+	public void addBlockingChecker(Checker<Value> checker) {
+		this.blockingCheckers.add(checker);
+	}
+
+	public Value getValue() {
+		return value;
+	}
+
+	public void setValue(Value value) {
+		this.value = value;
+	}
+
 	public Form getForm() {
 		return form;
 	}
 
 	public void setForm(Form form) {
 		this.form = form;
-	}
-
-	protected User getUser() {
-		return getForm().getUser();
-	}
-
-	protected String getText(String key) {
-		return getForm().getText(key);
-	}
-
-	protected DaoFactory getDaoFactory() {
-		return getForm().getDaoFactory();
-	}
-
-	protected UnitFactory getUnitFactory() {
-		return getForm().getUnitFactory();
 	}
 
 	public boolean isNullPermitted() {
@@ -100,6 +114,10 @@ public abstract class FormField {
 
 	public void setEmptyPermitted(boolean emptyPermitted) {
 		this.emptyPermitted = emptyPermitted;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

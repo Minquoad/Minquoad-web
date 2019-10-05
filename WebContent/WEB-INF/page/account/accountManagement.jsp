@@ -96,7 +96,7 @@
 							</label>
 							<input type="checkbox" name="readabilityImprovementActivated"
 								id="readabilityImprovementActivated"
-								<c:if test="${ requestScope.userParametersAlteration.fields.readabilityImprovementActivated.checked }">
+								<c:if test="${ requestScope.userParametersAlteration.fields.readabilityImprovementActivated.value }">
 										checked
 									</c:if> />
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">
@@ -112,7 +112,7 @@
 							</label>
 							<input type="checkbox" name="typingAssistanceActivated"
 								id="typingAssistanceActivated"
-								<c:if test="${ requestScope.userParametersAlteration.fields.typingAssistanceActivated.checked }">
+								<c:if test="${ requestScope.userParametersAlteration.fields.typingAssistanceActivated.value }">
 										checked
 									</c:if> />
 							<jsp:include page="/WEB-INF/includable/form/formFieldProblems.jsp">

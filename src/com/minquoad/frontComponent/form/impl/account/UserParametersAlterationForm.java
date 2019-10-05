@@ -32,7 +32,7 @@ public class UserParametersAlterationForm extends Form {
 
 		field = new FormEmailField(MAIL_ADDRESS_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("mailAddress", value);
 			if (existingUser == null || existingUser == getUser()) {
 				return null;
@@ -53,7 +53,7 @@ public class UserParametersAlterationForm extends Form {
 			}
 		};
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			User existingUser = getDaoFactory().getUserDao().getOneMatching("nickname", value);
 			if (existingUser == null || existingUser == getUser()) {
 				return null;
@@ -61,7 +61,7 @@ public class UserParametersAlterationForm extends Form {
 				return getText("NicknameAlreadytaken", value);
 			}
 		});
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(UserUnit.getNicknameProblems(value, getLocale()));
 			return null;
 		});
@@ -84,11 +84,11 @@ public class UserParametersAlterationForm extends Form {
 		FormBooleanField checkboxField = null;
 		
 		checkboxField = new FormBooleanField(READABILITY_IMPROVEMENT_ACTIVATED);
-		checkboxField.setChecked(getUser().isReadabilityImprovementActivated());
+		checkboxField.setValue(getUser().isReadabilityImprovementActivated());
 		this.addField(checkboxField);
 
 		checkboxField = new FormBooleanField(TYPING_ASSISTANCE_ACTIVATED);
-		checkboxField.setChecked(getUser().isTypingAssistanceActivated());
+		checkboxField.setValue(getUser().isTypingAssistanceActivated());
 		this.addField(checkboxField);
 	}
 
@@ -114,12 +114,12 @@ public class UserParametersAlterationForm extends Form {
 
 	public boolean isReadabilityImprovementActivated() {
 		FormBooleanField field = (FormBooleanField) this.getField(READABILITY_IMPROVEMENT_ACTIVATED);
-		return field.isChecked();
+		return field.getValue();
 	}
 
 	public boolean isTypingAssistanceActivated() {
 		FormBooleanField field = (FormBooleanField) this.getField(TYPING_ASSISTANCE_ACTIVATED);
-		return field.isChecked();
+		return field.getValue();
 	}
 
 }

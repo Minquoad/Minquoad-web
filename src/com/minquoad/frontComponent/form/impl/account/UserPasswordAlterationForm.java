@@ -25,7 +25,7 @@ public class UserPasswordAlterationForm extends Form {
 
 		field = new FormStringField(OLD_PASSOWRD_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			if (getUser().isPassword(value, ServicesManager.getService(form.getRequest(), Deployment.class))) {
 				return null;
 			} else {
@@ -36,7 +36,7 @@ public class UserPasswordAlterationForm extends Form {
 
 		field = new FormStringField(NEW_PASSWORD_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			thisField.getValueProblems().addAll(UserUnit.getPasswordProblems(value, getLocale()));;
 			return null;
 		});
@@ -44,7 +44,7 @@ public class UserPasswordAlterationForm extends Form {
 
 		field = new FormStringField(NEW_PASSWORD_CONFIRMATION_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			FormStringField newPasswordField = (FormStringField) form.getField(NEW_PASSWORD_KEY);
 			String password = newPasswordField.getValue();
 			if (password != null && !password.equals(value)) {

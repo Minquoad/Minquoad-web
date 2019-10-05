@@ -28,7 +28,7 @@ public class InLogingForm extends Form {
 
 		field = new FormEmailField(MAIL_ADDRESS_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			Duration coolDown = getUnitFactory().getFailedInLoginigAttemptUnit().getCoolDown(value);
 			if (coolDown == null) {
 				return null;
@@ -44,7 +44,7 @@ public class InLogingForm extends Form {
 
 		field = new FormStringField(PASSWORD_KEY);
 		field.setEmptyPermitted(false);
-		field.addValueChecker((form, thisField, value) -> {
+		field.addNonBlockingChecker((form, thisField, value) -> {
 			FormStringField mailAddressField = (FormStringField) form.getField(MAIL_ADDRESS_KEY);
 			if (mailAddressField.isValid()) {
 

@@ -22,14 +22,14 @@ public class ConversationLeavingForm extends Form {
 				new FormEntityField<Conversation>(CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		conversationField.setEmptyPermitted(false);
-		conversationField.addValueChecker((form, field, value) -> {
+		conversationField.addNonBlockingChecker((form, field, value) -> {
 			if (getUnitFactory().getConversationUnit().hasUserConversationAccess(getUser(), value)) {
 				return null;
 			} else {
 				return "conversation access problem";
 			}
 		});
-		conversationField.addValueChecker((form, field, value) -> {
+		conversationField.addNonBlockingChecker((form, field, value) -> {
 			if (Conversation.TYPE_CREATED_BY_USER == value.getType()) {
 				return null;
 			} else {

@@ -16,16 +16,14 @@ public class FormDateField extends FormStringField {
 	public FormDateField(String name) {
 		super(name);
 		setConverter(LocalDate::atStartOfDay);
-	}
-
-	@Override
-	public String getFormatProblem(String value) {
-		try {
-			LocalDate.parse(value);
-			return null;
-		} catch (DateTimeParseException e) {
-			return getText("DatetimeWrongFormat");
-		}
+		this.addBlockingChecker((form, thisField, value) -> {
+			try {
+				LocalDate.parse(value);
+				return null;
+			} catch (DateTimeParseException e) {
+				return form.getText("DateWrongFormat");
+			}
+		});
 	}
 
 	public Instant getInstant() {

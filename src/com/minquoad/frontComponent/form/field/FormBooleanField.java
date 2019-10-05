@@ -2,31 +2,20 @@ package com.minquoad.frontComponent.form.field;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class FormBooleanField extends FormField {
-
-	private boolean checked;
+public class FormBooleanField extends FormField<Boolean> {
 
 	public FormBooleanField(String name) {
 		super(name);
-		setChecked(false);
-	}
-
-	public boolean isChecked() {
-		return checked;
-	}
-
-	public void setChecked(boolean checked) {
-		this.checked = checked;
 	}
 
 	@Override
 	public void collectValue(HttpServletRequest request) {
-		this.setChecked(request.getParameter(getName()) != null);
+		this.setValue(request.getParameter(getName()) != null);
 	}
 
 	@Override
 	public boolean isValueEmpty() {
-		return !isChecked();
+		return !getValue();
 	}
 
 	@Override

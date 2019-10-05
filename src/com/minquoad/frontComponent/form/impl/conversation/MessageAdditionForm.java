@@ -26,7 +26,7 @@ public class MessageAdditionForm extends Form {
 				new FormEntityField<Conversation>(CONVERSATION_ID_KEY, DaoFactory::getConversationDao);
 
 		conversationField.setEmptyPermitted(false);
-		conversationField.addValueChecker((form, field, value) -> {
+		conversationField.addNonBlockingChecker((form, field, value) -> {
 			if (getUnitFactory().getConversationUnit().hasUserConversationAccess(getUser(), value)) {
 				return null;
 			} else {

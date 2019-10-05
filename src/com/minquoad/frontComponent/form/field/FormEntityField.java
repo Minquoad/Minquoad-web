@@ -1,103 +1,87 @@
 package com.minquoad.frontComponent.form.field;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoGetter;
-import com.minquoad.frontComponent.form.field.valueChecker.EntityValueChecker;
 
-public class FormEntityField<Entity> extends FormField {
+public class FormEntityField<Entity> extends FormField<Entity> {
 
 	private String stringValue;
-	private Entity value;
-	private Collection<EntityValueChecker<Entity>> valueCheckers;
 	private Dao<Entity> dao;
 	private DaoGetter<Entity> daoGetter;
 
 	public FormEntityField(String name, Dao<Entity> dao) {
-		super(name);
-		valueCheckers = new ArrayList<EntityValueChecker<Entity>>();
+		this(name);
 		this.dao = dao;
 	}
 
 	public FormEntityField(String name, DaoGetter<Entity> daoGetter) {
-		super(name);
-		valueCheckers = new ArrayList<EntityValueChecker<Entity>>();
+		this(name);
 		this.daoGetter = daoGetter;
 	}
 
-	@Override
-	public void computeValueProblems() {
-		super.computeValueProblems();
-		if (!isValueNull() && !isValueEmpty()) {
+	private FormEntityField(String name) {
+		super(name);
+
+		this.addBlockingChecker((form, thisField, value) -> {
 			if (getValue() == null) {
-				getValueProblems().add(getText("EntityNotFound"));
-			} else {
-				for (EntityValueChecker<Entity> valueChecker : valueCheckers) {
-					String valueProblem = valueChecker.getValueProblem(getForm(), this, getValue());
-					if (valueProblem != null) {
-						getValueProblems().add(valueProblem);
-					}
-				}
+				return form.getText("EntityNotFound");
 			}
-		}
+			return null;
+		});
 	}
-
-	public Entity getValue() {
-		return value;
-	}
-
-	public void setValue(Entity value) {
-		this.value = value;
-	}
-
+	
 	@Override
 	public boolean isValueEmpty() {
-		return getStringValue().isEmpty();
+		return getValueAsString().isEmpty();
 	}
 
 	@Override
 	public boolean isValueNull() {
-		return getStringValue() == null;
+		return getValueAsString() == null;
 	}
 
 	@Override
 	public void collectValue(HttpServletRequest request) {
+
 		this.setStringValue(request.getParameter(getName()));
+
 		if (!isValueNull() && !isValueEmpty()) {
 			Dao<Entity> dao = this.dao;
 			if (dao == null) {
 				dao = this.daoGetter.getDao(getForm().getDaoFactory());
 			}
-			try {
-				setValue(dao.getByPk(getValueAsInteger()));
-			} catch (Exception e) {
-			}
+
 			try {
 				setValue(dao.getByPk(getValueAsLong()));
+				return;
 			} catch (Exception e) {
 			}
 			try {
-				setValue(dao.getByPk(getStringValue()));
+				setValue(dao.getByPk(getValueAsInteger()));
+				return;
+			} catch (Exception e) {
+			}
+			try {
+				setValue(dao.getByPk(getValueAsString()));
+				return;
 			} catch (Exception e) {
 			}
 		}
-	}
-
-	protected String getStringValue() {
-		return stringValue;
 	}
 
 	protected void setStringValue(String stringValue) {
 		this.stringValue = stringValue;
 	}
 
+	protected String getValueAsString() {
+		return stringValue;
+	}
+
 	protected Integer getValueAsInteger() {
 		try {
-			return Integer.parseInt(getStringValue());
+			return Integer.parseInt(getValueAsString());
 		} catch (Exception e) {
 			return null;
 		}
@@ -105,14 +89,10 @@ public class FormEntityField<Entity> extends FormField {
 
 	protected Long getValueAsLong() {
 		try {
-			return Long.parseLong(getStringValue());
+			return Long.parseLong(getValueAsString());
 		} catch (Exception e) {
 			return null;
 		}
-	}
-
-	public void addValueChecker(EntityValueChecker<Entity> valueChecker) {
-		this.valueCheckers.add(valueChecker);
 	}
 
 }
