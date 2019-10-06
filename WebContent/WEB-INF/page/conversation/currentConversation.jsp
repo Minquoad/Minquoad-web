@@ -9,12 +9,15 @@
 
 		<div class="inlineFlex fullHeigth titleSide">
 			<div class="totallyCenteredContainer participants">
+				<c:set var="first" value="${ true }" scope="page" />
 				<c:forEach items="${ requestScope.participants }" var="loopUser">
 					<c:if test="${ loopUser ne requestScope.user }">
 						<c:url value="/Profile" var="profileUrl">
 							<c:param name="targetUserId" value="${ loopUser.id }" />
 						</c:url>
 						<a href="${ profileUrl }" class="undecorated">
+							${ first?"":"," }
+							<c:set var="first" value="${ false }" scope="page" />
 							<c:out value="${ loopUser.nickname }" />
 						</a>
 					</c:if>
@@ -39,16 +42,37 @@
 		</div>
 
 		<div class="inlineFlex fullHeigth titleSide">
-			<c:if test="${ requestScope.conversationAccess.administrator }">
-				
-				<c:url value="/ConversationLeaving" var="conversationLeavingUrl">
-					<c:param name="conversationId"
+			<c:if test="${ requestScope.conversation.createdByUser }">
+
+				<form method="POST" action="<c:url value="/ConversationLeaving" />"
+					class="inlineFlex">
+					<input type="hidden" name="conversationId"
 						value="${ requestScope.conversation.id }" />
-				</c:url>
-				<form method="POST" action="${ conversationLeavingUrl }">
-					<input type="submit" value="leave">
+					<input type="submit" value="leave" />
 				</form>
-				
+
+			</c:if>
+			<c:if test="${ requestScope.conversationAccess.administrator }">
+
+				<form method="POST" action="<c:url value="/ConversationAccessGranting" />"
+					class="inlineFlex">
+					<input type="hidden" name="conversationId"
+						value="${ requestScope.conversation.id }" />
+
+					<select name="targets" multiple="multiple">
+						<c:forEach items="${ requestScope.daoFactory.userDao.all }" var="loopUser">
+							<c:if test="${ not requestScope.participants.contains(loopUser) }">
+
+								<option value="${ loopUser.id }"><c:out
+										value="${ loopUser.nickname }" /></option>
+
+							</c:if>
+						</c:forEach>
+					</select>
+
+					<input type="submit" value="add">
+				</form>
+
 			</c:if>
 		</div>
 

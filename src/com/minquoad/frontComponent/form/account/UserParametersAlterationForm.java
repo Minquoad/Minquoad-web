@@ -1,12 +1,14 @@
 package com.minquoad.frontComponent.form.account;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.minquoad.entity.User;
 import com.minquoad.framework.form.FormBooleanField;
 import com.minquoad.framework.form.FormColorField;
 import com.minquoad.framework.form.FormEmailField;
-import com.minquoad.framework.form.FormListField;
+import com.minquoad.framework.form.FormSingleValuePickerField;
 import com.minquoad.framework.form.FormStringField;
 import com.minquoad.tool.InternationalizationTool;
 import com.minquoad.tool.form.ImprovedForm;
@@ -68,11 +70,9 @@ public class UserParametersAlterationForm extends ImprovedForm {
 		field.setValue(getUser().getNickname());
 		this.addField(field);
 
-		FormListField languageField = new FormListField(LANGUAGE_KEY);
+		FormSingleValuePickerField languageField = new FormSingleValuePickerField(LANGUAGE_KEY);
 		languageField.setEmptyPermitted(false);
-		for (String supportedLanguageCode : InternationalizationTool.supportedLanguageCodes) {
-			languageField.addPossibleValue(supportedLanguageCode);
-		}
+		languageField.addAcceptedValues(Arrays.asList(InternationalizationTool.supportedLanguageCodes));
 		languageField.setValue(getUser().getLanguage());
 		this.addField(languageField);
 

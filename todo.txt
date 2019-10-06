@@ -1,5 +1,3 @@
 fini gestion des participants à une conversation
 rechercher parmis les conversations
 notifications
-
-mettre dans framework les forms mais pas tout comme pour DaoImpl

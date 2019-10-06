@@ -45,7 +45,9 @@ $(document).ready(function() {
 function detectCurrentConversation(data, textStatus, xhr) {
 
 	if (xhr.status == 204) {
-		window.location.replace("");
+		let list = $(".conversations #list");
+		list.find(".selectedSubPage").remove();
+		list.find(".borderedTile").first().trigger("click");
 
 	} else {
 

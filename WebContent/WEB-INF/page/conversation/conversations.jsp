@@ -15,7 +15,8 @@
 	let profileUrl = "<c:url value="/Profile" />";
 	let currentConversationUrl = "<c:url value="/CurrentConversation" />";
 </script>
-<script type="text/javascript" src="<c:url value="/js/currentConversation.js" />"></script>
+<script type="text/javascript"
+	src="<c:url value="/js/currentConversation.js" />"></script>
 <script type="text/javascript" src="<c:url value="/js/conversations.js" />"></script>
 </head>
 <body>
@@ -58,18 +59,21 @@
 						<div class="participants scrollableContainer">
 							<c:if
 								test="${ not conversationResume.conversation.isMainBetweenTwoUsers() }">
+								<c:set var="first" value="${ true }" scope="page" />
 								<c:forEach items="${ conversationResume.participants }"
 									var="participant">
 									<c:if test="${participant ne requestScope.user}">
+										${ first?"":"," }
+										<c:set var="first" value="${ false }" scope="page" />
 										<c:out value="${ participant.nickname }" />
 									</c:if>
 								</c:forEach>
 							</c:if>
 						</div>
-						
+
 					</div>
 				</div>
-				
+
 			</c:forEach>
 
 			<div class="borderedTile"
@@ -77,7 +81,8 @@
 				data-subPageKey="createConversation">
 				<div class="fullSize resume">
 					<div class="conversationTitle newConversationResume">
-						+ <fmt:message key="NewConversation" bundle="${ conversationsBundle }" />
+						+
+						<fmt:message key="NewConversation" bundle="${ conversationsBundle }" />
 					</div>
 					<div class="participants"></div>
 				</div>
