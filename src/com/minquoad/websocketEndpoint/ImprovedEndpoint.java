@@ -33,8 +33,8 @@ public class ImprovedEndpoint extends Endpoint {
 
 	@Override
 	public void onOpen(Session session, EndpointConfig config) {
-		available = true;
-		roles = new HashSet<String>();	
+		roles = new HashSet<String>();
+		setAvailable(true);
 
 		httpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
 		servletContext = httpSession.getServletContext();
@@ -42,17 +42,16 @@ public class ImprovedEndpoint extends Endpoint {
 
 		Database database = getService(Database.class);
 		DaoFactory daoFactory = database.pickOneDaoFactory();
-		if (getUser(daoFactory).isBlocked()) {
-			available = false;
+		User user = getUser(daoFactory);
+		if (user != null && user.isBlocked()) {
+			setAvailable(false);
 		}
 		database.giveBack(daoFactory);
 
 		session.addMessageHandler(new MessageHandler.Whole<String>() {
 			@Override
 			public void onMessage(String message) {
-				if (isAvailable()) {
-					addRole(message);
-				}
+				addRole(message);
 			}
 		});
 
@@ -103,6 +102,21 @@ public class ImprovedEndpoint extends Endpoint {
 	}
 
 	public void addRole(String role) {
+		// in order to handle some attacks
+		if (role.length() > 1024) {
+			RuntimeException exception = new RuntimeException("role too long");
+			exception.printStackTrace();
+			getService(Logger.class).logError(exception);
+			return;
+		}
+		// in order to handle some attacks
+		if (this.roles.size() == 1024) {
+			RuntimeException exception = new RuntimeException("too many roles for one endpoint");
+			exception.printStackTrace();
+			getService(Logger.class).logError(exception);
+			return;
+		}
+
 		this.roles.add(role);
 	}
 
@@ -114,4 +128,7 @@ public class ImprovedEndpoint extends Endpoint {
 		return available;
 	}
 
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
 }

@@ -87,21 +87,21 @@ public class Message {
 		MessageFile file = this.getMessageFile();
 
 		ObjectNode messageJsonObject = JsonNodeFactory.instance.objectNode();
-		messageJsonObject.put("id", Long.toString(this.getId()));
+		messageJsonObject.put("id", this.getId().toString());
 		messageJsonObject.put("text", this.getText());
 		messageJsonObject.put("editedText", this.getEditedText());
 		messageJsonObject.put("instant", this.getInstant().toString());
-		messageJsonObject.put("conversation", Long.toString(this.getConversation().getId()));
+		messageJsonObject.put("conversation", this.getConversation().getId().toString());
 
 		ObjectNode userJsonObject = JsonNodeFactory.instance.objectNode();
-		userJsonObject.put("id", Long.toString(user.getId()));
+		userJsonObject.put("id", user.getId().toString());
 		userJsonObject.put("nickname", user.getNickname());
 		userJsonObject.put("defaultColor", user.getDefaultColorAsHtmlValue());
 
 		ObjectNode fileJsonObject = null;
 		if (file != null) {
 			fileJsonObject = JsonNodeFactory.instance.objectNode();
-			fileJsonObject.put("id", Long.toString(file.getId()));
+			fileJsonObject.put("id", file.getId().toString());
 			fileJsonObject.put("image", file.isImage());
 			fileJsonObject.put("originalName", file.getOriginalName());
 		}

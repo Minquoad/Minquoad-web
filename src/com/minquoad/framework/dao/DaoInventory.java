@@ -36,7 +36,7 @@ public class DaoInventory<Entity> {
 	public void checkPrimaryKeyUnchanged(Entity entity) {
 		Entity expectedEntity = this.getByPrimaryKey(getPkEntityMember().getValue(entity));
 		if (!entity.equals(expectedEntity)) {
-			throw new DaoException("Entity primary key value changes are not allowed.");
+			throw new DaoException("Entity primary key value changes are not allowed in persisted entities.");
 		}
 	}
 

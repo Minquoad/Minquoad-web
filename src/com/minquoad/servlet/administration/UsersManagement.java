@@ -1,8 +1,8 @@
 package com.minquoad.servlet.administration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
+import com.minquoad.frontComponent.RefreshmentConfig;
 import com.minquoad.frontComponent.form.administration.BlockingForm;
 import com.minquoad.service.SessionManager;
 import com.minquoad.tool.ImprovedHttpServlet;
@@ -48,18 +49,19 @@ public class UsersManagement extends ImprovedHttpServlet {
 			getDaoFactory(request).getUserDao().persist(target);
 
 			if (target.isBlocked()) {
-				SessionManager sessionManager = getService(SessionManager.class);
 
-				Collection<ImprovedEndpoint> improvedEndpoints = sessionManager.getImprovedEndpoints();
-				Collection<ImprovedEndpoint> toRemoveImprovedEndpoints = new LinkedList<ImprovedEndpoint>();
+				Collection<User> targets = new ArrayList<User>(1);
+				targets.add(target);
 
-				for (ImprovedEndpoint improvedEndpoint : improvedEndpoints) {
+				sendJsonToClientsWithRole(
+						new RefreshmentConfig(false, 0).toJson(),
+						targets,
+						"refreshment");
+
+				for (ImprovedEndpoint improvedEndpoint : getService(SessionManager.class).getImprovedEndpoints()) {
 					if (improvedEndpoint.getUserId() == target.getId()) {
-						toRemoveImprovedEndpoints.add(improvedEndpoint);
+						improvedEndpoint.setAvailable(false);
 					}
-				}
-				for (ImprovedEndpoint improvedEndpoint : toRemoveImprovedEndpoints) {
-					sessionManager.remove(improvedEndpoint);
 				}
 			}
 		}

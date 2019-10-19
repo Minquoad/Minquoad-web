@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.User;
+import com.minquoad.frontComponent.RefreshmentConfig;
 import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/SiteManagement")
@@ -44,9 +45,19 @@ public class SiteManagement extends ImprovedHttpServlet {
 		if (formId != null) {
 			if (formId.equals(SITE_STATE_MANAGEMENT)) {
 				getDeployment().setOpen("true".equals(request.getParameter(OPEN_KEY)));
+
+				sendJsonToClientsWithRole(
+						new RefreshmentConfig(true, 1000).toJson(),
+						null,
+						"refreshment");
 			}
 			if (formId.equals(SITE_CLEAR_MANAGEMENT)) {
 				getDeployment().clear();
+
+				sendJsonToClientsWithRole(
+						new RefreshmentConfig(true, 1000).toJson(),
+						null,
+						"refreshment");
 			}
 		}
 

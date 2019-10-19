@@ -20,7 +20,7 @@ public class Pool<ReusableObject> {
 		unavailables = new LinkedList<ReusableObject>();
 	}
 
-	public ReusableObject pickOne() {
+	public synchronized ReusableObject pickOne() {
 		if (!availables.isEmpty()) {
 			ReusableObject pickedObject = availables.remove(0);
 			unavailables.add(pickedObject);
@@ -36,7 +36,7 @@ public class Pool<ReusableObject> {
 		return newObject;
 	}
 
-	public void giveBack(ReusableObject reusableObject) {
+	public synchronized void giveBack(ReusableObject reusableObject) {
 		if (unavailables.remove(reusableObject)) {
 			if (cleaner != null) {
 				cleaner.clean(reusableObject);
@@ -52,7 +52,7 @@ public class Pool<ReusableObject> {
 		}
 	}
 
-	public void discard(ReusableObject reusableObject) {
+	public synchronized void discard(ReusableObject reusableObject) {
 		availables.remove(reusableObject);
 		unavailables.remove(reusableObject);
 		if (destructor != null) {
@@ -60,7 +60,7 @@ public class Pool<ReusableObject> {
 		}
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		unavailables.clear();
 
 		if (destructor != null) {
@@ -71,7 +71,7 @@ public class Pool<ReusableObject> {
 		availables.clear();
 	}
 
-	public int getSize() {
+	public synchronized int getSize() {
 		return availables.size() + unavailables.size();
 	}
 

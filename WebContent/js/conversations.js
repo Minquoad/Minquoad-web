@@ -68,7 +68,7 @@ function generateConversationResumeHtml(conversationResume) {
 	tileHtml += '</div>';
 
 	tileHtml += '<div class="participants">';
-	tileHtml += '';// TODO
+	tileHtml += '';console.log(conversationResume);// TODO
 	tileHtml += '</div>';
 
 	tileHtml += '</div>';

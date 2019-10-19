@@ -26,7 +26,7 @@
 	let language = "${ sessionScope.locale.toLanguageTag() }";
 	let readabilityImprovementActivated = ${ empty requestScope.user ? true : requestScope.user.readabilityImprovementActivated };
 	let typingAssistanceActivated = ${ empty requestScope.user ? true : requestScope.user.typingAssistanceActivated };
-	let userId = ${ empty requestScope.user ? "null" : requestScope.user.id };
+	let userId = ${ empty requestScope.user ? "null" : "\"".concat(requestScope.user.id.toString()).concat("\"") };
 	let loadingImgUrl = '<c:url value="/img/loading.gif" />';
 	let fileDownloadUrl = "<c:url value="/FileDownload" />";
 	let imageDownloadUrl = "<c:url value="/ImageDownload" />";

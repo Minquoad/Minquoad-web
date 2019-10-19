@@ -50,8 +50,6 @@ public class AccountManagement extends ImprovedHttpServlet {
 
 			if (formId.equals(USER_PARAMETERS_ALTERATION)) {
 
-				//TODO rendre l'aide à la saisie optionnel
-
 				UserParametersAlterationForm form = (UserParametersAlterationForm) request.getAttribute(USER_PARAMETERS_ALTERATION);
 				form.submit();
 

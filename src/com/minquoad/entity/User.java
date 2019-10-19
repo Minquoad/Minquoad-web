@@ -22,7 +22,7 @@ public class User {
 	private Integer defaultColor = 8421504;
 	private String language;
 	private boolean readabilityImprovementActivated = true;
-	private boolean typingAssistanceActivated = true;
+	private boolean typingAssistanceActivated = false;
 
 	public Long getId() {
 		return id;

@@ -67,10 +67,10 @@ public class ConversationCreation extends ImprovedHttpServlet {
 					"conversationAddition");
 
 			ObjectNode json = JsonNodeFactory.instance.objectNode();
-			json.put("id", Long.toString(conversation.getId()));
+			json.put("id", conversation.getId().toString());
 
-			respondJson(response, json);
 			response.setStatus(HttpServletResponse.SC_CREATED);
+			respondJson(response, json);
 
 		} else {
 			forwardToView(request, response, VIEW_PATH);

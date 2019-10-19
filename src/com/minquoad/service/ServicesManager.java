@@ -19,7 +19,7 @@ public class ServicesManager implements ServletContextListener {
 		addService(servletContext, new StorageManager(servletContext));
 		addService(servletContext, new Logger(servletContext));
 		addService(servletContext, new Database(servletContext));
-		addService(servletContext, new SessionManager());
+		addService(servletContext, new SessionManager(servletContext));
 		addService(servletContext, new CronManager(servletContext));
 
 		//getService(servletContext, CronManager.class).start();//TODO this feature is not ready

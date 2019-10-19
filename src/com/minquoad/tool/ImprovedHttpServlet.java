@@ -3,10 +3,8 @@ package com.minquoad.tool;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.minquoad.dao.interfaces.Dao;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.interfaces.DaoGetter;
@@ -28,7 +24,6 @@ import com.minquoad.service.ServicesManager;
 import com.minquoad.service.SessionManager;
 import com.minquoad.service.StorageManager;
 import com.minquoad.unit.UnitFactory;
-import com.minquoad.websocketEndpoint.ImprovedEndpoint;
 
 public abstract class ImprovedHttpServlet extends HttpServlet {
 
@@ -318,46 +313,8 @@ public abstract class ImprovedHttpServlet extends HttpServlet {
 		return null;
 	}
 
-	public static void sendJsonToClientsWithRole(HttpServletRequest request, JsonNode json, String role, Collection<User> users) {
-		sendJsonToClientsWithRole(request.getServletContext(), json, users, role);
-	}
-
 	public void sendJsonToClientsWithRole(JsonNode json, Collection<User> users, String role) {
-		sendJsonToClientsWithRole(getServletContext(), json, users, role);
-	}
-
-	public static void sendJsonToClientsWithRole(ServletContext context, JsonNode json, Collection<User> users, String role) {
-
-		Collection<Long> usersIds = null;
-		if (users != null) {
-			usersIds = new HashSet<Long>();
-			for (User user : users) {
-				if (user == null) {
-					usersIds.add(null);
-				} else {
-					usersIds.add(user.getId());
-				}
-			}
-		}
-
-		ObjectNode eventJsonObject = JsonNodeFactory.instance.objectNode();
-		eventJsonObject.put("role", role);
-		eventJsonObject.set("data", json);
-		String text = eventJsonObject.toString();
-
-		Collection<ImprovedEndpoint> endpoints = ServicesManager.getService(context, SessionManager.class).getImprovedEndpoints();
-		for (ImprovedEndpoint endpoint : endpoints) {
-			if (endpoint.hasRole(role)) {
-				if (usersIds == null || usersIds.contains(endpoint.getUserId())) {
-					try {
-						endpoint.sendText(text);
-					} catch (Exception e) {
-						e.printStackTrace();
-						ServicesManager.getService(context, Logger.class).logError(e);
-					}
-				}
-			}
-		}
+		SessionManager.sendJsonToClientsWithRole(getServletContext(), json, users, role);
 	}
 
 	public void forwardToView(HttpServletRequest request, HttpServletResponse response, String viewPath) throws ServletException, IOException {

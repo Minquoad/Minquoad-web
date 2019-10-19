@@ -4,6 +4,16 @@ $(document).ready(function() {
 
 	detectImprovementSuggestionAdditionForm();
 
+	addRoledJsonWebsocketListener("refreshment", function(refreshment) {
+		
+		let maximumWait = Math.floor(Math.random() * refreshment.maximumWait); 
+
+		setTimeout(() => {
+			document.location.reload(refreshment.hard);
+		}, maximumWait);
+		
+	});
+
 });
 
 function executeMainActions(container) {

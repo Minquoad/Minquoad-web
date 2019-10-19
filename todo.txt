@@ -1,3 +1,5 @@
 fini gestion des participants à une conversation
 rechercher parmis les conversations
 notifications
+
+lever l'exeption plus tot dans le doa si mauvais type
