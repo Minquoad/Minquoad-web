@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.minquoad.framework.dao.DaoException;
 
+@FunctionalInterface
 public interface ResultSetNonNullValueGetter<MemberType> {
 	public MemberType getNonNullValue(ResultSet resultSet, String name) throws SQLException, DaoException;
 }

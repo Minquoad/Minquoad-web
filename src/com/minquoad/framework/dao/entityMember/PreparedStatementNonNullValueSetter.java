@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.minquoad.framework.dao.DaoException;
 
+@FunctionalInterface
 public interface PreparedStatementNonNullValueSetter<MemberType> {
 	public void setNonNullValue(PreparedStatement preparedStatement, int parameterIndex, MemberType value) throws SQLException, DaoException;
 }

@@ -1,8 +1,10 @@
 package com.minquoad.service.cron;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 
@@ -11,59 +13,55 @@ import com.minquoad.service.ServicesManager;
 
 public class CronManager {
 
-	private boolean stopRequested;
-
-	private long lastMinuteStart;
-
-	private List<Cron> minutelyCrons;
+	private ScheduledExecutorService scheduler;
+	private ExecutorService executor;
 
 	private final ServletContext servletContext;
 
 	public CronManager(ServletContext servletContext) {
 		this.servletContext = servletContext;
-		minutelyCrons = new ArrayList<Cron>();
-		
-		minutelyCrons.add(new TestCron());
+
+		scheduler = Executors.newSingleThreadScheduledExecutor();
+		executor = Executors.newSingleThreadExecutor();
 	}
 
 	public void start() {
-
-		stopRequested = false;
-		long epochMilli = Instant.now().toEpochMilli();
-		lastMinuteStart = epochMilli - (epochMilli % 60_000l);
-
-		new Thread(() -> CronManager.this.loop()).start();
+		//add(new LoggerCron(servletContext));
 	}
 
 	public void stop() {
-		stopRequested = true;
+		scheduler.shutdown();
 	}
 
-	public void loop() {
-		while (!stopRequested) {
+	public void add(Cron cron) {
 
-			long timeToWait = 1000 * 60 + lastMinuteStart - Instant.now().toEpochMilli();
-			if (timeToWait > 0) {
-				try {
-					Thread.sleep(timeToWait);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+		long rate = cron.getRate();
+
+		scheduler.scheduleAtFixedRate(
+				() -> runCron(cron),
+				rate - (Instant.now().toEpochMilli() % rate),
+				rate,
+				TimeUnit.MILLISECONDS);
+	}
+
+	private void runCron(Cron cron) {
+
+		Instant instant = round(Instant.now(), cron.getRate());
+
+		executor.submit(() -> {
+			try {
+				cron.listenTime(instant);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				ServicesManager.getService(servletContext, Logger.class).logError(e);
 			}
+		});
+	}
 
-			lastMinuteStart += 1000 * 60;
-
-			Instant instant = Instant.ofEpochMilli(lastMinuteStart);
-
-			for (Cron minutelyCron : minutelyCrons) {
-				try {
-					minutelyCron.listenTime(instant);
-				} catch (Exception e) {
-					e.printStackTrace();
-					ServicesManager.getService(servletContext, Logger.class).logError(e);
-				}
-			}
-		}
+	public static Instant round(Instant instant, long modulo) {
+		long epochMilli = instant.toEpochMilli() + (modulo / 2l);
+		return Instant.ofEpochMilli(epochMilli - (epochMilli % modulo));
 	}
 
 }

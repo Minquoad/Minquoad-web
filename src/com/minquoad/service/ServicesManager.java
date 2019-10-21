@@ -22,7 +22,8 @@ public class ServicesManager implements ServletContextListener {
 		addService(servletContext, new SessionManager(servletContext));
 		addService(servletContext, new CronManager(servletContext));
 
-		//getService(servletContext, CronManager.class).start();//TODO this feature is not ready
+		getService(servletContext, CronManager.class).start();
+
 		getService(servletContext, Logger.class).logInfo("Servlet context initialized. Running version : " + getService(servletContext, Deployment.class).getVersion());
 	}
 
@@ -32,6 +33,7 @@ public class ServicesManager implements ServletContextListener {
 
 		getService(servletContext, CronManager.class).stop();
 		getService(servletContext, Database.class).close();
+
 		getService(servletContext, Logger.class).logInfo("Servlet context destroyed");
 	}
 
