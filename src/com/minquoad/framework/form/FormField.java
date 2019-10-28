@@ -29,7 +29,6 @@ public abstract class FormField<Value> {
 		setEmptyPermitted(true);
 		blockingCheckers = new ArrayList<Checker<Value>>();
 		nonBlockingCheckers = new ArrayList<Checker<Value>>();
-		valueProblems = new LinkedList<String>();
 	}
 
 	public boolean isValid() {
@@ -37,10 +36,14 @@ public abstract class FormField<Value> {
 	}
 
 	public Collection<String> getValueProblems() {
+		if (valueProblems == null) {
+			this.computeValueProblems();
+		}
 		return valueProblems;
 	}
 
-	public void computeValueProblems() {
+	protected void computeValueProblems() {
+		valueProblems = new LinkedList<String>();
 		if (isValueNull()) {
 			if (!isNullPermitted()) {
 				getValueProblems().add(getForm().getText("FieldIsMissing"));

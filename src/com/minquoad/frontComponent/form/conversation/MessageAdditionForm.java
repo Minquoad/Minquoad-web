@@ -35,20 +35,17 @@ public class MessageAdditionForm extends ImprovedForm {
 		});
 		this.addField(conversationField);
 
-		FormStringField textField = new FormStringField(TEXT_KEY);
-		this.addField(textField);
-
-		FormFileField fileField = new FormFileField(FILE_KEY) {
-			@Override
-			public void computeValueProblems() {
-				if (!textField.isValueNull() && textField.isValueEmpty()) {
-					this.setEmptyPermitted(false);
-				}
-				super.computeValueProblems();
-			}
-		};
+		FormFileField fileField = new FormFileField(FILE_KEY);
+		fileField.setNullPermitted(true);
 		this.addField(fileField);
 
+		FormStringField textField = new FormStringField(TEXT_KEY) {
+			@Override
+			public boolean isEmptyPermitted() {
+				return !fileField.isValueNull() && !fileField.isValueEmpty();
+			}
+		};
+		this.addField(textField);
 
 	}
 

@@ -22,14 +22,14 @@ public class FailedInLoginigAttemptUnit extends Unit {
 
 			if (failedInLoginigAttempt != null) {
 				failedInLoginigAttempt.incrementAttemptsNumber();
-				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+				failedInLoginigAttempt.setLastAttemptInstant(Instant.now());
 				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 
 			} else {
 				failedInLoginigAttempt = new FailedInLoginigAttempt();
 				failedInLoginigAttempt.setMailAddress(mailAddress);
 				failedInLoginigAttempt.incrementAttemptsNumber();
-				failedInLoginigAttempt.setLastArremptInstant(Instant.now());
+				failedInLoginigAttempt.setLastAttemptInstant(Instant.now());
 				failedInLoginigAttemptDao.persist(failedInLoginigAttempt);
 			}
 		}
@@ -40,7 +40,7 @@ public class FailedInLoginigAttemptUnit extends Unit {
 		if (failedInLoginigAttempt == null) {
 			return null;
 		} else {
-			Instant lastAttemptInstant = failedInLoginigAttempt.getLastArremptInstant();
+			Instant lastAttemptInstant = failedInLoginigAttempt.getLastAttemptInstant();
 			long attemptsNumber = failedInLoginigAttempt.getAttemptsNumber();
 			
 			Duration duration = null;

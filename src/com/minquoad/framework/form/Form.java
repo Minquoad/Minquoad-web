@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class Form {
 
-	public static final String formResourceBundleName = "resources.Form";
-
 	private LinkedHashMap<String, FormField<?>> fileds;
 	private HttpServletRequest request;
 	private boolean submitted;
@@ -28,9 +26,6 @@ public abstract class Form {
 		setSubmitted(true);
 		for (FormField<?> field : getFields().values()) {
 			field.collectValue(getRequest());
-		}
-		for (FormField<?> field : getFields().values()) {
-			field.computeValueProblems();
 		}
 	}
 

@@ -123,7 +123,7 @@ public class EntityMember<Entity, MemberType> {
 
 	public EntityMemberRandomValueGenerator<MemberType> getRandomValueGenerator() {
 		if (randomValueGenerator == null) {
-			throw new DaoException("Not random value generator defined for the type of " + getName());
+			throw new DaoException("No random value generator defined for the type of " + getName());
 		}
 		return randomValueGenerator;
 	}

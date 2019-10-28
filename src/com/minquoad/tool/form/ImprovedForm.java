@@ -13,6 +13,8 @@ import com.minquoad.unit.UnitFactory;
 
 public class ImprovedForm extends Form {
 
+	public static final String formResourceBundleName = "resources.Form";
+
 	public ImprovedForm(HttpServletRequest request) {
 		super(request);
 	}

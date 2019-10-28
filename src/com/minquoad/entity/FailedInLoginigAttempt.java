@@ -7,7 +7,7 @@ public class FailedInLoginigAttempt {
 	private Long id;
 	private String mailAddress;
 	private long attemptsNumber;
-	private Instant lastArremptInstant;
+	private Instant lastAttemptInstant;
 
 	public Long getId() {
 		return id;
@@ -39,12 +39,12 @@ public class FailedInLoginigAttempt {
 		this.attemptsNumber = attemptsNumber;
 	}
 
-	public Instant getLastArremptInstant() {
-		return lastArremptInstant;
+	public Instant getLastAttemptInstant() {
+		return lastAttemptInstant;
 	}
 
-	public void setLastArremptInstant(Instant lastArremptInstant) {
-		this.lastArremptInstant = lastArremptInstant;
+	public void setLastAttemptInstant(Instant lastAttemptInstant) {
+		this.lastAttemptInstant = lastAttemptInstant;
 	}
 
 }

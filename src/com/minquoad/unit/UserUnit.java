@@ -8,8 +8,8 @@ import java.util.Locale;
 
 import com.minquoad.dao.interfaces.UserDao;
 import com.minquoad.entity.User;
-import com.minquoad.framework.form.Form;
 import com.minquoad.tool.InternationalizationTool;
+import com.minquoad.tool.form.ImprovedForm;
 
 public class UserUnit extends Unit {
 
@@ -48,7 +48,7 @@ public class UserUnit extends Unit {
 		if (nickname.length() < User.NICKNAME_MIN_LENGTH) {
 			problems.add(InternationalizationTool.getText(
 					"TooShortNickName",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale,
 					User.NICKNAME_MIN_LENGTH));
 			return problems;
@@ -57,7 +57,7 @@ public class UserUnit extends Unit {
 		if (nickname.length() > User.NICKNAME_MAX_LENGTH) {
 			problems.add(InternationalizationTool.getText(
 					"TooLongNickname",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale,
 					User.NICKNAME_MAX_LENGTH));
 		}
@@ -70,7 +70,7 @@ public class UserUnit extends Unit {
 			}
 			problems.add(InternationalizationTool.getText(
 					"UnauthorisedChars",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale,
 					impossibleCharsText));
 		}
@@ -85,21 +85,21 @@ public class UserUnit extends Unit {
 		if (dashOccurences > 1) {
 			problems.add(InternationalizationTool.getText(
 					"TooMuchHyphen",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale));
 		}
 
 		if (nickname.charAt(0) == '-') {
 			problems.add(InternationalizationTool.getText(
 					"HyphenWrongPotitionBeginning",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale));
 		}
 
 		if (nickname.charAt(nickname.length() - 1) == '-') {
 			problems.add(InternationalizationTool.getText(
 					"HyphenWrongPotitionEnd",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale));
 		}
 
@@ -147,14 +147,14 @@ public class UserUnit extends Unit {
 		if (passwordNotNormalChars.size() == 0) {
 			problems.add(InternationalizationTool.getText(
 					"NospecialChar",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale));
 		}
 
 		if (password.length() < 6) {
 			problems.add(InternationalizationTool.getText(
 					"TooShortPassword",
-					Form.formResourceBundleName,
+					ImprovedForm.formResourceBundleName,
 					locale));
 		}
 

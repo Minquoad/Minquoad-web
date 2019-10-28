@@ -28,7 +28,7 @@ public class FailedInLoginigAttemptDaoImpl extends DaoImpl<FailedInLoginigAttemp
 		this.addLongEntityMember("id", FailedInLoginigAttempt::getId, FailedInLoginigAttempt::setId);
 		this.addStringEntityMember("mailAddress", FailedInLoginigAttempt::getMailAddress, FailedInLoginigAttempt::setMailAddress);
 		this.addLongEntityMember("attemptsNumber", FailedInLoginigAttempt::getAttemptsNumber, FailedInLoginigAttempt::setAttemptsNumber);
-		this.addInstantEntityMember("lastArremptInstant", FailedInLoginigAttempt::getLastArremptInstant, FailedInLoginigAttempt::setLastArremptInstant);
+		this.addInstantEntityMember("lastAttemptInstant", FailedInLoginigAttempt::getLastAttemptInstant, FailedInLoginigAttempt::setLastAttemptInstant);
 	}
 
 }

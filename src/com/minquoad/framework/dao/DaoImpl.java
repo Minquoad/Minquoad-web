@@ -125,27 +125,27 @@ public abstract class DaoImpl<Entity> {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			String statement = getIdBasedSelectAllStatement();
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 			primaryKeyEntityMember.setValueInPreparedStatement(preparedStatement, 1, pk);
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			Entity entity = null;
 			if (resultSet.next()) {
 				entity = instantiateFromResultSet(resultSet);
 			}
 
-			ConnectionManager.close(resultSet, preparedStatement, connection);
+			ConnectionManager.close(preparedStatement, connection);
 
 			return entity;
 
-		} catch (Exception e) {
-			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+		} catch (SQLException e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
@@ -222,11 +222,10 @@ public abstract class DaoImpl<Entity> {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = getConnection();
-
+			connection.setAutoCommit(true);
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 
@@ -242,16 +241,16 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery();
 			resultSet.next();
 
 			getPrimaryKeyEntityMember().setValueOfResultSetInEntity(entity, resultSet);
 			this.hydrate(entity, resultSet, false);
 
-			ConnectionManager.close(resultSet, preparedStatement, connection);
+			ConnectionManager.close(preparedStatement, connection);
 
-		} catch (Exception e) {
-			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+		} catch (SQLException e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
@@ -290,13 +289,14 @@ public abstract class DaoImpl<Entity> {
 			String statement = "DELETE FROM \"" + getTableName() + "\" WHERE \"" + getPrimaryKeyEntityMember().getName() + "\"=?;";
 
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 			getPrimaryKeyEntityMember().setValueOfEntityInPreparedStatement(preparedStatement, 1, entity);
 			preparedStatement.executeUpdate();
 			ConnectionManager.close(preparedStatement, connection);
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
@@ -347,6 +347,7 @@ public abstract class DaoImpl<Entity> {
 
 		try {
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 
@@ -363,7 +364,7 @@ public abstract class DaoImpl<Entity> {
 
 			ConnectionManager.close(preparedStatement, connection);
 
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
@@ -431,10 +432,10 @@ public abstract class DaoImpl<Entity> {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 
@@ -447,7 +448,7 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 				if (getSubClassDaos().isEmpty()) {
@@ -457,7 +458,7 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			ConnectionManager.close(resultSet, preparedStatement, connection);
+			ConnectionManager.close(preparedStatement, connection);
 
 			Collection<Entity> entities = new ArrayList<Entity>();
 			for (Entity instantiatedEntity : getInstantiatedEntyties()) {
@@ -467,8 +468,8 @@ public abstract class DaoImpl<Entity> {
 			}
 			return entities;
 
-		} catch (Exception e) {
-			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+		} catch (SQLException e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
@@ -533,10 +534,10 @@ public abstract class DaoImpl<Entity> {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 
@@ -549,7 +550,7 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			Entity entity = null;
 			if (resultSet.next()) {
@@ -566,12 +567,12 @@ public abstract class DaoImpl<Entity> {
 				}
 			}
 
-			ConnectionManager.close(resultSet, preparedStatement, connection);
+			ConnectionManager.close(preparedStatement, connection);
 
 			return entity;
 
 		} catch (SQLException e) {
-			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
@@ -647,27 +648,27 @@ public abstract class DaoImpl<Entity> {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
 
 		try {
 			connection = getConnection();
+			connection.setAutoCommit(true);
 			String statement = getIdBasedSelectAllStatement();
 			triggerStatementListener(statement);
 			preparedStatement = connection.prepareStatement(statement);
 			getPrimaryKeyEntityMember().setValueOfResultSetInPreparedStatement(preparedStatement, 1, pkResultSet, keyColumnName);
-			resultSet = preparedStatement.executeQuery();
+			ResultSet resultSet = preparedStatement.executeQuery();
 
 			Entity entity = null;
 			if (resultSet.next()) {
 				entity = instantiateFromResultSet(resultSet);
 			}
 
-			ConnectionManager.close(resultSet, preparedStatement, connection);
+			ConnectionManager.close(preparedStatement, connection);
 
 			return entity;
 
-		} catch (Exception e) {
-			ConnectionManager.safeClose(resultSet, preparedStatement, connection);
+		} catch (SQLException e) {
+			ConnectionManager.safeClose(preparedStatement, connection);
 			throw new DaoException(e);
 		}
 	}
