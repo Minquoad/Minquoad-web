@@ -39,7 +39,4 @@ public abstract class DaoFactoryImpl {
 		}
 	}
 
-	public interface ConnectionProvier {
-		public Connection getConnection() throws SQLException;
-	}
 }
