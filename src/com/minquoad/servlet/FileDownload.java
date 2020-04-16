@@ -68,7 +68,7 @@ public class FileDownload extends ImprovedHttpServlet {
 
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 			int length;
-			while ((length = inputStream.read(buffer)) > 0) {
+			while ((length = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, length);
 			}
 

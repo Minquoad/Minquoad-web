@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.minquoad.entity.Conversation;
 import com.minquoad.entity.User;
+import com.minquoad.frontComponent.ConversationResume;
 import com.minquoad.frontComponent.form.conversation.ConversationAccessGrantingForm;
 import com.minquoad.tool.ImprovedHttpServlet;
 import com.minquoad.unit.ConversationUnit;
@@ -39,7 +40,24 @@ public class ConversationAccessGranting extends ImprovedHttpServlet {
 			for (User target : form.getTargets()) {
 				conversationUnit.giveAccessToConversation(target, conversation);
 			}
-			
+
+			ConversationResume conversationResume = new ConversationResume();
+			conversationResume.setConversation(conversation);
+			conversationResume.setParticipants(getDaoFactory(request).getUserDao().getConversationUsers(conversation));
+			respondJson(response, conversationResume.toJson());
+
+			sendJsonToClientsWithRole(
+					conversationResume.toJson(),
+					form.getTargets(),
+					"conversationAddition");
+
+			response.sendRedirect(
+					request.getContextPath()
+							+ "/CurrentConversation?"
+							+ CurrentConversation.CONVERSATION_ID_KEY
+							+ "="
+							+ conversation.getId());
+
 		} else {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}

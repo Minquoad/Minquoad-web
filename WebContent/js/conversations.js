@@ -23,9 +23,7 @@ $(document).ready(function() {
 
 		executeMainActions(tile);
 
-		subPageMenu.createAndAddItem(tile, function(data, textStatus, xhr) {
-			detectCurrentConversation(data, textStatus, xhr);
-		});
+		subPageMenu.createAndAddItem(tile, null);
 
 	});
 });

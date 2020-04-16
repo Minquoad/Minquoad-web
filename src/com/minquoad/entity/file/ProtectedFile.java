@@ -108,7 +108,7 @@ public class ProtectedFile {
 
 			byte[] buffer = new byte[bufferSize];
 			int length;
-			while ((length = input.read(buffer)) > 0) {
+			while ((length = input.read(buffer)) != -1) {
 				output.write(buffer, 0, length);
 			}
 
