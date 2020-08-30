@@ -1,9 +1,11 @@
 package com.minquoad.service;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.servlet.ServletContext;
 
@@ -35,6 +37,11 @@ public class StorageManager {
 		return new File(ServicesManager.getService(servletContext, Deployment.class).getStoragePath() + relativePath);
 	}
 
+	public static void move(File source, File destination) throws IOException {
+		StorageManager.initFolderIfNotExists(destination.getParentFile());
+		Files.move(source.toPath(), destination.toPath());
+	}
+
 	public static boolean initFolderIfNotExists(File file) {
 		if (!file.exists()) {
 			file.mkdirs();
@@ -44,34 +51,27 @@ public class StorageManager {
 	}
 
 	public static JsonNode fileToJsonNode(File file) throws IOException {
-		return new ObjectMapper().readTree(StorageManager.fileToString(file));
+		return new ObjectMapper().readTree(fileToString(file));
 	}
 
 	public static String fileToString(File file) throws IOException {
-		BufferedReader reader = null;
+
+		BufferedInputStream inputStream = null;
 		try {
+			inputStream = new BufferedInputStream(new FileInputStream(file));
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-			reader = new BufferedReader(new FileReader(file));
-			StringBuilder stringBuilder = new StringBuilder();
-			String line = null;
-			String ls = System.getProperty("line.separator");
-			boolean firstLine = true;
-			while ((line = reader.readLine()) != null) {
-				if (!firstLine) {
-					stringBuilder.append(ls);
-				}
-				stringBuilder.append(line);
-				firstLine = false;
-			}
+			byte[] buffer = new byte[8192];//Deployment.defaultBufferSize may not be initialised at this point
+			int length;
+			while ((length = inputStream.read(buffer)) != -1)
+				outputStream.write(buffer, 0, length);
 
-			return stringBuilder.toString();
+			return new String(outputStream.toByteArray());
 
 		} finally {
-			try {
-				reader.close();
-			} catch (Exception e) {
-			}
+			inputStream.close();
 		}
+
 	}
 
 }

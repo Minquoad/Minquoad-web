@@ -18,9 +18,9 @@ import com.minquoad.framework.form.FormFileField;
 import com.minquoad.tool.ImprovedHttpServlet;
 
 @WebServlet("/Test")
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
-		maxFileSize = 1024 * 1024 * 10, // 10 MB
-		maxRequestSize = 1024 * 1024 * 15 // 15 MB
+@MultipartConfig(fileSizeThreshold = 1_048_575, // 1MiB - 1
+		maxFileSize = 100_000_000_000l, // 100 GB
+		maxRequestSize = 100_000_000_000l // 100 GB
 )
 public class Test extends ImprovedHttpServlet {
 
@@ -144,7 +144,7 @@ public class Test extends ImprovedHttpServlet {
 				pf = new ProtectedFile();
 				pf.setId(0l);
 				pf.setOriginalName(FormFileField.getFileName(part));
-				pf.collectFromPart(part, getStorageManager());
+				pf.collectFromPart(part, getServletContext());
 				protectedFileDao.persist(pf);
 			}
 		}

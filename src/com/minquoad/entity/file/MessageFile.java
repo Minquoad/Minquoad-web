@@ -11,9 +11,10 @@ public class MessageFile extends ProtectedFile {
 	@Override
 	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
 
-		return unitFactory.getConversationUnit().hasUserConversationAccess(
-				user,
-				daoFactory.getMessageDao().getMessageFileMessage(this).getConversation());
+		return super.isDownloadableForUser(user, daoFactory, unitFactory)
+				&& unitFactory.getConversationUnit().hasUserConversationAccess(
+						user,
+						daoFactory.getMessageDao().getMessageFileMessage(this).getConversation());
 	}
 
 	public Boolean isImage() {

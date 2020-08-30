@@ -51,7 +51,7 @@ public class MessageAddition extends ImprovedHttpServlet {
 				messageFile = new MessageFile();
 				messageFile.setOriginalName(fileField.getOriginalFileName());
 				messageFile.setImage(fileField.isImage());
-				messageFile.collectFromPart(fileField.getValue(), getStorageManager());
+				messageFile.collectFromPart(fileField.getValue(), getServletContext());
 				getDaoFactory(request).getMessageFileDao().persist(messageFile);
 			}
 

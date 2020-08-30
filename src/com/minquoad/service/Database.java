@@ -11,6 +11,7 @@ import org.postgresql.Driver;
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.dao.sqlImpl.DaoFactoryImpl;
 import com.minquoad.tool.Pool;
+import com.minquoad.tool.Pool.ReusableObjectFactory;
 
 public class Database {
 
@@ -41,7 +42,7 @@ public class Database {
 		dataSource.setPassword(deployment.getDatabasePassword());
 		dataSource.setInitialSize(4);
 		dataSource.setMinIdle(4);
-		dataSource.setMaxIdle(4);
+		dataSource.setMaxIdle(32);
 		dataSource.setMaxActive(64);
 
 		try {
@@ -50,17 +51,30 @@ public class Database {
 			ServicesManager.getService(servletContext, Logger.class).logError(e);
 			throw new RuntimeException(e);
 		}
-		
+
 		return dataSource;
 	}
 
 	private Pool<DaoFactory> createDaoFactoryPool() {
-		Pool<DaoFactory> daoFactoryPool = new Pool<DaoFactory>();
 
-		daoFactoryPool.setConstructor(() -> new DaoFactoryImpl(servletContext));
-		daoFactoryPool.setCleaner(daoFactory -> ((DaoFactoryImpl) daoFactory).clear());
+		ReusableObjectFactory<DaoFactory> factory = new ReusableObjectFactory<DaoFactory>() {
 
-		return daoFactoryPool;
+			@Override
+			public DaoFactory construct() {
+				return new DaoFactoryImpl(servletContext);
+			}
+
+			@Override
+			public void clean(DaoFactory daoFactory) {
+				((DaoFactoryImpl) daoFactory).clear();
+			}
+
+			@Override
+			public void destruct(DaoFactory daoFactory) {
+			}
+		};
+
+		return new Pool<DaoFactory>(factory);
 	}
 
 	public Connection getConnection() throws SQLException {

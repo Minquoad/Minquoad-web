@@ -20,8 +20,6 @@ public class FileDownload extends ImprovedHttpServlet {
 
 	private static final String PROTECTED_FILE_ID = "id";
 
-	private static final int DEFAULT_BUFFER_SIZE = 10240;
-
 	@Override
 	public boolean isFullPage() {
 		return false;
@@ -39,7 +37,6 @@ public class FileDownload extends ImprovedHttpServlet {
 		ProtectedFile protectedFile = getEntityFromPkParameter(request, PROTECTED_FILE_ID, DaoFactory::getProtectedFileDao);
 
 		response.reset();
-		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(protectedFile.getFile(getStorageManager()).length()));
 		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
@@ -54,7 +51,6 @@ public class FileDownload extends ImprovedHttpServlet {
 		File file = protectedFile.getFile(getStorageManager());
 
 		response.reset();
-		response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		response.setContentType(getMimeType(protectedFile));
 		response.setHeader("Content-Length", String.valueOf(file.length()));
 		response.setHeader("Content-Disposition", getContentDisposition(request, protectedFile));
@@ -63,14 +59,13 @@ public class FileDownload extends ImprovedHttpServlet {
 		BufferedInputStream inputStream = null;
 		BufferedOutputStream outputStream = null;
 		try {
-			inputStream = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
-			outputStream = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
+			inputStream = new BufferedInputStream(new FileInputStream(file));
+			outputStream = new BufferedOutputStream(response.getOutputStream());
 
-			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+			byte[] buffer = new byte[getDeployment().getDefaultBufferSize()];
 			int length;
-			while ((length = inputStream.read(buffer)) != -1) {
+			while ((length = inputStream.read(buffer)) != -1)
 				outputStream.write(buffer, 0, length);
-			}
 
 		} finally {
 			try {

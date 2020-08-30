@@ -17,6 +17,7 @@ public class Deployment {
 	private boolean open;
 
 	private String storagePath;
+	private int defaultBufferSize;
 	private String databaseHost;
 	private String databasePort;
 	private String databaseName;
@@ -38,6 +39,7 @@ public class Deployment {
 			JsonNode configurationJson = StorageManager.fileToJsonNode(new File(CONFIGURATION_JSON_PATH));
 
 			storagePath = configurationJson.findValue("storagePath").asText();
+			defaultBufferSize = configurationJson.findValue("defaultBufferSize").asInt();
 
 			JsonNode databaseJson = configurationJson.findValue("database");
 
@@ -60,7 +62,7 @@ public class Deployment {
 		ResourceBundle.clearCache();
 		ServicesManager.getService(servletContext, Database.class).clear();
 	}
-	
+
 	public void setOpen(boolean open) {
 		this.open = open;
 	}
@@ -95,6 +97,10 @@ public class Deployment {
 
 	public String getUserPasswordSalt() {
 		return userPasswordSalt;
+	}
+
+	public int getDefaultBufferSize() {
+		return defaultBufferSize;
 	}
 
 	public String getVersion() {

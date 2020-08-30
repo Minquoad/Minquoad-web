@@ -39,11 +39,14 @@ public abstract class DaoImpl<Entity> {
 
 	private Collection<StatementListener> statementListeners;
 
+	private Random random;
+	
 	protected abstract String getTableName();
 
 	protected abstract Entity instantiateBlank();
 
 	public DaoImpl(DaoFactoryImpl daoFactory) {
+		random = new Random();
 		this.daoFactory = daoFactory;
 		connectionManager = new ConnectionManager(this);
 	}
@@ -146,10 +149,10 @@ public abstract class DaoImpl<Entity> {
 	}
 
 	public void persist(Entity entity) {
-		if (getPrimaryKeyEntityMember().getValue(entity) == null || !getInventory().contains(entity)) {
-			insert(entity);
-		} else {
+		if (getPrimaryKeyEntityMember().getValue(entity) != null && getInventory().contains(entity)) {
 			update(entity);
+		} else {
+			insert(entity);
 		}
 	}
 
@@ -824,7 +827,7 @@ public abstract class DaoImpl<Entity> {
 				valueSetter,
 				ResultSet::getInt,
 				PreparedStatement::setInt,
-				() -> Math.abs(new Random().nextInt())));
+				() -> Math.abs(random.nextInt())));
 	}
 
 	/**
@@ -939,7 +942,7 @@ public abstract class DaoImpl<Entity> {
 				valueSetter,
 				ResultSet::getLong,
 				PreparedStatement::setLong,
-				() -> Math.abs(new Random().nextLong())));
+				() -> Math.abs(random.nextLong())));
 	}
 
 	/**

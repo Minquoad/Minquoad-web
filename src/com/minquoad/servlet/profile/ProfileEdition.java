@@ -64,7 +64,7 @@ public class ProfileEdition extends ImprovedHttpServlet {
 				image.setOriginalName(field.getOriginalFileName());
 				image.setUser(getUser(request));
 
-				image.collectFromPart(field.getValue(), getStorageManager());
+				image.collectFromPart(field.getValue(), getServletContext());
 
 				userProfileImageDao.persist(image);
 			}

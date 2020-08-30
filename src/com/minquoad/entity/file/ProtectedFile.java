@@ -7,10 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Part;
 
 import com.minquoad.dao.interfaces.DaoFactory;
 import com.minquoad.entity.User;
+import com.minquoad.service.Deployment;
+import com.minquoad.service.ServicesManager;
 import com.minquoad.service.StorageManager;
 import com.minquoad.unit.UnitFactory;
 
@@ -34,11 +37,27 @@ public class ProtectedFile {
 		return relativePath;
 	}
 
-	public void setRelativePath(String relativePath) {
-		// relativePath is immutable
-		if (this.relativePath != null && !relativePath.equals(this.relativePath)) {
-			throw new RuntimeException("immutability violation");
+	public String getDefaultRelativePath() {
+
+		String path = "";
+		
+		Class<?> clazz = this.getClass();
+		while (!clazz.equals(ProtectedFile.class)) {
+			path = clazz.getSimpleName() + "/" + path;
+			clazz = clazz.getSuperclass();
 		}
+
+		path = StorageManager.COMMUNITY_PATH + path;
+
+		if (this.getId() == null)
+			this.setId(Math.abs(new Random().nextLong()));
+
+		return path + Long.toString(this.getId());
+	}
+
+	public void setRelativePath(String relativePath) {
+		if (this.relativePath != null && !relativePath.equals(this.relativePath))
+			throw new RuntimeException("to change relativePath, use change changeRelativePath()");
 		this.relativePath = relativePath;
 	}
 
@@ -59,9 +78,8 @@ public class ProtectedFile {
 	}
 
 	public File getFile(StorageManager storageManager) {
-		if (file == null) {
+		if (file == null)
 			file = storageManager.getFile(getRelativePath());
-		}
 		return file;
 	}
 
@@ -83,34 +101,38 @@ public class ProtectedFile {
 		return this.getOriginalName();
 	}
 
-	public void collectFromPart(Part part, StorageManager storageManager) throws IOException {
+	public void changeRelativePath(String relativePath, ServletContext servletContext) throws IOException {
+		StorageManager storageManager = ServicesManager.getService(servletContext, StorageManager.class);
 
-		String randomDirPath = StorageManager.COMMUNITY_PATH;
-		randomDirPath += getRandomIntString(3) + "/";
-		randomDirPath += getRandomIntString(3) + "/";
-		StorageManager.initFolderIfNotExists(storageManager.getFile(randomDirPath));
+		File newFile = storageManager.getFile(relativePath);
 
-		File file = null;
-		String randomPath = null;
-		while (file == null || file.exists()) {
-			randomPath = randomDirPath + getRandomIntString(9);
-			file = storageManager.getFile(randomPath);
-		}
-		this.setRelativePath(randomPath);
+		StorageManager.move(storageManager.getFile(this.relativePath), newFile);
+
+		this.relativePath = relativePath;
+		this.file = newFile;
+	}
+	
+	public void collectFromPart(Part part, ServletContext servletContext) throws IOException {
+		
+		StorageManager storageManager = ServicesManager.getService(servletContext, StorageManager.class);
+
+		String defaultRelativePath = this.getDefaultRelativePath();
+		
+		File file = storageManager.getFile(defaultRelativePath);
+		StorageManager.initFolderIfNotExists(file.getParentFile());
+		this.setRelativePath(defaultRelativePath);
 
 		BufferedInputStream input = null;
 		BufferedOutputStream output = null;
 		try {
 
-			int bufferSize = 102400;
-			input = new BufferedInputStream(part.getInputStream(), bufferSize);
-			output = new BufferedOutputStream(new FileOutputStream(file), bufferSize);
+			input = new BufferedInputStream(part.getInputStream());
+			output = new BufferedOutputStream(new FileOutputStream(file));
 
-			byte[] buffer = new byte[bufferSize];
+			byte[] buffer = new byte[ServicesManager.getService(servletContext, Deployment.class).getDefaultBufferSize()];
 			int length;
-			while ((length = input.read(buffer)) != -1) {
+			while ((length = input.read(buffer)) != -1)
 				output.write(buffer, 0, length);
-			}
 
 		} finally {
 			try {
@@ -132,5 +154,5 @@ public class ProtectedFile {
 		}
 		return string;
 	}
-	
+
 }

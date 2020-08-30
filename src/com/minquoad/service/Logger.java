@@ -1,9 +1,10 @@
 package com.minquoad.service;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
@@ -35,23 +36,21 @@ public class Logger {
 	}
 
 	private void standartLogInFile(String string, String filePath) {
-		logInFile(
-				Instant.now() + " : " + string,
+		writeInFile(
+				Instant.now() + " : " + string + "\n",
 				ServicesManager.getService(servletContext, StorageManager.class).getFile(StorageManager.LOG_PATH + filePath));
 	}
 
-	public void logInFile(String string, File file) {
+	public static void writeInFile(String string, File file) {
 		try {
 			if (!file.exists()) {
 				file.getParentFile().mkdirs();
 				file.createNewFile();
 			}
 
-			FileWriter fw = new FileWriter(file, true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter out = new PrintWriter(bw);
-			out.println(string);
-			out.close();
+			OutputStream bos = new BufferedOutputStream(new FileOutputStream(file, true));
+			bos.write(string.getBytes());
+			bos.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -59,13 +58,9 @@ public class Logger {
 	}
 
 	public static String getStackTraceAsString(Throwable throwable) {
-
 		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		throwable.printStackTrace(pw);
-		String stackTrace = sw.toString();
-
-		return stackTrace;
+		throwable.printStackTrace(new PrintWriter(sw));
+		return sw.toString();
 	}
 
 }

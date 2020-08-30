@@ -10,7 +10,8 @@ public class UserProfileImage extends ProtectedFile {
 
 	@Override
 	public boolean isDownloadableForUser(User user, DaoFactory daoFactory, UnitFactory unitFactory) {
-		return user != null;
+		return super.isDownloadableForUser(user, daoFactory, unitFactory)
+				&& user != null;
 	}
 
 	@Override

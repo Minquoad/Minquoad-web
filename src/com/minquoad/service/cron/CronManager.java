@@ -46,22 +46,18 @@ public class CronManager {
 
 	private void runCron(Cron cron) {
 
-		Instant instant = round(Instant.now(), cron.getRate());
+		long currentTimestamp = Instant.now().toEpochMilli();
+		Instant theoreticalExecutionInstant = Instant.ofEpochMilli(currentTimestamp - (currentTimestamp % cron.getRate()));
 
 		executor.submit(() -> {
 			try {
-				cron.listenTime(instant);
+				cron.listenTime(theoreticalExecutionInstant);
 
 			} catch (Exception e) {
 				e.printStackTrace();
 				ServicesManager.getService(servletContext, Logger.class).logError(e);
 			}
 		});
-	}
-
-	public static Instant round(Instant instant, long modulo) {
-		long epochMilli = instant.toEpochMilli() + (modulo / 2l);
-		return Instant.ofEpochMilli(epochMilli - (epochMilli % modulo));
 	}
 
 }
