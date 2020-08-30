@@ -7,5 +7,6 @@
     "password": "password",
     "userPasswordSalt": "userPasswordSalt"
   },
+  "defaultBufferSize": 8192,
   "storagePath" : "/minquoad-web-storage/"
 }
